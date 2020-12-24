@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-export const style = (bg = './assets/bg/london-bg.png') => (
-
-styled.div`
+export const style = (bg = './assets/bg/london-bg.png') => styled.div`
     background: url(${bg}) grey;
     max-height: 200vh;
     background-repeat: no-repeat;
@@ -17,6 +15,7 @@ styled.div`
     .nav {
         width: 100%;
         margin: 0px;
+        margin-top: -20px;
         padding-top: 40px;
         padding-right: 100px;
         button, a {
@@ -34,14 +33,14 @@ styled.div`
             color: #007B5D;
             :hover{
                 background: #007B5D;
-                color: white
+                color: white;
             }
         }
         a{
             font: normal normal normal 20px/24px Montserrat;
             letter-spacing: 0px;
             color: #424242;
-            margin: 24px 50px;
+            margin: 24px 15px;
             display: inline-block;
             float: right;
             text-decoration: none;
@@ -163,6 +162,7 @@ styled.div`
                         font: normal normal normal 15px/19px Montserrat;
                         color: #424242;
                         padding-left: 5px;
+                        position: absolute;
                     }
                 }
                 .deep-green{
@@ -208,6 +208,12 @@ styled.div`
     @media only screen and (max-width: 780px) { 
         background: white;
         height: auto;
+        .mobile {
+            display: inline-block!important;
+        }
+        .not-mobile{
+            display: none!important
+        }
         .f-growing{
             display: block;
             font: normal normal bold 20px/26px Montserrat;
@@ -218,6 +224,11 @@ styled.div`
             top: 55px;
             margin: auto;
             z-index: +3;
+            span{
+                display: inline-block;
+                width: 268px;
+                text-align: center;
+            }
         }
         .hero-grid{
             grid-template-columns: 1fr;
@@ -249,9 +260,15 @@ styled.div`
                             >span{
                               display: none;
                             }
-                            sa{
-                              font-style: italic;
-                              font-size: 9px;
+                            .sa{
+                                font-style: italic;
+                                font-size: 9px;
+                                font: italic normal normal 9px/13px Montserrat;
+                                color: #424242;
+                                .deep-green{
+                                    font: italic normal 600 9px/13px Montserrat;
+                                    position: static;
+                                }
                             }
                             i{
                                 display: none;
@@ -260,6 +277,10 @@ styled.div`
                     }
                     .timeline-5 {
                         margin-top: 90px;
+                        .we-conv{
+                            font: normal normal normal 11px Montserrat;
+                            color: #424242;
+                        }
                     }
                 }
                 .receive{
@@ -331,4 +352,3 @@ styled.div`
     }
 
 `
-)
