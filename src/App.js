@@ -1,9 +1,10 @@
 import './App.css';
-import LandingPage from './components/pages/LandingPage'
+import LandingPage from './components/pages/landing-page/LandingPage'
 
 function App() {
   return (
-    <LandingPage />
+    // <LandingPage location="yaounde"/>
+    <LandingPage location="london"/>
   );
 }
 
