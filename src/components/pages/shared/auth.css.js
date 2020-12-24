@@ -154,7 +154,7 @@ const style = (page) => styled.div`
             display: none;
         }
         >div:last-child{
-            >img{
+            >a>img{
                 top: 24px;
                 left: 20px;
                 width: 99px;
