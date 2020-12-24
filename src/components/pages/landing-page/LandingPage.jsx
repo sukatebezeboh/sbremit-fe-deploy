@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import ExchangeRateInput from '../../ui-components/ExchangeRateInput';
-import SBRemitLogo from "../../ui-components/SBRemitLogo";
+import SBRemitLogo from "../../ui-components/SBRemitLandingLogo";
 import {style} from "./LandingPage.css";
 
 const LandingPage = (props) => {
@@ -12,14 +13,14 @@ const LandingPage = (props) => {
     return (
     <Body>
         <div>
-            <SBRemitLogo />
+            <Link to="/"><SBRemitLogo /></Link>
             <div className="nav">
-                <button className="sign-up">Sign up</button>
-                <a href="/" className="sign-in">Sign in</a>
+                <Link to="/sign-up"><button className="sign-up">Sign up</button></Link>
+                <Link to="/sign-in"><a href="/" className="sign-in">Sign in</a></Link>
             </div>
         </div>
         <div className="f-growing">
-                The Fastest Growing Money Transfer Company
+               <span> The Fastest Growing Money Transfer Company </span>
         </div>
         <div className="hero-grid">
             <div className="hero-texts">
@@ -41,9 +42,9 @@ const LandingPage = (props) => {
                     <div className="timeline-box">
                         <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green">1 GBP = 70.036 XAF</span></span></div>
                         <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span>Service fee starts from <span className="deep-green">0.95 GBP</span></span> </span></div>
-                        <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <sa className="mobile">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</sa> </span></div>
+                        <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
                         <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">100.95 GBP</span></span></span></div>
-                        <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span>Transfer arrives <b>Within 2 hours</b></span></span></div>
+                        <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> <span className="mobile we-conv">We’ll convert 99.05 GBP</span> </span></div>
                     </div>
                 </div>
                 <div className="receive">
