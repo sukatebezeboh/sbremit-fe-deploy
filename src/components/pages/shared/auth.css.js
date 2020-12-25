@@ -50,6 +50,7 @@ const style = (page) => styled.div`
                     float: right;
                     font: normal normal 600 15px/19px Montserrat;
                     color: #007B5D;
+                    cursor: pointer;
                 }
                 input, select{
                     width: 100%;
@@ -208,14 +209,13 @@ const style = (page) => styled.div`
                         
                     }
                     div.email{
-                         margin-bottom: 10px;
+                         margin-bottom: 20px;
                     }
                     >button{
                         margin-top: 25px;
                         height: 40px;
                         font: normal normal normal 13px/16px Montserrat;
                     }
-
                 }
                 hr{
                     width: 80%;
