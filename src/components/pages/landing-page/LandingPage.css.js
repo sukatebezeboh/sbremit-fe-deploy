@@ -109,10 +109,10 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
                 :nth-child(3){
                     border-radius: 0px 8px 8px 0px;
                 }
-                :hover{
+                /* :hover{
                     background: #7FBCAD;
                     color: #fff;
-                }
+                } */
             }
         }
         .amt-txt {

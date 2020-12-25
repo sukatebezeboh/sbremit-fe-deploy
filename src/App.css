@@ -14,4 +14,9 @@ body::-webkit-scrollbar {
 .grey-txt{
     color: #A3A3A3;
 }
-  
+.show{
+    display: inline-block!important;
+}
+.hide{
+    display: none!important;
+}

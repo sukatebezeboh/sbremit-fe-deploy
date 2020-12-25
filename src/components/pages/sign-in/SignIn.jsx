@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import style from "./../shared/auth.css";
+import ForgotPasswordModal from './../../ui-components/ForgotPasswordModal';
+
 
 const Body = style('sign-in');
 
 const SignIn = () => {
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
+    const [showModal, setShowModal] = useState(false);
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -17,14 +20,13 @@ const SignIn = () => {
         })
     }
 
-    const handleForgotPassword = () => {
-        window.location.href = '/email/password-reset';
-    }
+    const handleForgotPassword = () => setShowModal(true);
 
     return (
         <Body>
             <div>
             </div>
+            <ForgotPasswordModal show={showModal} setShow={setShowModal} />
             <div>
                 <Link to="/"> <img src="./assets/main-logo.svg" alt=""/> </Link>
                 <div className="form">
