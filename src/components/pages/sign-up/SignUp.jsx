@@ -16,6 +16,9 @@ const SignUp = () => {
             return prevValue === 'show' ? 'hide' : 'show';
         })
     }
+    const handleSignUp = () => {
+        window.location.href = '/email/confirm-account'
+    }
 
     return (
         <Body>
@@ -56,7 +59,7 @@ const SignUp = () => {
                             <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
                         </div>
 
-                        <button>Sign up</button>
+                        <button onClick={handleSignUp}>Sign up</button>
                     </div>
                     <hr/>
                     <div className="terms">By signing up you agree to our <span>Terms of Use</span> and <span>Privacy Policy.</span></div>

@@ -17,6 +17,10 @@ const SignIn = () => {
         })
     }
 
+    const handleForgotPassword = () => {
+        window.location.href = '/email/password-reset';
+    }
+
     return (
         <Body>
             <div>
@@ -33,12 +37,12 @@ const SignIn = () => {
                             <input type="text" placeholder="Your email address" />
                         </div>
                         <div>
-                            <div>Password <span className="f-pass">Forgot Password?</span></div>
+                            <div>Password <span className="f-pass" onClick={handleForgotPassword}>Forgot Password?</span></div>
                             <input type={passwordType} placeholder="Enter your password"/>
                             <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
                         </div>
 
-                        <button>Sign up</button>
+                        <button>Sign in</button>
                     </div>
                 </div>
             </div>
