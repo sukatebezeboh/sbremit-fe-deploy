@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import React, {useState, useCallback} from "react";
+import { Link, useHistory } from "react-router-dom";
 import style from "./../shared/auth.css";
 
 const Body = style('sign-up');
@@ -7,6 +7,8 @@ const Body = style('sign-up');
 const SignUp = () => {
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
+    const history = useHistory();
+
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -16,9 +18,7 @@ const SignUp = () => {
             return prevValue === 'show' ? 'hide' : 'show';
         })
     }
-    const handleSignUp = () => {
-        window.location.href = '/email/confirm-account'
-    }
+    const handleSignUp = useCallback(() => history.push('/email/confirm-account'), [history]);
 
     return (
         <Body>

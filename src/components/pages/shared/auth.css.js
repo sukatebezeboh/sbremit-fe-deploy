@@ -18,6 +18,7 @@ const style = (page) => styled.div`
             position: absolute;
             top: 30px;
             left: 100px;
+            z-index: 3;
         }
         .form{
             margin-top: 240px;
