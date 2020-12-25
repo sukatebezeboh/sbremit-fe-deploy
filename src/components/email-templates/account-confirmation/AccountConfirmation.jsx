@@ -1,9 +1,9 @@
 import React from 'react'
-import BaseTemplate from "./../base-template/BaseTemplate-1";
-import style from './ForgotPassword.css'
+import BaseTemplate from "../base-template/BaseTemplate-1";
+import style from './AccountConfirmation.css'
 
 const Div = style();
-const ForgotPassword = () => {
+const AccountConfirmation = () => {
     const heading = "Welcome to SBremit";
     const content = "Thank you for signing up. Please verify your email address by clicking on the button below";
     const buttonText = "Confirm my account";
@@ -18,4 +18,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword;
+export default AccountConfirmation;

@@ -3,7 +3,7 @@ import LandingPage from './components/pages/landing-page/LandingPage'
 import { Route, Switch } from 'react-router-dom';
 import SignUp from './components/pages/sign-up/SignUp';
 import SignIn from './components/pages/sign-in/SignIn';
-import ForgotPassword from './components/email-templates/forgot-password/ForgotPassword';
+import AccountConfirmation from './components/email-templates/account-confirmation/AccountConfirmation';
 import PasswordReset from './components/email-templates/password-reset/PasswordReset';
 
 
@@ -21,7 +21,7 @@ function App() {
       </Route>
       <Route path="/sign-up" component={SignUp} exact/>
       <Route path="/sign-in" component={SignIn} exact/>
-      <Route path="/email/forgot-password" component={ForgotPassword} />
+      <Route path="/email/confirm-account" component={AccountConfirmation} />
       <Route path="/email/password-reset" component={PasswordReset} />
     </Switch>
     
