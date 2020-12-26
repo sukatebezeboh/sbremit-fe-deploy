@@ -110,7 +110,7 @@ const style = () => styled.div`
     @media only screen and (max-width: 780px) { 
         grid-template-columns: 1fr;
         >div:first-child{
-            margin: auto 30px;
+            margin: 0px 30px;
         }
         .heading {
             font: normal normal 600 20px/32px Montserrat;
@@ -154,7 +154,7 @@ const style = () => styled.div`
             border: none;
             height: 220px;
             position: absolute;
-            top: -50px;
+            top: -100px;
             left: 25px;
             ul{
                 margin-top: 15px;
