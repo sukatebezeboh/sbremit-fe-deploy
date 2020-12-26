@@ -154,7 +154,7 @@ const style = () => styled.div`
             border: none;
             height: 220px;
             position: absolute;
-            top: -100px;
+            top: -50px;
             left: 25px;
             ul{
                 margin-top: 15px;
