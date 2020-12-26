@@ -5,6 +5,7 @@ import SignUp from './components/pages/sign-up/SignUp';
 import SignIn from './components/pages/sign-in/SignIn';
 import AccountConfirmation from './components/email-templates/account-confirmation/AccountConfirmation';
 import PasswordReset from './components/email-templates/password-reset/PasswordReset';
+import ResetPassword from './components/pages/reset-password/ResetPassword';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route path="/sign-in" component={SignIn} exact/>
       <Route path="/email/confirm-account" component={AccountConfirmation} />
       <Route path="/email/password-reset" component={PasswordReset} />
+      <Route path="/reset-password" component={ResetPassword} />
     </Switch>
     
   );

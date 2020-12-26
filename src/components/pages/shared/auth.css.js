@@ -12,14 +12,6 @@ const style = (page) => styled.div`
         -webkit-backdrop-filter: blur(undefined);
     }
     >div:last-child{
-        >a>img{
-            width: 214px;
-            height: 50px;
-            position: absolute;
-            top: 30px;
-            left: 100px;
-            z-index: 3;
-        }
         .form{
             margin-top: 240px;
             .heading{
@@ -156,11 +148,6 @@ const style = (page) => styled.div`
             display: none;
         }
         >div:last-child{
-            >a>img{
-                top: 24px;
-                left: 20px;
-                width: 99px;
-            }
             .form{
                 margin-top: 81px;
                 .heading{

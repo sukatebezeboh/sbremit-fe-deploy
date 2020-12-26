@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import style from "./../shared/auth.css";
 import ForgotPasswordModal from './../../ui-components/ForgotPasswordModal';
+import SBRemitLogo from "../../ui-components/SBRemitLogo";
 
 
 const Body = style('sign-in');
@@ -28,7 +29,7 @@ const SignIn = () => {
             </div>
             <ForgotPasswordModal show={showModal} setShow={setShowModal} />
             <div>
-                <Link to="/"> <img src="./assets/main-logo.svg" alt=""/> </Link>
+                <SBRemitLogo />
                 <div className="form">
                     <div className="heading">Welcome back!</div>
                     <div className="sub-heading">New to SBremit? <Link to="/sign-up"><span>Sign up</span></Link> </div>

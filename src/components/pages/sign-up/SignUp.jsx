@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from "react";
 import { Link, useHistory } from "react-router-dom";
+import SBRemitLogo from "../../ui-components/SBRemitLogo";
 import style from "./../shared/auth.css";
 
 const Body = style('sign-up');
@@ -26,7 +27,7 @@ const SignUp = () => {
                 
             </div>
             <div>
-                <Link to="/"><img src="./assets/main-logo.svg" alt=""/></Link>
+                <SBRemitLogo />
                 <div className="form">
                     <div className="heading">Create an account. It’s free!</div>
                     <div className="sub-heading">Already have an account? <Link to="/sign-in"><span>Sign in</span></Link> </div>
