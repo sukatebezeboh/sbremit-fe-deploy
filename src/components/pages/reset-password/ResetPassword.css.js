@@ -3,8 +3,9 @@ import styled from 'styled-components';
 const style = () => styled.div`
     display: grid;
     grid-template-columns: 11fr 10fr;
-    margin-left: 5.3%;
+    padding-left: 5.3%;
     min-height: 120vh;
+    background: #FFFFFF;
     .heading {
         font: normal normal 600 30px/32px Montserrat;
         color: #007B5D;
