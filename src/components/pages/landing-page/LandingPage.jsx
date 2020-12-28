@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
-import ExchangeRateInput from '../../ui-components/ExchangeRateInput';
-import SBRemitLogo from "../../ui-components/SBRemitLandingLogo";
+import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
+import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
 import {style} from "./LandingPage.css";
 
 const LandingPage = (props) => {

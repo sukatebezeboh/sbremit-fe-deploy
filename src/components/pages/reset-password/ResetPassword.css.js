@@ -169,7 +169,6 @@ const style = () => styled.div`
                     }
                 }
             }
-            
         }
     }
 `

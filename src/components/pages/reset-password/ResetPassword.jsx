@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import SBRemitLogo from '../../ui-components/SBRemitLogo'
+import SBRemitLogo from '../../ui-components/sbremit-logo/SBRemitLogo'
 import style from './ResetPassword.css'
 
 const Body = style();

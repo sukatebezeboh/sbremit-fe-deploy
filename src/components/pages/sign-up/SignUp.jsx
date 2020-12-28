@@ -1,9 +1,9 @@
 import React, {useState, useCallback} from "react";
 import { Link, useHistory } from "react-router-dom";
-import SBRemitLogo from "../../ui-components/SBRemitLogo";
+import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
 import style from "./../shared/auth.css";
 
-const Body = style('sign-up');
+const Body = style('signup');
 
 const SignUp = () => {
     const [passwordType, setPasswordType] = useState('password');
