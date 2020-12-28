@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-
 const style = (page) => styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
     min-height: 120vh;
     >div:first-child{
-        background: url('./assets/bg/london-bg.png');
+        background: url('./assets/bg/${page}.png');
         backdrop-filter: blur(undefined);
         -webkit-backdrop-filter: blur(undefined);
+        background-size: contain;
     }
     >div:last-child{
         .form{

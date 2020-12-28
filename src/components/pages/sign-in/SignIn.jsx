@@ -1,16 +1,17 @@
 import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import style from "./../shared/auth.css";
-import ForgotPasswordModal from './../../ui-components/ForgotPasswordModal';
-import SBRemitLogo from "../../ui-components/SBRemitLogo";
+import ForgotPasswordModal from '../../ui-components/forgot-password-modal/ForgotPasswordModal';
+import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
 
 
-const Body = style('sign-in');
+const Body = style('signin');
 
 const SignIn = () => {
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
     const [showModal, setShowModal] = useState(false);
+    const history = useHistory();
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -22,6 +23,7 @@ const SignIn = () => {
     }
 
     const handleForgotPassword = () => setShowModal(true);
+    const handleSignIn = () => history.push('/dashboard');
 
     return (
         <Body>
@@ -45,7 +47,7 @@ const SignIn = () => {
                             <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
                         </div>
 
-                        <button>Sign in</button>
+                        <button onClick={handleSignIn}>Sign in</button>
                     </div>
                 </div>
             </div>

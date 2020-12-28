@@ -7,12 +7,13 @@
 body{
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none; 
+  background: #F5F7F7;
 }
 body::-webkit-scrollbar {
     display: none;
 }
 .grey-txt{
-    color: #A3A3A3;
+    color: rgb(231, 231, 231);
 }
 .show{
     display: inline-block!important;
@@ -28,6 +29,30 @@ body::-webkit-scrollbar {
     top: -33px;
     left: 90%;
 }
+.red-txt {
+    color: #CF0921!important;
+}
+
+.yellow-txt {
+    color: #FCD20F!important;
+}
+
+.green-txt {
+    color: #007B5D!important;
+}
+
+.white-txt {
+    color: #ffffff!important;
+}
+
+.green-bg {
+    background: #007B5D!important;
+}
+
+.white-bg {
+    background: #ffffff!important;
+}
+
 @media only screen and (max-width: 780px) { 
     .show-hide{
         top: -25px;
