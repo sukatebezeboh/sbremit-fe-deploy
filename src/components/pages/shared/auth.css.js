@@ -12,6 +12,7 @@ const style = (page) => styled.div`
         background-size: contain;
     }
     >div:last-child{
+        background: #ffffff;
         .form{
             margin-top: 240px;
             .heading{
