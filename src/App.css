@@ -41,12 +41,16 @@ body::-webkit-scrollbar {
     color: #007B5D!important;
 }
 
+.white-txt {
+    color: #ffffff!important;
+}
+
 .green-bg {
     background: #007B5D!important;
 }
 
 .white-bg {
-
+    background: #ffffff!important;
 }
 
 @media only screen and (max-width: 780px) { 
