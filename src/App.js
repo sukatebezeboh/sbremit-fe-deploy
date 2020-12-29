@@ -7,6 +7,7 @@ import AccountConfirmation from './components/email-templates/account-confirmati
 import PasswordReset from './components/email-templates/password-reset/PasswordReset';
 import ResetPassword from './components/pages/reset-password/ResetPassword';
 import Dashboard from './components/pages/dashboard/Dashboard';
+import UserProfile from './components/pages/user-profile/UserProfile';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Route path="/email/password-reset" component={PasswordReset} exact/>
       <Route path="/reset-password" component={ResetPassword} exact/>
       <Route path="/dashboard" component={Dashboard} exact/>
+      <Route path="/profile" component={UserProfile} exact/>
     </Switch>
     
   );

@@ -1,6 +1,7 @@
 import React from 'react'
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
+import PageHeading from '../../ui-components/page-heading/PageHeading';
 import style from './Dashboard.css';
 
 const Body = style();
@@ -11,9 +12,8 @@ const Dashboard = () => {
     return (
         <Body>
             <NavBar />
-            <div className="dash">
-                <div className="heading">Dashboard</div>
-                <div className="subheading">View recent transactions and analytics</div>
+            <div className="page-content">
+                <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <div className="transactions">
                     <div> 
                         <div className="green-txt">10</div>  
