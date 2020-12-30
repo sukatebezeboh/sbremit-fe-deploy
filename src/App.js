@@ -9,6 +9,7 @@ import ResetPassword from './components/pages/reset-password/ResetPassword';
 import Dashboard from './components/pages/dashboard/Dashboard';
 import UserProfile from './components/pages/user-profile/UserProfile';
 import ChangePassword from './components/pages/change-password/ChangePassword';
+import TransferMethod from './components/pages/transfer-method/TransferMethod';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
       <Route path="/dashboard" component={Dashboard} exact/>
       <Route path="/profile" component={UserProfile} exact/>
       <Route path="/change-password" component={ChangePassword} exact/>
+      <Route path="/transfer-method" component={TransferMethod} exact/>
     </Switch>
     
   );
