@@ -1,17 +1,9 @@
 import styled from 'styled-components';
 
 const style = () => styled.div`
-    >div.dash {
+    >div.page-content {
         margin: 150px auto;
         width: 65%;
-        >.heading {
-            font: normal normal 600 25px/40px Montserrat;
-            color: #424242;
-        }
-        >.subheading {
-            font: normal normal normal 20px/30px Montserrat;
-            color: #A3A3A3;
-        }
         >.transactions {
             margin-top: 50px;
             display: grid;
@@ -185,7 +177,7 @@ const style = () => styled.div`
     }
     @media only screen and (max-width: 1444px) { 
         
-        >div.dash {
+        >div.page-content {
             width: 95%;
             >.transactions {
                 grid-template-columns: 1fr 1fr;
@@ -194,7 +186,7 @@ const style = () => styled.div`
     }
     @media only screen and (max-width: 900px) { 
         
-        >div.dash{
+        >div.page-content{
             width: 90%;
             margin-top: 100px;
             >.heading {

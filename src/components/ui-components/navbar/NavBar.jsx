@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import style from './NavBar.css';
 
@@ -73,7 +74,7 @@ const NavBar = () => {
                          <hr/>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'user.svg')} alt="user icon"/> </div>
-                                <div>View Profile</div>
+                                <div><Link to="/profile">View Profile</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>
