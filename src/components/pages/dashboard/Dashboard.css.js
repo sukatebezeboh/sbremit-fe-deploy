@@ -8,7 +8,7 @@ const style = () => styled.div`
             margin-top: 50px;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
-            >div {
+            >div, .start-transfer {
                 width: 95%;
                 height: 150px;
                 box-shadow: 0px 10px 12px #CCCCCC80;
@@ -39,7 +39,7 @@ const style = () => styled.div`
                     height: 50px;
                     position: relative;
                     top: -5px;
-                    margin-bottom: 16px;
+                    margin-bottom: 18px;
                 }
                 :last-child {
                     position: relative;
@@ -197,7 +197,7 @@ const style = () => styled.div`
                 margin-bottom: -20px;
             }
             >.transactions {
-                >div {
+                >div, .start-transfer {
                     div:last-child{
                         font-size: 14px;
                     }

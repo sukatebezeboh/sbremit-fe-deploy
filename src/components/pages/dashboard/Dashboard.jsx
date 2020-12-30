@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -31,10 +32,12 @@ const Dashboard = () => {
                         <div className="red-txt">1</div>  
                         <div>Cancelled Transactions</div>
                     </div>
-                    <div className="green-bg start-transfer"> 
-                        <div> <img src={asset('icons', 'add.svg')} alt=""/> </div>  
-                        <div> Start new transfer</div>
-                    </div>
+                    <Link to="/transfer-method">
+                        <div className="green-bg start-transfer"> 
+                            <div> <img src={asset('icons', 'add.svg')} alt=""/> </div>  
+                            <div> Start new transfer</div>
+                        </div>
+                    </Link>
                 </div>
                 <div className="t-history">Transaction History <span>(13)</span></div>
                 {transactions.map(transaction => <div className="history">
