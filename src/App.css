@@ -4,6 +4,7 @@
     font-family: Montserrat, sans-serif;
     box-sizing: border-box;
 }
+
 body{
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none; 
@@ -68,6 +69,7 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
 @media only screen and (max-width: 1444px) { 
     div.page-content {
         width: 95%;
