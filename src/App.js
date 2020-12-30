@@ -8,6 +8,7 @@ import PasswordReset from './components/email-templates/password-reset/PasswordR
 import ResetPassword from './components/pages/reset-password/ResetPassword';
 import Dashboard from './components/pages/dashboard/Dashboard';
 import UserProfile from './components/pages/user-profile/UserProfile';
+import ChangePassword from './components/pages/change-password/ChangePassword';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
       <Route path="/reset-password" component={ResetPassword} exact/>
       <Route path="/dashboard" component={Dashboard} exact/>
       <Route path="/profile" component={UserProfile} exact/>
+      <Route path="/change-password" component={ChangePassword} exact/>
     </Switch>
     
   );

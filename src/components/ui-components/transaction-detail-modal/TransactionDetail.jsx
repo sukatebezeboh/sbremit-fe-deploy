@@ -4,11 +4,11 @@ import { asset } from '../../../util/util';
 // import {Link} from 'react-router-dom';
 
 const style = () => styled.div`
-    position: fixed;
+    position: absolute;
     top: 0px;
     left: 0px;
     width: 100%;
-    height: 100vh;
+    height: ${(document.body.clientWidth || document.documentElement.clientWidth || window.innerWidth) + 1000}px;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(2px);
     z-index: 1;
@@ -178,7 +178,6 @@ const style = () => styled.div`
                     }
                 }
             }
-            
         }
 
         .details {
@@ -360,7 +359,7 @@ const TransactionDetail = (props) => {
                     </div>
                 </div>
             </div>
-        </Modal>
+        </Modal> 
         )
     )
 }

@@ -30,7 +30,7 @@ const NavBar = () => {
                 <span></span>
                 </span> 
                 <span className="logo">
-                    <img src="./assets/main-logo.svg" alt="logo"/>
+                    <Link to="/dashboard"> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
             </div>
             
