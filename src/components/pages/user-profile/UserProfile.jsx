@@ -41,7 +41,7 @@ const style = () => styled.div`
                         border-radius: 15px;
                         font: normal normal normal 12px Montserrat;
                         color: #FFFFFF;
-                        padding: 7px 32px 8px 15px;
+                        padding: 7px 20px 8px 20px;
                         margin-top: 15px;
                     }
                 }
@@ -76,7 +76,7 @@ const style = () => styled.div`
                     :last-child {
                         font: normal normal normal 20px/44px Montserrat;
                         color: #424242;
-                        width: 60%
+                        width: 60%;
                     }
                 }
             }

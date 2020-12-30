@@ -1,17 +1,21 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
+import TransactionDetail from '../../ui-components/transaction-detail-modal/TransactionDetail';
 import style from './Dashboard.css';
+
 
 const Body = style();
 
 const Dashboard = () => {
     const transactions = [{},{},{},{},{},{},{},{},{},{}];
+    const [openTDModal, handleOpenTDModal] = useState(false);
 
     return (
         <Body>
             <NavBar />
+            <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <div className="transactions">
@@ -34,7 +38,7 @@ const Dashboard = () => {
                 </div>
                 <div className="t-history">Transaction History <span>(13)</span></div>
                 {transactions.map(transaction => <div className="history">
-                    <div className="up">
+                    <div className="up" onClick={()=>handleOpenTDModal(true)}>
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
                             <div>20 Nov 2020</div>
