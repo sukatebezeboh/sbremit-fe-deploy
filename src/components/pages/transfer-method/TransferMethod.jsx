@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -33,7 +34,7 @@ const TransferMethod = () => {
                     </div>
                     <div className="footnote">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
                 </div>
-                <div className="btns"><span>Cancel</span> <button>Start</button> </div>
+                <div className="btns"><span>Cancel</span> <Link to="/get-quote"><button>Start</button></Link> </div>
             </div>
         </Body>
     )
