@@ -233,11 +233,11 @@ const style = () => styled.div`
                 top: -32px;
             }
         }
-        .name {
-            >span {
-                /* display: none; */
-            }
+        .dropdown {
+            box-shadow: -100px 70000010px 1px 70000000px #aaaaaa80!important;
+            z-index: +50;
         }
+
         .arrow-down {
             margin-left: -30px;
         }

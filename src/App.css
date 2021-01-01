@@ -90,4 +90,7 @@ a {
         width: 90%;
         margin-top: 100px;
     }
+    .mobile-hide {
+        display: none!important;
+    }
 }
