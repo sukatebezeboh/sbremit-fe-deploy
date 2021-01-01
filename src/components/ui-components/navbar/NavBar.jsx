@@ -34,7 +34,7 @@ const NavBar = () => {
                 </span>
             </div>
             
-            <div>
+            <div className="right-opt">
                 <span className="notif">
                     <img src="./assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
                     <span></span>

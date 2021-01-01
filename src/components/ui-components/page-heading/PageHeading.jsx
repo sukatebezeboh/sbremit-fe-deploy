@@ -10,7 +10,7 @@ const PageHeading = (props) => {
     const Div = style(back);
 
     return (
-        <Div>
+        <Div className="page-heading">
             {back && <Link to={back}> <img className="back" src={asset('icons', 'prev.svg')} alt="back"/> </Link>}
             <div>
                 <div className="heading">{heading}</div>

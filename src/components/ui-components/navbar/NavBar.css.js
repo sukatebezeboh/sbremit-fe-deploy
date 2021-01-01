@@ -235,11 +235,20 @@ const style = () => styled.div`
         }
         .name {
             >span {
-                display: none;
+                /* display: none; */
             }
         }
         .arrow-down {
             margin-left: -30px;
+        }
+        grid-template-columns: 1fr 1.5fr!important;
+        .right-opt {
+            width: 200px;
+            text-align: right;
+            div.profile-dropdown {
+                width: 410px;
+                text-align: left;
+            }
         }
     }
     

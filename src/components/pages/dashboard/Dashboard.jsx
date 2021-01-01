@@ -19,6 +19,11 @@ const Dashboard = () => {
             <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
+                <Link to="/transfer-method">
+                    <div className="round-plus">
+                        +
+                    </div>
+                </Link>
                 <div className="transactions">
                     <div> 
                         <div className="green-txt">10</div>  
@@ -45,12 +50,12 @@ const Dashboard = () => {
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
                             <div>20 Nov 2020</div>
-                            <div>To <b>Ifepade Adewunmi</b></div>
+                            <div className="name">To <b>Ifepade Adewunmi</b></div>
                         </div>
                         <div><span>Pending</span></div>
                         <div>
                             <div>51,585.92 NGN</div>
-                            <div>100 GBP</div>
+                            <div className="amt-gbp">100 GBP</div>
                         </div>
                     </div>
                     <hr/>
@@ -58,7 +63,7 @@ const Dashboard = () => {
                         <div>Transaction #: <span>SBR334908</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
-                            <span><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
+                            <span className="view-det"><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
                         </div>
                     </div>
                 </div>)}
