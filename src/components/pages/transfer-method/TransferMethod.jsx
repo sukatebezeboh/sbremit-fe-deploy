@@ -26,7 +26,7 @@ const TransferMethod = () => {
                             <div>Bank Transfer</div>
                             <div>Service fee from 0.95 GBP</div>
                         </div>
-                        <div>
+                        <div className="pickup">
                             <img src={asset('icons', 'cash.svg')} alt="cash pickup"/>
                             <div>Cash Pickup</div>
                             <div>Service fee from 0.95 GBP</div>

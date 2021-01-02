@@ -4,7 +4,6 @@ import PageHeading from '../../ui-components/page-heading/PageHeading';
 import {asset} from '../../../util/util';
 import { Link } from 'react-router-dom';
 import style from './UserProfile.css'
-import './exclusive.css';
 
 const Body = style();
 

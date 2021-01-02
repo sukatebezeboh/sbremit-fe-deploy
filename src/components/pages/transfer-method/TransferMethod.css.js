@@ -6,16 +6,15 @@ const style = () => styled.div`
         grid-template-columns: 1fr 1fr 1fr;
         padding: 50px 5%;
         >div {
-            width: 300px;
+            width: 88%;
             height: 300px;
             text-align: center;
             background: #FFFFFF 0% 0% no-repeat padding-box;
             border: 2px solid #7FBCAD;
             border-radius: 15px;
             img {
-                    width: 120px;
-                    height: 120px;
-                    margin: 40px;
+                width: 40%;
+                margin: 40px;
             }
             >div {
                 :nth-child(2) {
@@ -56,6 +55,59 @@ const style = () => styled.div`
             outline: none;
         }
     }
-    
+@media only screen and (max-width: 900px) { 
+    .box {
+        padding: 5px;
+        padding-bottom: 15px;
+        .row {
+            padding: 15px;
+            grid-template-columns: 1fr 1fr;
+            >div {
+                height: 180px;
+                @media only screen and (max-width: 490px) { 
+                    height: 123px;
+                }
+                padding: 15px;
+                margin-bottom: 10px;
+                img {
+                    margin: 5px;
+                }
+                div {
+                    :nth-child(2) {
+                        font: normal normal 600 11px/14px Montserrat;
+                    }
+                    :last-child {
+                        font: normal normal normal 7px Montserrat;
+                        margin-top: -8px;
+                    }
+                }
+                
+            }
+            .pickup {
+                position: relative;
+                left: 50% ;
+            }
+        }
+    }
+    .footnote {
+        font: italic normal normal 11px/14px Montserrat;
+    }
+    .btns {
+        margin-top: -30px;
+        button {
+            width: 100%;
+            height: 40px;
+            font: normal normal normal 13px/16px Montserrat;
+        }
+        span {
+            font: normal normal normal 13px/16px Montserrat;
+            text-align: center;
+            display: block;
+            margin-right: 0px;
+            position: relative;
+            top: 70px;
+        }
+    }
+}
 `
 export default style;

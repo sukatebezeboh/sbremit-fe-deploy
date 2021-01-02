@@ -80,6 +80,8 @@ const style = () => styled.div`
     }
 
     @media only screen and (max-width: 900px) { 
+        background: #FFFFFF;
+        padding: 1px 0px;
         .box {
             background: transparent;
             padding: 0px;
@@ -127,10 +129,9 @@ const style = () => styled.div`
                 }
             }
             >div.down {
-                grid-template-columns: repeat(2, minmax(0, 1fr));;
+                grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) ;
                 .detail-grp {
                     margin: 15px 0px;
-                    width: 154%; 
                     word-break: break-word;
                     div {
                         :first-child{
@@ -138,6 +139,7 @@ const style = () => styled.div`
                         }
                         :last-child {
                             font: normal normal normal 13px/30px Montserrat;
+                            width: 100% ;
                         }
                     }
                 }
