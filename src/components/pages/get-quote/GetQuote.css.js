@@ -108,6 +108,7 @@ const style = () => styled.div`
                 .deep-green{
                     font: normal normal 600 15px/19px Montserrat;
                     color: #007B5D;
+                    width: fit-content;
                 }
             }
             .timeline-1{
@@ -161,7 +162,172 @@ const style = () => styled.div`
         }
     }
 
+@media only screen and (max-width: 900px) { 
+    background: white;
+    min-height: 100vh;
+    .page-heading {
+        margin-top: 30px;
+        
+    }
+    .box {
+        margin: 0px;
+        box-shadow: none;
+        padding: 0px;
+        .hero-rect {
+            width: 100%;
+        }
+        .head {
+            width: 100% ;
+            span:first-child {
+                font: normal normal normal 13px/16px Montserrat;
+            }
+            span:last-child {
+                font: normal normal normal 11px/14px Montserrat;
+            }
+        }
+        .footnote {
+            font: italic normal normal 10px/13px Montserrat;
+        }
+    }
 
+    .btns {
+        margin-top: -30px;
+        button {
+            width: 100%;
+            height: 40px;
+            font: normal normal normal 13px/16px Montserrat;
+        }
+        span {
+            font: normal normal normal 13px/16px Montserrat;
+            text-align: center;
+            display: block;
+            margin-right: 0px;
+            position: relative;
+            top: 70px;
+        }
+    }
+
+
+
+
+
+
+            grid-template-columns: 1fr;
+            .hero-texts{
+                display: none;
+            }
+            .hero-rect{
+                width: 100%;
+                border-radius: 0px;
+                box-shadow: none;
+                >button{
+                    font-size: 13px;
+                    height: 54px;
+                    padding: 0px;
+                }
+                .timeline-box{
+                    left: 20px;
+                    top: -15px;
+                    height: 240px;
+                    .timeline {
+                        span:not(.deep-green){
+                            font-size: 12px;
+                            width: 180px;
+                            font: normal normal normal 10px/13px Montserrat!important;
+                        }
+                        .deep-green{
+                            width: fit-content;
+                            font: normal normal 600 10px/13px Montserrat;
+                        }
+                    }
+                    .timeline-3{
+                        position: absolute;
+                        top: 235px;
+                        left: -10px;
+                        >span{
+                            >span{
+                              display: none;
+                            }
+                            .sa{
+                                font-style: italic;
+                                font-size: 9px;
+                                font: italic normal normal 9px/13px Montserrat;
+                                color: #424242;
+                                .deep-green{
+                                    font: italic normal 600 9px/13px Montserrat;
+                                    position: static;
+                                }
+                            }
+                            i{
+                                display: none;
+                            }
+                        }
+                    }
+                    .timeline-5 {
+                        margin-top: 90px;
+                        .we-conv{
+                            font: normal normal normal 11px Montserrat;
+                            color: #424242;
+                        }
+                    }
+                }
+                .receive{
+                    margin-top: 150px;
+                }
+                
+                .md-txt{
+                    font: normal normal normal 13px/16px Montserrat;
+                    color: #A3A3A3;
+                }
+                div:nth-child(2){
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    margin-top: 15px;
+                    button{
+                        font: normal normal normal 10px/13px Montserrat;
+                        height: 30px;
+                    }
+                }
+                .amt-txt {
+                    margin-top: 30px;
+                }
+                .x-input{
+                    height: 54px;
+                    padding: 0px 10px;
+                    div{
+                        font-size: 10px;
+                        input {
+                            font-size: 15px; 
+                        }
+                    }
+                    >div.flg-drp{
+                        margin-top: 10px;
+                        img{
+                            width: 26px;
+                            height: 26px; 
+                        }
+                        span:nth-child(2){
+                            font-size: 13px;
+                            margin-right: 23px;
+                            margin-top: 0px;
+                            text-transform: uppercase;
+                        }
+                        span:nth-child(3){
+                            font-size: 5px;
+                            color: #007B5D;
+                            margin-top: 10px;
+                            img{
+                                height: 9px;
+                                width: 10px;
+                            }
+                        }
+                    }
+                }
+        }
+
+
+
+}
     
 
 `

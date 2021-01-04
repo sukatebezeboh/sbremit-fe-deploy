@@ -1,6 +1,14 @@
 import styled from "styled-components";
 
 const style = () => styled.div`
+    .page-heading {
+        margin-top: 30px;
+    }
+    .box{
+        box-shadow: 0px 10px 12px #CCCCCC80;
+        border-radius: 15px;
+        padding-bottom: 25px;
+    }
     .row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -12,6 +20,9 @@ const style = () => styled.div`
             background: #FFFFFF 0% 0% no-repeat padding-box;
             border: 2px solid #7FBCAD;
             border-radius: 15px;
+            :hover {
+                
+            }
             img {
                 width: 40%;
                 margin: 40px;
@@ -62,6 +73,7 @@ const style = () => styled.div`
         .row {
             padding: 15px;
             grid-template-columns: 1fr 1fr;
+
             >div {
                 height: 180px;
                 @media only screen and (max-width: 490px) { 
