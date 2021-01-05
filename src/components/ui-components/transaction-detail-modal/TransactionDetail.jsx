@@ -607,7 +607,7 @@ const TransactionDetail = (props) => {
                 <div className="status"> <span>Pending</span> </div>
                 <div className="view-details" onClick={()=>showMobileModal(true)}>View transaction update</div>
             </div>
-           {openMobileTimeline && (<div className="timeline-modal-container">
+           {openMobileTimeline && (<div className="timeline-modal-container desktop-hide">
                 <div className="overlay" onClick={()=>showMobileModal(false)}></div>
                 <div className="timeline-modal">
                     <div className="timeline">
