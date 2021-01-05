@@ -15,7 +15,7 @@ const style = () => styled.div`
                 padding: 30px;
                 border-radius: 15px;
                 background: #fff;
-                margin-bottom: 10px;
+                margin-bottom: 10px;    
                 >div{
                     :first-child {
                         font: normal normal 600 40px/40px Montserrat;
@@ -189,6 +189,25 @@ const style = () => styled.div`
         >div.page-content{
             width: 90%;
             margin-top: 100px;
+            div.round-plus {
+                background:#007B5D;
+                display: inline-block;
+                width: 55px;
+                height: 50px;
+                text-align: center;
+                padding: 0px;
+                color: white;
+                font-size: 46px;
+                border-radius: 50%;
+                font-weight: lighter;
+                padding-top: 0px;
+                padding-bottom: 55px;
+                padding-right: 0px;
+                position: fixed;
+                bottom: 50px;
+                right: 20px;
+                z-index: 1;
+            }
             >.heading {
                 font-size: 18px;
             }
@@ -196,44 +215,106 @@ const style = () => styled.div`
                 font-size: 14px;
                 margin-bottom: -20px;
             }
+            .page-heading {
+                display: none;
+            }
             >.transactions {
+                grid-template-columns: 1fr 1fr 1fr;
+                grid-gap: 10px;
                 >div, .start-transfer {
-                    div:last-child{
-                        font-size: 14px;
+                    height: 95px;
+                    width: 100%;
+                    padding: 15px 10px;
+                    box-shadow: 0px 5px 6px #CCCCCC80;
+                    border-radius: 8px;
+                    div:first-child{
+                        font: normal normal 600 25px/40px Montserrat;
+                        margin-bottom: 0px;
+                        margin-top: -10px;
                     }
+                    div:last-child{
+                        margin-top: 8px;
+                        font: normal normal normal 10px/13px Montserrat;
+                    }
+                }
+                .start-transfer {
+                    display: none;
                 }
             }
 
+            .t-history {
+                font: normal normal normal 15px/30px Montserrat;
+                margin-top: 25px;
+                margin-bottom: 15px;
+            }
             .history {
                 font-size: 12px;
+                font: normal normal normal 8px Montserrat!important;
+                padding: 17px 10px 15px;
+                box-shadow: 0px 10px 12px #CCCCCC80;
+                border-radius: 8px;
+                margin-bottom: 10px;
                 .up {
-                    grid-template-columns: 1fr 3fr;
+                    grid-template-columns: 0.7fr 3fr 0fr 2fr;
                     grid-template-rows: 2fr 2fr;
-                    div{
-                        span {
+                    z-index: 0;
+                    .status{
                             position: relative;
-                            left: 100%;
-                            
-                            @media only screen and (max-width: 375px) { 
-                                left: 0%;
+                        }
+                    div{
+                        
+                        z-index: 0;
+                        div, span {
+                            font: normal normal normal 10px/10px Montserrat!important;
+                        }
+                        .amt-gbp {
+                            margin-top: 5px!important;
+                        }
+                        img {
+                            width: 30px;
+                            height: 30px;
+                        }
+                        :nth-child(3) {
+                            span {
+                                padding: 3px 10px;
+                                position: absolute;
+                                top: 33px;
+                                right: -30vw;
+                                float: right;
                             }
                         }
-                        div b{
-                            font-size: 16px;
+                        span {
+                            /* position: relative;
+                            left: 100%; */
+                            
+                            @media only screen and (max-width: 375px) { 
+                                /* left: 0%; */
+                            }
+                        }
+                        div.name{
+                            margin-top: 5px!important;
+
+                            b{
+                                font: normal normal bold 11px Montserrat;
+                            }
                         }
                     }
                 }
                 .down {
-                    grid-template-columns: 1fr;
-                }
+                    grid-template-columns: 1fr 1fr;
                     div {
-                        font-size: 14px!important;
+                        font: normal normal normal 8px Montserrat!important;
                     }
+                    
+                    .view-det {
+                        display: none;
+                    }
+                }
             }
             .pagination {
-                transform: scale(0.65, 0.65);  
+                transform: scale(0.5, 0.5);  
                 width: 120%;
-                margin-left: -10%;
+                margin-left: -12%;
                 img {
                     margin: 0px;
                     

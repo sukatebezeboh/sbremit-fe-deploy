@@ -46,9 +46,10 @@ const style = () => styled.div`
             top: -16px;
         }
     }
-    >div:last-child {
+    >div.right-opt {
         position: relative;
         width: 100%;
+        text-align: right;
         .notif{
             >img{
                 width: 30px;
@@ -66,6 +67,7 @@ const style = () => styled.div`
             }
         }
         .dropdown {
+            text-align: left;
             width: 460px;
             position: absolute;
             left: -296px;
@@ -215,7 +217,8 @@ const style = () => styled.div`
         grid-template-columns: 1fr 1fr;
         height: 60px;
         padding: 15px 3%;
-        >div:last-child {
+        
+        >div.right-opt {
             transform: scale(0.65, 0.65);
             top: -12px;
             .pic {
@@ -233,14 +236,126 @@ const style = () => styled.div`
                 top: -32px;
             }
         }
-        .name {
-            >span {
-                display: none;
-            }
+        .dropdown {
+            /* box-shadow: -100px 70000010px 1px 70000000px #aaaaaa80!important; */
+            z-index: +50;
         }
+
         .arrow-down {
             margin-left: -30px;
         }
+        grid-template-columns: 1fr 1.5fr!important;
+        /* .right-opt {
+            width: 200px;
+            all: unset;
+            div.profile-dropdown {
+                width: 410px;
+                text-align: left;
+                
+            }
+            .notif {
+                
+                all: unset;
+                background: green;
+                display: block !important;
+                div.dropdown.notif-dropdown {
+                    background: lightgrey;
+                    position: absolute;
+                    width: 275%;
+                    top: -20px;
+                    left: -140%;
+                    height: 155vh;
+                    border-radius: none;
+                    .notif-head {
+                        box-shadow: 0px 2px 4px #CCCCCC80;
+                        height: 92px;
+                        padding: 40px 20px;
+                    }
+                    :before{
+                        all:unset;
+                    }
+                }
+            }
+        } */
+
+        .desktop-hide.notif {
+            background: white;
+            position: fixed;
+            width: 100%;
+            height: 130vh;
+            padding-bottom: 30vh;
+            left: 0;
+            z-index: +2;
+            margin-top: -40px;
+            overflow-y: scroll;
+            .page-heading {
+                opacity: 1 !important;
+                .heading{
+                box-shadow: 0px 2px 4px #CCCCCC80;
+            }}
+            .unread {
+                    :before{
+                        content: '';
+                        width: 3px;
+                        height: 3px;
+                        border-radius: 50% ;
+                        background: #FCD20F;
+                        float: left;
+                        position: absolute;
+                        z-index: -1;
+                        margin-top: 22px;
+                        margin-left: -10px;
+                    }
+                }
+                .read{
+                    
+                }
+            .notif-body {
+                display: grid;
+                grid-template-columns: 1fr 5fr;
+                margin: 7px 15px;
+                border-bottom: 1px solid #f8f8f9;
+                height: 60px;
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                }
+                
+                div {
+                    div:first-child {
+                        font: normal normal normal 13px/24px Montserrat;
+                        color: #424242;
+                    }
+                    div:last-child {
+                        font: normal normal normal 11px/13px Montserrat;
+                        color: #A3A3A3;
+                    }
+                }
+                :nth-child(4), :nth-child(5) {
+                    /* opacity: 0.5; */
+                }
+                :last-child {
+                    /* border-bottom: none; */
+                }
+            }
+            hr {
+
+                border-top: 1px solid #f8f8f9;
+            }
+            .notif-more {
+                display: inline-block;
+                width: 100%;
+                padding: 20px;
+                text-align: center;
+                font: normal normal normal 12px/13px Montserrat;
+                color: #A3A3A3;
+                position: fixed;
+                bottom: 0px;
+                background: white;
+            }
+        }
+        
     }
     
 `

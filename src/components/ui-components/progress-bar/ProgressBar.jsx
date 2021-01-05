@@ -6,7 +6,7 @@ const Div = styled.div`
         .timeline {
             background: #007B5D 0% 0% no-repeat padding-box;
             box-shadow: 0px 2px 4px #CCCCCC80;
-            padding: 50px 100px;
+            padding: 50px 6%;
             margin-bottom: 50px;
             .bar {
                 height: 8px;
@@ -45,6 +45,36 @@ const Div = styled.div`
                 }
             }
         }
+@media only screen and (max-width: 900px) { 
+    margin-top: 60px;
+    .timeline {
+        margin-bottom: 0px;
+        .bar {
+            width: 100% ;
+            height: 4px;
+            .point {
+                height: 3px;
+                margin: 1px;
+            }
+            .point-1 {
+                width: 23px;
+            }
+        }
+        .point-labels {
+            width: 105%;
+            opacity: 0.8;
+            margin-top: 10px;
+            >div {
+                >div {
+                    font: normal normal normal 8px Montserrat!important;
+                }
+            }
+            .label-1 {
+                padding-left: 10%;
+            }
+        }
+    }
+}    
 
 `
 

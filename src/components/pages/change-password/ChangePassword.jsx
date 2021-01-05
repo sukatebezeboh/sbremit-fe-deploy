@@ -41,7 +41,7 @@ const ChangePassword = () => {
         <Body>
             <NavBar />
             <div className="page-content">
-                <PageHeading heading="Change Password" subheading="Update your password from your old one" back="/profile" />
+                <PageHeading heading="Change Password" subheading="Update your password from your old one" back="/profile" mobileHide="subheading" />
                 <div className="box">
                     <div>
                         <div className="content">Enter the new password you want to access your account with</div>
@@ -60,7 +60,7 @@ const ChangePassword = () => {
                             <input type={newPasswordType} placeholder="Create your password"/>
                             <img className="show-hide" onClick={handleNewPasswordClick} src={`./assets/icons/${pwNewIcon}.svg`} alt="show/hide"/>
                         </div>
-                        <div className="btn"><span>Cancel</span><button>Reset</button></div>
+                        <div className="btn"><span>Cancel</span><button>Save new password</button></div>
                     </div>
                     <div className="text">
                         <div>To protect your account the password must contain at least:</div>

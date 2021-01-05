@@ -4,12 +4,11 @@ import styled from "styled-components";
 const style = () => styled.div`
     .box {
         background: #ffffff;
-        /* height: 706px; */
         margin: 50px 0px;
         border-radius: 15px;
         box-shadow: 0px 10px 12px #CCCCCC80;
         padding: 30px 50px;
-        >div:first-child {
+        >div.up {
             display: grid;
             grid-template-columns: 3fr 2fr;
             div.left{
@@ -74,6 +73,74 @@ const style = () => styled.div`
                         font: normal normal normal 20px/44px Montserrat;
                         color: #424242;
                         width: 60%;
+                    }
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: 900px) { 
+        background: #FFFFFF;
+        padding: 1px 0px;
+        .box {
+            background: transparent;
+            padding: 0px;
+            box-shadow: none;
+            margin: 0;
+            >div.up{
+                grid-template-columns: 1fr;
+                div.left {
+                    grid-template-columns: 0fr 1fr;
+                    >img {
+                        width: 44px;
+                        height: 44px;
+                    }
+                    div{
+                        >div{
+                            :first-child {
+                                margin-top: 3px;
+                                font: normal normal normal 17px Montserrat;
+                                color: #000000;
+                            }
+                            :last-child {
+                                font: normal normal normal 13px/35px Montserrat;
+                            }
+                        }
+                        span.status{
+                            font: normal normal normal 8px Montserrat;
+                            padding: 3px 15px; 
+                            margin-top: 0px;
+                        }
+                    }
+                    
+                }
+                div.right {
+                    margin-top: -32px;
+                    span  {
+                        font: normal normal normal 10px/28px Montserrat;
+                        margin-left: 20px;
+                        img{
+                            width: 9px;
+                            height: 10px;
+                            margin-right: 7px;
+                        }
+                        color: #A3A3A3;
+                    }
+                }
+            }
+            >div.down {
+                grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) ;
+                .detail-grp {
+                    margin: 15px 0px;
+                    word-break: break-word;
+                    div {
+                        :first-child{
+                            font: normal normal normal 10px Montserrat;
+                        }
+                        :last-child {
+                            font: normal normal normal 13px/30px Montserrat;
+                            width: 100% ;
+                        }
                     }
                 }
             }

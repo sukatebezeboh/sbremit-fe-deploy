@@ -87,6 +87,86 @@ const style = () => styled.div`
             }
         }
     }
+    
+@media only screen and (max-width: 900px) { 
+    background: #FFFFFF;
+    padding: 1px 0px;
+    min-height: 100vh;
+    .box{
+        box-shadow: none;
+        grid-template-columns: 1fr;
+        margin: 0px;
+        padding: 0px;
+        .content {
+            font: normal normal normal 13px/20px Montserrat;
+            margin-bottom: 195px;
+        }
+        .form {
+            margin-top: 15px;
+            width: 100%;
+            margin-bottom: -20px;
+            .name, input {
+                font: normal normal normal 10px/13px Montserrat;
+                ::placeholder{
+                    font: normal normal normal 10px/13px Montserrat;
+                }
+            }
+            input{
+                height: 30px;
+                border: 1px solid #7FBCAD;
+                width: 100%;
+            }
+        }
+        .btn {
+            margin-top: 0px;
+            width: 100% ;
+            button {
+                margin-top: 30px;
+                height: 40px;
+                width: 100% ;
+                font: normal normal normal 13px/16px Montserrat;
+            }
+            span {
+                width: 100%;
+                text-align: center;
+                margin: 0px;
+                position: relative;
+                top: 110px;
+                font: normal normal normal 13px/16px Montserrat;
+            }
+        }
+        .footer {
+            margin-top: 60px;
+            font: normal normal normal 11px/12px Montserrat;
+            span {
+                font: normal normal normal 11px/12px Montserrat;
+            }
+        }
+        .text {
+            font: normal normal normal 13px/20px Montserrat;
+            border: none;
+            height: 220px;
+            position: absolute;
+            top: 120px;
+            left: -5%;
+            div {
+                width: 100%;
+            }
+            ul{
+                margin-top: 15px;
+                li{
+                    margin-top: 0px;
+                    ::before{
+                        width: 5px;
+                        height: 5px;
+                        margin-right: 5%; 
+                        margin-left: -46px;
+                    }
+                }
+            }
+        }
+    }
+}
 `
 
 export default style;

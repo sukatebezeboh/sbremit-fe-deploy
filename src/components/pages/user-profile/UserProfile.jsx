@@ -2,8 +2,8 @@ import React from 'react'
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import {asset} from '../../../util/util';
-import style from './UserProfile.css'
 import { Link } from 'react-router-dom';
+import style from './UserProfile.css'
 
 const Body = style();
 
@@ -12,7 +12,7 @@ const UserProfile = () => {
         <Body>
             <NavBar />
             <div className="page-content">
-                <PageHeading heading="My Profile" subheading="View my personal and account information"/>
+                <PageHeading heading="My Profile" subheading="View my personal and account information" mobileHide="subheading" />
 
                 <div className="box">
                     <div className="up">
