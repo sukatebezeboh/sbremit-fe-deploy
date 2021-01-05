@@ -54,6 +54,10 @@ body::-webkit-scrollbar {
     background: #ffffff!important;
 }
 
+.desktop-hide {
+    display: none; 
+}
+
 @media only screen and (max-width: 780px) { 
     .show-hide{
         top: -25px;
@@ -92,5 +96,8 @@ a {
     }
     .mobile-hide {
         display: none!important;
+    }
+    .desktop-hide {
+        display: inline-block;
     }
 }

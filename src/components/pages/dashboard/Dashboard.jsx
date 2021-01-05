@@ -20,7 +20,7 @@ const Dashboard = () => {
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
-                    <div className="round-plus">
+                    <div className="round-plus desktop-hide">
                         +
                     </div>
                 </Link>
@@ -52,7 +52,7 @@ const Dashboard = () => {
                             <div>20 Nov 2020</div>
                             <div className="name">To <b>Ifepade Adewunmi</b></div>
                         </div>
-                        <div><span>Pending</span></div>
+                        <div className="status"><span>Pending</span></div>
                         <div>
                             <div>51,585.92 NGN</div>
                             <div className="amt-gbp">100 GBP</div>

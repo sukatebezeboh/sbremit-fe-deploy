@@ -2,11 +2,12 @@ import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import style from './NavBar.css';
+import PageHeading from './../page-heading/PageHeading'
 
 const Bar = style();
 
 const NavBar = () => {
-    const notifs = [{name: 'foo'}, {name: 'bar'}, {name: 'doe'}, {}, {}];
+    const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
     const [showNotifDropdown, setShowNotifDropdown] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
 
@@ -19,6 +20,18 @@ const NavBar = () => {
             setShowNotifDropdown(false);
             setShowProfileDropdown(prev=>!prev);
         }
+    }
+
+    const notifList = (notifs) => {
+        return notifs.map(notif => (
+            <div className={`notif-body ${notif.read ? 'read' : 'unread'}`}>
+                <img src="./assets/images/noimage.png" alt="pic"/>
+                <div>
+                    <div>You transferred £150.00 to <b>David Lee</b></div>
+                    <div>4 min ago</div>
+                </div>
+            </div>
+        ))
     }
 
     return (
@@ -42,15 +55,7 @@ const NavBar = () => {
                          <div className="notif-head">Notifications</div>
                          <hr/>
                         <div>
-                            {notifs.map(notif => (
-                                <div className="notif-body">
-                                    <img src="./assets/images/noimage.png" alt="pic"/>
-                                    <div>
-                                        <div>You transferred £150.00 to <b>David Lee</b></div>
-                                        <div>4 min ago</div>
-                                    </div>
-                                </div>
-                            ))}
+                            {notifList(notifs)}
                          </div>
                          <hr/>
                          <div className="notif-more">View all notifications </div>
@@ -90,6 +95,23 @@ const NavBar = () => {
                 <span className="arrow-down">
                     <img src="./assets/icons/angle-down.svg" alt="arrow down" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
+            </div>
+
+            {/* MOBILE NOTIF */}
+            <div className={`desktop-hide notif ${showNotifDropdown || 'mobile-hide'}`}>
+                    <PageHeading heading="Notification" callBack={()=>setShowNotifDropdown(false)} back="#" mobileHide="subheading" className="pgheading"/>
+                        <div>
+                            {
+                                notifList(notifs)
+                            }
+                            {
+                                notifList(notifs)
+                            }
+                            {
+                                notifList(notifs)
+                            }
+                         </div>
+                    <div className="notif-more">You have viewed all notifications</div>
             </div>
         </Bar>
     )

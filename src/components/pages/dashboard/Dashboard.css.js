@@ -206,7 +206,7 @@ const style = () => styled.div`
                 position: fixed;
                 bottom: 50px;
                 right: 20px;
-                z-index: 2;
+                z-index: 1;
             }
             >.heading {
                 font-size: 18px;
@@ -257,8 +257,13 @@ const style = () => styled.div`
                 .up {
                     grid-template-columns: 0.7fr 3fr 0fr 2fr;
                     grid-template-rows: 2fr 2fr;
+                    z-index: 0;
+                    .status{
+                            position: relative;
+                        }
                     div{
-                        position: relative;
+                        
+                        z-index: 0;
                         div, span {
                             font: normal normal normal 10px/10px Montserrat!important;
                         }
