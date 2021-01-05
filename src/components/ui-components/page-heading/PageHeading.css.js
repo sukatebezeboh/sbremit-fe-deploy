@@ -38,6 +38,7 @@ const style = (back) => styled.div`
                 color: #424242;
                 padding: 22px;
                 padding-left: 38px;
+                box-shadow: 0px 2px 4px #CCCCCC80;
             }
             >.subheading {
                 font-size: 14px;

@@ -12,15 +12,16 @@ const Body = style();
 const Dashboard = () => {
     const transactions = [{},{},{},{},{},{},{},{},{},{}];
     const [openTDModal, handleOpenTDModal] = useState(false);
+    const [showPlus, handleShowPlus] = useState(true);
 
     return (
         <Body>
             <NavBar />
-            <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} />
+            <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
-                    <div className="round-plus desktop-hide">
+                    <div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`}>
                         +
                     </div>
                 </Link>
