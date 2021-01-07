@@ -16,14 +16,14 @@ const Body = styled.div`
         }
         hr {
             border: 1px solid #f8f7f8;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
 
         .form {
             
         }
         .part{
-                background: #FFFFFF 0% 0% no-repeat padding-box;
+                background: #FFFFFF;
                 box-shadow: 0px 10px 12px #CCCCCC80;
                 border-radius: 15px;
                 width: 100%;
@@ -46,7 +46,49 @@ const Body = styled.div`
                     margin-top: 50px;
                     margin: 30px auto;
                     width: 100%;
-  
+                    .radio-span {
+                        input[type=radio] {
+                            width: 19px;
+                            :before {
+                                width: 19px;
+                                height: 19px;
+                                border-radius: 15px;
+                                top: 30%;
+                                left: -5%;
+                                position: relative;
+                                background-color: white;
+                                content: '';
+                                display: inline-block;
+                                visibility: visible;
+                                border: 1px solid #FCD20F;
+                                pointer-events: none;
+                                @media only screen and (max-width: 900px) { 
+                                    top: 15%;
+                                }
+                            }
+                            :checked{
+                                :after {
+                                    width: 11px;
+                                    height: 11px;
+                                    border-radius: 15px;
+                                    top: -57%;
+                                    left: 15%;
+                                    position: relative;
+                                    background-color: #FCD20F;
+                                    content: '';
+                                    display: inline-block;
+                                    visibility: visible;
+                                    border: 1px double #FCD20F;
+                                    z-index: 1;
+                                    pointer-events: none;
+                                }
+                            }
+                        }
+                        
+                        .radio-txt {
+                            padding: 17px 5px;
+                        }
+                    }
                     input, select{
                         margin-bottom: 5px;
                         width: 100%;
@@ -68,7 +110,7 @@ const Body = styled.div`
                         background: transparent;
                         background-image: url("data:image/svg+xml;utf8,<svg fill='rgb(127, 188, 173)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
                         background-repeat: no-repeat;
-                        background-position-x: 10%;
+                        background-position-x: 15%;
                         background-position-y: 10px;
                         padding: 0px;
                         padding-left: 75px;
@@ -76,20 +118,20 @@ const Body = styled.div`
                     input.phone-no {
                         position: relative;
                         top: 51px;
-                        width: 85%;
+                        width: 79%;
                         height: 44px;
-                        margin-left: 14%;
+                        margin-left: 20%;
                         border: 2px solid transparent;
-                        background: white;
+                        background: #fff;
                     }
                     div.mobile-head {
                         margin-bottom: -44px;
                     }
                     .dob {
+                        margin-top: 6px;
                         input {
                             padding: 9px;
                         }
-                        
                     }
                     select+img{
                         position: relative;
@@ -131,7 +173,6 @@ const Body = styled.div`
             }
         }
         .transfer-details {
-            /* max-height: 500px; */
             .row {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -168,9 +209,114 @@ const Body = styled.div`
                 border: none;
                 outline: none;
             }
-    }
+        }
 
     }
+@media only screen and (max-width: 900px) { 
+    .page-content {
+        background: #fff;
+        width: 100%;
+        height: 100vh;
+        margin-top: -10px;
+        padding-top: 10px;
+        .page-heading {
+            margin-top: 10px;
+            .heading {
+                z-index: 1;
+            }
+        }
+        .box-container {
+            grid-template-columns: 1fr;
+            padding-top: 0px;
+            margin-top: 10px;
+            .part {
+                padding: 20px;
+                box-shadow: none;
+                .inputs {
+                    margin-top: -10px;
+                    >div {
+                        grid-template-columns: 1fr;
+                    }
+                    input{
+                        padding: 10px 20px;
+                    }
+                    input, select{
+                        height: 30px!important;
+                        font: normal normal normal 14px/18px Montserrat;
+                    }
+                    input.phone-no {
+                        top: 32px;
+                        height: 25px!important;
+                        margin-left: 15%;
+                        width: 85%;
+                        padding-left: 5px;
+                    }
+                    select{
+                        padding: 10px 50%;
+                        background-position-y: 3px;
+                        background-position-x: 10%;
+                    }
+                    .mobile-head {
+                        margin-bottom: -31px;
+                    }
+                    select+img{
+                        top: -29px;
+                        left: 10px;
+                    }
+                    >div{
+                        margin-top: 15px;
+                        >div{
+                            font: normal normal normal 10px/13px Montserrat;
+                            line-height: 19px;
+                        }
+                        .show-hide{
+                            top: -25px;
+                            left: 90%;
+                        }
+                        
+                    }
+                    div.email{
+                         margin-bottom: 20px;
+                    }
+                    >button{
+                        margin-top: 25px;
+                        height: 40px;
+                        font: normal normal normal 13px/16px Montserrat;
+                    }
+                    .radio-txt {
+                        padding: 10px 5px;
+                        font: normal normal normal 14px/19px Montserrat;
+                    }
+                }
+            }
+        }
+        .btns {
+            margin-top: -30px;
+            padding: 0px 5%;
+            button {
+                width: 100%;
+                height: 40px;
+                font: normal normal normal 13px/16px Montserrat;
+            }
+            span {
+                font: normal normal normal 13px/16px Montserrat;
+                text-align: center;
+                display: block;
+                margin-right: 0px;
+                position: relative;
+                top: 70px;
+            }
+        }
+
+        .m-grid-col-1-1-1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .m-grid-col-span-1-4 {
+            grid-column: 1/4;
+        }
+    }
+}
 `
 
 const Verification = () => {
@@ -184,13 +330,13 @@ const Verification = () => {
                 <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
                 <div className="box-container">
                     <div className="form part">
-                            <div className="heading">
+                            <div className="heading mobile-hide">
                                 <div className="title">My personal details</div>
                             </div>
-                            <hr/>
+                            <hr className="mobile-hide"/>
 
                         <div className="inputs">
-                            <div>
+                            <div className="names">
                                 <div>
                                     <div>First Name<i>*</i></div>
                                     <input type="text" placeholder="John" />
@@ -220,6 +366,25 @@ const Verification = () => {
                                 </div>
                             </div>
                             <div>
+                                <div>Gender<i>*</i></div>
+                                <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
+                                    <span className="grid-col-0-1 radio-span">
+                                        <input type="radio" name="gender" value="Male" />
+                                        <span className="radio-txt">Male</span>
+                                    </span>
+                                    <span className="grid-col-0-1 radio-span">
+                                        <input type="radio" name="gender" value="Fenale" />
+                                        <span className="radio-txt">Female</span>
+                                    </span>
+                                    <span className="grid-col-0-1 radio-span">
+                                        <input type="radio" name="gender" value="Other" />
+                                        <span className="radio-txt">Other</span>
+                                    </span>
+                                    <span className="m-grid-col-span-1-4"> <input className="specify" placeholder="Please specify" /> </span>
+                                </div>
+                                
+                            </div>
+                            <div>
                                 <div>Address line 1<i>*</i></div>
                                 <input type="text" placeholder="Street name and no." />
                             </div>
@@ -233,18 +398,18 @@ const Verification = () => {
                             </div>
                             <div>
                                 <div>State</div>
-                                <input type="text" placeholder="Apartment, suite, unit, building, floor" />
+                                <input type="text" />
                             </div>
                             <div>
                                 <div>Postal / zip code</div>
-                                <input type="text" placeholder="Apartment, suite, unit, building, floor" />
+                                <input type="text" />
                             </div>
 
 
                         </div>
 
                     </div>
-                    <div>
+                    <div className="mobile-hide">
                         <div className="transfer-details part">
                                 <div className="heading">
                                     <div className="title">Transfer Details</div>
@@ -273,7 +438,7 @@ const Verification = () => {
                                 </div>
                                 <div className="row">
                                     <div className="left">Total to pay</div>
-                                    <div className="right"><b className="green">100.95 GBP</b></div>
+                                    <div className="right"><b className="green-txt">100.95 GBP</b></div>
                                 </div>
                                 <div className="row">
                                     <div className="left">Transfer time</div>

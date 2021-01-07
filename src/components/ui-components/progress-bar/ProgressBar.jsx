@@ -49,6 +49,7 @@ const Div = styled.div`
     margin-top: 60px;
     .timeline {
         margin-bottom: 0px;
+        padding: 20px 6%;
         .bar {
             width: 100% ;
             height: 4px;
