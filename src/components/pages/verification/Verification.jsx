@@ -71,7 +71,7 @@ const Body = styled.div`
                                     width: 11px;
                                     height: 11px;
                                     border-radius: 15px;
-                                    top: -57%;
+                                    top: -8px;
                                     left: 15%;
                                     position: relative;
                                     background-color: #FCD20F;
@@ -81,10 +81,12 @@ const Body = styled.div`
                                     border: 1px double #FCD20F;
                                     z-index: 1;
                                     pointer-events: none;
+                                    @media only screen and (max-width: 900px) { 
+                                        top: -57%;
+                                    }
                                 }
                             }
                         }
-                        
                         .radio-txt {
                             padding: 17px 5px;
                         }
