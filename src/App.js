@@ -11,6 +11,7 @@ import UserProfile from './components/pages/user-profile/UserProfile';
 import ChangePassword from './components/pages/change-password/ChangePassword';
 import TransferMethod from './components/pages/transfer-method/TransferMethod';
 import GetQuote from './components/pages/get-quote/GetQuote';
+import Verification from './components/pages/verification/Verification';
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
       <Route path="/change-password" component={ChangePassword} exact/>
       <Route path="/transfer-method" component={TransferMethod} exact/>
       <Route path="/get-quote" component={GetQuote} exact/>
+      <Route path="/verification" component={Verification} exact/>
     </Switch>
     
   );

@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 // import { asset } from '../../../util/util';
 import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
-import style from './GetQuote.css'
+import style from './GetQuote.css';
+
 
 const Body = style();
 
@@ -13,6 +14,7 @@ const GetQuote = () => {
 
     const [toSend] = useState({value: 100, currency: 'gbp', isSend: true});
     const [toReceive] = useState({value: '70,036', currency: 'xaf'});
+    const history = useHistory(); 
 
     return (
         <Body>
@@ -49,7 +51,7 @@ const GetQuote = () => {
 
                     </div>
                 </div>
-                <div className="btns"><span>Cancel</span> <button>Continue</button> </div>
+                <div className="btns"><span>Cancel</span> <button onClick={()=>history.push('/verification')}>Continue</button> </div>
             </div>
         </Body>
     )
