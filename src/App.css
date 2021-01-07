@@ -83,6 +83,20 @@ a {
     padding: 30px 50px;
 }
 
+.grid-col-1-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid-col-1-2-1 {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.grid-gap-3 {
+    grid-column-gap: 9%;
+}
+
 @media only screen and (max-width: 1444px) { 
     div.page-content {
         width: 95%;
