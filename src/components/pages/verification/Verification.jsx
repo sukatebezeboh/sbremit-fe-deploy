@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
+import TransferDetalsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 
 const Body = styled.div`
@@ -172,21 +173,6 @@ const Body = styled.div`
                         display: grid;
                         grid-template-columns: 5fr 1fr 5fr;
                     }
-            }
-        }
-        .transfer-details {
-            .row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                margin: 5px 0px;
-                font: normal normal normal 16px/44px Montserrat;
-                .left {
-                    color: #A3A3A3;
-                }
-                .right {
-                    text-align: right;
-                    color: #424242;
-                }
             }
         }
 
@@ -411,45 +397,10 @@ const Verification = () => {
                         </div>
 
                     </div>
-                    <div className="mobile-hide">
-                        <div className="transfer-details part">
-                                <div className="heading">
-                                    <div className="title">Transfer Details</div>
-                                    <div className="update">Edit</div>
-                                </div>
-                                <hr/>
-                                <div className="row">
-                                    <div className="left">Transfer method</div>
-                                    <div className="right">Bank Transfer</div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">You send</div>
-                                    <div className="right"><b>100 GBP</b></div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">Exchange rate</div>
-                                    <div className="right">1 GBP = 70.36 XAF</div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">Service fee</div>
-                                    <div className="right">+0.95 GBP</div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">They get</div>
-                                    <div className="right"><b>70,036 XAF</b></div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">Total to pay</div>
-                                    <div className="right"><b className="green-txt">100.95 GBP</b></div>
-                                </div>
-                                <div className="row">
-                                    <div className="left">Transfer time</div>
-                                    <div className="right">within 2 hours</div>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button >Continue</button> </div>
+ 
+                    <TransferDetalsBox />
+                 </div>
+                <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button onClick={()=>history.push('/recipient')} >Continue</button> </div>
 
             </div>
         </Body>

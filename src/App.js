@@ -12,6 +12,7 @@ import ChangePassword from './components/pages/change-password/ChangePassword';
 import TransferMethod from './components/pages/transfer-method/TransferMethod';
 import GetQuote from './components/pages/get-quote/GetQuote';
 import Verification from './components/pages/verification/Verification';
+import Recipient from './components/pages/recipient/Recipient';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
       <Route path="/transfer-method" component={TransferMethod} exact/>
       <Route path="/get-quote" component={GetQuote} exact/>
       <Route path="/verification" component={Verification} exact/>
+      <Route path="/recipient" component={Recipient} exact/>
     </Switch>
     
   );
