@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
+import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
 import TransactionDetail from '../../ui-components/transaction-detail-modal/TransactionDetail';
 import style from './Dashboard.css';
 
@@ -21,9 +22,7 @@ const Dashboard = () => {
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
-                    <div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`}>
-                        +
-                    </div>
+                    <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
                 <div className="transactions">
                     <div> 
