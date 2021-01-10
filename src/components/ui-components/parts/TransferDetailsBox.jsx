@@ -41,7 +41,7 @@ const Div = styled.div`
 
 `
 
-const TransferDetalsBox = () => {
+const TransferDetailsBox = () => {
     return (
     <Div className="mobile-hide">
         <div className="transfer-details part">
@@ -84,4 +84,4 @@ const TransferDetalsBox = () => {
     )
 }
 
-export default TransferDetalsBox;
+export default TransferDetailsBox;
