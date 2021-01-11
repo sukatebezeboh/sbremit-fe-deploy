@@ -13,6 +13,7 @@ import TransferMethod from './components/pages/transfer-method/TransferMethod';
 import GetQuote from './components/pages/get-quote/GetQuote';
 import Verification from './components/pages/verification/Verification';
 import Recipient from './components/pages/recipient/Recipient';
+import RecipientDetails from './components/pages/recipient-details/RecipientDetails';
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
       <Route path="/get-quote" component={GetQuote} exact/>
       <Route path="/verification" component={Verification} exact/>
       <Route path="/recipient" component={Recipient} exact/>
+      <Route path="/recipient-details" component={RecipientDetails} exact/>
     </Switch>
     
   );

@@ -54,7 +54,7 @@ const Recipient = () => {
                     </div>
                     <TransferDetailsBox/>
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/verification')}>Back</span> <button onClick={()=>history.push('/recipient')}>Continue</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/verification')}>Back</span> <button onClick={()=>history.push('/recipient-details')}>Continue</button> </div>
             </div>
         </Body>
     )
