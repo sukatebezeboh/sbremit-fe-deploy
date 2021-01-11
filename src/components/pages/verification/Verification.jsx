@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetalsBox from '../../ui-components/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 
 const Body = styled.div`
@@ -398,7 +398,7 @@ const Verification = () => {
 
                     </div>
  
-                    <TransferDetalsBox />
+                    <TransferDetailsBox />
                  </div>
                 <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button onClick={()=>history.push('/recipient')} >Continue</button> </div>
 
