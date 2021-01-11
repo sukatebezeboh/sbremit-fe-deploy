@@ -113,10 +113,14 @@ const Body = styled.div`
                         background: transparent;
                         background-image: url("data:image/svg+xml;utf8,<svg fill='rgb(127, 188, 173)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
                         background-repeat: no-repeat;
-                        background-position-x: 15%;
+                        background-position-x: 95%;
                         background-position-y: 10px;
                         padding: 0px;
+                        padding-left: 25px;
+                    }
+                    .phone-select {
                         padding-left: 75px;
+                        background-position-x: 15%;
                     }
                     input.phone-no {
                         position: relative;
@@ -242,7 +246,7 @@ const Body = styled.div`
                         width: 85%;
                         padding-left: 5px;
                     }
-                    select{
+                    .phone-select{
                         padding: 10px 50%;
                         background-position-y: 3px;
                         background-position-x: 10%;
@@ -310,7 +314,7 @@ const Body = styled.div`
 }
 `
 
-const Verification = () => {
+const RecipientDetails = () => {
     const history = useHistory();
 
     return (
@@ -318,11 +322,11 @@ const Verification = () => {
             <NavBar />
             <ProgressBar />
             <div className="page-content">
-                <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
+                <PageHeading heading="Recipient's Details" subheading="Details of the person you are sending money to" back="/recipient" />
                 <div className="box-container">
                     <div className="form part">
                             <div className="heading mobile-hide">
-                                <div className="title">My personal details</div>
+                                <div className="title">Sending to <span>Ifepade Adewunmi</span></div>
                             </div>
                             <hr className="mobile-hide"/>
 
@@ -342,41 +346,18 @@ const Verification = () => {
                                 <div>
                                     <div className="mobile-head">Mobile<i>*</i></div>
                                     <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                                    <select name="" id="" >
+                                    <select name="" id="" className="phone-select" >
                                         <option value="">United Kingdom</option>
                                     </select>
                                     <img src="./assets/flags/gbp.png" alt="uk"/>
                                 </div>
                                 <div>
-                                <div>Date of birth<i>*</i></div>
-                                    <div className="grid-col-1-2-1 grid-gap-3 dob">                              
-                                        <div><input type="text" placeholder="Day"/></div>
-                                        <div><input type="text" placeholder="Month"/></div>
-                                        <div><input type="text" placeholder="Year"/></div>
-                                    </div>
+                                    <div>Email<i>*</i></div>
+                                    <input type="text" placeholder="johndoe@email.com"/>
                                 </div>
                             </div>
                             <div>
-                                <div>Gender<i>*</i></div>
-                                <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Male" />
-                                        <span className="radio-txt">Male</span>
-                                    </span>
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Fenale" />
-                                        <span className="radio-txt">Female</span>
-                                    </span>
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Other" />
-                                        <span className="radio-txt">Other</span>
-                                    </span>
-                                    <span className="m-grid-col-span-1-4"> <input className="specify" placeholder="Please specify" /> </span>
-                                </div>
-                                
-                            </div>
-                            <div>
-                                <div>Address line 1<i>*</i></div>
+                                <div>Address line 1</div>
                                 <input type="text" placeholder="Street name and no." />
                             </div>
                             <div>
@@ -384,18 +365,37 @@ const Verification = () => {
                                 <input type="text" placeholder="Apartment, suite, unit, building, floor" />
                             </div>
                             <div>
-                                <div>City / Town</div>
+                                <div>City / Town </div>
                                 <input type="text" />
                             </div>
                             <div>
-                                <div>State</div>
+                                <div>State <i>*</i></div>
                                 <input type="text" />
                             </div>
                             <div>
                                 <div>Postal / zip code</div>
                                 <input type="text" />
                             </div>
-
+                            <div>
+                                <div>Recipient’s bank name <i>*</i></div>
+                                <input type="text" placeholder="UBA - United Bank for Africa" />
+                            </div>
+                            <div className="grid-col-1-1 grid-gap-3">
+                                <div>
+                                    <div>Account number<i>*</i></div>
+                                    <input type="text" placeholder="3450012398" />
+                                </div>
+                                <div>
+                                    <div>Branch name<i>*</i></div>
+                                    <input type="text" placeholder="Yaounde"/>
+                                </div>
+                            </div>
+                            <div>
+                                <div>Reason</div>
+                                <select name="" id="">
+                                    <option value="family support">Family support</option>
+                                </select>
+                            </div>
 
                         </div>
 
@@ -403,11 +403,11 @@ const Verification = () => {
  
                     <TransferDetailsBox />
                  </div>
-                <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button onClick={()=>history.push('/recipient')} >Continue</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/recipient')}>Back</span> <button onClick={()=>history.push('/recipient-details')} >Continue</button> </div>
 
             </div>
         </Body>
     )
 }
 
-export default Verification;
+export default RecipientDetails;
