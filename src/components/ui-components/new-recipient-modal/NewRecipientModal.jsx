@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import PageHeading from '../page-heading/PageHeading';
 
 const Div = styled.div`
     .overlay {
@@ -148,17 +149,108 @@ const Div = styled.div`
             }
         }
     }
+@media only screen and (max-width: 900px) { 
+    padding:0px;
+    .overlay {
+        background: #fff;
+    }
+    .mobile-modal {
+        .page-heading {
+            
+            .heading {
+                z-index: 2;
+            }
+            
+        }
+    }
+    .modal {
+        width: 100%;
+        left: 0%;
+        top: 50px;
+        padding: 0px;
+        box-shadow: none;
+        .form {
+            grid-template-columns: 1fr;
+            grid-gap: 0px;
+            width: 90%;
+            >div {
+                margin-top: 15px;
+                div {
+                    font: normal normal normal 10px/13px Montserrat;
+                }
+                input, select {
+                    height: 30px;
+                    border: 1px solid #7FBCAD;
+                    border-radius: 4px;
+                    padding: 0px 15px;
+                    ::placeholder {
+                        font: normal normal normal 13px/16px Montserrat;
+                    }
+                }
+                div.margin-adjust {
+                    margin-bottom: -25px;
+                }
+                input.phone-no {
+                        top: 32px;
+                        height: 25px!important;
+                        margin-left: 15%;
+                        width: 85%;
+                        padding-left: 5px;
+                        border: 1px solid transparent;
+                        padding: 0px 5px;
+                    }
+                    select {
+                        background-position-y: 3px;
+                    }
+                    select.phone{
+                        padding: 10px 50%;
+                        background-position-y: 3px;
+                        background-position-x: 10%;
+                    }
+                    .mobile-head {
+                        margin-bottom: -31px;
+                    }
+                    select+img{
+                        top: -29px;
+                        left: 10px;
+                    }
+            }
+        }
+        .modal-btns {
+            margin: 20px 0px;
+            padding: 0px 5%;
+            width: 100%;
+            button {
+                width: 100%;
+                height: 40px;
+                font: normal normal normal 13px/16px Montserrat;
+                border-radius: 6px;
+            }
+            span {
+                font: normal normal normal 13px/16px Montserrat;
+                text-align: center;
+                display: block;
+                margin-right: 0px;
+                position: relative;
+                top: 70px;
+            }
+        }
+    }
+}
+
 `
 
-function NewRecipientModal() {
+function NewRecipientModal(props) {
+    const {modalOpen, openModal} = props;
+
     return (
-        <Div>
+        modalOpen && <Div>
             <div className="overlay">
             </div>
             <div className="modal">
-                <div className="head">
+                <div className="head mobile-hide">
                     <div className="t-id">Add a new recipient</div>
-                    <div className="close" onClick="" >x</div>
+                    <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 <div className="form grid-col-1-1 grid-gap-3">
                         <div>
@@ -201,8 +293,14 @@ function NewRecipientModal() {
                             <input type="text" placeholder="e.g. 3450012398" />
                         </div>
                 </div>
-                <div className="modal-btns"><span onClick="">Cancel</span> <button onClick="">Add</button> </div>
+                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <button onClick="">Add</button> </div>
             </div>
+
+             {/* MOBILE NR MODAL */}
+             <div className="desktop-hide mobile-modal">
+                <PageHeading heading="Add a new recipient" back="#" callBack={()=>openModal(false)} />
+            </div>
+           
         </Div>
     )
 }

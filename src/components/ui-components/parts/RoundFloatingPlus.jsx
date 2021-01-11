@@ -24,9 +24,9 @@ const Div = styled.div`
 `
 
 const RoundFloatingPlus = (props) => {
-    const {showPlus} = props;
+    const {showPlus, callBack} = props;
     return (
-        <Div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`}>
+        <Div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`} onClick={callBack}>
             +
         </Div>
     )

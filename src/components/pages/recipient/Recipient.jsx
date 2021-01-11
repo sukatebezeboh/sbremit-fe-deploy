@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useHistory } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -13,22 +13,23 @@ const Recipient = () => {
     const history = useHistory();
     const users = [
         {},{},{},{},{}
-    ]
+    ];
+    const [openNRModal, setOpenNRModal] = useState(false)
 
     return (
         <Body>
             <NavBar />
             <ProgressBar />
-            <NewRecipientModal />
+            <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} />
             <div className="page-content">
                 <div className="search">
                     <div><input type="text" placeholder="Search recipients"/> <button className=""> <img src={asset("icons", "search.svg")} alt="search"/> </button> </div>
                 </div>
-                <div>
+                <div className={openNRModal && "mobile-hide"}>
                     <PageHeading heading="Recipient" subheading="Who are you sending money to?" back="/verification" />
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
-                <RoundFloatingPlus showPlus={true} />
+                <RoundFloatingPlus showPlus={!openNRModal} callBack={()=>setOpenNRModal(true)} />
                 <div className="box-container">
                     <div className="right part">
                             <div className="heading mobile-hide">
@@ -36,7 +37,7 @@ const Recipient = () => {
                             </div>
                             <hr className="mobile-hide"/>
                             <div className="small-boxes">
-                                <div className="recipient plus mobile-hide">
+                                <div className="recipient plus mobile-hide" onClick={()=>setOpenNRModal(true)}>
                                     <img src={asset("icons", "add.svg")} alt="plus"/>
                                     <span>New recipient</span>
                                 </div>
