@@ -55,7 +55,7 @@ body::-webkit-scrollbar {
 }
 
 .desktop-hide {
-    display: none; 
+    display: none!important; 
 }
 
 @media only screen and (max-width: 780px) { 

@@ -39,11 +39,37 @@ const Div = styled.div`
         }
     }
 
+    @media only screen and (max-width: 900px) { 
+                grid-template-columns: 1fr;
+                grid-gap: 15px;
+                width: 100%;
+                >div {
+                    padding: 15px 20px;
+                    .heading {
+                        .title {
+                            font: normal normal normal 13px/16px Montserrat;
+                        }
+                        .update {
+                            font: normal normal normal 11px/14px Montserrat;
+                        }
+                    }
+                    .row {
+                        font: normal normal normal 11px/22px Montserrat;
+                    }
+                }
+                .recipient-details {
+                    margin-left: auto;
+
+                }
+                .transfer-details {
+
+                }
+            }
 `
 
 const TransferDetailsBox = () => {
     return (
-    <Div className="mobile-hide">
+    <Div className="">
         <div className="transfer-details part">
                 <div className="heading">
                     <div className="title">Transfer Details</div>
