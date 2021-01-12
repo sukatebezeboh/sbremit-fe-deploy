@@ -52,7 +52,9 @@ const Recipient = () => {
                             </div>
 
                     </div>
-                    <TransferDetailsBox/>
+                    <div className="mobile-hide">
+                        <TransferDetailsBox />
+                    </div>
                 </div>
                 <div className="btns"><span onClick={()=>history.push('/verification')}>Back</span> <button onClick={()=>history.push('/recipient-details')}>Continue</button> </div>
             </div>

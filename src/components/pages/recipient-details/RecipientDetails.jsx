@@ -403,7 +403,7 @@ const RecipientDetails = () => {
  
                     <TransferDetailsBox />
                  </div>
-                <div className="btns"><span onClick={()=>history.push('/recipient')}>Back</span> <button onClick={()=>history.push('/recipient-details')} >Continue</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/recipient')}>Back</span> <button onClick={()=>history.push('/review')} >Continue</button> </div>
 
             </div>
         </Body>

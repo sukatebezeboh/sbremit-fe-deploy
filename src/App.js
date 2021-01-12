@@ -14,6 +14,7 @@ import GetQuote from './components/pages/get-quote/GetQuote';
 import Verification from './components/pages/verification/Verification';
 import Recipient from './components/pages/recipient/Recipient';
 import RecipientDetails from './components/pages/recipient-details/RecipientDetails';
+import Review from './components/pages/review/Review';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
       <Route path="/verification" component={Verification} exact/>
       <Route path="/recipient" component={Recipient} exact/>
       <Route path="/recipient-details" component={RecipientDetails} exact/>
+      <Route path="/review" component={Review} exact/>
     </Switch>
     
   );
