@@ -39,7 +39,7 @@ export default styled.div`
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 .recipient {
-                    display: grid;
+                    display: grid!important;
                     grid-template-rows: 1fr 1fr;
                     border-radius: 8px;
                     width: 92%;
@@ -164,6 +164,9 @@ export default styled.div`
             }
             .small-boxes {
                 grid-template-columns: 1fr;
+                .recipient.plus.mobile-hide{
+                    display: none!important;
+                }
                 .recipient {
                     grid-template-columns: 0fr 7fr;
                     grid-template-rows: 1fr;

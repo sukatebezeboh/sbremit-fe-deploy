@@ -278,7 +278,7 @@ const style = () => styled.div`
             }
         } */
 
-        .desktop-hide.notif {
+        .desktop-hide .notif {
             background: white;
             position: fixed;
             width: 100%;

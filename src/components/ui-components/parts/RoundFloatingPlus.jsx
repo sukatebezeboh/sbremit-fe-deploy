@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Div = styled.div`
     @media only screen and (max-width: 900px) { 
         background:#007B5D;
-        display: inline-block;
+        display: inline-block!important;
         width: 55px;
         height: 50px;
         text-align: center;
@@ -26,7 +26,7 @@ const Div = styled.div`
 const RoundFloatingPlus = (props) => {
     const {showPlus, callBack} = props;
     return (
-        <Div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`} onClick={callBack}>
+        showPlus && <Div className={`round-plus desktop-hide ${showPlus ? '' : 'mobile-hide'}`} onClick={callBack}>
             +
         </Div>
     )
