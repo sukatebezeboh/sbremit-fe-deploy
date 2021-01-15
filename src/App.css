@@ -58,6 +58,10 @@ body::-webkit-scrollbar {
     display: none!important; 
 }
 
+.mobile-hide {
+    display: inline-block!important;
+}
+
 @media only screen and (max-width: 780px) { 
     .show-hide{
         top: -25px;
@@ -145,7 +149,7 @@ a {
         display: none!important;
     }
     .desktop-hide {
-        display: inline-block;
+        display: inline-block!important;
     }
     .m-grid-col-1-1-1 {
         display: grid;

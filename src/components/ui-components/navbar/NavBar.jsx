@@ -98,20 +98,22 @@ const NavBar = () => {
             </div>
 
             {/* MOBILE NOTIF */}
-            <div className={`desktop-hide notif ${showNotifDropdown || 'mobile-hide'}`}>
-                    <PageHeading heading="Notification" callBack={()=>setShowNotifDropdown(false)} back="#" mobileHide="subheading" className="pgheading"/>
-                        <div>
-                            {
-                                notifList(notifs)
-                            }
-                            {
-                                notifList(notifs)
-                            }
-                            {
-                                notifList(notifs)
-                            }
-                         </div>
-                    <div className="notif-more">You have viewed all notifications</div>
+            <div className='desktop-hide'>
+                <div className={` notif ${showNotifDropdown || 'mobile-hide'}`}>
+                        <PageHeading heading="Notification" callBack={()=>setShowNotifDropdown(false)} back="#" mobileHide="subheading" className="pgheading"/>
+                            <div>
+                                {
+                                    notifList(notifs)
+                                }
+                                {
+                                    notifList(notifs)
+                                }
+                                {
+                                    notifList(notifs)
+                                }
+                            </div>
+                        <div className="notif-more">You have viewed all notifications</div>
+                </div>
             </div>
         </Bar>
     )

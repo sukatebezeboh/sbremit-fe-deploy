@@ -208,9 +208,10 @@ const Body = styled.div`
     .page-content {
         background: #fff;
         width: 100%;
-        height: 100vh;
+        height: 150vh;
         margin-top: -10px;
         padding-top: 10px;
+        margin-bottom: 0px;
         .page-heading {
             margin-top: 10px;
             .heading {
@@ -400,8 +401,9 @@ const RecipientDetails = () => {
                         </div>
 
                     </div>
- 
-                    <TransferDetailsBox />
+                    <div className="mobile-hide">
+                        <TransferDetailsBox />
+                    </div>
                  </div>
                 <div className="btns"><span onClick={()=>history.push('/recipient')}>Back</span> <button onClick={()=>history.push('/review')} >Continue</button> </div>
 

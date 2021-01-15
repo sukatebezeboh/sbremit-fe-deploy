@@ -179,7 +179,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>history.push('/review')}>Continue</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>history.push('/payment-method')}>Confirm</button> </div>
             </div>
         </Body>
     )

@@ -15,6 +15,7 @@ import Verification from './components/pages/verification/Verification';
 import Recipient from './components/pages/recipient/Recipient';
 import RecipientDetails from './components/pages/recipient-details/RecipientDetails';
 import Review from './components/pages/review/Review';
+import PaymentMethod from './components/pages/payment-method/PaymentMethod';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
       <Route path="/recipient" component={Recipient} exact/>
       <Route path="/recipient-details" component={RecipientDetails} exact/>
       <Route path="/review" component={Review} exact/>
+      <Route path="/payment-method" component={PaymentMethod} exact/>
     </Switch>
     
   );
