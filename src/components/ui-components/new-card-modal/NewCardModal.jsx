@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components';
 import PageHeading from '../page-heading/PageHeading';
+import RadioButton from '../parts/RadioButton';
 
 const Div = styled.div`
     .overlay {
@@ -17,22 +18,22 @@ const Div = styled.div`
     .modal {
         box-shadow: 0px 10px 12px #CCCCCC80;
         border-radius: 15px;
-        width: 55%;
-        min-height: 661px;
+        width: 40%;
         background: #fff;
         margin: 0px auto;
-        padding: 60px 0px 30px;
+        padding: 60px 0px 0px;
         position: absolute;
         z-index:1;
-        top: 240px;
-        left: 22%;
+        top: 200px;
+        left: 27%;
         .head {
             border-bottom: 1px solid #F0F0F0;
-            display: grid!important;
+            display: grid;
             grid-template-columns: 3fr 4fr;
             width: 80%;
             margin: 0px auto;
             padding: 20px 0px;
+
             .t-id {
                 font: normal normal normal 20px/24px Montserrat;
                 color: #A3A3A3;
@@ -62,15 +63,19 @@ const Div = styled.div`
                     width: 16px;
                     height: 16px;
                     position: relative;
-                    top: -33px;
-                    left: 90%;
+                    top: -35px;
+                    left: 84%;
                 }
                 >div{
                     font: normal normal normal 15px/19px Montserrat;
                     line-height: 19px;
                 }
+                
             }
-            input, select{
+            input[type=text], 
+            input[type=number], 
+            input[type=password], 
+            select{
                 margin-bottom: 5px;
                 width: 100%;
                 height: 48px;
@@ -125,6 +130,7 @@ const Div = styled.div`
             div.margin-adjust {
                 margin-bottom: -44px;
             }
+            
         }
         .modal-btns {
             text-align: right;
@@ -178,7 +184,17 @@ const Div = styled.div`
                 div {
                     font: normal normal normal 10px/13px Montserrat;
                 }
-                input, select {
+                .show-hide{
+                    width: 16px;
+                    height: 16px;
+                    position: relative;
+                    top: -28px;
+                    left: 90%;
+                }
+                input[type=text], 
+                input[type=number], 
+                input[type=password], 
+                select {
                     height: 30px;
                     border: 1px solid #7FBCAD;
                     border-radius: 4px;
@@ -215,6 +231,9 @@ const Div = styled.div`
                         left: 10px;
                     }
             }
+            .radio-span {
+
+            }
         }
         .modal-btns {
             margin: 20px 0px;
@@ -240,69 +259,68 @@ const Div = styled.div`
 
 `
 
-function NewRecipientModal(props) {
+function NewCardModal(props) {
     const {modalOpen, openModal} = props;
+
+    const [passwordType, setPasswordType] = useState('password');
+    const [pwIcon, setPwIcon] = useState('show');
+
+    const handlePasswordClick = () => {
+        setPasswordType(prevValue=>{
+           return prevValue === 'password' ? 'text' : 'password';
+        })
+        setPwIcon(prevValue=>{
+            return prevValue === 'show' ? 'hide' : 'show';
+        })
+    }
 
     return (
         modalOpen && <Div>
             <div className="overlay">
             </div>
             <div className="modal">
-                <div className="head mobile-hide">
-                    <div className="t-id">Add a new recipient</div>
-                    <div className="close" onClick={()=>openModal(false)} >x</div>
-                </div>
+                <div className="head mobile-grid-hide">
+                    <div className="t-id">Add a new card</div>
+                    </div>
                 <div className="form grid-col-1-1 grid-gap-3">
-                        <div>
-                            <div>First name<i>*</i></div>
-                            <input type="text" placeholder="John" />
+                        <div className="grid-span-1-3">
+                            <div>Card holder’s name<i>*</i></div>
+                            <input type="text" placeholder="Enter name as it appears on your card" />
                         </div>
-                        <div>
-                            <div>Last name<i>*</i></div>
-                            <input type="text" placeholder="Doe" />
+                        <div className="grid-span-1-3">
+                            <div>Card number<i>*</i></div>
+                            <input type="text" placeholder="Long 16-digit number on card" />
                         </div>
-                        <div>
-                            <div className="mobile-head">Mobile<i>*</i></div>
-                            <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                            <select name="" id="" className="phone" >
-                                <option value="">United Kingdom</option>
-                            </select>
-                            <img src="./assets/flags/gbp.png" alt="uk"/>
-                            <div className="margin-adjust"></div>
+                        <div className="m-grid-span-1-3">
+                            <div>Expiry date<i>*</i></div>
+                            <input type="text" placeholder="MM/YY" />
                         </div>
-                        <div>
-                            <div>Email<i>*</i></div>
-                            <input type="text" placeholder="Recipient’s email address" />
+                        <div className="m-grid-span-1-3">
+                            <div>CVV/CVC<i>*</i></div>
+                            <input type={passwordType} placeholder="3-digit code" />
+                            <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
                         </div>
-                        <div>
-                            <div>State<i>*</i></div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Reason</div>
-                            <select name="reason" id="reason">
-                                <option value="Select">Select</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div>Recipient's bank name</div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Account number</div>
-                            <input type="text" placeholder="e.g. 3450012398" />
-                        </div>
+                        
+                       <div className="grid-col-0-1 grid-gap-1 grid-span-1-3 ">
+                           <span>
+                                <RadioButton />
+                           </span>
+                           <span className="pt-5">
+                                Save this card for future payments
+                           </span>
+
+                       </div>
                 </div>
-                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <button onClick="">Add</button> </div>
+                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel payment</span> <button onClick="">Pay 100.95 GBP</button> </div>
             </div>
 
              {/* MOBILE NR MODAL */}
              <div className="desktop-hide mobile-modal">
-                <PageHeading heading="Add a new recipient" back="#" callBack={()=>openModal(false)} />
+                <PageHeading heading="Add a new card" back="#" callBack={()=>openModal(false)} />
             </div>
            
         </Div>
     )
 }
 
-export default NewRecipientModal
+export default NewCardModal

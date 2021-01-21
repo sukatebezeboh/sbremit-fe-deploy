@@ -8,6 +8,7 @@ import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
 import { asset } from '../../../util/util';
 import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
+import NewCardModal from '../../ui-components/new-card-modal/NewCardModal';
 
 
 const Body = styled.div`
@@ -292,6 +293,7 @@ const CardPayment = () => {
 
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
+    const [openModal, setOpenModal] = useState(true)
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -305,16 +307,15 @@ const CardPayment = () => {
     return (
         <Body>
             <NavBar />
-            <RoundFloatingPlus showPlus={true} />
-
+            <RoundFloatingPlus showPlus={true} callBack={()=>setOpenModal(true)} />
+            <NewCardModal modalOpen={openModal} openModal={setOpenModal} />
             <div className="page-content">
                 <div>
-                    <PageHeading heading="Select saved cards" subheading="Select the card you want to pay with or add a new card" back="/payment-method" />
-                    <div className="green-txt desktop-hide view-td">View transfer details</div>
+                { !openModal &&  <PageHeading heading="Select saved cards" subheading="Select the card you want to pay with or add a new card" back="/payment-method" />}                    <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 <div className="box-container details">
                     <div>
-                        <div className="radio-card green-bg mobile-hide">
+                        <div className="radio-card green-bg mobile-hide" onClick={()=>setOpenModal(true)}>
                             <div className="new-card">
                                 <img src={asset('icons', 'add.svg')} alt="add"/>
                                 <div>Add a new card</div>
