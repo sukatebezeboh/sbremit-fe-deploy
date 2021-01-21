@@ -239,7 +239,7 @@ const PaymentMethod = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push('/payment-method')}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push('/card-payment')}>Proceed to payment</button> </div>
             </div>
         </Body>
     )

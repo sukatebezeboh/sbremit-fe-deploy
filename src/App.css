@@ -30,6 +30,9 @@ body::-webkit-scrollbar {
     top: -33px;
     left: 90%;
 }
+.align-center {
+    text-align: center;
+}
 .red-txt {
     color: #CF0921!important;
 }
