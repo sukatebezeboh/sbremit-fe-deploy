@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -181,6 +181,7 @@ const Body = styled.div`
 
 const PaymentMethod = () => {
     const history = useHistory();
+    const [selected, setSelected] = useState('')
 
     return (
         <Body>
@@ -194,9 +195,9 @@ const PaymentMethod = () => {
                 <div className="box-container details">
                     <div>
                         
-                        <div className="radio-card">
+                        <div className="radio-card" onClick={()=>setSelected('dc_card')}>
                             <div className="radio-div">
-                                <RadioButton />
+                                <RadioButton selected={selected==='dc_card'}/>
                             </div>
                             <div>
                                 <div className="rc-head">Debit / Credit Card</div>
@@ -214,9 +215,9 @@ const PaymentMethod = () => {
                             </div>
                         </div>
 
-                        <div className="radio-card">
+                        <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
                             <div className="radio-div">
-                                <RadioButton />
+                                <RadioButton selected={selected==='bank_transfer'} />
                             </div>
                             <div>
                                 <div className="rc-head">Bank Transfer</div>
@@ -239,7 +240,7 @@ const PaymentMethod = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push('/card-payment')}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push(selected==='dc_card'? '/card-payment' : selected==='bank_transfer' ? '/create-transfer': '#')}>Proceed to payment</button> </div>
             </div>
         </Body>
     )

@@ -4,11 +4,6 @@ import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
-import RadioButton from '../../ui-components/parts/RadioButton';
-import { asset } from '../../../util/util';
-import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
-import NewCardModal from '../../ui-components/new-card-modal/NewCardModal';
-
 
 const Body = styled.div`
     .page-content {
@@ -215,19 +210,6 @@ const Body = styled.div`
 const CreateTransfer = () => {
     const history = useHistory();
 
-    const [passwordType, setPasswordType] = useState('password');
-    const [pwIcon, setPwIcon] = useState('show');
-    const [openModal, setOpenModal] = useState(false)
-
-    const handlePasswordClick = () => {
-        setPasswordType(prevValue=>{
-           return prevValue === 'password' ? 'number' : 'password';
-        })
-        setPwIcon(prevValue=>{
-            return prevValue === 'show' ? 'hide' : 'show';
-        })
-    }
-
     return (
         <Body>
             <NavBar />
@@ -276,10 +258,6 @@ const CreateTransfer = () => {
                             </div>
                             
                         </div>
-                        
-
-                        
-
                         <div className="green-txt cpm-text">Change payment method</div>
 
                     </div>
@@ -288,7 +266,7 @@ const CreateTransfer = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel payment</span> <button onClick={()=>history.push('/payment-method')}>I’ve sent 100.95 GBP</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/payment-method')}>Cancel payment</span> <button onClick={()=>history.push('/transfer-complete')}>I’ve sent 100.95 GBP</button> </div>
             </div>
         </Body>
     )

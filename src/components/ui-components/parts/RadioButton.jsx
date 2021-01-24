@@ -72,11 +72,12 @@ const Button = styled.div`
 }
 `
 
-function RadioButton() {
+function RadioButton(props) {
+    const {selected} = props;
     return (
         <Button>
             <span className="radio-span">
-                <input type="radio" name="gender" value="get_from_props" />
+                <input type="radio" name="gender" value="get_from_props" checked={selected} />
             </span>
         </Button>
     )

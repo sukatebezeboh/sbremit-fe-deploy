@@ -18,6 +18,7 @@ import Review from './components/pages/review/Review';
 import PaymentMethod from './components/pages/payment-method/PaymentMethod';
 import CardPayment from './components/pages/card-payment/CardPayment';
 import CreateTransfer from './components/pages/create-transfer/CreateTransfer';
+import TransferComplete from './components/pages/transfer-complete/TransferComplete';
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
       <Route path="/payment-method" component={PaymentMethod} exact/>
       <Route path="/card-payment" component={CardPayment} exact/>
       <Route path="/create-transfer" component={CreateTransfer} exact/>
+      <Route path="/transfer-complete" component={TransferComplete} exact/>
     </Switch>
     
   );
