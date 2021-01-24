@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
 import { asset } from '../../../util/util';
@@ -293,7 +292,7 @@ const CardPayment = () => {
 
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
-    const [openModal, setOpenModal] = useState(true)
+    const [openModal, setOpenModal] = useState(false)
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
