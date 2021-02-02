@@ -1,10 +1,14 @@
 import React, {useState, useCallback} from "react";
+import {useDispatch, useSelector} from 'react-redux';
 import { Link, useHistory } from "react-router-dom";
 import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
 import style from "../shared/auth.css";
 import {Formik, Form, Field} from 'formik';
 import { SignUpValidator } from "../../../util/form-validators";
 import { signUpAction } from "../../../redux/actions/actions";
+import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
+import { SIGN_UP, SUBMITTING } from "../../../redux/actionTypes";
+import Toast from "../../ui-components/toast/Toast";
 
 
 
@@ -14,6 +18,8 @@ const SignUp = () => {
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
     const history = useHistory();
+    const dispatch = useDispatch()
+    const submitting = useSelector((state: any) => state.submitting)
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -34,7 +40,6 @@ const SignUp = () => {
         mobile: ""
     }
 
-
     return (
         <Body>
             <div>
@@ -46,7 +51,8 @@ const SignUp = () => {
                         initialValues={{...initialValues}}
                         validationSchema={SignUpValidator}
                         onSubmit={values => {
-                            signUpAction(values)
+                            
+                            dispatch(signUpAction(values))
                         }}>
                         {
                             ({errors, touched, values}: any) => (
@@ -91,7 +97,7 @@ const SignUp = () => {
 
                                         </div>
 
-                                        <button type="submit">Sign up</button>
+                                        <button type="submit" className="grid-col-1-0" disabled={submitting === SIGN_UP}> <span> Sign up </span> { submitting === SIGN_UP && <ButtonLoader/>} </button>
                                     </div>
                                     <hr/>
                                     <div className="terms">By signing up you agree to our <span>Terms of Use</span> and <span>Privacy Policy.</span></div>

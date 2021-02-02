@@ -19,6 +19,7 @@ import PaymentMethod from './components/pages/payment-method/PaymentMethod';
 import CardPayment from './components/pages/card-payment/CardPayment';
 import CreateTransfer from './components/pages/create-transfer/CreateTransfer';
 import TransferComplete from './components/pages/transfer-complete/TransferComplete';
+import Toast from './components/ui-components/toast/Toast';
 
 
 function App() {
