@@ -7,3 +7,8 @@ export const SignUpValidator = Yup.object().shape({
     username: Yup.string().required("Required").email("Enter valid email"),
     password: Yup.string().min(8, "Minimum password length is 8 characters").max(20, "Max password length is 20 characters").required("Required")
 });
+
+export const SignInValidator = Yup.object().shape({
+    username: Yup.string().required("Required").email("Enter valid email"),
+    password: Yup.string().min(8, "Minimum password length is 8 characters").max(20, "Max password length is 20 characters").required("Required")
+});

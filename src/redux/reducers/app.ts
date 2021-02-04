@@ -1,13 +1,14 @@
-import { SUBMITTING } from "../actionTypes";
+import { IAction } from ".";
+import { SUBMITTING, TOAST, REDIRECT } from "../actionTypes";
 
-const initialState = "";
-
-interface IAction {
-  type: string,
-  payload: any
+const initialSubmittingState = "";
+const initialToastState = {
 }
+const initialRedirectState = {
+  to: "/sign-in"
+};
 
-export const submitting = (state: any = initialState, {type, payload}: IAction) => {
+export const submitting = (state: any = initialSubmittingState, {type, payload}: IAction) => {
     switch (type) {
         case SUBMITTING: {
           return payload
@@ -15,6 +16,25 @@ export const submitting = (state: any = initialState, {type, payload}: IAction) 
         default:
           return state;
       }
-//   return action.payload || state
 }
 
+export const toast = (state: any = initialToastState, {type, payload}: IAction) => {
+
+  switch (type) {
+      case TOAST: {
+        return  {...payload}
+      }
+      default:
+        return state;
+    }
+}
+
+export const redirect = (state: any = initialRedirectState, {type, payload}: IAction) => {
+  switch (type) {
+      case REDIRECT: {
+        return payload
+      }
+      default:
+        return state;
+    }
+}

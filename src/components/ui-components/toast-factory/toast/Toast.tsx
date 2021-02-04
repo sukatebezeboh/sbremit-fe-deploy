@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components';
-import { asset } from '../../../util/util';
 
 const Div = styled.div`
 .container{
@@ -91,19 +90,34 @@ const Div = styled.div`
         right: 20px;
     }
 }
-.animate {
+
+@keyframes slide_out {
+    0% {
+        right: 20px;
+    }
+    100% {
+        right: -500px;
+    }
+}
+.animate-in {
     display: grid;
     -webkit-animation: slide_in 0.8s ease forwards ;
     animation: slide_in 0.8s ease forwards;
-    animation: name duration timing-function delay iteration-count direction fill-mode;
 }
+.animate-out {
+    display: grid;
+    -webkit-animation: slide_out 0.8s ease forwards;
+    animation: slide_out 0.8s ease forwards;
+    /* animation-delay: 10s; */
+}
+
 
 `
 export default function Toast(props: any) {
     const {config} = props;
     return (
         <Div>
-            <div className={`container container-${config?.type || 'success'} animate`}>
+            <div className={`container container-${config?.type} ${config?.show ? 'animate-in': '' } ${((config?.show && config?.readyToClose) ? 'animate-out': '')}`}>
                 <div className="icon">
                 </div>
                 <div className="content">

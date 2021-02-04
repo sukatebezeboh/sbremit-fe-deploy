@@ -1,6 +1,7 @@
 import './App.css';
+import React from 'react';
 import LandingPage from './components/pages/landing-page/LandingPage'
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import SignUp from './components/pages/sign-up/SignUp';
 import SignIn from './components/pages/sign-in/SignIn';
 import AccountConfirmation from './components/email-templates/account-confirmation/AccountConfirmation';
@@ -19,41 +20,39 @@ import PaymentMethod from './components/pages/payment-method/PaymentMethod';
 import CardPayment from './components/pages/card-payment/CardPayment';
 import CreateTransfer from './components/pages/create-transfer/CreateTransfer';
 import TransferComplete from './components/pages/transfer-complete/TransferComplete';
-import Toast from './components/ui-components/toast/Toast';
 
 
 function App() {
   return (
-    <Switch>
-      <Route path="/en/" exact>
-        <LandingPage location="london"/>
-      </Route>
-      <Route path="/ca/" exact>
-        <LandingPage location="yaounde"/>
-      </Route>
-      <Route path="/" exact>
-        <LandingPage location="london"/>
-      </Route>
-      <Route path="/sign-up" component={SignUp} exact/>
-      <Route path="/sign-in" component={SignIn} exact/>
-      <Route path="/email/confirm-account" component={AccountConfirmation} exact />
-      <Route path="/email/password-reset" component={PasswordReset} exact/>
-      <Route path="/reset-password" component={ResetPassword} exact/>
-      <Route path="/dashboard" component={Dashboard} exact/>
-      <Route path="/profile" component={UserProfile} exact/>
-      <Route path="/change-password" component={ChangePassword} exact/>
-      <Route path="/transfer-method" component={TransferMethod} exact/>
-      <Route path="/get-quote" component={GetQuote} exact/>
-      <Route path="/verification" component={Verification} exact/>
-      <Route path="/recipient" component={Recipient} exact/>
-      <Route path="/recipient-details" component={RecipientDetails} exact/>
-      <Route path="/review" component={Review} exact/>
-      <Route path="/payment-method" component={PaymentMethod} exact/>
-      <Route path="/card-payment" component={CardPayment} exact/>
-      <Route path="/create-transfer" component={CreateTransfer} exact/>
-      <Route path="/transfer-complete" component={TransferComplete} exact/>
-    </Switch>
-    
+      <Switch>
+        <Route path="/en/" exact>
+          <LandingPage location="london"/>
+        </Route>
+        <Route path="/ca/" exact>
+          <LandingPage location="yaounde"/>
+        </Route>
+        <Route path="/" exact>
+          <LandingPage location="london"/>
+        </Route>
+        <Route path="/sign-up" component={SignUp} exact/>
+        <Route path="/sign-in" component={SignIn} exact/>
+        <Route path="/email/confirm-account" component={AccountConfirmation} exact />
+        <Route path="/email/password-reset" component={PasswordReset} exact/>
+        <Route path="/reset-password" component={ResetPassword} exact/>
+        <Route path="/dashboard" component={Dashboard} exact/>
+        <Route path="/profile" component={UserProfile} exact/>
+        <Route path="/change-password" component={ChangePassword} exact/>
+        <Route path="/transfer-method" component={TransferMethod} exact/>
+        <Route path="/get-quote" component={GetQuote} exact/>
+        <Route path="/verification" component={Verification} exact/>
+        <Route path="/recipient" component={Recipient} exact/>
+        <Route path="/recipient-details" component={RecipientDetails} exact/>
+        <Route path="/review" component={Review} exact/>
+        <Route path="/payment-method" component={PaymentMethod} exact/>
+        <Route path="/card-payment" component={CardPayment} exact/>
+        <Route path="/create-transfer" component={CreateTransfer} exact/>
+        <Route path="/transfer-complete" component={TransferComplete} exact/>
+      </Switch>
   );
 }
 

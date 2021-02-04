@@ -7,8 +7,8 @@ import {Formik, Form, Field} from 'formik';
 import { SignUpValidator } from "../../../util/form-validators";
 import { signUpAction } from "../../../redux/actions/actions";
 import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
-import { SIGN_UP, SUBMITTING } from "../../../redux/actionTypes";
-import Toast from "../../ui-components/toast/Toast";
+import { SIGN_UP, SUBMITTING, TOAST } from "../../../redux/actionTypes";
+import Toast from "../../ui-components/toast-factory/toast/Toast";
 
 
 

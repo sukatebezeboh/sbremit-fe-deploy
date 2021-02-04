@@ -6,13 +6,14 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import store from './redux/store';
 import { Provider } from 'react-redux';
-import Toast from './components/ui-components/toast/Toast';
+import ToastFactory from './components/ui-components/toast-factory/ToastFactory';
+
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <Toast config={{type: "success"}} /> 
+        <ToastFactory /> 
         <App />
       </Provider>
     </BrowserRouter>
