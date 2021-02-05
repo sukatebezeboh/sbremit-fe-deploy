@@ -79,9 +79,9 @@ const SignUp = () => {
                                             <div>Country of Residence<i>*</i></div>
                                             <Field as="select" name="location_country" id="">
                                                 <option value="UK">United Kingdom</option>
-                                                <option value="GB">Gambia</option>
+                                                <option value="CA">Cameroon</option>
                                             </Field>
-                                            <img src="./assets/flags/gbp.png" alt="uk"/>
+                                            <img src={`./assets/flags/${values.location_country}.png`} alt="uk"/>
                                             {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                         </div>
                                         <div className={(touched.username && errors.username) ? 'form-error': ''}>

@@ -1,3 +1,5 @@
-export default {
-    API_HOST: 'http://api-uat.sbremit.co.uk'
+const config  =  {
+    API_HOST: '/api'
 }
+
+export default config;

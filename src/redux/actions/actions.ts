@@ -1,11 +1,10 @@
+import axios from 'axios';
+
 import { SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
 import config from '../../env';
-import axios from 'axios';
 import endpoints from "../../util/endpoints";
 import store from './../store';
-import { routes } from "../../util/routes";
 
-const runningTimeouts: any[] = [];
 export const recieveSignUpAction = (data: any) => ({
     type: SIGN_UP,
     payload: {
@@ -25,8 +24,6 @@ export const signUpAction = (data: any) => {
                 title: "You're signed up!",
                 message: `We have sent a verification mail to ${res.data.data.username}.`
             })
-            // redirectAction({to: routes.SIGN_IN})
-            // clearRedirect()
         } else {
             toastAction({
                 show: true, 
@@ -76,6 +73,7 @@ export const signInAction = (data: any) => {
     })
 }
 
+const runningTimeouts: any[] = [];
 export const toastAction = (toastConfig: any) => {
     runningTimeouts.forEach(t=>{
         return clearTimeout(t);

@@ -10,7 +10,7 @@ const ToastFactory = () => {
 
    
     return (
-        (toastConfig.show ? <Toast config={toastConfig} /> : "")
+        (toastConfig.show ? <Toast config={toastConfig} /> : <span></span>)
     )
 }
 
