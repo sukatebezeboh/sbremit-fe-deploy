@@ -5,8 +5,8 @@ import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLanding
 import {style} from "./LandingPage.css";
 
 const LandingPage = (props) => {
-    const [toSend] = useState({value: 100, currency: 'gbp', isSend: true});
-    const [toReceive] = useState({value: '70,036', currency: 'xaf'});
+    const [toSend] = useState({value: 100, currency: 'gbp', image: 'UK', isSend: true});
+    const [toReceive] = useState({value: '70,036', currency: 'xaf', image: 'CA'});
     const bg = props.location ? `/assets/bg/${props.location}-bg.png` : null;
     const Body = style(bg);
 

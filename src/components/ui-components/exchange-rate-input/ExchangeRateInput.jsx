@@ -66,7 +66,7 @@ const ExchangeRateInput = (props) =>{
                     <input type="text" value={data.value}/>
                 </div>
                 <div className="flg-drp">
-                    <img src={`./assets/flags/${data.currency}.png`} alt={data.currency}/>
+                    <img src={`./assets/flags/${data.image}.png`} alt={data.currency}/>
                     <span>{data.currency}</span>
                     <span><img src="./assets/icons/angle-down.svg" alt=""/></span>
                 </div>
