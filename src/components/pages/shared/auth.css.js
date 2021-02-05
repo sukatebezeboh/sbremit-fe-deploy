@@ -117,6 +117,7 @@ const style = (page) => styled.div`
                     font: normal normal normal 16px/19px Montserrat;
                     color: #424242;
                     margin-top: 50px;
+                    align-items: center;
                 }
             }
             hr{
