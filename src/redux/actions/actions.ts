@@ -1,9 +1,12 @@
 import axios from 'axios';
 
-import { SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { AUTH, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
+import { CookieService } from '../../services/CookieService';
+import env from '../../env'
+import { paths } from '../../util/paths';
 
 export const recieveSignUpAction = (data: any) => ({
     type: SIGN_UP,
@@ -32,7 +35,6 @@ export const signUpAction = (data: any) => {
                 message: `${res.data.error.message}`
             })
         }
-        
     })
     .catch(err=>{
         console.log(err);
@@ -42,28 +44,39 @@ export const signUpAction = (data: any) => {
     })
 }
 
-
 export const signInAction = (data: any) => {       
     store.dispatch({type: SUBMITTING, payload: SIGN_IN})
-    axios.post(config.API_HOST + endpoints.SIGN_IN, {...data})
+    axios.post(config.API_HOST + endpoints.SIGN_IN, {...data}, {
+        headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'}
+    })
     .then((res: any)=> {
         if (res.data.status === "200"){
-            toastAction({
-                show: true, 
-                type: 'success',
-                timeout: 20000,
-                title: "Hi there!",
-                message: `You're welcome`
-            })
+            if(res.data.data.verified) {
+                toastAction({
+                    show: true, 
+                    type: 'success',
+                    timeout: 5000,
+                    message: `Welcome, ${res.data.data.profile.firstName}`
+                })
+                CookieService.put(env.SESSION_KEY, res.data.data.seed);
+                store.dispatch({type: AUTH, payload: {isAuthenticated: true}})
+            } else {
+                toastAction({
+                    show: true, 
+                    type: 'error',
+                    timeout: 20000,
+                    title: "Account not verified",
+                    message: `A verification link has been sent to ${res.data.data.username}`
+                })
+            }
         } else {
             toastAction({
                 show: true, 
                 type: 'error',
-                timeout: 20000,
+                timeout: 10000,
                 message: `${res.data.error.message}`
             })
         }
-        
     })
     .catch(err=>{
         console.log('sign in request error:', err);
