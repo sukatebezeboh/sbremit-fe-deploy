@@ -3,7 +3,7 @@ import dev from './dev';
 import production from './production'
 import common from './common';
 
-let _env = dev;
+let _env: any = dev;
 const env = (config: any) => {
     _env = {...config, ...common}
 }

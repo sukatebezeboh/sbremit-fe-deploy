@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import style from "../shared/auth.css";
 import ForgotPasswordModal from '../../ui-components/forgot-password-modal/ForgotPasswordModal';
 import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "../../../redux/actions/actions";
 import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
 import { SIGN_IN } from "../../../redux/actionTypes";
+import { paths } from "../../../util/paths";
 
 
 const Body = style('signin');
@@ -20,6 +21,7 @@ const SignIn = () => {
     const history = useHistory();
     const dispatch = useDispatch()
     const submitting = useSelector((state: any)=> state.submitting)
+    const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -39,6 +41,9 @@ const SignIn = () => {
     } 
 
     return (
+        isAuthenticated ? 
+        <Redirect to={paths.DASHBOARD} />
+        :
         <Body>
             <div>
             </div>
