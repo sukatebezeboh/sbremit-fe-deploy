@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-import { AUTH, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { APP_VALUES, AUTH, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
 import { CookieService } from '../../services/CookieService';
 import env from '../../env'
-import { paths } from '../../util/paths';
+import { AppService } from '../../services/AppService';
 
 export const recieveSignUpAction = (data: any) => ({
     type: SIGN_UP,
@@ -102,4 +102,15 @@ export const toastAction = (toastConfig: any) => {
 
     runningTimeouts.push(t_id_1)
     runningTimeouts.push(t_id_2)
+}
+
+
+export const appValuesAction = async() => {
+    const allValues = await AppService.getValues();
+    const countries = await AppService.getValueById(2);
+    const values: any = {}
+    values.values = allValues;
+    values.countries = countries.data;
+    store.dispatch({type: APP_VALUES, payload: values})
+    console.log(store.getState());
 }

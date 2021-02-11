@@ -4,3 +4,4 @@ export const SUBMITTING = "SUBMITTING";
 export const TOAST = "TOAST";
 export const REDIRECT = "REDIRECT";
 export const AUTH = "AUTH";
+export const APP_VALUES = "APP_VALUES"
