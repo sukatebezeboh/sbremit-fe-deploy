@@ -20,7 +20,8 @@ const SignUp = () => {
     const history = useHistory();
     const dispatch = useDispatch()
     const submitting = useSelector((state: any) => state.submitting)
-
+    const countries: any = useSelector((state: any) => state.appValues.countries)    
+    
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
            return prevValue === 'password' ? 'text' : 'password';
@@ -34,7 +35,7 @@ const SignUp = () => {
     const initialValues: any = {
         firstName:"",
         lastName: "",
-        location_country: "UK",
+        location_country: "AD",
         username: "",
         password: "",
         mobile: ""
@@ -77,11 +78,14 @@ const SignUp = () => {
                                         </div>
                                         <div className={(touched.location_country && errors.location_country) ? 'form-error': ''}>
                                             <div>Country of Residence<i>*</i></div>
-                                            <Field as="select" name="location_country" id="">
-                                                <option value="UK">United Kingdom</option>
-                                                <option value="CA">Cameroon</option>
+                                            <Field as="select" name="location_country" id="" >
+                                                {
+                                                    Object.keys(countries).map((key) => (
+                                                        <option value={key}>{countries[key]}</option>
+                                                    ))
+                                                }
                                             </Field>
-                                            <img src={`./assets/flags/${values.location_country}.png`} alt="uk"/>
+                                            <img src={`./assets/flags/${values.location_country}.png`} alt={values.location_country}/>
                                             {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                         </div>
                                         <div className={(touched.username && errors.username) ? 'form-error': ''}>

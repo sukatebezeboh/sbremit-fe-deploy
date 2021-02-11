@@ -9,7 +9,8 @@ const style = (page) => styled.div`
         background: url('./assets/bg/${page}.png');
         backdrop-filter: blur(undefined);
         -webkit-backdrop-filter: blur(undefined);
-        background-size: contain;
+        background-size: cover;
+        background-repeat: no-repeat;
     }
     >div:last-child{
         background: #ffffff;
