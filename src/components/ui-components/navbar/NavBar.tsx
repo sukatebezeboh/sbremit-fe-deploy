@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 import { asset } from '../../../util/util';
 import style from './NavBar.css';
-import PageHeading from './../page-heading/PageHeading'
+import PageHeading from '../page-heading/PageHeading'
+import { useSelector } from 'react-redux';
 
 const Bar = style();
 
@@ -10,8 +11,10 @@ const NavBar = () => {
     const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
     const [showNotifDropdown, setShowNotifDropdown] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
+    const user = useSelector((state: any)=> state.auth.user)
 
-    const handleDropdownClick = (type) => {
+
+    const handleDropdownClick = (type: string) => {
         if (type === 'notif') {
             setShowNotifDropdown(prev=>!prev);
             setShowProfileDropdown(false);
@@ -22,7 +25,7 @@ const NavBar = () => {
         }
     }
 
-    const notifList = (notifs) => {
+    const notifList = (notifs: any[]) => {
         return notifs.map(notif => (
             <div className={`notif-body ${notif.read ? 'read' : 'unread'}`}>
                 <img src="./assets/images/noimage.png" alt="pic"/>
@@ -65,13 +68,13 @@ const NavBar = () => {
                     <img src="./assets/images/noimage.png" alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
                 <span className="name" onClick={()=>handleDropdownClick('profile')}>
-                    <span>Bunmi</span>
+                    <span>{user.profile.firstName}</span>
                     {showProfileDropdown && <div className="dropdown profile-dropdown">
                             <div>
                                 <div className="notif-body">
                                     <img src="./assets/images/noimage.png" alt="pic"/>
                                     <div>
-                                        <div className="heading"><b>Tomiwa</b></div>
+                                        <div className="heading"><b>{user.profile.firstName + ' ' + user.profile.lastName}</b></div>
                                         <div>Membership number SBR899065</div>
                                     </div>
                                 </div>

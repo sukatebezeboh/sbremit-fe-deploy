@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
