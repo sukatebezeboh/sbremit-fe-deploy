@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/ui-components/toast-factory/ToastFactory';
-import { appValuesAction } from './redux/actions/actions';
+import { appInit, appValuesAction } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 
@@ -12,6 +12,7 @@ function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
 
   useEffect(() => {
+    appInit()
     appValuesAction()
   }, [])
   

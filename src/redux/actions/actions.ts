@@ -10,12 +10,17 @@ import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
 import { getQueryParam } from '../../util/util';
 
-export const recieveSignUpAction = (data: any) => ({
-    type: SIGN_UP,
-    payload: {
-        data
+export const appInit = () => {
+    const session = CookieService.get(env.SESSION_KEY)
+    const user = CookieService.get("user")
+    
+    if(session && user) {
+        store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
     }
-})
+    else{
+        store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+    }
+}
 
 export const signUpAction = (data: any) => {       
     store.dispatch({type: SUBMITTING, payload: SIGN_UP})
@@ -59,9 +64,10 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                CookieService.put(env.SESSION_KEY, res.data.data.seed);
+                CookieService.put(env.SESSION_KEY, res.data.data.meta.seed);
                 axios.get(config.API_HOST + endpoints.USER + '/' + res.data.data.id)
                 .then(response=>{
+                    CookieService.put('user', JSON.stringify(response.data.data));
                     store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: response.data.data}})
                 })            
         } else {
