@@ -66,12 +66,12 @@ export const Routing: IRoute[] = [
     { 
         path: paths.PASSWORD_RESET_EMAIL, 
         component: PasswordReset, 
-        protected: true 
+        protected: false 
     },
     { 
         path: paths.RESET_PASSWORD, 
         component: ResetPassword, 
-        protected: true 
+        protected: false 
     },
     { 
         path: paths.DASHBOARD, 

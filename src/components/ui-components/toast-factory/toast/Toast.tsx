@@ -13,7 +13,7 @@ const Div = styled.div`
     color: white;
     border-radius: 5px;
     box-shadow: 1px 1px 10px 1px lightgrey;
-    
+    z-index: 99999;
     :hover {
         filter: contrast(90%);
     }

@@ -54,6 +54,9 @@ const style = () => styled.div`
                 color: #424242;
                 outline: none;
                 border: none;
+                span{
+                    margin: 0px;
+                }
             }
         }
         .text {
