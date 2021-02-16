@@ -6,6 +6,7 @@ const endpoints = {
     USER: '/user',
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
+    RECIPIENTS: '/user/$_1/recipients'
 }
 
 export default endpoints;

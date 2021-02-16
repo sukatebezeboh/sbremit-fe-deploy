@@ -24,7 +24,6 @@ export const submitting = (state: any = initialSubmittingState, {type, payload}:
 }
 
 export const toast = (state: any = initialToastState, {type, payload}: IAction) => {
-
   switch (type) {
       case TOAST: {
         return  {...payload}

@@ -1,3 +1,4 @@
+import { Form, Formik } from 'formik';
 import React from 'react'
 import styled from 'styled-components';
 import PageHeading from '../page-heading/PageHeading';
@@ -240,8 +241,13 @@ const Div = styled.div`
 
 `
 
-function NewRecipientModal(props) {
+function NewRecipientModal(props: any) {
     const {modalOpen, openModal} = props;
+
+    const initialValues = {
+        firstName: "Test",
+        lastName: "Recipient",
+    }
 
     return (
         modalOpen && <Div>
@@ -252,48 +258,62 @@ function NewRecipientModal(props) {
                     <div className="t-id">Add a new recipient</div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
-                <div className="form grid-col-1-1 grid-gap-3">
-                        <div>
-                            <div>First name<i>*</i></div>
-                            <input type="text" placeholder="John" />
-                        </div>
-                        <div>
-                            <div>Last name<i>*</i></div>
-                            <input type="text" placeholder="Doe" />
-                        </div>
-                        <div>
-                            <div className="mobile-head">Mobile<i>*</i></div>
-                            <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                            <select name="" id="" className="phone" >
-                                <option value="">United Kingdom</option>
-                            </select>
-                            <img src="./assets/flags/gbp.png" alt="uk"/>
-                            <div className="margin-adjust"></div>
-                        </div>
-                        <div>
-                            <div>Email<i>*</i></div>
-                            <input type="text" placeholder="Recipient’s email address" />
-                        </div>
-                        <div>
-                            <div>State<i>*</i></div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Reason</div>
-                            <select name="reason" id="reason">
-                                <option value="Select">Select</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div>Recipient's bank name</div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Account number</div>
-                            <input type="text" placeholder="e.g. 3450012398" />
-                        </div>
-                </div>
-                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <button onClick="">Add</button> </div>
+                <Formik
+                        initialValues={{...initialValues}}
+                        validationSchema={{}}
+                        onSubmit={values => {
+                            
+                        }}>
+                        {
+                            ({errors, touched, values}: any) => (
+
+                                <Form>
+                                    <div className="form grid-col-1-1 grid-gap-3">
+                                            <div>
+                                                <div>First name<i>*</i></div>
+                                                <input type="text" placeholder="John" />
+                                            </div>
+                                            <div>
+                                                <div>Last name<i>*</i></div>
+                                                <input type="text" placeholder="Doe" />
+                                            </div>
+                                            <div>
+                                                <div className="mobile-head">Mobile<i>*</i></div>
+                                                <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
+                                                <select name="" id="" className="phone" >
+                                                    <option value="">United Kingdom</option>
+                                                </select>
+                                                <img src="./assets/flags/gbp.png" alt="uk"/>
+                                                <div className="margin-adjust"></div>
+                                            </div>
+                                            <div>
+                                                <div>Email<i>*</i></div>
+                                                <input type="text" placeholder="Recipient’s email address" />
+                                            </div>
+                                            <div>
+                                                <div>State<i>*</i></div>
+                                                <input type="text" placeholder="" />
+                                            </div>
+                                            <div>
+                                                <div>Reason</div>
+                                                <select name="reason" id="reason">
+                                                    <option value="Select">Select</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <div>Recipient's bank name</div>
+                                                <input type="text" placeholder="" />
+                                            </div>
+                                            <div>
+                                                <div>Account number</div>
+                                                <input type="text" placeholder="e.g. 3450012398" />
+                                            </div>
+                                    </div>
+                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <button onClick={alert}>Add</button> </div>
+                                </Form>
+                            )
+                        }
+                    </Formik>
             </div>
 
              {/* MOBILE NR MODAL */}

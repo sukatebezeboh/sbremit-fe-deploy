@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { APP_VALUES, AUTH, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -8,12 +8,13 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { getQueryParam } from '../../util/util';
+import { getQueryParam, parseEndpointParameters } from '../../util/util';
+import http from '../../util/http';
 
 export const appInit = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user")
-    
+
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
     }
@@ -205,4 +206,48 @@ export const resetPasswordAction = (values: any, stage="email") => {
             }
         })
     }
+}
+
+export const getRecipients = () => {
+    http.get(parseEndpointParameters(endpoints.RECIPIENTS, '35'))
+    .then((res: any) => {
+        if(res.data.status === "200"){            
+            store.dispatch({type: RECIPIENTS, payload: res.data.data})
+        }
+        else{}
+    }).catch(err=>{
+        console.log(err);
+    })
+}
+
+export const getRecipient = () => {
+    
+}
+
+export const createRecipient = (recipientData: any) => {
+    http.post(parseEndpointParameters(endpoints.RECIPIENTS, '35'))
+    .then((res: any)=>{
+        if(res.data.status === "200"){
+            getRecipients();
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 10000,
+                message: "New recipient added"
+            }) 
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 15000,
+                title: "Could not add recipient",
+                message: res.data.error.message
+            })    
+        }
+    })
+    .catch(err=>console.log(err))
+    .then(()=>{
+        store.dispatch({type: SUBMITTING, payload: ""})
+    })
 }

@@ -7,3 +7,18 @@ export const getQueryParam = (key: string): string => {
     const searchParam = urlParams.get(key);
     return searchParam || "";
 }
+
+export const parseEndpointParameters = (
+    endpoint: string,
+    $_1: string = "", 
+    $_2: string = "", 
+    $_3: string = "", 
+    $_4: string = ""
+    ) => 
+{
+    return endpoint
+    .replace('$_1', $_1)
+    .replace('$_2', $_2)
+    .replace('$_3', $_3)
+    .replace('$_4', $_4)
+}
