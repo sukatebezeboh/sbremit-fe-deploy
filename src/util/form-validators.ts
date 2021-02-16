@@ -35,6 +35,19 @@ export const ResetPasswordValidator = Yup.object().shape({
         )
       })
 });
+
 export const ResetEmailValidator = Yup.object().shape({
     username: Yup.string().required("Required").email("Enter valid email"),
 });
+
+export const RecipientValidator = Yup.object().shape({
+    firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+    lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+    mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
+    phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
+    email: Yup.string().required("Required").email("Enter valid email").required("Required"),
+    state: Yup.string().min(3, "Too short").max(25, "Too long").required("Required"),
+    reason: Yup.string(),
+    bankName: Yup.string().min(2, "Too short").max(100, "Too long").required("Required"),
+    accountNumber: Yup.string().min(5, "Too short").max(15, "Too long").required("Required"),
+ });

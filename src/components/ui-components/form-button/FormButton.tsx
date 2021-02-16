@@ -9,6 +9,11 @@ const Button = styled.button`
         text-align: center;
         padding-left: 20px !important;
         padding-right: 20px !important;
+        span{
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
 `
 
 const FormButton = ({label, formName}: any) => {

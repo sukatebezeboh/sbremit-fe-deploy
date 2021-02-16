@@ -23,7 +23,7 @@ const Recipient = () => {
 
     useEffect(() => {
         getRecipients();
-    }, [recipients])
+    }, [])
     
     const handleRecipientClick = (recipient: any) => {
         setSelectedRecipient(recipient);

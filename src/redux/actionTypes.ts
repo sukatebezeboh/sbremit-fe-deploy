@@ -8,3 +8,4 @@ export const APP_VALUES = "APP_VALUES";
 export const RECIPIENTS = "RECIPIENTS";
 export const RECIPIENT = "RECIPIENT";
 export const NEW_RECIPIENT = "NEW_RECIPIENT";
+export const LOADING = "LOADING";

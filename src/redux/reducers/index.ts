@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import auth from "./auth";
-import {submitting, toast, redirect, appValues} from './app';
+import {submitting, toast, redirect, appValues, loading} from './app';
 import {recipients} from './recipients';
 
 
@@ -15,5 +15,6 @@ export default combineReducers({
     toast, 
     redirect, 
     appValues,
-    recipients
+    recipients,
+    loading
  });

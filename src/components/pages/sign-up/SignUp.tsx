@@ -52,7 +52,6 @@ const SignUp = () => {
                         initialValues={{...initialValues}}
                         validationSchema={SignUpValidator}
                         onSubmit={values => {
-                            
                             dispatch(signUpAction(values))
                         }}>
                         {
