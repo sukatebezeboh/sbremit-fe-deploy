@@ -224,7 +224,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
 
 export const getRecipients = () => {
     store.dispatch({type: LOADING, payload: true})
-    const user = store.getState().auth.user
+    const user = store.getState().auth.user;
 
     http.get(parseEndpointParameters(endpoints.RECIPIENTS, user.id))
     .then((res: any) => {
