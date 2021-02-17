@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -8,17 +8,28 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { getQueryParam } from '../../util/util';
+import { getQueryParam, parseEndpointParameters } from '../../util/util';
+import http from '../../util/http';
 
-export const appInit = () => {
+export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
-    const user = CookieService.get("user")
-    
+    const user = CookieService.get("user");
+    const sessionId = CookieService.get(env.SESSION_ID);
+    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || 'sbremit-web-uat';
+
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
+        return {
+            isAuthenticated: true, 
+            user: JSON.parse(user),
+            authToken: session,
+            sessionId,
+            serviceProvider
+        };
     }
     else{
         store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+        return {isAuthenticated: false, user: undefined};
     }
 }
 
@@ -64,7 +75,11 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                CookieService.put(env.SESSION_KEY, res.data.data.meta.seed);
+                console.log(res);
+                
+                CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
+                CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
+                CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
                 axios.get(config.API_HOST + endpoints.USER + '/' + res.data.data.id)
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
@@ -205,4 +220,63 @@ export const resetPasswordAction = (values: any, stage="email") => {
             }
         })
     }
+}
+
+export const getRecipients = () => {
+    store.dispatch({type: LOADING, payload: true})
+    const user = store.getState().auth.user;
+
+    http.get(parseEndpointParameters(endpoints.RECIPIENTS, user.id))
+    .then((res: any) => {
+        if(res.data.status === "200"){            
+            store.dispatch({type: RECIPIENTS, payload: res.data.data})
+            store.dispatch({type: LOADING, payload: false})
+        }
+        else{}
+    }).catch(err=>{
+        console.log(err);
+    }).then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const getRecipient = () => {
+    
+}
+
+export const createRecipient = (recipientData: any) => {
+    recipientData = {
+        firstName: recipientData.firstName,
+        lastName: recipientData.lastName,
+        profile: {
+            ...recipientData
+        }
+    }
+    store.dispatch({type: SUBMITTING, payload: paths.RECIPIENT})
+    const user = store.getState().auth.user
+    http.post(parseEndpointParameters(endpoints.CREATE_RECIPIENT, user.id), {...recipientData})
+    .then((res: any)=>{
+        if(res.data.status === "200"){
+            getRecipients();
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 10000,
+                message: "New recipient added"
+            }) 
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 15000,
+                title: "Add recipient failed",
+                message: res.data.error.message
+            })    
+        }
+    })
+    .catch(err=>console.log(err))
+    .then(()=>{
+        store.dispatch({type: SUBMITTING, payload: ""})
+    })
 }

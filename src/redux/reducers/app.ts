@@ -1,6 +1,6 @@
 import { IAction } from ".";
 import { AppService } from "../../services/AppService";
-import { SUBMITTING, TOAST, REDIRECT, APP_VALUES } from "../actionTypes";
+import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING } from "../actionTypes";
 
 const initialSubmittingState = "";
 const initialToastState = {
@@ -12,6 +12,7 @@ const initialAppValues = {
   values: {},
   countries: {}
 }
+const initialLoadingState = false;
 
 export const submitting = (state: any = initialSubmittingState, {type, payload}: IAction) => {
     switch (type) {
@@ -24,7 +25,6 @@ export const submitting = (state: any = initialSubmittingState, {type, payload}:
 }
 
 export const toast = (state: any = initialToastState, {type, payload}: IAction) => {
-
   switch (type) {
       case TOAST: {
         return  {...payload}
@@ -47,6 +47,16 @@ export const redirect = (state: any = initialRedirectState, {type, payload}: IAc
 export const appValues = (state: any = initialAppValues, {type, payload}: IAction) => {
   switch (type) {
       case APP_VALUES: {
+        return payload
+      }
+      default:
+        return state;
+    }
+}
+
+export const loading = (state: any = initialLoadingState, {type, payload}: IAction) => {
+  switch (type) {
+      case LOADING: {
         return payload
       }
       default:

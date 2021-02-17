@@ -1,6 +1,13 @@
+import { Field, Form, Formik } from 'formik';
 import React from 'react'
 import styled from 'styled-components';
+
+import { createRecipient } from '../../../redux/actions/actions';
+import { paths } from '../../../util/paths';
+import { RecipientValidator } from "../../../util/form-validators";
+import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
+import { useDispatch } from 'react-redux';
 
 const Div = styled.div`
     .overlay {
@@ -240,8 +247,21 @@ const Div = styled.div`
 
 `
 
-function NewRecipientModal(props) {
+function NewRecipientModal(props: any) {
     const {modalOpen, openModal} = props;
+    const dispatch = useDispatch()
+
+    const initialValues = {
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        phoneCode: "+234",
+        email: "",
+        state: "",
+        reason: "",
+        bankName: "",
+        accountNumber: ""
+    }
 
     return (
         modalOpen && <Div>
@@ -252,48 +272,63 @@ function NewRecipientModal(props) {
                     <div className="t-id">Add a new recipient</div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
-                <div className="form grid-col-1-1 grid-gap-3">
-                        <div>
-                            <div>First name<i>*</i></div>
-                            <input type="text" placeholder="John" />
-                        </div>
-                        <div>
-                            <div>Last name<i>*</i></div>
-                            <input type="text" placeholder="Doe" />
-                        </div>
-                        <div>
-                            <div className="mobile-head">Mobile<i>*</i></div>
-                            <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                            <select name="" id="" className="phone" >
-                                <option value="">United Kingdom</option>
-                            </select>
-                            <img src="./assets/flags/gbp.png" alt="uk"/>
-                            <div className="margin-adjust"></div>
-                        </div>
-                        <div>
-                            <div>Email<i>*</i></div>
-                            <input type="text" placeholder="Recipient’s email address" />
-                        </div>
-                        <div>
-                            <div>State<i>*</i></div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Reason</div>
-                            <select name="reason" id="reason">
-                                <option value="Select">Select</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div>Recipient's bank name</div>
-                            <input type="text" placeholder="" />
-                        </div>
-                        <div>
-                            <div>Account number</div>
-                            <input type="text" placeholder="e.g. 3450012398" />
-                        </div>
-                </div>
-                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <button onClick="">Add</button> </div>
+                <Formik
+                        initialValues={{...initialValues}}
+                        validationSchema={RecipientValidator}
+                        onSubmit={values => {
+                            dispatch(createRecipient(values))
+                        }}>
+                        {
+                            ({errors, touched, values}: any) => (
+
+                                <Form>
+                                    <div className="form grid-col-1-1 grid-gap-3">
+                                            <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
+                                                <div>First name<i>*</i></div>
+                                                <Field type="text" name="firstName" placeholder="John" />
+                                            </div>
+                                            <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
+                                                <div>Last name<i>*</i></div>
+                                                <Field type="text" name="lastName" placeholder="Doe" />
+                                            </div>
+                                            <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
+                                                <div className="mobile-head">Mobile<i>*</i></div>
+                                                <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
+                                                <Field as="select" name="phoneCode" id="" className="phone" >
+                                                    <option value="+01">United Kingdom</option>
+                                                    <option value="+234">Nigeria</option>
+                                                </Field>
+                                                <img src="./assets/flags/UK.png" alt="uk"/>
+                                                <div className="margin-adjust"></div>
+                                            </div>
+                                            <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                                <div>Email<i>*</i></div>
+                                                <Field type="text" name="email" placeholder="Recipient’s email address" />
+                                            </div>
+                                            <div className={(touched.state && errors.state) ? 'form-error': ''}>
+                                                <div>State<i>*</i></div>
+                                                <Field type="text" name="state" placeholder="" />
+                                            </div>
+                                            <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
+                                                <div>Reason</div>
+                                                <Field as="select" name="reason" id="reason">
+                                                    <option value="Select">Select</option>
+                                                </Field>
+                                            </div>
+                                            <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                                <div>Recipient's bank name</div>
+                                                <Field type="text" name="bankName" placeholder="" />
+                                            </div>
+                                            <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
+                                                <div>Account number</div>
+                                                <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
+                                            </div>
+                                    </div>
+                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton onClick={alert} label="Add" formName={paths.RECIPIENT} /> </div>
+                                </Form>
+                            )
+                        }
+                    </Formik>
             </div>
 
              {/* MOBILE NR MODAL */}

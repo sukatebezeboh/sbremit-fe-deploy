@@ -1,5 +1,8 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { getRecipients } from '../../../redux/actions/actions';
+import { RECIPIENT } from '../../../redux/actionTypes';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import NewRecipientModal from '../../ui-components/new-recipient-modal/NewRecipientModal';
@@ -11,11 +14,22 @@ import Body from './Recipient.css';
 
 const Recipient = () => {
     const history = useHistory();
-    const users = [
-        {},{},{},{},{}
-    ];
+    const recipients = useSelector((state: any)=>state.recipients.recipients);
+    const recipient = useSelector((state: any)=>state.recipients.recipient);
+    const dispatch = useDispatch()
+    
     const [openNRModal, setOpenNRModal] = useState(false)
+    const [selectedRecipient, setSelectedRecipient] = useState(recipient)
 
+    useEffect(() => {
+        getRecipients();
+    }, [])
+    
+    const handleRecipientClick = (recipient: any) => {
+        setSelectedRecipient(recipient);
+        dispatch({type: RECIPIENT, payload: recipient})
+    }
+    
     return (
         <Body>
             <NavBar />
@@ -25,7 +39,7 @@ const Recipient = () => {
                 <div className="search">
                     <div><input type="text" placeholder="Search recipients"/> <button className=""> <img src={asset("icons", "search.svg")} alt="search"/> </button> </div>
                 </div>
-                <div className={openNRModal && "mobile-hide"}>
+                <div className={openNRModal ? "mobile-hide" : ''}>
                     <PageHeading heading="Recipient" subheading="Who are you sending money to?" back="/verification" />
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
@@ -42,10 +56,10 @@ const Recipient = () => {
                                     <span>New recipient</span>
                                 </div>
                                 {
-                                    users.map(user=>(
-                                        <div className="recipient">
-                                            <div><img src={asset("images", "noimage.png")} alt="user"/></div>
-                                            <div>Ifepade Adewunmi</div>
+                                    recipients.map((recipient: any)=>(
+                                        <div className={`recipient ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
+                                            <div><img src={`${recipient.profile.picture || asset("images", "noimage.png")}`} alt="user"/></div>
+                                            <div>{recipient.firstName + ' ' + recipient.lastName}</div>
                                         </div>
                                     ))
                                 }

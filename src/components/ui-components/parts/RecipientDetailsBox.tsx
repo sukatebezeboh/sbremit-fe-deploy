@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const Div = styled.div`
@@ -57,8 +58,11 @@ const Div = styled.div`
             
 `
 
-const RecipientDetailsBox = (props) => {
+const RecipientDetailsBox = (props: any) => {
     const {hideType} = props;
+    const recipient = useSelector((state: any) => state.recipients.recipient)
+    console.log(recipient);
+    
     return (
         <Div className={hideType}>
             <div className="recipient-details">
@@ -69,31 +73,31 @@ const RecipientDetailsBox = (props) => {
                 <hr/>
                 <div className="row">
                     <div className="left">Name</div>
-                    <div className="right">Ifepade Adewunmi</div>
+                    <div className="right">{recipient.firstName + ' ' + recipient.lastName }</div>
                 </div>
                 <div className="row">
                     <div className="left">Mobile No.</div>
-                    <div className="right">+2348160402986</div>
+                    <div className="right">{recipient.profile.mobile}</div>
                 </div>
                 <div className="row">
                     <div className="left">Email</div>
-                    <div className="right">bunmi.i.adewunmi@gmail.com</div>
+                    <div className="right">{recipient.profile.email}</div>
                 </div>
                 <div className="row">
                     <div className="left">City</div>
-                    <div className="right">Lagos</div>
+                    <div className="right">{recipient.profile.city || '-'}</div>
                 </div>
                 <div className="row">
                     <div className="left">Reason</div>
-                    <div className="right">Funds to self</div>
+                    <div className="right">{recipient.profile.reason || '-'}</div>
                 </div>
                 <div className="row">
                     <div className="left">Recipient’s Bank Name</div>
-                    <div className="right">GTB</div>
+                    <div className="right">{recipient.profile.bankName || '-'}</div>
                 </div>
                 <div className="row">
                     <div className="left">Account Number</div>
-                    <div className="right">2230987563</div>
+                    <div className="right">{recipient.profile.accountNumber || '-'}</div>
                 </div>
         </div>
         </Div>
