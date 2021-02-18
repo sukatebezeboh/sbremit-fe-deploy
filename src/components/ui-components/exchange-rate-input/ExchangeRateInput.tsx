@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { formatCurrency } from '../../../util/util';
 
 const Field = styled.div`
         .x-input{
@@ -17,9 +18,12 @@ const Field = styled.div`
             >div{
                 >input{
                     font: normal normal normal 300 25px/30px Montserrat;
-                    width: 90px;
+                    width: 100%;
                     border: none;
                     outline: none;
+                    @media only screen and (max-width: 900px) { 
+                        width: 120px;
+                    }
                 }
             }
             >div.flg-drp{
@@ -55,19 +59,19 @@ const Field = styled.div`
         }
 `
 
-const ExchangeRateInput = (props) =>{
-        const {data} = props;
+const ExchangeRateInput = (props: any) =>{
+    const {data, handleXInputChange} = props;
 
        return (
         <Field>
             <div className="x-input">
                 <div className="xi-1">
-                    <div className="grey-txt you-send">{data.isSend ? 'You send': 'They get'}</div>
-                    <input type="text" value={data.value}/>
+                    <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
+                    <input key={data?.currency +'-'+ window.location.pathname} type="text" value={formatCurrency(data?.value)} onChange={(e)=>{handleXInputChange(e, data)}}/>
                 </div>
                 <div className="flg-drp">
-                    <img src={`./assets/flags/${data.image}.png`} alt={data.currency}/>
-                    <span>{data.currency}</span>
+                    <img src={`./assets/flags/${data?.image}.png`} alt={data?.currency}/>
+                    <span>{data?.currency}</span>
                     <span><img src="./assets/icons/angle-down.svg" alt=""/></span>
                 </div>
             </div>

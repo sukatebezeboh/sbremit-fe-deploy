@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
+import { useSelector } from 'react-redux';
+import { paths } from '../../../util/paths';
 
 const Body = styled.div`
     .page-content {
@@ -182,8 +184,13 @@ const Body = styled.div`
 const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
+    const transferDetails = useSelector((state: any) => state.transfer.transferDetails)
 
     return (
+
+        !transferDetails ? 
+        <Redirect to={paths.REVIEW} />
+        :
         <Body>
             <NavBar />
             <ProgressBar />

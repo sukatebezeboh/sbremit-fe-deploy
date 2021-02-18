@@ -2,7 +2,7 @@ import { IAction } from ".";
 import { SIGN_UP, AUTH } from "../actionTypes";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: undefined,
   user: undefined
 };
 

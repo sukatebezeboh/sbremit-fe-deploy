@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -278,5 +278,46 @@ export const createRecipient = (recipientData: any) => {
     .catch(err=>console.log(err))
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
+    })
+}
+
+export const confirmTransfer = (recipient: any, transfer: any, history: any) => {
+    store.dispatch({type: LOADING, payload: true})
+    const payload = {
+        recipientId: recipient.id,
+        originCurrency: transfer.toSend?.currency,
+        originAmount: Number(transfer.toSend?.value),
+        destinationCurrency: transfer.toReceive?.currency,
+        destinationAmount: Number(transfer.toReceive?.value),
+    }
+    const user = store.getState().auth.user
+    http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
+    .then(res=>{
+        if (res.data.status === "200") {
+            getTransferDetails(res.data.data.id)
+            history.push(paths.PAYMENT_METHOD);
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 15000,
+                title: "Transfer failed",
+                message: res.data.error.message
+            })
+        }
+    }).then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const getTransferDetails = (transferId: string) => {
+    store.dispatch({type: LOADING, payload: true})
+
+    const user = store.getState().auth.user
+    const transfer = store.getState().transfer
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
+    .then(res=>{
+        store.dispatch({type: TRANSFER, payload: {...transfer, transferDetails: {...res.data.data}}})
+        store.dispatch({type: LOADING, payload: false})
     })
 }

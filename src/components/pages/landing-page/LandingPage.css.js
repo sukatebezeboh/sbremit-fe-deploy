@@ -338,16 +338,18 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
             }
         }
         .nav{
-            .sign-in{
-                    display: none;
-            } 
-            .sign-up{
+            
+            .sign-up, .sign-in{
                 transform: scale(0.5, 0.5);
                 float: none;
                 position: absolute;
                 right: -25px;
                 top: 0px;
             }
+            .sign-in{
+                right: 120px;
+                top: -3px;
+            } 
         }
     }
 

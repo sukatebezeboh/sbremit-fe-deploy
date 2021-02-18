@@ -8,6 +8,8 @@ const endpoints = {
     PASSWORD_RESET: '/user/password/reset',
     RECIPIENTS: '/user/$_1/recipients',
     CREATE_RECIPIENT: '/user/$_1/recipient',
+    CREATE_TRANSFER: '/user/$_1/transfer',
+    GET_TRANSFER: '/user/$_1/transfer/$_2',
 }
 
 export default endpoints;
