@@ -1,9 +1,10 @@
 const endpoints = {
     SIGN_UP: '/users/registration',
     SIGN_IN: '/session',
+    SIGN_OUT: '/sign-out',
     VALUES: '/values',
     VALUE: '/value',
-    USER: '/user',
+    USER: '/user/$_1',
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
     RECIPIENTS: '/user/$_1/recipients',

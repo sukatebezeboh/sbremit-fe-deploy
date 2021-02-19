@@ -6,8 +6,10 @@ import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
+import { confirmTransfer, toastAction } from '../../../redux/actions/actions';
+import { TRANSFER } from '../../../redux/actionTypes';
 
 const Body = styled.div`
     .page-content {
@@ -185,12 +187,25 @@ const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
     const transferDetails = useSelector((state: any) => state.transfer.transferDetails)
+    const recipient = useSelector((state: any)=>state.recipients.recipient)
+    const transfer = useSelector((state: any)=>state.transfer)
+    const dispatch = useDispatch()
+
+    const handleConfirm = () => {
+        dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
+        if(!selected){
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: 'Select a paymentMethod to proceed'
+            }) 
+            return
+        } 
+        confirmTransfer(recipient, transfer, history)
+    }
 
     return (
-
-        !transferDetails ? 
-        <Redirect to={paths.REVIEW} />
-        :
         <Body>
             <NavBar />
             <ProgressBar />
@@ -247,7 +262,7 @@ const PaymentMethod = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push(selected==='dc_card'? '/card-payment' : selected==='bank_transfer' ? '/create-transfer': '#')}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>handleConfirm()}>Proceed to payment</button> </div>
             </div>
         </Body>
     )

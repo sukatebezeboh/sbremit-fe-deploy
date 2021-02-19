@@ -4,6 +4,8 @@ import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
+import { useSelector } from 'react-redux';
+import { cancelTransfer } from '../../../redux/actions/actions';
 
 const Body = styled.div`
     .page-content {
@@ -209,6 +211,11 @@ const Body = styled.div`
 
 const CreateTransfer = () => {
     const history = useHistory();
+    const transferDetails =  useSelector((state: any)=>state.transfer.transferDetails)
+
+    const cancelPayment = () => {
+        cancelTransfer(transferDetails.id, () =>history.push('/payment-method'))
+    }
 
     return (
         <Body>
@@ -266,7 +273,7 @@ const CreateTransfer = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/payment-method')}>Cancel payment</span> <button onClick={()=>history.push('/transfer-complete')}>I’ve sent 100.95 GBP</button> </div>
+                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={()=>history.push('/transfer-complete')}>I’ve sent 100.95 GBP</button> </div>
             </div>
         </Body>
     )

@@ -78,7 +78,7 @@ const LandingPage = (props: any) => {
                     <div><button disabled>Mobile Money</button><button disabled>Bank Transfer</button><button disabled>Cash Pickup</button></div>
                     <div className="md-txt amt-txt">Enter an amount to send</div>
                     <div>
-                        <ExchangeRateInput data={toSend} handleXInputChange={handleXInputChange} />
+                        <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} />
                     </div>
                     <div className="wrapper">
                         <div className="timeline-box">
@@ -90,7 +90,7 @@ const LandingPage = (props: any) => {
                         </div>
                     </div>
                     <div className="receive">
-                        <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} />
+                        <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} />
                     </div>
                     <button>Start sending money</button>
                 </div>

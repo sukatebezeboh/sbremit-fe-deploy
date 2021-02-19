@@ -11,6 +11,8 @@ import { paths } from '../../util/paths';
 import { getQueryParam, parseEndpointParameters } from '../../util/util';
 import http from '../../util/http';
 
+const user = store.getState().auth.user;
+
 export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user");
@@ -75,12 +77,11 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                console.log(res);
                 
                 CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
                 CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
                 CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
-                axios.get(config.API_HOST + endpoints.USER + '/' + res.data.data.id)
+                axios.get(config.API_HOST + parseEndpointParameters(endpoints.USER, res.data.data.id))
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
                     store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: response.data.data}})
@@ -100,6 +101,13 @@ export const signInAction = (data: any) => {
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
     })
+}
+
+export const signOutAction = () => {
+    CookieService.remove(env.SESSION_KEY);
+    CookieService.remove(env.SESSION_ID);
+    store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+    
 }
 
 const runningTimeouts: any[] = [];
@@ -129,6 +137,28 @@ export const appValuesAction = async() => {
     values.countries = countries.data;
     store.dispatch({type: APP_VALUES, payload: values})
     console.log(store.getState());
+}
+
+export const editUserProfile = <T extends {profile: any}>(data: T) => {
+    store.dispatch({type: SUBMITTING, payload: paths.CHANGE_PASSWORD})
+    http.put(parseEndpointParameters(endpoints.USER, user.id), {...data})
+    .then((res) =>{
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: `Profile updated`
+            })
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 25000,
+                message: res.data.error.message
+            })
+        }
+    })
 }
 
 export const changePasswordAction = (values: any) => {
@@ -284,6 +314,7 @@ export const createRecipient = (recipientData: any) => {
 export const confirmTransfer = (recipient: any, transfer: any, history: any) => {
     store.dispatch({type: LOADING, payload: true})
     const payload = {
+        paymentMethod: transfer.paymentMethod,
         recipientId: recipient.id,
         originCurrency: transfer.toSend?.currency,
         originAmount: Number(transfer.toSend?.value),
@@ -294,8 +325,9 @@ export const confirmTransfer = (recipient: any, transfer: any, history: any) => 
     http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
     .then(res=>{
         if (res.data.status === "200") {
+            const nextPage = transfer.paymentMethod==='dc_card'? paths.CARD_PAYMENT : transfer.paymentMethod==='bank_transfer' ? paths.CREATE_TRANSFER: '#'
+            history.push(nextPage);
             getTransferDetails(res.data.data.id)
-            history.push(paths.PAYMENT_METHOD);
         } else {
             toastAction({
                 show: true,
@@ -305,7 +337,6 @@ export const confirmTransfer = (recipient: any, transfer: any, history: any) => 
                 message: res.data.error.message
             })
         }
-    }).then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
 }
@@ -319,5 +350,32 @@ export const getTransferDetails = (transferId: string) => {
     .then(res=>{
         store.dispatch({type: TRANSFER, payload: {...transfer, transferDetails: {...res.data.data}}})
         store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const cancelTransfer = (transferId: string, callback: Function) => {
+    store.dispatch({type: LOADING, payload: true})
+    const transfer = store.getState().transfer
+
+    http.delete(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
+    .then(res=>{
+        if(res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'info',
+                timeout: 10000,
+                message: "Transfer has been cancelled"
+            })
+            store.dispatch({type: TRANSFER, payload: {...transfer, transferDetails: undefined}})
+            store.dispatch({type: LOADING, payload: false})
+            callback()
+        }else {
+            toastAction({
+                show: true,
+                type: 'danger',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
     })
 }

@@ -169,12 +169,7 @@ const Body = styled.div`
 const Review = () => {
     const history = useHistory();
     const recipient = useSelector((state: any)=>state.recipients.recipient)
-    const transfer = useSelector((state: any)=>state.transfer)
-
-    const handleConfirm = () => {
-        confirmTransfer(recipient, transfer, history)
-    }
-
+    
     return (
         !recipient.id ?
         <Redirect to={paths.RECIPIENT} />
@@ -191,7 +186,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>handleConfirm()}>Confirm</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>history.push(paths.PAYMENT_METHOD)}>Confirm</button> </div>
             </div>
         </Body>
     )

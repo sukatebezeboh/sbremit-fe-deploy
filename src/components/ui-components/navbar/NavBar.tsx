@@ -4,6 +4,7 @@ import { asset } from '../../../util/util';
 import style from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
+import { signOutAction } from '../../../redux/actions/actions';
 
 const Bar = style();
 
@@ -89,7 +90,7 @@ const NavBar = () => {
                                 <div>Settings</div>
                          </div>
                          <hr/>
-                         <div className="notif-option">
+                         <div className="notif-option sign-out-option" onClick={signOutAction}>
                                 <div> <img src={asset('icons', 'logout.svg')} alt="signout"/> </div>
                                 <div><b>Sign out</b></div>
                          </div>
