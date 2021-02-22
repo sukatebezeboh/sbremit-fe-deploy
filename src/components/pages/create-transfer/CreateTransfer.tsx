@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
 import { useSelector } from 'react-redux';
 import { cancelTransfer } from '../../../redux/actions/actions';
+import { paths } from '../../../util/paths';
 
 const Body = styled.div`
     .page-content {
@@ -211,13 +212,16 @@ const Body = styled.div`
 
 const CreateTransfer = () => {
     const history = useHistory();
-    const transferDetails =  useSelector((state: any)=>state.transfer.transferDetails)
+    const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
 
     const cancelPayment = () => {
-        cancelTransfer(transferDetails.id, () =>history.push('/payment-method'))
+        cancelTransfer(() =>history.push('/payment-method'))
     }
 
     return (
+        !transactionDetails ?
+        <Redirect to={paths.REVIEW} />
+        :
         <Body>
             <NavBar />
             <div className="page-content">

@@ -311,7 +311,7 @@ export const createRecipient = (recipientData: any) => {
     })
 }
 
-export const confirmTransfer = (recipient: any, transfer: any, history: any) => {
+export const confirmTransfer = (recipient: any, transfer: any, callback: Function) => {
     store.dispatch({type: LOADING, payload: true})
     const payload = {
         paymentMethod: transfer.paymentMethod,
@@ -325,9 +325,9 @@ export const confirmTransfer = (recipient: any, transfer: any, history: any) => 
     http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
     .then(res=>{
         if (res.data.status === "200") {
-            const nextPage = transfer.paymentMethod==='dc_card'? paths.CARD_PAYMENT : transfer.paymentMethod==='bank_transfer' ? paths.CREATE_TRANSFER: '#'
-            history.push(nextPage);
-            getTransferDetails(res.data.data.id)
+            callback()
+            CookieService.put('transfer', JSON.stringify(res.data.data.id));
+            getTransactionDetails(callback)
         } else {
             toastAction({
                 show: true,
@@ -341,21 +341,52 @@ export const confirmTransfer = (recipient: any, transfer: any, history: any) => 
     })
 }
 
-export const getTransferDetails = (transferId: string) => {
+export const getTransactionDetails = (callback?: Function) => {
+    const transferId = CookieService.get('transfer');
+    if (!transferId) {
+        callback?.()
+        return toastAction({
+            show: true,
+            type: 'info',
+            timeout: 15000,
+            message: `No transfer initiated yet`
+        })
+    }
+    
     store.dispatch({type: LOADING, payload: true})
-
     const user = store.getState().auth.user
     const transfer = store.getState().transfer
     http.get(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
     .then(res=>{
-        store.dispatch({type: TRANSFER, payload: {...transfer, transferDetails: {...res.data.data}}})
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactionDetails: {...res.data.data}}})
         store.dispatch({type: LOADING, payload: false})
     })
 }
 
-export const cancelTransfer = (transferId: string, callback: Function) => {
+export const getUserTransactions = () => {
+    http.get('/user/35/transfers')
+    .then(res=>{
+        console.log(res, "--->");
+    }).catch(err=>{
+        console.log(err, "--->");
+    })
+}
+
+export const cancelTransfer = (callback: Function) => {
+    const transferId = CookieService.get('transfer');
+    if (!transferId) {
+        callback?.()
+        return toastAction({
+            show: true,
+            type: 'info',
+            timeout: 15000,
+            message: `No transfer initiated yet`
+        })
+    }
+
     store.dispatch({type: LOADING, payload: true})
     const transfer = store.getState().transfer
+    const user = store.getState().auth.user;
 
     http.delete(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
     .then(res=>{
@@ -366,16 +397,30 @@ export const cancelTransfer = (transferId: string, callback: Function) => {
                 timeout: 10000,
                 message: "Transfer has been cancelled"
             })
-            store.dispatch({type: TRANSFER, payload: {...transfer, transferDetails: undefined}})
+            store.dispatch({type: TRANSFER, payload: {...transfer, transactionDetails: undefined}})
             store.dispatch({type: LOADING, payload: false})
             callback()
         }else {
+            store.dispatch({type: LOADING, payload: false})
             toastAction({
                 show: true,
-                type: 'danger',
+                type: 'error',
                 timeout: 10000,
                 message: res.data.error.message
             })
         }
     })
+}
+
+export const getQuoteService = ($_1: string, $_2: string) => {
+    store.dispatch({type: LOADING, payload: true})
+
+    const transfer = store.getState().transfer
+    http.get(parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
+    .then(res => {
+        if(res.data.status === "200")
+        store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+    })
+    store.dispatch({type: LOADING, payload: false})
+
 }

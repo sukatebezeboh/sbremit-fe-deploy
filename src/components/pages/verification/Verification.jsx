@@ -346,7 +346,7 @@ const Verification = () => {
                                     <select name="" id="" >
                                         <option value="">United Kingdom</option>
                                     </select>
-                                    <img src="./assets/flags/gbp.png" alt="uk"/>
+                                    <img src="./assets/flags/UK.png" alt="uk"/>
                                 </div>
                                 <div>
                                 <div>Date of birth<i>*</i></div>

@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -16,6 +17,10 @@ const Dashboard = () => {
     const transactions = [{},{},{},{},{},{},{},{},{},{}];
     const [openTDModal, handleOpenTDModal] = useState(false);
     const [showPlus, handleShowPlus] = useState(true);
+
+    useEffect(() => {
+        getUserTransactions()
+    }, [showPlus])
 
     return (
         <Body>

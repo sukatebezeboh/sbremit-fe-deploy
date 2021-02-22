@@ -186,7 +186,6 @@ const Body = styled.div`
 const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
-    const transferDetails = useSelector((state: any) => state.transfer.transferDetails)
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer)
     const dispatch = useDispatch()
@@ -202,7 +201,10 @@ const PaymentMethod = () => {
             }) 
             return
         } 
-        confirmTransfer(recipient, transfer, history)
+        confirmTransfer(recipient, transfer, () => {
+            const nextPage = selected==='dc_card'? paths.CARD_PAYMENT : selected==='bank_transfer' ? paths.CREATE_TRANSFER: '#'
+            history.push(nextPage);
+        })
     }
 
     return (

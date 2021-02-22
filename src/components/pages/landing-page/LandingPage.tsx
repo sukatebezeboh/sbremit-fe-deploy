@@ -36,7 +36,7 @@ const LandingPage = (props: any) => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value}`}, 
-                    toReceive: {...toReceive, value: `${value * conversionRate}`}
+                    toReceive: {...toReceive, value: `${value * conversionRate?.rate}`}
                 }
             })
 
@@ -45,7 +45,7 @@ const LandingPage = (props: any) => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${value / conversionRate}`}, 
+                    toSend: {...toSend, value: `${value / conversionRate?.rate}`}, 
                     toReceive: {...toReceive, value: `${value}`}
                 }
             })
@@ -82,7 +82,7 @@ const LandingPage = (props: any) => {
                     </div>
                     <div className="wrapper">
                         <div className="timeline-box">
-                            <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className="deep-green">1 GBP = {conversionRate} XAF</span></span></div>
+                            <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className="deep-green">1 GBP = {conversionRate?.rate} XAF</span></span></div>
                             <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
                             <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
                             <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + serviceFee}`)} GBP</span></span></span></div>
