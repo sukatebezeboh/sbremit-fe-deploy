@@ -215,7 +215,7 @@ const CreateTransfer = () => {
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
 
     const cancelPayment = () => {
-        cancelTransfer(() =>history.push('/payment-method'))
+        history.push('/payment-method')
     }
 
     return (

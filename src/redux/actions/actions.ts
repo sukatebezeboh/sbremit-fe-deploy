@@ -314,7 +314,7 @@ export const createRecipient = (recipientData: any) => {
 export const confirmTransfer = (recipient: any, transfer: any, callback: Function) => {
     store.dispatch({type: LOADING, payload: true})
     const payload = {
-        paymentMethod: transfer.paymentMethod,
+        paymentMethod: transfer.transferMethod,
         recipientId: recipient.id,
         originCurrency: transfer.toSend?.currency,
         originAmount: Number(transfer.toSend?.value),
@@ -364,11 +364,19 @@ export const getTransactionDetails = (callback?: Function) => {
 }
 
 export const getUserTransactions = () => {
-    http.get('/user/35/transfers')
+    const user = store.getState().auth.user
+    const transfer = store.getState().transfer
+
+    store.dispatch({type: LOADING, payload: true})
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
     .then(res=>{
-        console.log(res, "--->");
-    }).catch(err=>{
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions: res.data.data} })
+    })
+    .catch(err=>{
         console.log(err, "--->");
+    })
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
     })
 }
 

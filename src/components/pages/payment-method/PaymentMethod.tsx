@@ -8,8 +8,9 @@ import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { confirmTransfer, toastAction } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
+import { ConfirmModal } from '../../ui-components/confirm-modal/ConfirmModal';
 
 const Body = styled.div`
     .page-content {
@@ -188,27 +189,48 @@ const PaymentMethod = () => {
     const [selected, setSelected] = useState('')
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer)
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const dispatch = useDispatch()
 
-    const handleConfirm = () => {
+    const handleProceed = () => {
         dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
         if(!selected){
             toastAction({
                 show: true,
                 type: 'warning',
                 timeout: 10000,
-                message: 'Select a paymentMethod to proceed'
+                message: 'Select a payment method to proceed'
             }) 
             return
         } 
-        confirmTransfer(recipient, transfer, () => {
-            const nextPage = selected==='dc_card'? paths.CARD_PAYMENT : selected==='bank_transfer' ? paths.CREATE_TRANSFER: '#'
-            history.push(nextPage);
-        })
+
+        if (selected==="dc_card"){
+            history.push(paths.CARD_PAYMENT)
+        }else if (selected==="bank_transfer") {
+            history.push(paths.CREATE_TRANSFER)
+        }else{
+            return
+        }
+    }
+
+    const handleCancel = () => {
+        cancelTransfer(() => history.push(paths.DASHBOARD))
     }
 
     return (
         <Body>
+            {openConfirmModal ? 
+            <ConfirmModal 
+            message="Are you sure you want to cancel this transfer?"
+            onSave={{
+                label: 'Yes, cancel',
+                fn: ()=>handleCancel()
+            }} 
+            onCancel={{
+                label: "No, don't cancel",
+                fn: () => setOpenConfirmModal(false)
+            }}
+            /> : <></>}
             <NavBar />
             <ProgressBar />
             <div className="page-content">
@@ -264,7 +286,7 @@ const PaymentMethod = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>handleConfirm()}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </div>
             </div>
         </Body>
     )

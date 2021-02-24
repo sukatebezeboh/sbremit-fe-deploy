@@ -4,11 +4,12 @@ import { TRANSFER } from "../actionTypes";
 const initialTransferState: {} = {
     conversionRate: {},
     serviceFee: 0.95,
-    toSend: {value: "1", currency: 'gbp', image: "UK", isSend: true},
-    toReceive: {value: `${752.81}`, currency: 'xaf', image: "CM"},
+    toSend: {value: "1", currency: 'GBP', image: "UK", isSend: true},
+    toReceive: {value: `${752.81}`, currency: 'XAF', image: "CM"},
     paymentMethod: "",
     transactionDetails: undefined,
-    transferMethod: ""
+    transferMethod: "",
+    transactions: []
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {

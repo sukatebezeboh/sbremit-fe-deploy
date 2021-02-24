@@ -19,9 +19,8 @@ http.interceptors.request.use((config: any) => {
             const url = env.API_HOST + config.url;
             const payload = JSON.stringify(data);
             const authToken = authData.authToken
-            console.log(url + payload + authToken, "[[]]");
-            
-            const requestHash = sha1(url + payload + authToken);
+
+            const requestHash = payload ? sha1(url + payload + authToken) : sha1(url + authToken);
 
             headers = {
                 'X-SERVICE-PROVIDER'    : authData.serviceProvider,

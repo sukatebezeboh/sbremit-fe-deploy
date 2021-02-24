@@ -208,17 +208,27 @@ button:disabled{
 }
 
 .capitalize {
-    text-transform: capitalize;
+    text-transform: capitalize!important;
 }
 
 .uppercase {
-    text-transform: uppercase;
+    text-transform: uppercase!important;
 }
 
 .lowercase {
-    text-transform: lowercase;
+    text-transform: lowercase!important;
 }
 
+.sentence-case {
+    text-transform: lowercase!important;
+}
 .sentence-case::first-letter {
-    text-transform: uppercase;
+    text-transform: uppercase!important;
+}
+
+.cancelled {
+    background: red!important;
+}
+.completed {
+    background: #007B5D!important;
 }

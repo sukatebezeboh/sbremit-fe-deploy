@@ -11,6 +11,7 @@ const endpoints = {
     CREATE_RECIPIENT: '/user/$_1/recipient',
     CREATE_TRANSFER: '/user/$_1/transfer',
     GET_TRANSFER: '/user/$_1/transfer/$_2',
+    GET_TRANSFERS: '/user/$_1/transfers',
     QUOTE_SERVICE: '/exchange/$_1/$_2'
 }
 

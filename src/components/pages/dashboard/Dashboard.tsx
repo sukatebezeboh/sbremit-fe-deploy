@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import { useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
+import { getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
-import { asset } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
@@ -14,13 +14,15 @@ import style from './Dashboard.css';
 const Body = style();
 
 const Dashboard = () => {
-    const transactions = [{},{},{},{},{},{},{},{},{},{}];
+    const transactions = useSelector((state: any) => state.transfer.transactions);
+    const recipients = useSelector((state: any) => state.recipients.recipients);
     const [openTDModal, handleOpenTDModal] = useState(false);
     const [showPlus, handleShowPlus] = useState(true);
 
     useEffect(() => {
-        getUserTransactions()
-    }, [showPlus])
+        getUserTransactions();
+        getRecipients();
+    }, [])
 
     return (
         <Body>
@@ -52,22 +54,22 @@ const Dashboard = () => {
                     </Link>
                 </div>
                 <div className="t-history">Transaction History <span>(13)</span></div>
-                {transactions.map(transaction => <div className="history">
+                {transactions && transactions.map((transaction: any) => <div className="history">
                     <div className="up" onClick={()=>handleOpenTDModal(true)}>
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
-                            <div>20 Nov 2020</div>
-                            <div className="name">To <b>Ifepade Adewunmi</b></div>
+                            <div>{convertDateString(transaction.dateCreated)}</div>
+                            <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                         </div>
-                        <div className="status"><span>Pending</span></div>
+                        <div className={"status"}><span className={"sentence-case "+transaction.status?.toLowerCase()}>{transaction.status}</span></div>
                         <div>
-                            <div>51,585.92 NGN</div>
-                            <div className="amt-gbp">100 GBP</div>
+                            <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
+                            <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
                         </div>
                     </div>
                     <hr/>
                     <div className="down">
-                        <div>Transaction #: <span>SBR334908</span></div>
+                        <div>Transaction #: <span>SBR{transaction.dateCreated}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
                             <span className="view-det"><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>

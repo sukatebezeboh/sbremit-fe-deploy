@@ -32,3 +32,16 @@ export const formatCurrency = (value: string, currency: string = ""): string => 
 export const getMoneyValue = (formattedAmount: string): number => {
     return Number(formattedAmount.replace(',', ''))
 }
+
+export const convertDateString = (value: any) => {
+    const d = new Date(value)
+    console.log(d, "///");
+    return d.toDateString()
+}
+    
+    
+
+export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn: any): T => {
+    const value = array.filter(a=>a[targetId] == id)[0];    
+    return value[keyToReturn] || value;
+}
