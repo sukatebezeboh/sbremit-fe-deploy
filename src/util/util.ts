@@ -34,14 +34,33 @@ export const getMoneyValue = (formattedAmount: string): number => {
 }
 
 export const convertDateString = (value: any) => {
+    value  = parseInt(value) * 1000
     const d = new Date(value)
-    console.log(d, "///");
     return d.toDateString()
 }
     
     
 
-export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn: any): T => {
+export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): T => {
+    // eslint-disable-next-line eqeqeq
     const value = array.filter(a=>a[targetId] == id)[0];    
     return value[keyToReturn] || value;
+}
+
+export const genPaginationHashTable = (array: any[], noPerPage: number) => {
+    const hashTable: any = {}
+    // const paginationList = Math.ceil(array.length / noPerPage)
+    array.forEach((val: any, i: number)=>{
+        const temp = Math.floor(i/noPerPage) + 1
+        if (hashTable[temp]) {
+            hashTable[temp].push(val)
+        }
+        else{
+            hashTable[temp] = [val]
+        }
+    })
+
+    const pages = Object.keys(hashTable);
+    
+    return {paginated: hashTable, pages }
 }

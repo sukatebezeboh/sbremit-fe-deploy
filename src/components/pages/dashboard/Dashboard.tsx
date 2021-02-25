@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import { getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
+import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -14,20 +15,29 @@ import style from './Dashboard.css';
 const Body = style();
 
 const Dashboard = () => {
-    const transactions = useSelector((state: any) => state.transfer.transactions);
+    let transfer = useSelector((state: any) => state.transfer);
     const recipients = useSelector((state: any) => state.recipients.recipients);
     const [openTDModal, handleOpenTDModal] = useState(false);
     const [showPlus, handleShowPlus] = useState(true);
+    const [modalData, setModalData] = useState({});
 
+    const dispatch = useDispatch()
     useEffect(() => {
         getUserTransactions();
         getRecipients();
     }, [])
 
+    const setPageTo = (page: string|number) => {
+        dispatch({type: TRANSFER, payload: {...transfer, currentTransactionsPage: page}})
+    }
+
+    const transactions = transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [];
+    const allTransactions = transfer.transactions;
+    
     return (
         <Body>
             <NavBar />
-            <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
+            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
@@ -53,9 +63,15 @@ const Dashboard = () => {
                         </div>
                     </Link>
                 </div>
-                <div className="t-history">Transaction History <span>(13)</span></div>
+                <div className="t-history">Transaction History <span>({allTransactions.length})</span></div>
                 {transactions && transactions.map((transaction: any) => <div className="history">
-                    <div className="up" onClick={()=>handleOpenTDModal(true)}>
+                    <div 
+                    className="up" 
+                    onClick={()=>{
+                            setModalData(transaction);
+                            handleOpenTDModal(true);
+                        }
+                        }>
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
                             <div>{convertDateString(transaction.dateCreated)}</div>
@@ -76,15 +92,16 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>)}
-                <div className="pagination">
+                {transfer.paginatedTransactions.pages?.length > 1 ? <div className="pagination">
                     <img src={asset('icons', 'prev.svg')} alt="prev"/> 
-                    <span className="active green-bg white-txt">1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
+                    {
+                        transfer.paginatedTransactions.pages?.map((page: string)=>(
+                            <span className={transfer.currentTransactionsPage == page ? "active green-bg white-txt" : ""} onClick={()=>setPageTo(page)} >{page}</span>
+                        ))
+                    }
+                    
                     <img src={asset('icons', 'next.svg')} alt="next"/>
-                 </div>
+                 </div>: <></>}
             </div>
         </Body>
     )

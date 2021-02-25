@@ -9,7 +9,9 @@ const initialTransferState: {} = {
     paymentMethod: "",
     transactionDetails: undefined,
     transferMethod: "",
-    transactions: []
+    transactions: [],
+    paginatedTransactions: {},
+    currentTransactionsPage: 1
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {

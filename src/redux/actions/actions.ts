@@ -8,7 +8,7 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { getQueryParam, parseEndpointParameters } from '../../util/util';
+import { genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
 import http from '../../util/http';
 
 const user = store.getState().auth.user;
@@ -370,7 +370,17 @@ export const getUserTransactions = () => {
     store.dispatch({type: LOADING, payload: true})
     http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
     .then(res=>{
-        store.dispatch({type: TRANSFER, payload: {...transfer, transactions: res.data.data} })
+        let transactions: any[] = res.data.data?.sort((a: any, b: any)=>{
+            if (a.dateCreated < b.dateCreated) {
+                return 1
+            }
+            if (a.dateCreated > b.dateCreated) {
+                return -1
+            }
+            return 0
+        })
+        const paginatedTransactions = genPaginationHashTable(transactions, 20);
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions} })
     })
     .catch(err=>{
         console.log(err, "--->");
