@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService } from '../../../redux/actions/actions';
+import { getQuoteService, setNewQuote } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
+import { paths } from '../../../util/paths';
 import { formatCurrency, getMoneyValue } from '../../../util/util';
 // import { asset } from '../../../util/util';
 import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
@@ -96,7 +97,9 @@ const GetQuote = () => {
 
                     </div>
                 </div>
-                <div className="btns"><span>Cancel</span> <button onClick={()=>history.push('/verification')}>Continue</button> </div>
+                <div className="btns"><span>Cancel</span> <button onClick={()=>{
+                    setNewQuote(toSend.currency, toReceive.currency);
+                    history.push(paths.VERIFICATION)}}>Continue</button> </div>
             </div>
         </Body>
     )

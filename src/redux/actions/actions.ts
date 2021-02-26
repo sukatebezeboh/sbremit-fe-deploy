@@ -314,12 +314,13 @@ export const createRecipient = (recipientData: any) => {
 export const confirmTransfer = (recipient: any, transfer: any, callback: Function) => {
     store.dispatch({type: LOADING, payload: true})
     const payload = {
-        paymentMethod: transfer.transferMethod,
+        transferMethod: transfer.transferMethod,
         recipientId: recipient.id,
         originCurrency: transfer.toSend?.currency,
         originAmount: Number(transfer.toSend?.value),
         destinationCurrency: transfer.toReceive?.currency,
         destinationAmount: Number(transfer.toReceive?.value),
+        paymentMethod: {}
     }
     const user = store.getState().auth.user
     http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
@@ -337,6 +338,12 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
                 message: res.data.error.message
             })
         }
+        store.dispatch({type: LOADING, payload: false})
+    })
+    .catch(err=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+    .then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
 }
@@ -379,11 +386,11 @@ export const getUserTransactions = () => {
             }
             return 0
         })
-        const paginatedTransactions = genPaginationHashTable(transactions, 20);
+        const paginatedTransactions = genPaginationHashTable(transactions, 10);
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions} })
     })
     .catch(err=>{
-        console.log(err, "--->");
+        console.log(err);
     })
     .then(()=>{
         store.dispatch({type: LOADING, payload: false})
@@ -430,15 +437,68 @@ export const cancelTransfer = (callback: Function) => {
     })
 }
 
+export const setNewQuote = (base: string, target: string) => {
+    const payload: {base: string, target: string, meta?: any} = {
+        base,
+        target
+    }
+    const userId = store.getState().auth.user?.id;
+    if(userId) payload.meta = {userId}
+    http.post('/quote', payload)
+    .then((res)=>{
+        if(res.data.data?.status === "200") {
+            CookieService.put('QUOTE', res.data.data.id)
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    }).catch((res)=>{
+        toastAction({
+            show: true,
+            type: 'warning',
+            timeout: 10000,
+            message: res.data.error.message
+        })
+    })
+}
+
 export const getQuoteService = ($_1: string, $_2: string) => {
     store.dispatch({type: LOADING, payload: true})
+    const quoteId = CookieService.get('QUOTE');
+    if(quoteId) {
+        http.get('/quote/'+quoteId)
+        .then(res=>{
+            const transfer = store.getState().transfer
+            if(res.data.status === "200"){
+                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+            } else {
+                getNewQuote($_1, $_2)
+            }
+        }).catch(()=>{
+            getNewQuote($_1, $_2)
+        })
+        .then(()=>{
+            store.dispatch({type: LOADING, payload: false})
+        })
+    }else {
+        getNewQuote($_1, $_2)
+    }
+}
 
+export const getNewQuote = ($_1: string, $_2: string) => {
     const transfer = store.getState().transfer
     http.get(parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
     .then(res => {
-        if(res.data.status === "200")
-        store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+        if(res.data.status === "200"){
+            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+        }
+    }).catch()
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
     })
-    store.dispatch({type: LOADING, payload: false})
-
 }

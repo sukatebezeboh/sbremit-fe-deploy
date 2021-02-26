@@ -1,4 +1,6 @@
+import { Field, Form, Formik } from 'formik';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -317,6 +319,10 @@ const Body = styled.div`
 
 const RecipientDetails = () => {
     const history = useHistory();
+    const recipient = useSelector((state: any) => state.recipients.recipient)
+
+    console.log(recipient, '///');
+    
 
     return (
         <Body>
@@ -325,82 +331,95 @@ const RecipientDetails = () => {
             <div className="page-content">
                 <PageHeading heading="Recipient's Details" subheading="Details of the person you are sending money to" back="/recipient" />
                 <div className="box-container">
-                    <div className="form part">
-                            <div className="heading mobile-hide">
-                                <div className="title">Sending to <span>Ifepade Adewunmi</span></div>
-                            </div>
-                            <hr className="mobile-hide"/>
+                    <Formik
+                            initialValues={{...recipient?.profile}}
+                            onSubmit={values => {
+                                // dispatch(updateRecipient(values))
+                            }}>
+                            {
+                                ({errors, touched, values}: any) => (
 
-                        <div className="inputs">
-                            <div className="names">
-                                <div>
-                                    <div>First Name<i>*</i></div>
-                                    <input type="text" placeholder="John" />
-                                </div>
-                                <div></div>
-                                <div>
-                                    <div>Last Name<i>*</i></div>
-                                    <input type="text" placeholder="Doe"/>
-                                </div>
-                            </div>
-                            <div className="grid-col-1-1 grid-gap-3">
-                                <div>
-                                    <div className="mobile-head">Mobile<i>*</i></div>
-                                    <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                                    <select name="" id="" className="phone-select" >
-                                        <option value="">United Kingdom</option>
-                                    </select>
-                                    <img src="./assets/flags/gbp.png" alt="uk"/>
-                                </div>
-                                <div>
-                                    <div>Email<i>*</i></div>
-                                    <input type="text" placeholder="johndoe@email.com"/>
-                                </div>
-                            </div>
-                            <div>
-                                <div>Address line 1</div>
-                                <input type="text" placeholder="Street name and no." />
-                            </div>
-                            <div>
-                                <div>Address line 2</div>
-                                <input type="text" placeholder="Apartment, suite, unit, building, floor" />
-                            </div>
-                            <div>
-                                <div>City / Town </div>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <div>State <i>*</i></div>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <div>Postal / zip code</div>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <div>Recipient’s bank name <i>*</i></div>
-                                <input type="text" placeholder="UBA - United Bank for Africa" />
-                            </div>
-                            <div className="grid-col-1-1 grid-gap-3">
-                                <div>
-                                    <div>Account number<i>*</i></div>
-                                    <input type="text" placeholder="3450012398" />
-                                </div>
-                                <div>
-                                    <div>Branch name<i>*</i></div>
-                                    <input type="text" placeholder="Yaounde"/>
-                                </div>
-                            </div>
-                            <div>
-                                <div>Reason</div>
-                                <select name="" id="">
-                                    <option value="family support">Family support</option>
-                                </select>
-                            </div>
+                                    <Form className="form part">
+                                            <div className="heading mobile-hide">
+                                                <div className="title">Sending to <span>Ifepade Adewunmi</span></div>
+                                            </div>
+                                            <hr className="mobile-hide"/>
 
-                        </div>
+                                        <div className="inputs">
+                                            <div className="names">
+                                                <div>
+                                                    <div>First Name<i>*</i></div>
+                                                    <Field name="firstName" type="text" placeholder="John" />
+                                                </div>
+                                                <div></div>
+                                                <div>
+                                                    <div>Last Name<i>*</i></div>
+                                                    <Field name="lastName" type="text" placeholder="Doe"/>
+                                                </div>
+                                            </div>
+                                            <div className="grid-col-1-1 grid-gap-3">
+                                                <div>
+                                                    <div className="mobile-head">Mobile<i>*</i></div>
+                                                    <Field name="mobile" type="text" className="phone-no" placeholder="e.g 07967885952"/>
+                                                    <Field as="select" name="" id="" className="phone-select" >
+                                                        <option value="">United Kingdom</option>
+                                                    </Field>
+                                                    <img src="./assets/flags/UK.png" alt="uk"/>
+                                                </div>
+                                                <div>
+                                                    <div>Email<i>*</i></div>
+                                                    <Field name="email" type="text" placeholder="johndoe@email.com"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>Address line 1</div>
+                                                <Field name="address1" type="text" placeholder="Street name and no." />
+                                            </div>
+                                            <div>
+                                                <div>Address line 2</div>
+                                                <Field name="address2" type="text" placeholder="Apartment, suite, unit, building, floor" />
+                                            </div>
+                                            <div>
+                                                <div>City / Town </div>
+                                                <Field name="city" type="text" />
+                                            </div>
+                                            <div>
+                                                <div>State <i>*</i></div>
+                                                <Field name="state" type="text" />
+                                            </div>
+                                            <div>
+                                                <div>Postal / zip code</div>
+                                                <Field name="zipCode" type="text" />
+                                            </div>
+                                            <div>
+                                                <div>Recipient’s bank name <i>*</i></div>
+                                                <Field name="bankName" type="text" placeholder="UBA - United Bank for Africa" />
+                                            </div>
+                                            <div className="grid-col-1-1 grid-gap-3">
+                                                <div>
+                                                    <div>Account number<i>*</i></div>
+                                                    <Field name="accountNumber" type="text" placeholder="3450012398" />
+                                                </div>
+                                                <div>
+                                                    <div>Branch name<i>*</i></div>
+                                                    <Field name="branchName" type="text" placeholder="Yaounde"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>Reason</div>
+                                                <Field as="select" name="reason" id="">
+                                                    <option value="family support">- None -</option>
+                                                    <option value="family support">Family support</option>
+                                                </Field>
+                                            </div>
 
-                    </div>
+                                        </div>
+
+                                    </Form>
+                                )
+                            }
+                    </Formik>
+
                     <div className="mobile-hide">
                         <TransferDetailsBox />
                     </div>

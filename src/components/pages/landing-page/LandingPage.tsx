@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import { getQuoteService, setNewQuote } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
+import { paths } from '../../../util/paths';
 import { formatCurrency, getMoneyValue } from '../../../util/util';
 import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
 import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
@@ -12,13 +14,18 @@ const LandingPage = (props: any) => {
     const Body = style(bg);
 
     const transfer = useSelector((state: any)=>state.transfer) 
-    console.log(transfer);
+    const history = useHistory();
     
     const conversionRate = transfer.conversionRate;
     const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        getQuoteService(toSend.currency, toReceive.currency);
+    }, [])
+
 
     const handleXInputChange = (e: any, data: any) => {
         const caret = e.target.selectionStart
@@ -92,7 +99,10 @@ const LandingPage = (props: any) => {
                     <div className="receive">
                         <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} />
                     </div>
-                    <button>Start sending money</button>
+                    <button onClick={()=>{
+                        setNewQuote(toSend.currency, toReceive.currency);
+                        history.push(paths.SIGN_UP);
+                        }}>Start sending money</button>
                 </div>
             </div>
         </Body>
