@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { toastAction } from '../../../redux/actions/actions';
+import { getServiceRate, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
@@ -22,6 +22,10 @@ const TransferMethod = () => {
         dispatch({type: TRANSFER, payload: {...transfer, transferMethod: method}})
     }
 
+    useEffect(()=>{
+        getServiceRate();
+    }, [transfer.transferMethod])
+
     const handleStartClick = () => {
         if (!selected) {
             return toastAction({
@@ -34,6 +38,8 @@ const TransferMethod = () => {
         return history.push(paths.GET_QUOTE);
     }
 
+    const serviceFee = transfer.serviceFee;
+
     return (
         <Body>
             <NavBar />
@@ -44,20 +50,20 @@ const TransferMethod = () => {
                         <div className={`${selected === "mobile_money" && "selected"}`} onClick={() => setTransferMethod('mobile_money')}>
                             <img src={asset('icons', 'transfer4.svg')} alt="mobile money"/>
                             <div>Mobile Money</div>
-                            <div>Service fee from 0.95 GBP</div>
+                            <div>Service fee from 0.25 GBP</div>
                         </div>
                         <div className={`${selected === "bank_transfer" && "selected"}`} onClick={() => setTransferMethod('bank_transfer')}>
                             <img src={asset('icons', 'bank.svg')} alt="bank transfer"/>
                             <div>Bank Transfer</div>
-                            <div>Service fee from 0.95 GBP</div>
+                            <div>Service fee from 1.99 GBP</div>
                         </div>
                         <div className={`pickup ${selected === "cash_pickup" && "selected"}`} onClick={() => setTransferMethod('cash_pickup')}>
                             <img src={asset('icons', 'cash.svg')} alt="cash pickup"/>
                             <div>Cash Pickup</div>
-                            <div>Service fee from 0.95 GBP</div>
+                            <div>Service fee from 1.99 GBP</div>
                         </div>
                     </div>
-                    <div className="footnote">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
+                    <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={handleStartClick}>Start</button> </div>
             </div>

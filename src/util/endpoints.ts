@@ -12,7 +12,10 @@ const endpoints = {
     CREATE_TRANSFER: '/user/$_1/transfer',
     GET_TRANSFER: '/user/$_1/transfer/$_2',
     GET_TRANSFERS: '/user/$_1/transfers',
-    QUOTE_SERVICE: '/exchange/$_1/$_2'
+    QUOTE_SERVICE: '/exchange/$_1/$_2',
+    GET_QUOTE: '/quote/$_1',
+    GET_SERVICES: '/transfer/services',
+    GET_SERVICE: '/transfer/service/$_1'
 }
 
 export default endpoints;

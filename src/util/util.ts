@@ -44,7 +44,7 @@ export const convertDateString = (value: any) => {
 export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): T => {
     // eslint-disable-next-line eqeqeq
     const value = array.filter(a=>a[targetId] == id)[0];    
-    return value[keyToReturn] || value;
+    return value?.[keyToReturn] || value;
 }
 
 export const genPaginationHashTable = (array: any[], noPerPage: number) => {

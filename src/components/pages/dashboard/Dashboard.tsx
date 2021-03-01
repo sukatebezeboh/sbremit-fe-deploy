@@ -20,6 +20,7 @@ const Dashboard = () => {
     const [openTDModal, handleOpenTDModal] = useState(false);
     const [showPlus, handleShowPlus] = useState(true);
     const [modalData, setModalData] = useState({});
+    const [selectedFilter, setSelectedFilter] = useState("");
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -27,13 +28,49 @@ const Dashboard = () => {
         getRecipients();
     }, [])
 
+    const _setSelectedFilter = (status: string) => {
+        if (selectedFilter === status) {
+            setSelectedFilter("")
+            setPageTo(1)
+        }else {
+            setSelectedFilter(status)
+            setPageTo(1)
+        }
+    }
+
     const setPageTo = (page: string|number) => {
         dispatch({type: TRANSFER, payload: {...transfer, currentTransactionsPage: page}})
     }
 
-    const transactions = transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [];
+    const getTransactions = () => {
+        const filters: any = {
+            all: transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            completed: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            cancelled: transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            pending: transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+        }
+        return filters[selectedFilter||"all"]
+    }
+
+    const getCorrespondingPages = () => {
+        const filters: any = {
+            all: transfer.paginatedTransactions.pages,
+            completed: transfer.paginatedCompletedTransactions.pages,
+            cancelled: transfer.paginatedCancelledTransactions.pages,
+            pending: transfer.paginatedPendingTransactions.pages,
+        }
+        return filters[selectedFilter||"all"]
+    }
+
+    const transactions = getTransactions();
     const allTransactions = transfer.transactions;
-    
+    const pages = getCorrespondingPages();
+
+    const getTransactionStatusCount = (status: string) => {
+        return allTransactions.filter((t: any)=>t.status?.toLowerCase() === status).length
+    }
+
+
     return (
         <Body>
             <NavBar />
@@ -44,16 +81,16 @@ const Dashboard = () => {
                     <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
                 <div className="transactions">
-                    <div> 
-                        <div className="green-txt">10</div>  
+                    <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
+                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>  
                         <div>Complete Transactions</div>
                     </div>
-                    <div> 
-                        <div className="yellow-txt">2</div>  
+                    <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
+                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>  
                         <div>Pending Transactions</div>
                     </div>
-                    <div> 
-                        <div className="red-txt">1</div>  
+                    <div onClick={()=>_setSelectedFilter("cancelled")} className={selectedFilter === "cancelled" ? "selected-border-red" : ''}> 
+                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>  
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">
@@ -92,10 +129,10 @@ const Dashboard = () => {
                         </div>
                     </div>
                 </div>)}
-                {transfer.paginatedTransactions.pages?.length > 1 ? <div className="pagination">
+                {pages?.length > 1 ? <div className="pagination">
                     <img src={asset('icons', 'prev.svg')} alt="prev"/> 
                     {
-                        transfer.paginatedTransactions.pages?.map((page: string)=>(
+                        pages?.map((page: string)=>(
                             <span className={transfer.currentTransactionsPage == page ? "active green-bg white-txt" : ""} onClick={()=>setPageTo(page)} >{page}</span>
                         ))
                     }

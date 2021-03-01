@@ -207,6 +207,18 @@ button:disabled{
     border: 1px solid #007B5D!important;
 }
 
+.selected-border-green {
+    border: 1px solid #007B5D!important;
+}
+
+.selected-border-yellow {
+    border: 1px solid #FCD20F!important;
+}
+
+.selected-border-red {
+    border: 1px solid #CF0921!important;
+}
+
 .capitalize {
     text-transform: capitalize!important;
 }
@@ -227,7 +239,7 @@ button:disabled{
 }
 
 .cancelled {
-    background: red!important;
+    background: #CF0921!important;
 }
 .completed {
     background: #007B5D!important;

@@ -132,9 +132,12 @@ export const toastAction = (toastConfig: any) => {
 export const appValuesAction = async() => {
     const allValues = await AppService.getValues();
     const countries = await AppService.getValueById(2);
+    const services = await AppService.getServices();
     const values: any = {}
     values.values = allValues;
     values.countries = countries.data;
+    values.services = services;
+
     store.dispatch({type: APP_VALUES, payload: values})
     console.log(store.getState());
 }
@@ -387,7 +390,10 @@ export const getUserTransactions = () => {
             return 0
         })
         const paginatedTransactions = genPaginationHashTable(transactions, 10);
-        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions} })
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="cancelled"), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="completed"), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="pending"), 10)
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
     })
     .catch(err=>{
         console.log(err);
@@ -446,7 +452,7 @@ export const setNewQuote = (base: string, target: string) => {
     if(userId) payload.meta = {userId}
     http.post('/quote', payload)
     .then((res)=>{
-        if(res.data.data?.status === "200") {
+        if(res.data.status === "200") {
             CookieService.put('QUOTE', res.data.data.id)
         }
         else {
@@ -470,12 +476,14 @@ export const setNewQuote = (base: string, target: string) => {
 export const getQuoteService = ($_1: string, $_2: string) => {
     store.dispatch({type: LOADING, payload: true})
     const quoteId = CookieService.get('QUOTE');
+    
     if(quoteId) {
-        http.get('/quote/'+quoteId)
+        http.get(parseEndpointParameters(endpoints.GET_QUOTE , quoteId))
         .then(res=>{
             const transfer = store.getState().transfer
             if(res.data.status === "200"){
-                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: res.data.data}})
+                store.dispatch({type: LOADING, payload: false})
             } else {
                 getNewQuote($_1, $_2)
             }
@@ -496,9 +504,28 @@ export const getNewQuote = ($_1: string, $_2: string) => {
     .then(res => {
         if(res.data.status === "200"){
             store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+            store.dispatch({type: LOADING, payload: false})
         }
-    }).catch()
+    }).catch(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
     .then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
+}
+
+export const getServiceRate = () => {
+    const transferMethodsIds: any = {
+        mobile_money: "1",
+        bank_transfer: "2",
+        cash_pickup: "3"
+    }
+   const services = store.getState().appValues.services;
+   const transfer = store.getState().transfer
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0];
+   
+   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee || 0}})
+
+   return fees?.fee || 0;
 }
