@@ -1,6 +1,10 @@
 import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
+import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
+import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import PageHeading from '../page-heading/PageHeading';
 
@@ -15,7 +19,14 @@ const style = () => styled.div`
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(2px);
     z-index: 1;
-
+    .disable {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+    .is-resending {
+        transition: 3s ease-out;
+        transform: rotateZ(-720deg);
+    }
     .modal {
         box-shadow: 0px 10px 12px #CCCCCC80;
         border-radius: 15px;
@@ -441,13 +452,50 @@ const TransactionDetail = (props: any) => {
     const {openTDModal, handleOpenTDModal, handleShowPlus, data} = props;
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
     const recipients = useSelector((state: any) => state.recipients.recipients);
-
+    const transfer = useSelector((state: any) => state.transfer);
+    const [isResending, setIsResending] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const showMobileModal = (bool: boolean) => {
         handleOpenMobileTimeline(bool)
     }
+
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
+
+    const handleResend = () => {
+        setIsResending(true)
+
+        console.log(transfer, recipient,  data, "--;;;--");
+        const toSend = {
+            value: data.originAmount,
+            currency: data.originCurrency,
+            image: data.originCurrency
+        }
+
+        const toReceive = {
+            value: data.destinationAmount,
+            currency: data.destinationCurrency,
+            image: data.destinationCurrency
+        }
+
+        const transferMethod = data.transferMethod
+
+        dispatch({type: RECIPIENT, payload: recipient})
+        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "Okay. Let's start resending in a smooth sail..."
+        })
+
+        setTimeout(()=>{
+            history.push(paths.TRANSFER_METHOD)
+            setIsResending(false)
+        }, 1000 )
+    }    
     return (
        
         (openTDModal && data) && ( 
@@ -455,7 +503,7 @@ const TransactionDetail = (props: any) => {
             <div className="modal">
                 <div className="head">
                     <div className="t-id">Transaction #: <span>SBR{data.dateCreated}</span></div>
-                    <div className="status"> <span className="sentence-case">{data.status}</span> </div>
+                    <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
                     <div className="close" onClick={()=>handleOpenTDModal(false)} >x</div>
                 </div>
                 <div className="sub">
@@ -469,12 +517,15 @@ const TransactionDetail = (props: any) => {
                             <img src={asset('icons', 'export.svg')} alt="export"/>
                             <div> <span className="mobile-hide">Export </span>PDF</div>
                         </div>
-                        <div className="cancel">
+                        <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
+                            getUserTransactions();
+                            handleOpenTDModal(false)
+                        }, data.id)}>
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
                         </div>
-                        <div className="resend">
-                            <img src={asset('icons', 'reload.svg')} alt="reload"/>
+                        <div className="resend" onClick={handleResend}>
+                            <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>
                         </div>
                     </div>

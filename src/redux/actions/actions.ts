@@ -403,8 +403,8 @@ export const getUserTransactions = () => {
     })
 }
 
-export const cancelTransfer = (callback: Function) => {
-    const transferId = CookieService.get('transfer');
+export const cancelTransfer = (callback: Function, id = null) => {
+    const transferId = id || CookieService.get('transfer');
     if (!transferId) {
         callback?.()
         return toastAction({

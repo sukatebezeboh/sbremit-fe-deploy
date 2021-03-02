@@ -96,7 +96,7 @@ const GetQuote = () => {
                                 <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} />
                             </div>
                         </div>
-                        <div className="footnote">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
+                        <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
 
                     </div>
                 </div>
