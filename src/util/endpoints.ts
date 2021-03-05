@@ -15,7 +15,8 @@ const endpoints = {
     QUOTE_SERVICE: '/exchange/$_1/$_2',
     GET_QUOTE: '/quote/$_1',
     GET_SERVICES: '/transfer/services',
-    GET_SERVICE: '/transfer/service/$_1'
+    GET_SERVICE: '/transfer/service/$_1',
+    INITIATE_PAYMENT: '/user/$_1/payment'
 }
 
 export default endpoints;

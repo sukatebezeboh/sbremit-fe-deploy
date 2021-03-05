@@ -51,3 +51,11 @@ export const RecipientValidator = Yup.object().shape({
     bankName: Yup.string().min(2, "Too short").max(100, "Too long").required("Required"),
     accountNumber: Yup.string().min(5, "Too short").max(15, "Too long").required("Required"),
  });
+
+
+ export const NewPaymentCardValidator = Yup.object().shape({
+  cardHolder: Yup.string().min(3, "Too short").required("Required"),
+  cardNumber: Yup.number().min(1000000000000000, "Invalid card number").max(9999999999999999, "Invalid card number").required("Required"),
+  expiryDate: Yup.string().min(5, "Too short").max(5, "Too long").required("Required"),
+  cvv: Yup.string().min(3, "Too short").max(3, "Too long").required("Required"),
+});

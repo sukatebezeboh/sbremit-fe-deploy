@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Button = styled.div`
     .radio-span {
-            input[type=radio] {
+            input {
                 width: 19px;
                 :before {
                     width: 19px;
@@ -50,7 +50,7 @@ const Button = styled.div`
 
 @media only screen and (max-width: 900px) { 
     .radio-span {
-            input[type=radio] {
+            input {
                 width: 19px;
                 :before {
                     width: 19px;
@@ -73,11 +73,11 @@ const Button = styled.div`
 `
 
 function RadioButton(props) {
-    const {selected} = props;
+    const {selected, type, name} = props;
     return (
         <Button>
             <span className="radio-span">
-                <input type="radio" name="gender" value="get_from_props" checked={selected} />
+                <input type={type || "radio"} name={name || "gender"} value="true" checked={selected} />
             </span>
         </Button>
     )

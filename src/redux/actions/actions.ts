@@ -139,6 +139,7 @@ export const appValuesAction = async() => {
     values.services = services;
 
     store.dispatch({type: APP_VALUES, payload: values})
+    getServiceRate()
     console.log(store.getState());
 }
 
@@ -463,13 +464,9 @@ export const setNewQuote = (base: string, target: string) => {
                 message: res.data.error.message
             })
         }
-    }).catch((res)=>{
-        toastAction({
-            show: true,
-            type: 'warning',
-            timeout: 10000,
-            message: res.data.error.message
-        })
+    }).catch((error)=>{
+        console.log(error);
+        
     })
 }
 
@@ -500,11 +497,11 @@ export const getQuoteService = ($_1: string, $_2: string) => {
 
 export const getNewQuote = ($_1: string, $_2: string) => {
     const transfer = store.getState().transfer
-    http.get(parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
+    axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
     .then(res => {
         if(res.data.status === "200"){
             store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
-            store.dispatch({type: LOADING, payload: false})
+            store.dispatch({type: LOADING, payload: false})            
         }
     }).catch(()=>{
         store.dispatch({type: LOADING, payload: false})
@@ -522,10 +519,51 @@ export const getServiceRate = () => {
     }
    const services = store.getState().appValues.services;
    const transfer = store.getState().transfer
-   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0];
-   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0];
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0] || services?.data[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees[0];
+   console.log(fees, 'fees');
    
-   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee || 0}})
+   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee}})
 
    return fees?.fee || 0;
+}
+
+export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
+    store.dispatch({type: LOADING, payload: true})
+
+    const transfer = store.getState().transfer
+    const userId = store.getState().auth.user.id;
+
+    const payload = {
+        transferId: transfer.transactionDetails.id,
+        method: transfer.paymentMethod,
+        amount: transfer.transactionDetails.originAmount,
+        reference: `${transfer.transactionDetails.originAmount}`,
+        status: "PENDING",
+        dateCreated: Math.round(Date.now() / 1000),
+        lastUpdated: null,
+        meta,
+        data
+    }
+
+    http.post(parseEndpointParameters(endpoints.INITIATE_PAYMENT, userId), payload)
+    .then(res => {
+        if (res.data.id) {
+            callback?.()
+            store.dispatch({type: LOADING, payload: false})
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
+
+    }).catch()
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
 }

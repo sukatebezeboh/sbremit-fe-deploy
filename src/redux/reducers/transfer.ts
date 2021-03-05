@@ -3,10 +3,10 @@ import { TRANSFER } from "../actionTypes";
 
 const initialTransferState: {} = {
     conversionRate: {},
-    serviceFee: 0.95,
+    serviceFee: 0,
     service: {},
-    toSend: {value: "1", currency: 'GBP', image: "UK", isSend: true},
-    toReceive: {value: `${752.81}`, currency: 'XAF', image: "CM"},
+    toSend: {value: "0.00", currency: 'GBP', image: "UK", isSend: true},
+    toReceive: {value: `${0.00}`, currency: 'XAF', image: "CM"},
     paymentMethod: "",
     transactionDetails: undefined,
     transferMethod: "",

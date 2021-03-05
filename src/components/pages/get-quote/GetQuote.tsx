@@ -85,10 +85,10 @@ const GetQuote = () => {
                             </div>
                             <div className="wrapper">
                                 <div className="timeline-box">
-                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green">1 GBP = {conversionRate.rate?.rate} XAF</span></span></div>
+                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green">1 GBP = {conversionRate.rate} XAF</span></span></div>
                                     <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
                                     {/* <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> </span></div> */}
-                                    <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + serviceFee}`)} GBP</span></span></span></div>
+                                    <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> </span></div>
                                 </div>
                             </div>
