@@ -204,7 +204,7 @@ const PaymentMethod = () => {
             return
         } 
 
-        if (selected==="dc_card"){
+        if (selected==="card"){
             history.push(paths.CARD_PAYMENT)
         }else if (selected==="bank_transfer") {
             history.push(paths.CREATE_TRANSFER)
@@ -241,9 +241,9 @@ const PaymentMethod = () => {
                 <div className="box-container details">
                     <div>
                         
-                        <div className="radio-card" onClick={()=>setSelected('dc_card')}>
+                        <div className="radio-card" onClick={()=>setSelected('card')}>
                             <div className="radio-div">
-                                <RadioButton selected={selected==='dc_card'}/>
+                                <RadioButton selected={selected==='card'}/>
                             </div>
                             <div>
                                 <div className="rc-head">Debit / Credit Card</div>
