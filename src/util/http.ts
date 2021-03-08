@@ -16,11 +16,15 @@ http.interceptors.request.use((config: any) => {
     
     config.transformRequest = [
         (data: any, headers: any) => {
-            const url = env.API_HOST + config.url;
+            // This check is a temporary fix for netlify hashing hitch. This check should be removed once the staging environment is no longer netlify
+            // or api calls are now made to an SSL certified endpoint
+            const url = env.API_HOST === "/api" ? "http://api-uat.sbremit.co.uk" + config.url : env.API_HOST + config.url;
             const payload = JSON.stringify(data);
             const authToken = authData.authToken
 
             const requestHash = payload ? sha1(url + payload + authToken) : sha1(url + authToken);
+            console.log('url:', url, 'payload:', payload, 'authToken:', authToken, 'requestHash:', requestHash);
+            
 
             headers = {
                 'X-SERVICE-PROVIDER'    : authData.serviceProvider,

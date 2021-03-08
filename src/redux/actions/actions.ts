@@ -567,3 +567,11 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
         store.dispatch({type: LOADING, payload: false})
     })
 }
+
+export const makePaymentWithStripe = () => {
+    const transfer = store.getState().transfer
+    axios.post('/create-payment-intent', {
+        transferId: transfer.transactionDetails.id,
+    })
+    .then()
+}

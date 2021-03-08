@@ -95,7 +95,7 @@ const TransferDetailsBox = () => {
                     </div>
                     <div className="row">
                         <div className="left">Exchange rate</div>
-                        <div className="right uppercase">1 {transfer.conversionRate?.base} = {formatCurrency(transfer.conversionRate?.rate)} {transfer.conversionRate?.target}</div>
+                        <div className="right uppercase">1 {transfer.conversionRate?.base} = {formatCurrency(transfer.conversionRate?.rate?.rate)} {transfer.conversionRate?.target}</div>
                     </div>
                     <div className="row">
                         <div className="left">Service fee</div>
