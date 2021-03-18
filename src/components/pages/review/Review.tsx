@@ -185,7 +185,7 @@ const Review = () => {
         :
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={3} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Review" subheading="Review the details of your transfer" back="/recipient-details" />

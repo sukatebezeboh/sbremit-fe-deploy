@@ -317,7 +317,7 @@ const Verification = () => {
     return (
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={1}/>
             <div className="page-content">
                 <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
                 <div className="box-container">
@@ -374,7 +374,6 @@ const Verification = () => {
                                     </span>
                                     <span className="m-grid-col-span-1-4"> <input className="specify" placeholder="Please specify" /> </span>
                                 </div>
-                                
                             </div>
                             <div>
                                 <div>Address line 1<i>*</i></div>

@@ -28,6 +28,18 @@ const Div = styled.div`
                     width: 43px;
                     height: 6px;
                 }
+                .progressed {
+                    width: 100%;
+                    height: 6px;
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                }
+                .progressing {
+                    width: 100%;
+                    height: 6px;
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                }
             }
             .point-labels {
                 display: grid;
@@ -75,20 +87,21 @@ const Div = styled.div`
             }
         }
     }
-}    
+}
 
 `
 
-const ProgressBar = () => {
+const ProgressBar = (props) => {
+    const {point} = props
     return (
         <Div>
             <div className="timeline">
                     <div className="bar">
-                        <div className="point point-1"></div>
-                        <div className="point point-2"></div>
-                        <div className="point point-3"></div>
-                        <div className="point point-4"></div>
-                        <div className="point point-5"></div>
+                        <div className={`point point-1 ${point == 1 ? "progressing" : (point > 1 ? 'progressed': '')}`}></div>
+                        <div className={`point point-2 ${point == 2 ? "progressing" : (point > 2 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-3 ${point == 3 ? "progressing" : (point > 3 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-4 ${point == 4 ? "progressing" : (point > 4 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-5 ${point == 5 ? "progressing" : (point > 5 ? 'progressed': '')}`}></div>
                     </div>
                     <div className="point-labels">
                         <div className="label-1"> <div>Get quote</div></div>

@@ -327,7 +327,7 @@ const RecipientDetails = () => {
     return (
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={2} />
             <div className="page-content">
                 <PageHeading heading="Recipient's Details" subheading="Details of the person you are sending money to" back="/recipient" />
                 <div className="box-container">

@@ -17,6 +17,7 @@ import PaymentMethod from '../components/pages/payment-method/PaymentMethod';
 import CardPayment from '../components/pages/card-payment/CardPayment';
 import CreateTransfer from '../components/pages/create-transfer/CreateTransfer';
 import TransferComplete from '../components/pages/transfer-complete/TransferComplete';
+import Stripe from '../components/pages/stripe/Stripe';
 import { paths } from './paths';
 
 
@@ -136,6 +137,11 @@ export const Routing: IRoute[] = [
     { 
         path: paths.TRANSFER_COMPLETE, 
         component: TransferComplete,
+        protected: true 
+    },
+    { 
+        path: '/stripe', 
+        component: Stripe,
         protected: true 
     },
 ]

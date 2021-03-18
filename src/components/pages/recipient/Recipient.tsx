@@ -33,7 +33,7 @@ const Recipient = () => {
     return (
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={2} />
             <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} />
             <div className="page-content">
                 <div className="search">

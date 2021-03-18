@@ -8,9 +8,12 @@ import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, toastAction } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../ui-components/confirm-modal/ConfirmModal';
+import { loadStripe } from '@stripe/stripe-js';
+import http from '../../../util/http';
+import { formatCurrency } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -177,7 +180,6 @@ const Body = styled.div`
                         font: normal normal normal 11px Montserrat;
                     }
                 }
-                            
             }
         }
     }
@@ -192,7 +194,7 @@ const PaymentMethod = () => {
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const dispatch = useDispatch()
 
-    const handleProceed = () => {
+    const handleProceed = async () => {
         dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
         if(!selected){
             toastAction({
@@ -200,15 +202,17 @@ const PaymentMethod = () => {
                 type: 'warning',
                 timeout: 10000,
                 message: 'Select a payment method to proceed'
-            }) 
+            })
             return
-        } 
-
+        }
         if (selected==="card"){
-            history.push(paths.CARD_PAYMENT)
-        }else if (selected==="bank_transfer") {
+            // history.push(paths.CARD_PAYMENT)
+            await makePaymentWithStripe()
+        }
+        else if (selected==="bank_transfer") {
             history.push(paths.CREATE_TRANSFER)
-        }else{
+        }
+        else{
             return
         }
     }
@@ -232,7 +236,7 @@ const PaymentMethod = () => {
             }}
             /> : <></>}
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={4} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
@@ -240,7 +244,6 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
-                        
                         <div className="radio-card" onClick={()=>setSelected('card')}>
                             <div className="radio-div">
                                 <RadioButton selected={selected==='card'}/>
@@ -249,14 +252,14 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Debit / Credit Card</div>
                                 <div className="rc-body">
                                     <div>
-                                        Authorise SBremit to debit <b className="green-txt">100.95 GBP</b>  from your Debit / Credit card
+                                        Authorise SBremit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your Debit / Credit card
                                     </div>
                                     <div>
                                         Should arrive in 2 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                    Fast and easy transfer - 0.95 GBP
+                                    Fast and easy transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
                         </div>
@@ -269,14 +272,14 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Bank Transfer</div>
                                 <div className="rc-body">
                                     <div>
-                                        Transfer <b className="green-txt">100.95 GBP</b>  from your bank, we’ll proceed when we receive payment                                    
+                                        Transfer <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your bank, we’ll proceed when we receive payment
                                     </div>
                                     <div>
                                         Should arrive in 11 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                        Low cost transfer - 4.99 GBP
+                                        Low cost transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
                         </div>
@@ -284,7 +287,6 @@ const PaymentMethod = () => {
                     <div className="mobile-hide">
                         <TransferDetailsBox />
                     </div>
-                    
                 </div>
                 <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </div>
             </div>

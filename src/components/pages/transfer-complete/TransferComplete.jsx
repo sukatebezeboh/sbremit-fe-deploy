@@ -174,7 +174,7 @@ const TransferComplete = () => {
     return (
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={5} />
             <div className="page-content">
                 <div className="box-container details">
                     <div className="completed-box">

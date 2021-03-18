@@ -67,7 +67,7 @@ const ExchangeRateInput = (props: any) =>{
             <div className="x-input">
                 <div className="xi-1">
                     <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                    <input key={data?.currency +'-'+ window.location.pathname} type="text" value={formatCurrency(data?.value)} onChange={(e)=>{handleXInputChange(e, data)}}/>
+                    <input key={data?.currency +'-'+ window.location.pathname} type="text" value={data?.value} onChange={(e)=>{handleXInputChange(e, data)}}/>
                 </div>
                 <div className="flg-drp">
                     <img src={`./assets/flags/${data?.image}.png`} alt={data?.currency}/>
@@ -75,7 +75,8 @@ const ExchangeRateInput = (props: any) =>{
                     <span><img src="./assets/icons/angle-down.svg" alt=""/></span>
                 </div>
             </div>
-        </Field>)
+        </Field>
+        )
 }
 
 export default ExchangeRateInput;

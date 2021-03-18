@@ -75,9 +75,9 @@ const TransferDetailsBox = () => {
     const transfer = useSelector((state: any) => state.transfer);    
 
     return (
-        !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?
-        <Redirect to={paths.TRANSFER_METHOD} />
-        :
+        // !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?
+        // <Redirect to={paths.TRANSFER_METHOD} />
+        // :
         <Div className="">
             <div className="transfer-details part">
                     <div className="heading">
@@ -91,11 +91,11 @@ const TransferDetailsBox = () => {
                     </div>
                     <div className="row">
                         <div className="left">You send</div>
-                        <div className="right uppercase"><b>{transfer.toSend.value} {transfer.toSend.currency}</b></div>
+                        <div className="right uppercase"><b>{formatCurrency(transfer.toSend.value)} {transfer.toSend.currency}</b></div>
                     </div>
                     <div className="row">
                         <div className="left">Exchange rate</div>
-                        <div className="right uppercase">1 {transfer.conversionRate?.base} = {formatCurrency(transfer.conversionRate?.rate?.rate)} {transfer.conversionRate?.target}</div>
+                        <div className="right uppercase">1 {transfer.conversionRate?.base} = {formatCurrency(transfer.conversionRate?.rate)} {transfer.conversionRate?.target}</div>
                     </div>
                     <div className="row">
                         <div className="left">Service fee</div>
@@ -103,11 +103,11 @@ const TransferDetailsBox = () => {
                     </div>
                     <div className="row">
                         <div className="left">They get</div>
-                        <div className="right uppercase"><b>{transfer.toReceive.value} {transfer.toReceive.currency}</b></div>
+                        <div className="right uppercase"><b>{formatCurrency(transfer.toReceive.value)} {transfer.toReceive.currency}</b></div>
                     </div>
                     <div className="row">
                         <div className="left">Total to pay</div>
-                        <div className="right uppercase"><b className="green-txt">{Number(transfer.toSend.value) + Number(transfer.serviceFee)} {transfer.toSend.currency}</b></div>
+                        <div className="right uppercase"><b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b></div>
                     </div>
                     <div className="row">
                         <div className="left">Transfer time</div>

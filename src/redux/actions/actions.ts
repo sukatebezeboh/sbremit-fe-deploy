@@ -8,8 +8,9 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
+import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
 import http from '../../util/http';
+import { loadStripe } from '@stripe/stripe-js';
 
 const user = store.getState().auth.user;
 
@@ -222,7 +223,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
                 })
                 store.dispatch({type: SUBMITTING, payload: ""})
             }
-        })   
+        })
     }
 
     else{
@@ -241,7 +242,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
                     type: 'success',
                     timeout: 15000,
                     message: `Password changed`
-                })    
+                })
                 store.dispatch({type: SUBMITTING, payload: ""})
             } else {
                 toastAction({
@@ -262,7 +263,7 @@ export const getRecipients = () => {
 
     http.get(parseEndpointParameters(endpoints.RECIPIENTS, user.id))
     .then((res: any) => {
-        if(res.data.status === "200"){            
+        if(res.data.status === "200"){
             store.dispatch({type: RECIPIENTS, payload: res.data.data})
             store.dispatch({type: LOADING, payload: false})
         }
@@ -275,7 +276,7 @@ export const getRecipients = () => {
 }
 
 export const getRecipient = () => {
-    
+
 }
 
 export const createRecipient = (recipientData: any) => {
@@ -297,7 +298,7 @@ export const createRecipient = (recipientData: any) => {
                 type: 'success',
                 timeout: 10000,
                 message: "New recipient added"
-            }) 
+            })
         }
         else {
             toastAction({
@@ -306,7 +307,7 @@ export const createRecipient = (recipientData: any) => {
                 timeout: 15000,
                 title: "Add recipient failed",
                 message: res.data.error.message
-            })    
+            })
         }
     })
     .catch(err=>console.log(err))
@@ -363,7 +364,7 @@ export const getTransactionDetails = (callback?: Function) => {
             message: `No transfer initiated yet`
         })
     }
-    
+
     store.dispatch({type: LOADING, payload: true})
     const user = store.getState().auth.user
     const transfer = store.getState().transfer
@@ -479,7 +480,7 @@ export const getQuoteService = ($_1: string, $_2: string) => {
         .then(res=>{
             const transfer = store.getState().transfer
             if(res.data.status === "200"){
-                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: res.data.data}})
+                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data, rate: res.data.data.rate?.rate}}})
                 store.dispatch({type: LOADING, payload: false})
             } else {
                 getNewQuote($_1, $_2)
@@ -501,7 +502,7 @@ export const getNewQuote = ($_1: string, $_2: string) => {
     .then(res => {
         if(res.data.status === "200"){
             store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
-            store.dispatch({type: LOADING, payload: false})            
+            store.dispatch({type: LOADING, payload: false})
         }
     }).catch(()=>{
         store.dispatch({type: LOADING, payload: false})
@@ -519,10 +520,9 @@ export const getServiceRate = () => {
     }
    const services = store.getState().appValues.services;
    const transfer = store.getState().transfer
-   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0] || services?.data[0];
-   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees[0];
-   console.log(fees, 'fees');
-   
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0] || services?.data?.[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees?.[0];
+
    store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee}})
 
    return fees?.fee || 0;
@@ -568,10 +568,53 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
     })
 }
 
-export const makePaymentWithStripe = () => {
-    const transfer = store.getState().transfer
-    axios.post('/create-payment-intent', {
-        transferId: transfer.transactionDetails.id,
+export const makePaymentWithStripe = async () => {
+    store.dispatch({type: LOADING, payload: true})
+
+    toastAction({
+        show: true,
+        type: 'info',
+        timeout: 10000,
+        title: "Redirecting...",
+        message: "All card payments are handled with Stripe. Please wait while we redirect you there"
     })
-    .then()
+    try {
+        const transfer = store.getState().transfer
+        const stripePromise = await loadStripe("pk_test_51IRO98LR6ZSV0Ja4g66DDSiCPiUasKR3B2a1gZ8Qb7FfC6nmKSfJmTitbTa6mHi7f7nEfHBkYsc1kWLWmc2SZCXf00SPR70HyD");
+        const stripe = await stripePromise;
+        const response = await http.post("/stripe/payment/card", {
+            "items": [
+            {
+                "name": "SBRemit Transfer - GBP->XAF",
+                "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
+                "quantity": 1
+            },
+            {
+                "name": transfer.transferMethod,
+                "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
+                "quantity": 1
+            }
+            ]
+        });
+        const session = response.data;
+        // When the customer clicks on the button, redirect them to Checkout.
+        const result = await stripe?.redirectToCheckout({
+            sessionId: session.data.id
+        });
+        store.dispatch({type: LOADING, payload: false})
+
+        if (result?.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer
+            // using `result.error.message`.
+        }
+    }catch (e){
+        store.dispatch({type: LOADING, payload: false})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "An error occurred. Please, try again"
+        })
+    }
 }
