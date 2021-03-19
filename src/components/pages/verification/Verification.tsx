@@ -1,6 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
+import { paths } from '../../../util/paths';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
@@ -313,8 +314,11 @@ const Body = styled.div`
 
 const Verification = () => {
     const history = useHistory();
+    const enableVerficationStep = false;
 
     return (
+        !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
+        :
         <Body>
             <NavBar />
             <ProgressBar point={1}/>

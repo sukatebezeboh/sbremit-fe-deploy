@@ -467,7 +467,6 @@ const TransactionDetail = (props: any) => {
     const handleResend = () => {
         setIsResending(true)
 
-        console.log(transfer, recipient,  data, "--;;;--");
         const toSend = {
             value: data.originAmount,
             currency: data.originCurrency,

@@ -584,16 +584,16 @@ export const makePaymentWithStripe = async () => {
         const stripe = await stripePromise;
         const response = await http.post("/stripe/payment/card", {
             "items": [
-            {
-                "name": "SBRemit Transfer - GBP->XAF",
-                "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
-                "quantity": 1
-            },
-            {
-                "name": transfer.transferMethod,
-                "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
-                "quantity": 1
-            }
+                {
+                    "name": "SBRemit Transfer - GBP->XAF",
+                    "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
+                    "quantity": 1
+                },
+                {
+                    "name": "Service fee",
+                    "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
+                    "quantity": 1
+                }
             ]
         });
         const session = response.data;

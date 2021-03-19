@@ -1,5 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { paths } from '../../../util/paths'
 
 const Div = styled.div`
         margin-top: 110px;
@@ -104,11 +106,11 @@ const ProgressBar = (props) => {
                         <div className={`point point-5 ${point == 5 ? "progressing" : (point > 5 ? 'progressed': '')}`}></div>
                     </div>
                     <div className="point-labels">
-                        <div className="label-1"> <div>Get quote</div></div>
+                        <div className="label-1"> <div><Link to={paths.GET_QUOTE}>Get quote</Link></div></div>
                         <div className="label-2"> <div>Verification</div> </div>
-                        <div className="label-3"> <div>Recipient</div></div>
-                        <div className="label-4"> <div>Review</div></div>
-                        <div className="label-4"> <div>Pay</div></div>
+                        <div className="label-3"> <div><Link to={point >=3 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
+                        <div className="label-4"> <div><Link to={point >=4 ? paths.REVIEW : "#"}>Review </Link></div></div>
+                        <div className="label-4"> <div><Link to={point >=3 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
                     </div>
                 </div>
         </Div>

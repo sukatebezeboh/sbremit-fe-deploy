@@ -48,8 +48,8 @@ export const RecipientValidator = Yup.object().shape({
     email: Yup.string().required("Required").email("Enter valid email").required("Required"),
     state: Yup.string().min(3, "Too short").max(25, "Too long").required("Required"),
     reason: Yup.string(),
-    bankName: Yup.string().min(2, "Too short").max(100, "Too long").required("Required"),
-    accountNumber: Yup.string().min(5, "Too short").max(15, "Too long").required("Required"),
+    bankName: Yup.string().min(2, "Too short").max(100, "Too long"),
+    accountNumber: Yup.string().min(5, "Too short").max(15, "Too long"),
  });
 
 

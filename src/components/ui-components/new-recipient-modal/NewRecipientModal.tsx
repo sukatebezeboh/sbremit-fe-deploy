@@ -255,7 +255,7 @@ function NewRecipientModal(props: any) {
         firstName: "",
         lastName: "",
         mobile: "",
-        phoneCode: "+234",
+        phoneCode: "+237",
         email: "",
         state: "",
         reason: "",
@@ -296,9 +296,9 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
                                                     <option value="+01">United Kingdom</option>
-                                                    <option value="+234">Nigeria</option>
+                                                    <option value="+237">Cameroon</option>
                                                 </Field>
-                                                <img src="./assets/flags/UK.png" alt="uk"/>
+                                                <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
                                                 <div className="margin-adjust"></div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>

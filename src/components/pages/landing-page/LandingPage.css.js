@@ -102,9 +102,7 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
                 height: 48px;
                 outline: none;
                 :nth-child(1){
-                    background: #CF0921 0% 0% no-repeat padding-box;
                     border-radius: 8px 0px 0px 8px;
-                    color: #FFFFFF;
                 }
                 :nth-child(3){
                     border-radius: 0px 8px 8px 0px;
@@ -113,6 +111,10 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
                     background: #7FBCAD;
                     color: #fff;
                 } */
+            }
+            .selectedTM{
+                background: #CF0921 0% 0% no-repeat padding-box;
+                color: #FFFFFF;
             }
         }
         .amt-txt {
