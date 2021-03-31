@@ -5,10 +5,10 @@ import styled from 'styled-components'
 import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
+import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArray } from '../../../util/util';
 import PageHeading from '../page-heading/PageHeading';
+import Pdf from "react-to-pdf";
 
-// import {Link} from 'react-router-dom';
 
 const style = () => styled.div`
     position: absolute;
@@ -64,7 +64,6 @@ const style = () => styled.div`
                 font: normal normal normal 26px/24px Montserrat;
                 color: #A3A3A3;
                 cursor: default;
-                
             }
         }
 
@@ -240,7 +239,6 @@ const style = () => styled.div`
                     }
                 }
             }
-            
         }
     }
     .green {
@@ -313,10 +311,8 @@ const style = () => styled.div`
                     }
                     .export {
                     }
-                    
                 }
             }
-            
             .timeline {
                 display: none;
             }
@@ -447,6 +443,7 @@ const style = () => styled.div`
 `
 
 const Modal = style();
+const ref: any = React.createRef()
 
 const TransactionDetail = (props: any) => {
     const {openTDModal, handleOpenTDModal, handleShowPlus, data} = props;
@@ -494,12 +491,16 @@ const TransactionDetail = (props: any) => {
             history.push(paths.TRANSFER_METHOD)
             setIsResending(false)
         }, 1000 )
-    }    
+    }
+
+    const pdfOptions = {
+        orientation: 'landscape',
+
+    }
     return (
-       
-        (openTDModal && data) && ( 
-        <Modal>
-            <div className="modal">
+        (openTDModal && data) && (
+        <Modal ref={ref}>
+            <div className="modal" id="TD-Modal" >
                 <div className="head">
                     <div className="t-id">Transaction #: <span>SBR{data.dateCreated}</span></div>
                     <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
@@ -512,10 +513,14 @@ const TransactionDetail = (props: any) => {
                         <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
                     <div className="actions">
-                        <div className="export">
-                            <img src={asset('icons', 'export.svg')} alt="export"/>
-                            <div> <span className="mobile-hide">Export </span>PDF</div>
-                        </div>
+                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" options = {pdfOptions} x={-43.5} y={-7.5} scale={0.76}>
+                        {({ toPdf }: any) =>(
+                            <div className="export" onClick={toPdf} >
+                                <img src={asset('icons', 'export.svg')} alt="export"/>
+                                <div> <span className="mobile-hide">Export </span>PDF</div>
+                            </div>
+                        )}
+                        </Pdf>
                         <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
@@ -679,7 +684,7 @@ const TransactionDetail = (props: any) => {
                     </div>
                 </div>
             </div>)}
-        </Modal> 
+        </Modal>
         )
     )
 }

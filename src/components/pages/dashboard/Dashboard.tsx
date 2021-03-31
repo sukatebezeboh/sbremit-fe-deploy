@@ -136,7 +136,6 @@ const Dashboard = () => {
                             <span className={transfer.currentTransactionsPage == page ? "active green-bg white-txt" : ""} onClick={()=>setPageTo(page)} >{page}</span>
                         ))
                     }
-                    
                     <img src={asset('icons', 'next.svg')} alt="next"/>
                  </div>: <></>}
             </div>

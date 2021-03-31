@@ -22,7 +22,6 @@ const style = () => styled.div`
             img {
                 filter: invert(0%) sepia(21%) saturate(28%) hue-rotate(346deg) brightness(204%) contrast(97%);
             }
-
         }
         >div {
             width: 88%;

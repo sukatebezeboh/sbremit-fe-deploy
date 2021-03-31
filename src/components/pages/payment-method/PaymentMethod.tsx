@@ -107,7 +107,6 @@ const Body = styled.div`
             .part {
                 padding: 20px;
             }
-            
         }
         .btns {
             margin-top: -70px;

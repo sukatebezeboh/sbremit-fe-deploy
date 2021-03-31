@@ -64,3 +64,7 @@ export const genPaginationHashTable = (array: any[], noPerPage: number) => {
     
     return {paginated: hashTable, pages }
 }
+
+export const downloadPDF = (id: string) => {
+    const element = document.getElementById(id)
+}

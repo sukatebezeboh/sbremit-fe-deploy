@@ -17,7 +17,6 @@ import PaymentMethod from '../components/pages/payment-method/PaymentMethod';
 import CardPayment from '../components/pages/card-payment/CardPayment';
 import CreateTransfer from '../components/pages/create-transfer/CreateTransfer';
 import TransferComplete from '../components/pages/transfer-complete/TransferComplete';
-import Stripe from '../components/pages/stripe/Stripe';
 import { paths } from './paths';
 
 
@@ -109,40 +108,35 @@ export const Routing: IRoute[] = [
         component: Recipient,
         protected: true 
     },
-    { 
-        path: paths.RECIPIENT_DETAILS, 
+    {
+        path: paths.RECIPIENT_DETAILS,
         component: RecipientDetails,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.REVIEW, 
+    {
+        path: paths.REVIEW,
         component: Review,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.PAYMENT_METHOD, 
+    {
+        path: paths.PAYMENT_METHOD,
         component: PaymentMethod,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.CARD_PAYMENT, 
+    {
+        path: paths.CARD_PAYMENT,
         component: CardPayment,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.CREATE_TRANSFER, 
+    {
+        path: paths.CREATE_TRANSFER,
         component: CreateTransfer,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.TRANSFER_COMPLETE, 
+    {
+        path: paths.TRANSFER_COMPLETE,
         component: TransferComplete,
-        protected: true 
+        protected: true
     },
-    { 
-        path: '/stripe', 
-        component: Stripe,
-        protected: true 
-    },
+
 ]
-         
