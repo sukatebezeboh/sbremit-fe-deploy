@@ -279,7 +279,7 @@ export const getRecipient = () => {
 
 }
 
-export const createRecipient = (recipientData: any) => {
+export const createRecipient = (recipientData: any, callback?:Function) => {
     recipientData = {
         firstName: recipientData.firstName,
         lastName: recipientData.lastName,
@@ -299,6 +299,7 @@ export const createRecipient = (recipientData: any) => {
                 timeout: 10000,
                 message: "New recipient added"
             })
+            callback?.(false)
         }
         else {
             toastAction({

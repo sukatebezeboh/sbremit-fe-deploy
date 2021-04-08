@@ -9,6 +9,8 @@ body{
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none; 
   background: #F5F7F7;
+  zoom: 0.8;
+
 }
 body::-webkit-scrollbar {
     display: none;

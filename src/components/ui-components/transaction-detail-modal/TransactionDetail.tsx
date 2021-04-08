@@ -116,7 +116,7 @@ const style = () => styled.div`
 
             .actions {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr;
                 >div {
                     border-radius: 15px;
                     width: 124px;
@@ -151,11 +151,11 @@ const style = () => styled.div`
         .timeline {
             background: #007B5D 0% 0% no-repeat padding-box;
             box-shadow: 0px 2px 4px #CCCCCC80;
-            padding: 30px 100px;
+            padding: 30px 6%;
             margin-bottom: 50px;
             .bar {
                 height: 8px;
-                width: 90%;
+                width: 80%;
                 border-radius: 15px;
                 background: #3f896f;
                 display: grid;
@@ -176,10 +176,12 @@ const style = () => styled.div`
             }
             .point-labels {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 0fr;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 margin-top: 20px;
                 >div {
-                    width: 250px;
+                    width: 200%;
+                    padding-left: 0px;
+                    margin-left: -50%;
                     text-align: center;
                     div:first-child {
                         font: normal normal normal 16px/16px Montserrat;
@@ -188,6 +190,7 @@ const style = () => styled.div`
                     div:last-child{
                         font: normal normal normal 13px/18px Montserrat;
                         color: #A3A3A3;
+                        /* width: 300px; */
                     }
                 }
             }
@@ -517,17 +520,17 @@ const TransactionDetail = (props: any) => {
                         {({ toPdf }: any) =>(
                             <div className="export" onClick={toPdf} >
                                 <img src={asset('icons', 'export.svg')} alt="export"/>
-                                <div> <span className="mobile-hide">Export </span>PDF</div>
+                                <div> Download <span className="mobile-hide"></span></div>
                             </div>
                         )}
                         </Pdf>
-                        <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
+                        {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
                         }, data.id)}>
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
-                        </div>
+                        </div> */}
                         <div className="resend" onClick={handleResend}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>

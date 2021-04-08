@@ -107,8 +107,7 @@ const Dashboard = () => {
                     onClick={()=>{
                             setModalData(transaction);
                             handleOpenTDModal(true);
-                        }
-                        }>
+                        }}>
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
                             <div>{convertDateString(transaction.dateCreated)}</div>
@@ -125,7 +124,12 @@ const Dashboard = () => {
                         <div>Transaction #: <span>SBR{transaction.dateCreated}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
-                            <span className="view-det"><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
+                            <span 
+                            className="view-det" 
+                            onClick={()=>{
+                                setModalData(transaction);
+                                handleOpenTDModal(true);
+                            }}><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
                         </div>
                     </div>
                 </div>)}

@@ -34,6 +34,7 @@ const LandingPage = (props: any) => {
     }, [transfer.toSend, transfer.transferMethod])
 
     useEffect(() => {
+        setTransferMethod("mobile_money")
         getQuoteService(toSend.currency, toReceive.currency);
     }, [])
 

@@ -29,7 +29,14 @@ export const formatCurrency = (value: string, currency: string = ""): string => 
     return currency + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
+export const formatCurrencyWithoutFloats = (value: any, currency: string = ""): string => {
+    value = value || "0"
+    value = getMoneyValue(value);
+    return currency + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export const getMoneyValue = (formattedAmount: string): number => {
+    formattedAmount = formattedAmount.toString()
     return Number(formattedAmount.replace(',', ''))
 }
 
