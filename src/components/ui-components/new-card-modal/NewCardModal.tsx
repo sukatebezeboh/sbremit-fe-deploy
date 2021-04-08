@@ -1,5 +1,11 @@
+import { Field, Form, Formik } from 'formik';
 import React, {useState} from 'react'
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { initiatePayment } from '../../../redux/actions/actions';
+import { NewPaymentCardValidator } from '../../../util/form-validators';
+import { paths } from '../../../util/paths';
 import PageHeading from '../page-heading/PageHeading';
 import RadioButton from '../parts/RadioButton';
 
@@ -259,11 +265,13 @@ const Div = styled.div`
 
 `
 
-function NewCardModal(props) {
+function NewCardModal(props: any) {
     const {modalOpen, openModal} = props;
 
     const [passwordType, setPasswordType] = useState('password');
     const [pwIcon, setPwIcon] = useState('show');
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const handlePasswordClick = () => {
         setPasswordType(prevValue=>{
@@ -274,6 +282,12 @@ function NewCardModal(props) {
         })
     }
 
+    const initialValues = {
+        cardHolder: "",
+        cardNumber: "",
+        expiryDate: "",
+        cvv: ""
+    }
     return (
         modalOpen && <Div>
             <div className="overlay">
@@ -281,37 +295,53 @@ function NewCardModal(props) {
             <div className="modal">
                 <div className="head mobile-grid-hide">
                     <div className="t-id">Add a new card</div>
-                    </div>
-                <div className="form grid-col-1-1 grid-gap-3">
-                        <div className="grid-span-1-3">
-                            <div>Card holder’s name<i>*</i></div>
-                            <input type="text" placeholder="Enter name as it appears on your card" />
-                        </div>
-                        <div className="grid-span-1-3">
-                            <div>Card number<i>*</i></div>
-                            <input type="text" placeholder="Long 16-digit number on card" />
-                        </div>
-                        <div className="m-grid-span-1-3">
-                            <div>Expiry date<i>*</i></div>
-                            <input type="text" placeholder="MM/YY" />
-                        </div>
-                        <div className="m-grid-span-1-3">
-                            <div>CVV/CVC<i>*</i></div>
-                            <input type={passwordType} placeholder="3-digit code" />
-                            <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
-                        </div>
-                        
-                       <div className="grid-col-0-1 grid-gap-1 grid-span-1-3 ">
-                           <span>
-                                <RadioButton />
-                           </span>
-                           <span className="pt-5">
-                                Save this card for future payments
-                           </span>
-
-                       </div>
                 </div>
-                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel payment</span> <button onClick="">Pay 100.95 GBP</button> </div>
+                <Formik
+                        initialValues={{...initialValues}}
+                        validationSchema={NewPaymentCardValidator}
+                        onSubmit={values => {
+                            dispatch(initiatePayment(()=>history.push(paths.TRANSFER_COMPLETE), values, values))
+                        }}>
+                        {
+                            ({errors, touched, values}: any) => (
+                            <Form>
+                                <div className="form grid-col-1-1 grid-gap-3">
+                                        <div className={`grid-span-1-3 ${(touched.cardHolder && errors.cardHolder) ? 'form-error': ''}`}>
+                                            <div>Card holder’s name<i>*</i></div>
+                                            <Field name="cardHolder" type="text" placeholder="Enter name as it appears on your card" />
+                                            {(touched.cardHolder && errors.cardHolder) && <div className="form-error-message">{errors.cardHolder}</div>}
+                                        </div>
+                                        <div className={`grid-span-1-3 ${(touched.cardNumber && errors.cardNumber) ? 'form-error': ''}`}>
+                                            <div>Card number<i>*</i></div>
+                                            <Field name="cardNumber" type="text" placeholder="Long 16-digit number on card" />
+                                            {(touched.cardNumber && errors.cardNumber) && <div className="form-error-message">{errors.cardNumber}</div>}
+                                        </div>
+                                        <div className={`m-grid-span-1-3 ${(touched.expiryDate && errors.expiryDate) ? 'form-error': ''}`}>
+                                            <div>Expiry date<i>*</i></div>
+                                            <Field name="expiryDate" type="text" placeholder="MM/YY" />
+                                            {(touched.expiryDate && errors.expiryDate) && <div className="form-error-message">{errors.expiryDate}</div>}
+                                        </div>
+                                        <div className={`m-grid-span-1-3 ${(touched.cvv && errors.cvv) ? 'form-error': ''}`}>
+                                            <div>CVV/CVC<i>*</i></div>
+                                            <Field name="cvv" type={passwordType} placeholder="3-digit code" />
+                                            <img className="show-hide" onClick={handlePasswordClick} src={`./assets/icons/${pwIcon}.svg`} alt="show/hide"/>
+                                            {(touched.cvv && errors.cvv) && <div className="form-error-message form-error-message-adjust-up">{errors.cvv}</div>}
+                                        </div>
+                                        
+                                    <div className="grid-col-0-1 grid-gap-1 grid-span-1-3 ">
+                                        <span>
+                                                <RadioButton type="checkbox" />
+                                        </span>
+                                        <span className="pt-5">
+                                                Save this card for future payments
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel payment</span> <button type="submit">Pay 100.95 GBP</button> </div>
+                            </Form>
+                            )
+                        }
+                    </Formik>
             </div>
 
              {/* MOBILE NR MODAL */}

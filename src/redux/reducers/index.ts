@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import auth from "./auth";
 import {submitting, toast, redirect, appValues, loading} from './app';
 import {recipients} from './recipients';
+import {transfer} from './transfer';
 
 
 export interface IAction {
@@ -16,5 +17,6 @@ export default combineReducers({
     redirect, 
     appValues,
     recipients,
-    loading
+    loading,
+    transfer
  });

@@ -1,9 +1,14 @@
 import React, {useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { asset } from '../../../util/util';
+import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
+import { paths } from '../../../util/paths';
+import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArray } from '../../../util/util';
 import PageHeading from '../page-heading/PageHeading';
+import Pdf from "react-to-pdf";
 
-// import {Link} from 'react-router-dom';
 
 const style = () => styled.div`
     position: absolute;
@@ -14,7 +19,14 @@ const style = () => styled.div`
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(2px);
     z-index: 1;
-
+    .disable {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+    .is-resending {
+        transition: 3s ease-out;
+        transform: rotateZ(-720deg);
+    }
     .modal {
         box-shadow: 0px 10px 12px #CCCCCC80;
         border-radius: 15px;
@@ -52,7 +64,6 @@ const style = () => styled.div`
                 font: normal normal normal 26px/24px Montserrat;
                 color: #A3A3A3;
                 cursor: default;
-                
             }
         }
 
@@ -105,7 +116,7 @@ const style = () => styled.div`
 
             .actions {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr;
                 >div {
                     border-radius: 15px;
                     width: 124px;
@@ -140,11 +151,11 @@ const style = () => styled.div`
         .timeline {
             background: #007B5D 0% 0% no-repeat padding-box;
             box-shadow: 0px 2px 4px #CCCCCC80;
-            padding: 30px 100px;
+            padding: 30px 6%;
             margin-bottom: 50px;
             .bar {
                 height: 8px;
-                width: 90%;
+                width: 80%;
                 border-radius: 15px;
                 background: #3f896f;
                 display: grid;
@@ -165,10 +176,12 @@ const style = () => styled.div`
             }
             .point-labels {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 0fr;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 margin-top: 20px;
                 >div {
-                    width: 250px;
+                    width: 200%;
+                    padding-left: 0px;
+                    margin-left: -50%;
                     text-align: center;
                     div:first-child {
                         font: normal normal normal 16px/16px Montserrat;
@@ -177,6 +190,7 @@ const style = () => styled.div`
                     div:last-child{
                         font: normal normal normal 13px/18px Montserrat;
                         color: #A3A3A3;
+                        /* width: 300px; */
                     }
                 }
             }
@@ -228,7 +242,6 @@ const style = () => styled.div`
                     }
                 }
             }
-            
         }
     }
     .green {
@@ -301,10 +314,8 @@ const style = () => styled.div`
                     }
                     .export {
                     }
-                    
                 }
             }
-            
             .timeline {
                 display: none;
             }
@@ -435,43 +446,93 @@ const style = () => styled.div`
 `
 
 const Modal = style();
+const ref: any = React.createRef()
 
-const TransactionDetail = (props) => {
-    const {openTDModal, handleOpenTDModal, handleShowPlus} = props;
+const TransactionDetail = (props: any) => {
+    const {openTDModal, handleOpenTDModal, handleShowPlus, data} = props;
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
+    const recipients = useSelector((state: any) => state.recipients.recipients);
+    const transfer = useSelector((state: any) => state.transfer);
+    const [isResending, setIsResending] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
 
-    const showMobileModal = (bool) => {
+    const showMobileModal = (bool: boolean) => {
         handleOpenMobileTimeline(bool)
     }
 
+    const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
+
+    const handleResend = () => {
+        setIsResending(true)
+
+        const toSend = {
+            value: data.originAmount,
+            currency: data.originCurrency,
+            image: data.originCurrency
+        }
+
+        const toReceive = {
+            value: data.destinationAmount,
+            currency: data.destinationCurrency,
+            image: data.destinationCurrency
+        }
+
+        const transferMethod = data.transferMethod
+
+        dispatch({type: RECIPIENT, payload: recipient})
+        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "Okay. Let's start resending in a smooth sail..."
+        })
+
+        setTimeout(()=>{
+            history.push(paths.TRANSFER_METHOD)
+            setIsResending(false)
+        }, 1000 )
+    }
+
+    const pdfOptions = {
+        orientation: 'landscape',
+
+    }
     return (
-       
-        openTDModal && ( 
-        <Modal>
-            <div className="modal">
+        (openTDModal && data) && (
+        <Modal ref={ref}>
+            <div className="modal" id="TD-Modal" >
                 <div className="head">
-                    <div className="t-id">Transaction #: <span>SBR334908</span></div>
-                    <div className="status"> <span>Pending</span> </div>
+                    <div className="t-id">Transaction #: <span>SBR{data.dateCreated}</span></div>
+                    <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
                     <div className="close" onClick={()=>handleOpenTDModal(false)} >x</div>
                 </div>
                 <div className="sub">
                     <div className="name">
                         <div> <img src={asset('images', 'noimage.png')} alt=""/> </div>
-                        <div> <div>20 Nov 2020</div> <div>To <b>Ifepade Adewunmi</b></div> </div>
-                        <div> <div>70,036 XAF</div> <div>100 GBP</div> </div>
+                        <div> <div>{convertDateString(data.dateCreated)}</div> <div>To <b>{recipient?.firstName} {recipient?.lastName}</b></div> </div>
+                        <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
                     <div className="actions">
-                        <div className="export">
-                            <img src={asset('icons', 'export.svg')} alt="export"/>
-                            <div> <span className="mobile-hide">Export </span>PDF</div>
-                        </div>
-                        <div className="cancel">
+                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" options = {pdfOptions} x={-43.5} y={-7.5} scale={0.76}>
+                        {({ toPdf }: any) =>(
+                            <div className="export" onClick={toPdf} >
+                                <img src={asset('icons', 'export.svg')} alt="export"/>
+                                <div> Download <span className="mobile-hide"></span></div>
+                            </div>
+                        )}
+                        </Pdf>
+                        {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
+                            getUserTransactions();
+                            handleOpenTDModal(false)
+                        }, data.id)}>
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
-                        </div>
-                        <div className="resend">
-                            <img src={asset('icons', 'reload.svg')} alt="reload"/>
+                        </div> */}
+                        <div className="resend" onClick={handleResend}>
+                            <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>
                         </div>
                     </div>
@@ -485,10 +546,10 @@ const TransactionDetail = (props) => {
                         <div className="point point-4"></div>
                     </div>
                     <div className="point-labels">
-                        <div className="label-1"> <div>Transfer created</div> <div>20 Nov 2020</div> </div>
-                        <div className="label-2"> <div>Received GBP payment</div> <div>20 Nov 2020</div> </div>
-                        <div className="label-3"> <div>Vendor processing transfer</div> <div>20 Nov 2020</div> </div>
-                        <div className="label-4"> <div>Recipient receives XAF</div> <div>20 Nov 2020</div> </div>
+                        <div className="label-1"> <div>Transfer created</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                        <div className="label-2"> <div>Received GBP payment</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                        <div className="label-3"> <div>Vendor processing transfer</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                        <div className="label-4"> <div>Recipient receives XAF</div> <div>{convertDateString(data.dateCreated)}</div> </div>
                     </div>
                 </div>
 
@@ -501,34 +562,34 @@ const TransactionDetail = (props) => {
                         <hr/>
                         <div className="row">
                             <div className="left">Name</div>
-                            <div className="right">Ifepade Adewunmi</div>
+                            <div className="right">{recipient?.firstName} {recipient.lastName}</div>
                         </div>
                         <div className="row">
                             <div className="left">Mobile No.</div>
-                            <div className="right">+2348160402986</div>
+                            <div className="right">{recipient?.profile?.mobile || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Email</div>
-                            <div className="right">bunmi.i.adewunmi@gmail.com</div>
+                            <div className="right">{recipient?.profile?.email || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">City</div>
-                            <div className="right">Lagos</div>
+                            <div className="right">{recipient?.profile?.state || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Reason</div>
-                            <div className="right">Funds to self</div>
+                            <div className="right">{recipient?.profile?.reason || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Recipient’s Bank Name</div>
-                            <div className="right">GTB</div>
+                            <div className="right">{recipient?.profile?.bankName || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Account Number</div>
-                            <div className="right">2230987563</div>
+                            <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                         </div>
                     </div>
-                    <div className="transfer-details">
+                    <div className="transfer-details" >
                         <div className="heading">
                                 <div className="title">Transfer Details</div>
                                 <div className="update">Update</div>
@@ -536,11 +597,11 @@ const TransactionDetail = (props) => {
                             <hr/>
                             <div className="row">
                                 <div className="left">Transfer method</div>
-                                <div className="right">Bank Transfer</div>
+                                <div className="right sentence-case">{data.transferMethod?.replace('_', ' ')}</div>
                             </div>
                             <div className="row">
                                 <div className="left">You send</div>
-                                <div className="right"><b>100 GBP</b></div>
+                                <div className="right"><b>{formatCurrency(data.originAmount)} {data.originCurrency}</b></div>
                             </div>
                             <div className="row">
                                 <div className="left">Exchange rate</div>
@@ -552,7 +613,7 @@ const TransactionDetail = (props) => {
                             </div>
                             <div className="row">
                                 <div className="left">They get</div>
-                                <div className="right"><b>70,036 XAF</b></div>
+                                <div className="right"><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b></div>
                             </div>
                             <div className="row">
                                 <div className="left">Total to pay</div>
@@ -571,31 +632,31 @@ const TransactionDetail = (props) => {
                         <hr/>
                         <div className="row">
                             <div className="left">Name</div>
-                            <div className="right">Ifepade Adewunmi</div>
+                            <div className="right">{recipient?.firstName} {recipient.lastName}</div>
                         </div>
                         <div className="row">
                             <div className="left">Mobile No.</div>
-                            <div className="right">+2348160402986</div>
+                            <div className="right">{recipient?.profile?.mobile || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Email</div>
-                            <div className="right">bunmi.i.adewunmi@gmail.com</div>
+                            <div className="right">{recipient?.profile?.email || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">City</div>
-                            <div className="right">Lagos</div>
+                            <div className="right">{recipient?.profile?.state || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Reason</div>
-                            <div className="right">Funds to self</div>
+                            <div className="right">{recipient?.profile?.reason || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Recipient’s Bank Name</div>
-                            <div className="right">GTB</div>
+                            <div className="right">{recipient?.profile?.bankName || '-'}</div>
                         </div>
                         <div className="row">
                             <div className="left">Account Number</div>
-                            <div className="right">2230987563</div>
+                            <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                         </div>
                     </div>
                 </div>
@@ -626,7 +687,7 @@ const TransactionDetail = (props) => {
                     </div>
                 </div>
             </div>)}
-        </Modal> 
+        </Modal>
         )
     )
 }

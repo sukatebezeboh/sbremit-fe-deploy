@@ -1,11 +1,14 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RecipientDetailsBox from '../../ui-components/parts/RecipientDetailsBox';
+import { useSelector } from 'react-redux';
+import { paths } from '../../../util/paths';
+import { confirmTransfer } from '../../../redux/actions/actions';
 
 const Body = styled.div`
     .page-content {
@@ -165,11 +168,24 @@ const Body = styled.div`
 
 const Review = () => {
     const history = useHistory();
+    const recipient = useSelector((state: any)=>state.recipients.recipient)
+    const transfer = useSelector((state: any)=>state.transfer)
 
+    const handleConfirmClick = () => {
+        confirmTransfer(recipient, transfer, () => {
+            history.push(paths.PAYMENT_METHOD);
+        })
+    }
+
+   
+    
     return (
+        !recipient.id ?
+        <Redirect to={paths.RECIPIENT} />
+        :
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={3} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Review" subheading="Review the details of your transfer" back="/recipient-details" />
@@ -179,7 +195,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>history.push('/payment-method')}>Confirm</button> </div>
+                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>handleConfirmClick()}>Confirm</button> </div>
             </div>
         </Body>
     )

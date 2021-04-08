@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST } from "../actionTypes";
+import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -8,8 +8,11 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { getQueryParam, parseEndpointParameters } from '../../util/util';
+import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
 import http from '../../util/http';
+import { loadStripe } from '@stripe/stripe-js';
+
+const user = store.getState().auth.user;
 
 export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
@@ -75,12 +78,11 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                console.log(res);
                 
                 CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
                 CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
                 CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
-                axios.get(config.API_HOST + endpoints.USER + '/' + res.data.data.id)
+                axios.get(config.API_HOST + parseEndpointParameters(endpoints.USER, res.data.data.id))
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
                     store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: response.data.data}})
@@ -100,6 +102,13 @@ export const signInAction = (data: any) => {
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
     })
+}
+
+export const signOutAction = () => {
+    CookieService.remove(env.SESSION_KEY);
+    CookieService.remove(env.SESSION_ID);
+    store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+    
 }
 
 const runningTimeouts: any[] = [];
@@ -124,11 +133,37 @@ export const toastAction = (toastConfig: any) => {
 export const appValuesAction = async() => {
     const allValues = await AppService.getValues();
     const countries = await AppService.getValueById(2);
+    const services = await AppService.getServices();
     const values: any = {}
     values.values = allValues;
     values.countries = countries.data;
+    values.services = services;
+
     store.dispatch({type: APP_VALUES, payload: values})
+    getServiceRate()
     console.log(store.getState());
+}
+
+export const editUserProfile = <T extends {profile: any}>(data: T) => {
+    store.dispatch({type: SUBMITTING, payload: paths.CHANGE_PASSWORD})
+    http.put(parseEndpointParameters(endpoints.USER, user.id), {...data})
+    .then((res) =>{
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: `Profile updated`
+            })
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 25000,
+                message: res.data.error.message
+            })
+        }
+    })
 }
 
 export const changePasswordAction = (values: any) => {
@@ -188,7 +223,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
                 })
                 store.dispatch({type: SUBMITTING, payload: ""})
             }
-        })   
+        })
     }
 
     else{
@@ -207,7 +242,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
                     type: 'success',
                     timeout: 15000,
                     message: `Password changed`
-                })    
+                })
                 store.dispatch({type: SUBMITTING, payload: ""})
             } else {
                 toastAction({
@@ -228,7 +263,7 @@ export const getRecipients = () => {
 
     http.get(parseEndpointParameters(endpoints.RECIPIENTS, user.id))
     .then((res: any) => {
-        if(res.data.status === "200"){            
+        if(res.data.status === "200"){
             store.dispatch({type: RECIPIENTS, payload: res.data.data})
             store.dispatch({type: LOADING, payload: false})
         }
@@ -241,10 +276,10 @@ export const getRecipients = () => {
 }
 
 export const getRecipient = () => {
-    
+
 }
 
-export const createRecipient = (recipientData: any) => {
+export const createRecipient = (recipientData: any, callback?:Function) => {
     recipientData = {
         firstName: recipientData.firstName,
         lastName: recipientData.lastName,
@@ -263,7 +298,8 @@ export const createRecipient = (recipientData: any) => {
                 type: 'success',
                 timeout: 10000,
                 message: "New recipient added"
-            }) 
+            })
+            callback?.(false)
         }
         else {
             toastAction({
@@ -272,11 +308,314 @@ export const createRecipient = (recipientData: any) => {
                 timeout: 15000,
                 title: "Add recipient failed",
                 message: res.data.error.message
-            })    
+            })
         }
     })
     .catch(err=>console.log(err))
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
     })
+}
+
+export const confirmTransfer = (recipient: any, transfer: any, callback: Function) => {
+    store.dispatch({type: LOADING, payload: true})
+    const payload = {
+        transferMethod: transfer.transferMethod,
+        recipientId: recipient.id,
+        originCurrency: transfer.toSend?.currency,
+        originAmount: Number(transfer.toSend?.value),
+        destinationCurrency: transfer.toReceive?.currency,
+        destinationAmount: Number(transfer.toReceive?.value),
+        paymentMethod: {}
+    }
+    const user = store.getState().auth.user
+    http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
+    .then(res=>{
+        if (res.data.status === "200") {
+            callback()
+            CookieService.put('transfer', JSON.stringify(res.data.data.id));
+            getTransactionDetails(callback)
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 15000,
+                title: "Transfer failed",
+                message: res.data.error.message
+            })
+        }
+        store.dispatch({type: LOADING, payload: false})
+    })
+    .catch(err=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const getTransactionDetails = (callback?: Function) => {
+    const transferId = CookieService.get('transfer');
+    if (!transferId) {
+        callback?.()
+        return toastAction({
+            show: true,
+            type: 'info',
+            timeout: 15000,
+            message: `No transfer initiated yet`
+        })
+    }
+
+    store.dispatch({type: LOADING, payload: true})
+    const user = store.getState().auth.user
+    const transfer = store.getState().transfer
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
+    .then(res=>{
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactionDetails: {...res.data.data}}})
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const getUserTransactions = () => {
+    const user = store.getState().auth.user
+    const transfer = store.getState().transfer
+
+    store.dispatch({type: LOADING, payload: true})
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
+    .then(res=>{
+        let transactions: any[] = res.data.data?.sort((a: any, b: any)=>{
+            if (a.dateCreated < b.dateCreated) {
+                return 1
+            }
+            if (a.dateCreated > b.dateCreated) {
+                return -1
+            }
+            return 0
+        })
+        const paginatedTransactions = genPaginationHashTable(transactions, 10);
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="cancelled"), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="completed"), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="pending"), 10)
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const cancelTransfer = (callback: Function, id = null) => {
+    const transferId = id || CookieService.get('transfer');
+    if (!transferId) {
+        callback?.()
+        return toastAction({
+            show: true,
+            type: 'info',
+            timeout: 15000,
+            message: `No transfer initiated yet`
+        })
+    }
+
+    store.dispatch({type: LOADING, payload: true})
+    const transfer = store.getState().transfer
+    const user = store.getState().auth.user;
+
+    http.delete(parseEndpointParameters(endpoints.GET_TRANSFER, user.id, transferId))
+    .then(res=>{
+        if(res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'info',
+                timeout: 10000,
+                message: "Transfer has been cancelled"
+            })
+            store.dispatch({type: TRANSFER, payload: {...transfer, transactionDetails: undefined}})
+            store.dispatch({type: LOADING, payload: false})
+            callback()
+        }else {
+            store.dispatch({type: LOADING, payload: false})
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    })
+}
+
+export const setNewQuote = (base: string, target: string) => {
+    const payload: {base: string, target: string, meta?: any} = {
+        base,
+        target
+    }
+    const userId = store.getState().auth.user?.id;
+    if(userId) payload.meta = {userId}
+    http.post('/quote', payload)
+    .then((res)=>{
+        if(res.data.status === "200") {
+            CookieService.put('QUOTE', res.data.data.id)
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    }).catch((error)=>{
+        console.log(error);
+        
+    })
+}
+
+export const getQuoteService = ($_1: string, $_2: string) => {
+    store.dispatch({type: LOADING, payload: true})
+    const quoteId = CookieService.get('QUOTE');
+    
+    if(quoteId) {
+        http.get(parseEndpointParameters(endpoints.GET_QUOTE , quoteId))
+        .then(res=>{
+            const transfer = store.getState().transfer
+            if(res.data.status === "200"){
+                store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data, rate: res.data.data.rate?.rate}}})
+                store.dispatch({type: LOADING, payload: false})
+            } else {
+                getNewQuote($_1, $_2)
+            }
+        }).catch(()=>{
+            getNewQuote($_1, $_2)
+        })
+        .then(()=>{
+            store.dispatch({type: LOADING, payload: false})
+        })
+    }else {
+        getNewQuote($_1, $_2)
+    }
+}
+
+export const getNewQuote = ($_1: string, $_2: string) => {
+    const transfer = store.getState().transfer
+    axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
+    .then(res => {
+        if(res.data.status === "200"){
+            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+            store.dispatch({type: LOADING, payload: false})
+        }
+    }).catch(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const getServiceRate = () => {
+    const transferMethodsIds: any = {
+        mobile_money: "1",
+        bank_transfer: "2",
+        cash_pickup: "3"
+    }
+   const services = store.getState().appValues.services;
+   const transfer = store.getState().transfer
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0] || services?.data?.[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees?.[0];
+
+   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee}})
+
+   return fees?.fee || 0;
+}
+
+export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
+    store.dispatch({type: LOADING, payload: true})
+
+    const transfer = store.getState().transfer
+    const userId = store.getState().auth.user.id;
+
+    const payload = {
+        transferId: transfer.transactionDetails.id,
+        method: transfer.paymentMethod,
+        amount: transfer.transactionDetails.originAmount,
+        reference: `${transfer.transactionDetails.originAmount}`,
+        status: "PENDING",
+        dateCreated: Math.round(Date.now() / 1000),
+        lastUpdated: null,
+        meta,
+        data
+    }
+
+    http.post(parseEndpointParameters(endpoints.INITIATE_PAYMENT, userId), payload)
+    .then(res => {
+        if (res.data.id) {
+            callback?.()
+            store.dispatch({type: LOADING, payload: false})
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
+
+    }).catch()
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+}
+
+export const makePaymentWithStripe = async () => {
+    store.dispatch({type: LOADING, payload: true})
+
+    toastAction({
+        show: true,
+        type: 'info',
+        timeout: 10000,
+        title: "Redirecting...",
+        message: "All card payments are handled with Stripe. Please wait while we redirect you there"
+    })
+    try {
+        const transfer = store.getState().transfer
+        const stripePromise = await loadStripe("pk_test_51IRO98LR6ZSV0Ja4g66DDSiCPiUasKR3B2a1gZ8Qb7FfC6nmKSfJmTitbTa6mHi7f7nEfHBkYsc1kWLWmc2SZCXf00SPR70HyD");
+        const stripe = await stripePromise;
+        const response = await http.post("/stripe/payment/card", {
+            "items": [
+                {
+                    "name": "SBRemit Transfer - GBP->XAF",
+                    "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
+                    "quantity": 1
+                },
+                {
+                    "name": "Service fee",
+                    "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
+                    "quantity": 1
+                }
+            ]
+        });
+        const session = response.data;
+        // When the customer clicks on the button, redirect them to Checkout.
+        const result = await stripe?.redirectToCheckout({
+            sessionId: session.data.id
+        });
+        store.dispatch({type: LOADING, payload: false})
+
+        if (result?.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer
+            // using `result.error.message`.
+        }
+    }catch (e){
+        store.dispatch({type: LOADING, payload: false})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "An error occurred. Please, try again"
+        })
+    }
 }

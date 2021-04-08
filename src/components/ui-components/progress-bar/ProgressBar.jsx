@@ -1,5 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { paths } from '../../../util/paths'
 
 const Div = styled.div`
         margin-top: 110px;
@@ -27,6 +29,18 @@ const Div = styled.div`
                 .point-1 {
                     width: 43px;
                     height: 6px;
+                }
+                .progressed {
+                    width: 100%;
+                    height: 6px;
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                }
+                .progressing {
+                    width: 100%;
+                    height: 6px;
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
                 }
             }
             .point-labels {
@@ -75,27 +89,28 @@ const Div = styled.div`
             }
         }
     }
-}    
+}
 
 `
 
-const ProgressBar = () => {
+const ProgressBar = (props) => {
+    const {point} = props
     return (
         <Div>
             <div className="timeline">
                     <div className="bar">
-                        <div className="point point-1"></div>
-                        <div className="point point-2"></div>
-                        <div className="point point-3"></div>
-                        <div className="point point-4"></div>
-                        <div className="point point-5"></div>
+                        <div className={`point point-1 ${point == 1 ? "progressing" : (point > 1 ? 'progressed': '')}`}></div>
+                        <div className={`point point-2 ${point == 2 ? "progressing" : (point > 2 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-3 ${point == 3 ? "progressing" : (point > 3 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-4 ${point == 4 ? "progressing" : (point > 4 ? 'progressing progressed': '')}`}></div>
+                        <div className={`point point-5 ${point == 5 ? "progressing" : (point > 5 ? 'progressed': '')}`}></div>
                     </div>
                     <div className="point-labels">
-                        <div className="label-1"> <div>Get quote</div></div>
+                        <div className="label-1"> <div><Link to={paths.GET_QUOTE}>Get quote</Link></div></div>
                         <div className="label-2"> <div>Verification</div> </div>
-                        <div className="label-3"> <div>Recipient</div></div>
-                        <div className="label-4"> <div>Review</div></div>
-                        <div className="label-4"> <div>Pay</div></div>
+                        <div className="label-3"> <div><Link to={point >=3 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
+                        <div className="label-4"> <div><Link to={point >=4 ? paths.REVIEW : "#"}>Review </Link></div></div>
+                        <div className="label-4"> <div><Link to={point >=3 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
                     </div>
                 </div>
         </Div>

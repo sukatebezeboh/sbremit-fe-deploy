@@ -1,11 +1,19 @@
 import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { paths } from '../../../util/paths';
+import { cancelTransfer, confirmTransfer, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
+import { TRANSFER } from '../../../redux/actionTypes';
+import { ConfirmModal } from '../../ui-components/confirm-modal/ConfirmModal';
+import { loadStripe } from '@stripe/stripe-js';
+import http from '../../../util/http';
+import { formatCurrency } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -99,7 +107,6 @@ const Body = styled.div`
             .part {
                 padding: 20px;
             }
-            
         }
         .btns {
             margin-top: -70px;
@@ -172,7 +179,6 @@ const Body = styled.div`
                         font: normal normal normal 11px Montserrat;
                     }
                 }
-                            
             }
         }
     }
@@ -182,11 +188,54 @@ const Body = styled.div`
 const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
+    const recipient = useSelector((state: any)=>state.recipients.recipient)
+    const transfer = useSelector((state: any)=>state.transfer)
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const dispatch = useDispatch()
+
+    const handleProceed = async () => {
+        dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
+        if(!selected){
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: 'Select a payment method to proceed'
+            })
+            return
+        }
+        if (selected==="card"){
+            // history.push(paths.CARD_PAYMENT)
+            await makePaymentWithStripe()
+        }
+        else if (selected==="bank_transfer") {
+            history.push(paths.CREATE_TRANSFER)
+        }
+        else{
+            return
+        }
+    }
+
+    const handleCancel = () => {
+        cancelTransfer(() => history.push(paths.DASHBOARD))
+    }
 
     return (
         <Body>
+            {openConfirmModal ? 
+            <ConfirmModal 
+            message="Are you sure you want to cancel this transfer?"
+            onSave={{
+                label: 'Yes, cancel',
+                fn: ()=>handleCancel()
+            }} 
+            onCancel={{
+                label: "No, don't cancel",
+                fn: () => setOpenConfirmModal(false)
+            }}
+            /> : <></>}
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={4} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
@@ -194,23 +243,22 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
-                        
-                        <div className="radio-card" onClick={()=>setSelected('dc_card')}>
+                        <div className="radio-card" onClick={()=>setSelected('card')}>
                             <div className="radio-div">
-                                <RadioButton selected={selected==='dc_card'}/>
+                                <RadioButton selected={selected==='card'}/>
                             </div>
                             <div>
                                 <div className="rc-head">Debit / Credit Card</div>
                                 <div className="rc-body">
                                     <div>
-                                        Authorise SBremit to debit <b className="green-txt">100.95 GBP</b>  from your Debit / Credit card
+                                        Authorise SBremit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your Debit / Credit card
                                     </div>
                                     <div>
                                         Should arrive in 2 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                    Fast and easy transfer - 0.95 GBP
+                                    Fast and easy transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
                         </div>
@@ -223,14 +271,14 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Bank Transfer</div>
                                 <div className="rc-body">
                                     <div>
-                                        Transfer <b className="green-txt">100.95 GBP</b>  from your bank, we’ll proceed when we receive payment                                    
+                                        Transfer <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your bank, we’ll proceed when we receive payment
                                     </div>
                                     <div>
                                         Should arrive in 11 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                        Low cost transfer - 4.99 GBP
+                                        Low cost transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
                         </div>
@@ -238,9 +286,8 @@ const PaymentMethod = () => {
                     <div className="mobile-hide">
                         <TransferDetailsBox />
                     </div>
-                    
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/review')}>Cancel transfer</span> <button onClick={()=>history.push(selected==='dc_card'? '/card-payment' : selected==='bank_transfer' ? '/create-transfer': '#')}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </div>
             </div>
         </Body>
     )

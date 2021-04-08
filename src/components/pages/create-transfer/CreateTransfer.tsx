@@ -1,9 +1,12 @@
 import React, {useState} from 'react'
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
+import { useSelector } from 'react-redux';
+import { cancelTransfer, initiatePayment } from '../../../redux/actions/actions';
+import { paths } from '../../../util/paths';
 
 const Body = styled.div`
     .page-content {
@@ -209,8 +212,20 @@ const Body = styled.div`
 
 const CreateTransfer = () => {
     const history = useHistory();
+    const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
+
+    const cancelPayment = () => {
+        history.push(paths.PAYMENT_METHOD)
+    }
+
+    const handleSubmit = () => {
+        initiatePayment(()=>history.push(paths.TRANSFER_COMPLETE))
+    }
 
     return (
+        !transactionDetails ?
+        <Redirect to={paths.REVIEW} />
+        :
         <Body>
             <NavBar />
             <div className="page-content">
@@ -266,7 +281,7 @@ const CreateTransfer = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/payment-method')}>Cancel payment</span> <button onClick={()=>history.push('/transfer-complete')}>I’ve sent 100.95 GBP</button> </div>
+                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent 100.95 GBP</button> </div>
             </div>
         </Body>
     )

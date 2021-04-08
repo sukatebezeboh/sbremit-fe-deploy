@@ -4,7 +4,7 @@ export class CookieService {
         return document.cookie
     }
 
-    public static put(name: string, value: string, days: number = 7) {
+    public static put(name: string, value: string, days: number = 1) {
         let expires = "";
         if (days) {
             const date = new Date();

@@ -1,6 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
+import { paths } from '../../../util/paths';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
@@ -313,11 +314,14 @@ const Body = styled.div`
 
 const Verification = () => {
     const history = useHistory();
+    const enableVerficationStep = false;
 
     return (
+        !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
+        :
         <Body>
             <NavBar />
-            <ProgressBar />
+            <ProgressBar point={1}/>
             <div className="page-content">
                 <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
                 <div className="box-container">
@@ -346,7 +350,7 @@ const Verification = () => {
                                     <select name="" id="" >
                                         <option value="">United Kingdom</option>
                                     </select>
-                                    <img src="./assets/flags/gbp.png" alt="uk"/>
+                                    <img src="./assets/flags/UK.png" alt="uk"/>
                                 </div>
                                 <div>
                                 <div>Date of birth<i>*</i></div>
@@ -374,7 +378,6 @@ const Verification = () => {
                                     </span>
                                     <span className="m-grid-col-span-1-4"> <input className="specify" placeholder="Please specify" /> </span>
                                 </div>
-                                
                             </div>
                             <div>
                                 <div>Address line 1<i>*</i></div>

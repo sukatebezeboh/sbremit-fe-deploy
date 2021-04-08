@@ -10,7 +10,8 @@ const initialRedirectState = {
 };
 const initialAppValues = {
   values: {},
-  countries: {}
+  countries: {},
+  services: {}
 }
 const initialLoadingState = false;
 

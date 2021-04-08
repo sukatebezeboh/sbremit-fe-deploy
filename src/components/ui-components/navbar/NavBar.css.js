@@ -162,6 +162,7 @@ const style = () => styled.div`
                 display: grid;
                 grid-template-columns: 2fr 15fr;
                 padding: 10px 0px;
+                cursor: pointer;
                 >div {
                     img {
                         width: 16px;

@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
+import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
@@ -13,30 +15,82 @@ import style from './Dashboard.css';
 const Body = style();
 
 const Dashboard = () => {
-    const transactions = [{},{},{},{},{},{},{},{},{},{}];
+    let transfer = useSelector((state: any) => state.transfer);
+    const recipients = useSelector((state: any) => state.recipients.recipients);
     const [openTDModal, handleOpenTDModal] = useState(false);
     const [showPlus, handleShowPlus] = useState(true);
+    const [modalData, setModalData] = useState({});
+    const [selectedFilter, setSelectedFilter] = useState("");
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        getUserTransactions();
+        getRecipients();
+    }, [])
+
+    const _setSelectedFilter = (status: string) => {
+        if (selectedFilter === status) {
+            setSelectedFilter("")
+            setPageTo(1)
+        }else {
+            setSelectedFilter(status)
+            setPageTo(1)
+        }
+    }
+
+    const setPageTo = (page: string|number) => {
+        dispatch({type: TRANSFER, payload: {...transfer, currentTransactionsPage: page}})
+    }
+
+    const getTransactions = () => {
+        const filters: any = {
+            all: transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            completed: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            cancelled: transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            pending: transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+        }
+        return filters[selectedFilter||"all"]
+    }
+
+    const getCorrespondingPages = () => {
+        const filters: any = {
+            all: transfer.paginatedTransactions.pages,
+            completed: transfer.paginatedCompletedTransactions.pages,
+            cancelled: transfer.paginatedCancelledTransactions.pages,
+            pending: transfer.paginatedPendingTransactions.pages,
+        }
+        return filters[selectedFilter||"all"]
+    }
+
+    const transactions = getTransactions();
+    const allTransactions = transfer.transactions;
+    const pages = getCorrespondingPages();
+
+    const getTransactionStatusCount = (status: string) => {
+        return allTransactions.filter((t: any)=>t.status?.toLowerCase() === status).length
+    }
+
 
     return (
         <Body>
             <NavBar />
-            <TransactionDetail openTDModal={openTDModal} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
+            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
                     <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
                 <div className="transactions">
-                    <div> 
-                        <div className="green-txt">10</div>  
+                    <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
+                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>  
                         <div>Complete Transactions</div>
                     </div>
-                    <div> 
-                        <div className="yellow-txt">2</div>  
+                    <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
+                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>  
                         <div>Pending Transactions</div>
                     </div>
-                    <div> 
-                        <div className="red-txt">1</div>  
+                    <div onClick={()=>_setSelectedFilter("cancelled")} className={selectedFilter === "cancelled" ? "selected-border-red" : ''}> 
+                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>  
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">
@@ -46,38 +100,48 @@ const Dashboard = () => {
                         </div>
                     </Link>
                 </div>
-                <div className="t-history">Transaction History <span>(13)</span></div>
-                {transactions.map(transaction => <div className="history">
-                    <div className="up" onClick={()=>handleOpenTDModal(true)}>
+                <div className="t-history">Transaction History <span>({allTransactions.length})</span></div>
+                {transactions && transactions.map((transaction: any) => <div className="history">
+                    <div 
+                    className="up" 
+                    onClick={()=>{
+                            setModalData(transaction);
+                            handleOpenTDModal(true);
+                        }}>
                         <div><img src={asset('images', 'noimage.png')} alt=""/></div>
                         <div>
-                            <div>20 Nov 2020</div>
-                            <div className="name">To <b>Ifepade Adewunmi</b></div>
+                            <div>{convertDateString(transaction.dateCreated)}</div>
+                            <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                         </div>
-                        <div className="status"><span>Pending</span></div>
+                        <div className={"status"}><span className={"sentence-case "+transaction.status?.toLowerCase()}>{transaction.status}</span></div>
                         <div>
-                            <div>51,585.92 NGN</div>
-                            <div className="amt-gbp">100 GBP</div>
+                            <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
+                            <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
                         </div>
                     </div>
                     <hr/>
                     <div className="down">
-                        <div>Transaction #: <span>SBR334908</span></div>
+                        <div>Transaction #: <span>SBR{transaction.dateCreated}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
-                            <span className="view-det"><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
+                            <span 
+                            className="view-det" 
+                            onClick={()=>{
+                                setModalData(transaction);
+                                handleOpenTDModal(true);
+                            }}><img src={asset('icons', 'show.svg')} alt="view"/> View details</span>
                         </div>
                     </div>
                 </div>)}
-                <div className="pagination">
+                {pages?.length > 1 ? <div className="pagination">
                     <img src={asset('icons', 'prev.svg')} alt="prev"/> 
-                    <span className="active green-bg white-txt">1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
+                    {
+                        pages?.map((page: string)=>(
+                            <span className={transfer.currentTransactionsPage == page ? "active green-bg white-txt" : ""} onClick={()=>setPageTo(page)} >{page}</span>
+                        ))
+                    }
                     <img src={asset('icons', 'next.svg')} alt="next"/>
-                 </div>
+                 </div>: <></>}
             </div>
         </Body>
     )

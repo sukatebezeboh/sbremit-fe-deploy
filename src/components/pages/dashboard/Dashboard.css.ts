@@ -122,6 +122,9 @@ const style = () => styled.div`
                 div {
                     font: normal normal normal 16px/44px Montserrat;
                     color: #A3A3A3;
+                    .view-det {
+                        cursor: pointer;
+                    }
                     :first-child {
                         span {
                             color: #424242;
@@ -287,9 +290,9 @@ const style = () => styled.div`
                     div {
                         font: normal normal normal 8px Montserrat!important;
                     }
-                    
                     .view-det {
                         display: none;
+
                     }
                 }
             }

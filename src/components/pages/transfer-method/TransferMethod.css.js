@@ -9,10 +9,20 @@ const style = () => styled.div`
         border-radius: 15px;
         padding-bottom: 25px;
     }
+    
     .row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         padding: 50px 5%;
+        .selected {
+            background: #007b5d!important;
+            div{
+                color: white!important;
+            }
+            img {
+                filter: invert(0%) sepia(21%) saturate(28%) hue-rotate(346deg) brightness(204%) contrast(97%);
+            }
+        }
         >div {
             width: 88%;
             height: 300px;
@@ -38,6 +48,7 @@ const style = () => styled.div`
                     color: #424242;
                 }
             }
+            
         }
     }
     .footnote {

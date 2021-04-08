@@ -255,7 +255,7 @@ function NewRecipientModal(props: any) {
         firstName: "",
         lastName: "",
         mobile: "",
-        phoneCode: "+234",
+        phoneCode: "+237",
         email: "",
         state: "",
         reason: "",
@@ -276,7 +276,7 @@ function NewRecipientModal(props: any) {
                         initialValues={{...initialValues}}
                         validationSchema={RecipientValidator}
                         onSubmit={values => {
-                            dispatch(createRecipient(values))
+                            dispatch(createRecipient(values, openModal))
                         }}>
                         {
                             ({errors, touched, values}: any) => (
@@ -296,9 +296,9 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
                                                     <option value="+01">United Kingdom</option>
-                                                    <option value="+234">Nigeria</option>
+                                                    <option value="+237">Cameroon</option>
                                                 </Field>
-                                                <img src="./assets/flags/UK.png" alt="uk"/>
+                                                <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
                                                 <div className="margin-adjust"></div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
@@ -309,7 +309,7 @@ function NewRecipientModal(props: any) {
                                                 <div>State<i>*</i></div>
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
-                                            <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
+                                            {/* <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
                                                 <div>Reason</div>
                                                 <Field as="select" name="reason" id="reason">
                                                     <option value="Select">Select</option>
@@ -322,7 +322,7 @@ function NewRecipientModal(props: any) {
                                             <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
                                                 <div>Account number</div>
                                                 <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
-                                            </div>
+                                            </div> */}
                                     </div>
                                     <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton onClick={alert} label="Add" formName={paths.RECIPIENT} /> </div>
                                 </Form>
