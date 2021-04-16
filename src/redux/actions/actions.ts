@@ -279,7 +279,7 @@ export const getRecipient = () => {
 
 }
 
-export const createRecipient = (recipientData: any, callback?:Function) => {
+export const createRecipient =  (recipientData: any, callback?:any) => {
     recipientData = {
         firstName: recipientData.firstName,
         lastName: recipientData.lastName,
@@ -299,7 +299,8 @@ export const createRecipient = (recipientData: any, callback?:Function) => {
                 timeout: 10000,
                 message: "New recipient added"
             })
-            callback?.(false)
+            callback?.openModal?.(false);
+            callback?.selectRecipient?.( res.data.data );
         }
         else {
             toastAction({
@@ -354,8 +355,8 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
     })
 }
 
-export const getTransactionDetails = (callback?: Function) => {
-    const transferId = CookieService.get('transfer');
+export const getTransactionDetails = (callback?: Function, id?: any) => {
+    const transferId = id ?? CookieService.get('transfer');
     if (!transferId) {
         callback?.()
         return toastAction({
@@ -446,6 +447,33 @@ export const cancelTransfer = (callback: Function, id = null) => {
     })
 }
 
+export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: any) => {
+    const payload: {base: string, target: string, meta?: any} = {
+        base,
+        target
+    }
+    const userId = store.getState().auth.user?.id;
+    if(userId) payload.meta = {userId}
+    axios.post(config.API_HOST + '/quote', payload)
+    .then((res)=>{
+        if(res.data.status === "200") {
+            CookieService.put('QUOTE', res.data.data.id)
+            CookieService.put('SKIP_QUOTE', "true")
+            callback();
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    }).catch((error)=>{
+        console.log(error);
+    })
+}
+
 export const setNewQuote = (base: string, target: string) => {
     const payload: {base: string, target: string, meta?: any} = {
         base,
@@ -468,14 +496,21 @@ export const setNewQuote = (base: string, target: string) => {
         }
     }).catch((error)=>{
         console.log(error);
-        
     })
+}
+
+export const checkSkip = (callback: Function) => {
+    const skip = (CookieService.get('SKIP_QUOTE'));
+    if(skip) {
+        callback();
+        CookieService.remove('SKIP_QUOTE')
+    }
 }
 
 export const getQuoteService = ($_1: string, $_2: string) => {
     store.dispatch({type: LOADING, payload: true})
     const quoteId = CookieService.get('QUOTE');
-    
+
     if(quoteId) {
         http.get(parseEndpointParameters(endpoints.GET_QUOTE , quoteId))
         .then(res=>{
@@ -587,12 +622,12 @@ export const makePaymentWithStripe = async () => {
             "items": [
                 {
                     "name": "SBRemit Transfer - GBP->XAF",
-                    "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
+                    "unitCost": formatCurrency(transfer.toSend.value).replace(/,/g, '').replace(/\./, ''),
                     "quantity": 1
                 },
                 {
                     "name": "Service fee",
-                    "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
+                    "unitCost": formatCurrency(transfer.serviceFee).replace(/,/g, '').replace(/\./, ''),
                     "quantity": 1
                 }
             ]

@@ -25,11 +25,12 @@ const style = () => styled.div`
         }
         >div {
             width: 88%;
-            height: 300px;
+            min-height: 300px;
             text-align: center;
             background: #FFFFFF 0% 0% no-repeat padding-box;
             border: 2px solid #7FBCAD;
             border-radius: 15px;
+            padding: 10px;
             :hover {
                 
             }
@@ -86,8 +87,10 @@ const style = () => styled.div`
             grid-template-columns: 1fr 1fr;
 
             >div {
+                min-height: 120px;
                 height: 180px;
                 @media only screen and (max-width: 490px) { 
+                    min-height: 120px;
                     height: 123px;
                 }
                 padding: 15px;
