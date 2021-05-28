@@ -1,0 +1,5 @@
+[uat]
+api-uat.sbremit.co.uk ansible_user=root
+
+[prod]
+sbremit.com ansible_user=root

@@ -1,0 +1,14 @@
+---
+- name: Deploy SB Remit UAT
+  hosts: "{{TARGET_ENV}}"
+  remote_user: root
+
+  pre_tasks:
+    - name: 'Install python'
+      raw: 'sudo apt-get -y install python'
+
+  tasks:
+  - name: cd to project directory
+    shell: docker stack deploy -c docker-compose.yml sbremit
+    args:
+      chdir: sbremit/

@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo "Build Docker Image"
                 script {
-                    webImage = docker.build("hub.almamaters.club:5000/venus/chile-web:${target_env}", ".")
+                    webImage = docker.build("hub.almamaters.club:5000/sbremit/web:${target_env}", ".")
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
                     ansiblePlaybook(
                         credentialsId: 'root-ssh', 
                         inventory: './ansible/hosts', 
-                        playbook: './ansible/playbooks/deploy-venus.yml', 
+                        playbook: './ansible/playbooks/deploy-sbremit.yml', 
                         disableHostKeyChecking: true,
                         extras: "-e TARGET_ENV=${params.target_env}"
                     )

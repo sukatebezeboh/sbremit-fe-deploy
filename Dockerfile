@@ -3,8 +3,8 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y apache2 curl openssl
 
-ADD ssl/obselsauce.key /etc/ssl/private/obselsauce.key
-ADD ssl/obselsauce_com.* /etc/ssl/certs/
+ADD ssl/sbremit.key /etc/ssl/private/sbremit.key
+ADD ssl/sbremit_com.* /etc/ssl/certs/
 
 COPY vhost.conf /etc/apache2/sites-available/000-default.conf
 RUN rm -rf /var/www/html/*
