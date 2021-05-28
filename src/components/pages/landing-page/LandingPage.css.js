@@ -6,6 +6,7 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
+    height: 125vh;
     .f-growing{
         display: none;
     }

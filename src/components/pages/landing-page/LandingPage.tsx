@@ -22,6 +22,8 @@ const LandingPage = (props: any) => {
     const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
+    toReceive.value = transfer.toSend.value * conversionRate?.rate
+
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");

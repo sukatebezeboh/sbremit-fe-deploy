@@ -569,6 +569,7 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
 
     const transfer = store.getState().transfer
     const userId = store.getState().auth.user.id;
+    console.log(transfer);
 
     const payload = {
         transferId: transfer.transactionDetails.id,
@@ -653,4 +654,23 @@ export const makePaymentWithStripe = async () => {
             message: "An error occurred. Please, try again"
         })
     }
+}
+
+export const editProfileAction = (values: any) => {
+    store.dispatch({type: LOADING, payload: true})
+    const userId = store.getState().auth.user?.id;
+
+    http.put(parseEndpointParameters(endpoints.USER, userId), {
+        ...values
+    })
+    .then(res => {
+        store.dispatch({type: LOADING, payload: true})
+
+        toastAction({
+            show: true,
+            type: 'success',
+            timeout: 10000,
+            message: "Profile updated"
+        })
+    })
 }
