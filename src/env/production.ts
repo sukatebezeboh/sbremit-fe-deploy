@@ -1,5 +1,5 @@
 const config = {
-    API_HOST: 'http://api-uat.sbremit.co.uk',
+    API_HOST: 'https://sbremit.com',
 }
 
 export default config;
