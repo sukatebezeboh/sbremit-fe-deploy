@@ -18,7 +18,7 @@ export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user");
     const sessionId = CookieService.get(env.SESSION_ID);
-    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || 'sbremit-web-uat';
+    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || 'sbremit-web-prod';
 
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
