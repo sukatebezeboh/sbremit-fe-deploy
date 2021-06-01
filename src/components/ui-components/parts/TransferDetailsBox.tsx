@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import styled from "styled-components";
+import { getTransactionDetails } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
-import { formatCurrency } from '../../../util/util';
+import { formatCurrency, getQueryParam } from '../../../util/util';
 
 const Div = styled.div`
     .transfer-details {
@@ -73,6 +74,14 @@ const Div = styled.div`
 
 const TransferDetailsBox = () => {
     const transfer = useSelector((state: any) => state.transfer);    
+
+    useEffect(() => {
+        const transferId = getQueryParam('t');
+        if ( transferId ) {
+            getTransactionDetails( undefined, transferId )
+        }
+    }, [])
+
 
     return (
         // !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?

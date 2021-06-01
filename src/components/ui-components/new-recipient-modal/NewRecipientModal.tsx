@@ -248,7 +248,7 @@ const Div = styled.div`
 `
 
 function NewRecipientModal(props: any) {
-    const {modalOpen, openModal} = props;
+    const {modalOpen, openModal, selectRecipient} = props;
     const dispatch = useDispatch()
 
     const initialValues = {
@@ -276,7 +276,7 @@ function NewRecipientModal(props: any) {
                         initialValues={{...initialValues}}
                         validationSchema={RecipientValidator}
                         onSubmit={values => {
-                            dispatch(createRecipient(values, openModal))
+                            dispatch(createRecipient(values, { openModal, selectRecipient }))
                         }}>
                         {
                             ({errors, touched, values}: any) => (
@@ -306,7 +306,7 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
                                             </div>
                                             <div className={(touched.state && errors.state) ? 'form-error': ''}>
-                                                <div>State<i>*</i></div>
+                                                <div>City/State<i>*</i></div>
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
                                             {/* <div className={(touched.reason && errors.reason) ? 'form-error': ''}>

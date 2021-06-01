@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import { getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
+import { Link, Redirect, useHistory } from 'react-router-dom';
+import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
@@ -21,9 +21,11 @@ const Dashboard = () => {
     const [showPlus, handleShowPlus] = useState(true);
     const [modalData, setModalData] = useState({});
     const [selectedFilter, setSelectedFilter] = useState("");
+    const history = useHistory();
 
     const dispatch = useDispatch()
     useEffect(() => {
+        checkSkip(() => history.push(paths.RECIPIENT));
         getUserTransactions();
         getRecipients();
     }, [])

@@ -37,7 +37,7 @@ export const formatCurrencyWithoutFloats = (value: any, currency: string = ""): 
 
 export const getMoneyValue = (formattedAmount: string): number => {
     formattedAmount = formattedAmount.toString()
-    return Number(formattedAmount.replace(',', ''))
+    return Number(formattedAmount.replace(/,/g, ''))
 }
 
 export const convertDateString = (value: any) => {
@@ -45,8 +45,6 @@ export const convertDateString = (value: any) => {
     const d = new Date(value)
     return d.toDateString()
 }
-    
-    
 
 export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): T => {
     // eslint-disable-next-line eqeqeq

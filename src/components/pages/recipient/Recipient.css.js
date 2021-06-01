@@ -43,9 +43,9 @@ export default styled.div`
                     grid-template-rows: 1fr 1fr;
                     border-radius: 8px;
                     width: 92%;
-                    height: 129px;
+                    height: 170px;
                     text-align: center;
-                    padding: 20px 0px;
+                    padding: 35px 0px;
                     box-shadow: 0px 2px 4px #CCCCCC80;
                     margin-top: 35px;
                     font: normal normal normal 16px/20px Montserrat;
@@ -57,6 +57,10 @@ export default styled.div`
                         height: 55px; */
                         margin-bottom: 15px;
                         border-radius: 50%;
+                    }
+                    @media only screen and (min-width: 2550px) and (max-width: 4000px) { 
+                        padding: 45px 0px;
+                        height: 220px;
                     }
                 }
                 .plus {

@@ -177,8 +177,6 @@ const Review = () => {
         })
     }
 
-   
-    
     return (
         !recipient.id ?
         <Redirect to={paths.RECIPIENT} />
@@ -195,7 +193,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push('/recipient-details')}>Back</span> <button onClick={()=>handleConfirmClick()}>Confirm</button> </div>
+                <div className="btns"><span onClick={()=>history.push(paths.RECIPIENT)}>Back</span> <button onClick={()=>handleConfirmClick()}>Confirm</button> </div>
             </div>
         </Body>
     )

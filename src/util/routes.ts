@@ -18,6 +18,7 @@ import CardPayment from '../components/pages/card-payment/CardPayment';
 import CreateTransfer from '../components/pages/create-transfer/CreateTransfer';
 import TransferComplete from '../components/pages/transfer-complete/TransferComplete';
 import { paths } from './paths';
+import EditProfile from '../components/pages/edit-profile/EditProfile';
 
 
 export interface IRoute {
@@ -81,6 +82,11 @@ export const Routing: IRoute[] = [
     { 
         path: paths.PROFILE, 
         component: UserProfile,
+        protected: true 
+    },
+    { 
+        path: paths.EDIT_PROFILE, 
+        component: EditProfile,
         protected: true 
     },
     { 

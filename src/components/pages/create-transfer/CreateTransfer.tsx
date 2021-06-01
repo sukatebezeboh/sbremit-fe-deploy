@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
 import { useSelector } from 'react-redux';
-import { cancelTransfer, initiatePayment } from '../../../redux/actions/actions';
+import { cancelTransfer, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 
 const Body = styled.div`
@@ -221,6 +221,10 @@ const CreateTransfer = () => {
     const handleSubmit = () => {
         initiatePayment(()=>history.push(paths.TRANSFER_COMPLETE))
     }
+
+    useEffect(() => {
+        getTransactionDetails( undefined )
+    }, [])
 
     return (
         !transactionDetails ?
