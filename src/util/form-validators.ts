@@ -59,3 +59,13 @@ export const RecipientValidator = Yup.object().shape({
   expiryDate: Yup.string().min(5, "Too short").max(5, "Too long").required("Required"),
   cvv: Yup.string().min(3, "Too short").max(3, "Too long").required("Required"),
 });
+
+export const EditProfileValidator = Yup.object().shape({
+  firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+  lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+  mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
+  state: Yup.string().min(3, "Too short").max(25, "Too long"),
+  day: Yup.string().min(1, "Input day").max(2, "Input day"),
+  month: Yup.string().min(1, "Input month").max(15, "Input month"),
+  year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month"),
+});

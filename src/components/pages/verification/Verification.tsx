@@ -317,8 +317,8 @@ const Verification = () => {
     const enableVerficationStep = false;
 
     return (
-        !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
-        :
+        // !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
+        // :
         <Body>
             <NavBar />
             <ProgressBar point={1}/>

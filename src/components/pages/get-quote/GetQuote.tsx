@@ -17,14 +17,19 @@ const Body = style();
 
 const GetQuote = () => {
     
-    const transfer = useSelector((state: any)=>state.transfer) 
-    
+    const transfer = useSelector((state: any)=>state.transfer);
+    const appValues = useSelector((state: any) => state.appValues);
+
     const conversionRate = transfer.conversionRate;
     const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
+    toReceive.value = transfer.toSend.value * conversionRate?.rate
+    const payInCountries = appValues.payInCountries;
+    const payOutCountries = appValues.payOutCountries;
     const dispatch = useDispatch()
     const history = useHistory();
+    const max  = transfer.transferMax;
 
     const handleXInputChange = (e: any, data: any) => {
         const caret = e.target.selectionStart
@@ -35,7 +40,7 @@ const GetQuote = () => {
         })
         const value = getMoneyValue(e.target.value);
 
-        if(!value) return;
+        // if(!value) return;
         if (data.isSend) {
             dispatch({
                 type: TRANSFER, 
@@ -80,7 +85,7 @@ const GetQuote = () => {
                     <div className="calc">
                         <div className="hero-rect">
                             <div>
-                                <ExchangeRateInput data={toSend} handleXInputChange={handleXInputChange}/>
+                                <ExchangeRateInput max={max} data={toSend} handleXInputChange={handleXInputChange} countries={payInCountries}/>
                             </div>
                             <div className="wrapper">
                                 <div className="timeline-box">
@@ -92,7 +97,7 @@ const GetQuote = () => {
                                 </div>
                             </div>
                             <div className="receive">
-                                <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} />
+                                <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
                         </div>
                         <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
@@ -100,7 +105,7 @@ const GetQuote = () => {
                     </div>
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={()=>{
-                    if (!Number(toSend.value)) {
+                    if (!Number(toSend.value) || Number(toSend.value) > max ) {
                         toastAction({
                             show: true,
                             type: "warning",

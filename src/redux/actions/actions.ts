@@ -18,12 +18,12 @@ export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user");
     const sessionId = CookieService.get(env.SESSION_ID);
-    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || 'sbremit-web-prod';
+    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
 
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
         return {
-            isAuthenticated: true, 
+            isAuthenticated: true,
             user: JSON.parse(user),
             authToken: session,
             sessionId,
@@ -36,7 +36,7 @@ export const checkAuth = () => {
     }
 }
 
-export const signUpAction = (data: any) => {       
+export const signUpAction = (data: any) => {
     store.dispatch({type: SUBMITTING, payload: SIGN_UP})
     axios.post(config.API_HOST + endpoints.SIGN_UP, {...data})
     .then((res: any)=> {
@@ -78,7 +78,7 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                
+
                 CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
                 CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
                 CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
@@ -86,7 +86,7 @@ export const signInAction = (data: any) => {
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
                     store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: response.data.data}})
-                })            
+                })
         } else {
             toastAction({
                 show: true,
@@ -108,7 +108,6 @@ export const signOutAction = () => {
     CookieService.remove(env.SESSION_KEY);
     CookieService.remove(env.SESSION_ID);
     store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
-    
 }
 
 const runningTimeouts: any[] = [];
@@ -133,11 +132,15 @@ export const toastAction = (toastConfig: any) => {
 export const appValuesAction = async() => {
     const allValues = await AppService.getValues();
     const countries = await AppService.getValueById(2);
+    const payInCountries = await AppService.getValueById(8);
+    const payOutCountries = await AppService.getValueById(9);
     const services = await AppService.getServices();
     const values: any = {}
     values.values = allValues;
     values.countries = countries.data;
     values.services = services;
+    values.payInCountries = payInCountries.data;
+    values.payOutCountries = payOutCountries.data;
 
     store.dispatch({type: APP_VALUES, payload: values})
     getServiceRate()
@@ -279,7 +282,7 @@ export const getRecipient = () => {
 
 }
 
-export const createRecipient = (recipientData: any, callback?:Function) => {
+export const createRecipient =  (recipientData: any, callback?:any) => {
     recipientData = {
         firstName: recipientData.firstName,
         lastName: recipientData.lastName,
@@ -299,7 +302,8 @@ export const createRecipient = (recipientData: any, callback?:Function) => {
                 timeout: 10000,
                 message: "New recipient added"
             })
-            callback?.(false)
+            callback?.openModal?.(false);
+            callback?.selectRecipient?.( res.data.data );
         }
         else {
             toastAction({
@@ -354,8 +358,8 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
     })
 }
 
-export const getTransactionDetails = (callback?: Function) => {
-    const transferId = CookieService.get('transfer');
+export const getTransactionDetails = (callback?: Function, id?: any) => {
+    const transferId = id ?? CookieService.get('transfer');
     if (!transferId) {
         callback?.()
         return toastAction({
@@ -446,6 +450,33 @@ export const cancelTransfer = (callback: Function, id = null) => {
     })
 }
 
+export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: any) => {
+    const payload: {base: string, target: string, meta?: any} = {
+        base,
+        target
+    }
+    const userId = store.getState().auth.user?.id;
+    if(userId) payload.meta = {userId}
+    axios.post(config.API_HOST + '/quote', payload)
+    .then((res)=>{
+        if(res.data.status === "200") {
+            CookieService.put('QUOTE', res.data.data.id)
+            CookieService.put('SKIP_QUOTE', "true")
+            callback();
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    }).catch((error)=>{
+        console.log(error);
+    })
+}
+
 export const setNewQuote = (base: string, target: string) => {
     const payload: {base: string, target: string, meta?: any} = {
         base,
@@ -468,14 +499,21 @@ export const setNewQuote = (base: string, target: string) => {
         }
     }).catch((error)=>{
         console.log(error);
-        
     })
+}
+
+export const checkSkip = (callback: Function) => {
+    const skip = (CookieService.get('SKIP_QUOTE'));
+    if(skip) {
+        callback();
+        CookieService.remove('SKIP_QUOTE')
+    }
 }
 
 export const getQuoteService = ($_1: string, $_2: string) => {
     store.dispatch({type: LOADING, payload: true})
     const quoteId = CookieService.get('QUOTE');
-    
+
     if(quoteId) {
         http.get(parseEndpointParameters(endpoints.GET_QUOTE , quoteId))
         .then(res=>{
@@ -534,6 +572,7 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
 
     const transfer = store.getState().transfer
     const userId = store.getState().auth.user.id;
+    console.log(transfer);
 
     const payload = {
         transferId: transfer.transactionDetails.id,
@@ -587,12 +626,12 @@ export const makePaymentWithStripe = async () => {
             "items": [
                 {
                     "name": "SBRemit Transfer - GBP->XAF",
-                    "unitCost": formatCurrency(transfer.toSend.value).replace(',', '').replace('.', ''),
+                    "unitCost": formatCurrency(transfer.toSend.value).replace(/,/g, '').replace(/\./, ''),
                     "quantity": 1
                 },
                 {
                     "name": "Service fee",
-                    "unitCost": formatCurrency(transfer.serviceFee).replace(',', '').replace('.', ''),
+                    "unitCost": formatCurrency(transfer.serviceFee).replace(/,/g, '').replace(/\./, ''),
                     "quantity": 1
                 }
             ]
@@ -618,4 +657,23 @@ export const makePaymentWithStripe = async () => {
             message: "An error occurred. Please, try again"
         })
     }
+}
+
+export const editProfileAction = (values: any) => {
+    store.dispatch({type: LOADING, payload: true})
+    const userId = store.getState().auth.user?.id;
+
+    http.put(parseEndpointParameters(endpoints.USER, userId), {
+        ...values
+    })
+    .then(res => {
+        store.dispatch({type: LOADING, payload: true})
+
+        toastAction({
+            show: true,
+            type: 'success',
+            timeout: 10000,
+            message: "Profile updated"
+        })
+    })
 }

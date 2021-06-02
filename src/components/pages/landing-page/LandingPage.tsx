@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, setNewQuote } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, setNewQuote, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { formatCurrency, getMoneyValue } from '../../../util/util';
@@ -9,17 +9,26 @@ import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeR
 import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
 import { style } from "./LandingPage.css";
 
-const LandingPage = (props: any) => {
-    const bg = props.location ? `/assets/bg/${props.location}-bg.png` : undefined;
+
+const bg = window.location.pathname.indexOf('/en/') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca/') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
     const Body = style(bg);
+const LandingPage = (props: any) => {
+    
 
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
+    const appValues = useSelector((state: any) => state.appValues);
+
 
     const conversionRate = transfer.conversionRate;
     const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
+    toReceive.value = transfer.toSend.value * conversionRate?.rate
+    const payInCountries = appValues.payInCountries;
+    const payOutCountries = appValues.payOutCountries;
+    const max  = transfer.transferMax;
+
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");
@@ -99,24 +108,31 @@ const LandingPage = (props: any) => {
                         <button className={selected === "bank_transfer" ? "selectedTM" : ""}  onClick={() => setTransferMethod('bank_transfer')} >Bank Transfer</button>
                         <button className={selected === "cash_pickup" ? "selectedTM" : ""}  onClick={() => setTransferMethod('cash_pickup')}>Cash Pickup</button></div>
                     <div className="md-txt amt-txt">Enter an amount to send</div>
-                    <div>
-                        <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} />
-                    </div>
-                    <div className="wrapper">
-                        <div className="timeline-box">
-                            <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className="deep-green">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                            <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
-                            <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
-                            <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
-                            <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> <span className="mobile we-conv">We’ll convert 99.05 GBP</span> </span></div>
+                    <form>
+                        <div>
+                            {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
+                            {
+                                ExchangeRateInput({data: toSend, handleXInputChange, max, countries: payInCountries})
+                            }
                         </div>
-                    </div>
-                    <div className="receive">
-                        <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} />
-                    </div>
+                        <div className="wrapper">
+                            <div className="timeline-box">
+                                <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className="deep-green">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
+                                <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
+                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
+                                <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
+                                <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> <span className="mobile we-conv">We’ll convert 99.05 GBP</span> </span></div>
+                            </div>
+                        </div>
+                        <div className="receive">
+                            {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
+                            {
+                                ExchangeRateInput({data: toReceive, handleXInputChange, key: 'landingPageToRecieve', countries: payOutCountries})
+                            }
+                        </div>
+                    </form>
                     <button onClick={()=>{
-                        setNewQuote(toSend.currency, toReceive.currency);
-                        history.push(paths.SIGN_UP);
+                        setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(paths.SIGN_UP));
                         }}>Start sending money</button>
                 </div>
             </div>

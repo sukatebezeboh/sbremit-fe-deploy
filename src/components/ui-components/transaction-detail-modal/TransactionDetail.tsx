@@ -524,13 +524,13 @@ const TransactionDetail = (props: any) => {
                             </div>
                         )}
                         </Pdf>
-                        {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
+                        <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
                         }, data.id)}>
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
-                        </div> */}
+                        </div>
                         <div className="resend" onClick={handleResend}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>

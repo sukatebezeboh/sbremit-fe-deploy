@@ -10,7 +10,7 @@ body{
   scrollbar-width: none; 
   background: #F5F7F7;
   zoom: 0.8;
-
+  height: 100vh;
 }
 body::-webkit-scrollbar {
     display: none;
@@ -245,4 +245,7 @@ button:disabled{
 }
 .completed {
     background: #007B5D!important;
+}
+.float-right {
+    float: right;
 }

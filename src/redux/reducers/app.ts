@@ -11,7 +11,9 @@ const initialRedirectState = {
 const initialAppValues = {
   values: {},
   countries: {},
-  services: {}
+  services: {},
+  payInCountries: {},
+  payOutCountries: {}
 }
 const initialLoadingState = false;
 

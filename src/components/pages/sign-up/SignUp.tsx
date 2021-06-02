@@ -30,7 +30,6 @@ const SignUp = () => {
             return prevValue === 'show' ? 'hide' : 'show';
         })
     }
-    const handleSignUp = useCallback(() => history.push('/email/confirm-account'), [history]);
 
     const initialValues: any = {
         firstName:"",

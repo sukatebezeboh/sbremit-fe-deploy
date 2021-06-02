@@ -2,16 +2,17 @@ import React from 'react'
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import {asset} from '../../../util/util';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import style from './UserProfile.css'
 import { useSelector } from 'react-redux';
+import { paths } from '../../../util/paths';
 
 const Body = style();
 
 const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
-
+    const history = useHistory()
     return (
         <Body>
             <NavBar />
@@ -32,7 +33,7 @@ const UserProfile = () => {
                         </div>
                         <div className="right">
                             <span> <Link to="/change-password"> <img src={asset('icons', 'lock.svg')} alt="lock-icon" /> Change password </Link></span> 
-                            <span><img src={asset('icons', 'pencil.svg')} alt="pen-icon" /> Edit profile</span>
+                            <span> <Link to={paths.EDIT_PROFILE}><img src={asset('icons', 'pencil.svg')} alt="pen-icon" /> Edit profile</Link></span>
                         </div>
                     </div>
                     <hr/>
