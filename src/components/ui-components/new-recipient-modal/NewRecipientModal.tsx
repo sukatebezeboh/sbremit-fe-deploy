@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components';
 
 import { createRecipient } from '../../../redux/actions/actions';
@@ -8,6 +8,7 @@ import { RecipientValidator } from "../../../util/form-validators";
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch } from 'react-redux';
+import { REASONS } from '../../../util/constants';
 
 const Div = styled.div`
     .overlay {
@@ -132,6 +133,15 @@ const Div = styled.div`
             div.margin-adjust {
                 margin-bottom: -44px;
             }
+            span.reason-close {
+                color: red;
+                position: relative;
+                right: 5%;
+                top: -40px;
+                float: right;
+                cursor: pointer;
+
+            }
         }
         .modal-btns {
             text-align: right;
@@ -250,6 +260,7 @@ const Div = styled.div`
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient} = props;
     const dispatch = useDispatch()
+    const [otherReasons, setOtherReasons] = useState(false)
 
     const initialValues = {
         firstName: "",
@@ -280,7 +291,7 @@ function NewRecipientModal(props: any) {
                         }}>
                         {
                             ({errors, touched, values}: any) => (
-
+                                
                                 <Form>
                                     <div className="form grid-col-1-1 grid-gap-3">
                                             <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
@@ -309,12 +320,29 @@ function NewRecipientModal(props: any) {
                                                 <div>City/State<i>*</i></div>
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
-                                            {/* <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
+                                            <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
                                                 <div>Reason</div>
-                                                <Field as="select" name="reason" id="reason">
-                                                    <option value="Select">Select</option>
-                                                </Field>
+                                                {
+                                                    values.reason === "Others" ? setOtherReasons(true) : ''
+                                                }
+                                                
+                                                    
+                                                    <Field as="select"  name="reason" id="reason">
+                                                        <option value="">Select</option>
+                                                        {
+                                                            REASONS.map((reason: string) => (
+                                                                <option value={reason}>{reason}</option>
+                                                            ))
+                                                        }
+                                                    </Field>
+                                                {
+                                                    otherReasons ?
+                                                    <Field type="text" name="reason" id="reason" />
+                                                    : <></>
+                                                }
+                                                {otherReasons ? <span className="reason-close" onClick={() => setOtherReasons(false)} >x</span> : ''}
                                             </div>
+                                            {/*
                                             <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
                                                 <div>Recipient's bank name</div>
                                                 <Field type="text" name="bankName" placeholder="" />

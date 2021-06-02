@@ -8,13 +8,13 @@ const initialRecipientState: {recipients: any[], recipient: any} = {
 
 export const recipients = (state: any = initialRecipientState, {type, payload}: IAction) => {
     switch (type) {
-        case RECIPIENTS: {            
+        case RECIPIENTS: {
           return {
               ...state,
               recipients: [...payload],
           }
         }
-        case RECIPIENT: {            
+        case RECIPIENT: {
             return {
                 ...state,
                 recipient: {...payload},

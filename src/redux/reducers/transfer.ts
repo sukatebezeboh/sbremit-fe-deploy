@@ -15,7 +15,8 @@ const initialTransferState: {} = {
     paginatedCompletedTransactions: {},
     paginatedCancelledTransactions: {},
     paginatedPendingTransactions: {},
-    currentTransactionsPage: 1
+    currentTransactionsPage: 1,
+    transferMax: 800
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {

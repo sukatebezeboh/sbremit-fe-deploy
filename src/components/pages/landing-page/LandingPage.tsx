@@ -17,12 +17,17 @@ const LandingPage = (props: any) => {
 
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
+    const appValues = useSelector((state: any) => state.appValues);
+
 
     const conversionRate = transfer.conversionRate;
     const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
     toReceive.value = transfer.toSend.value * conversionRate?.rate
+    const payInCountries = appValues.payInCountries;
+    const payOutCountries = appValues.payOutCountries;
+    const max  = transfer.transferMax;
 
     const dispatch = useDispatch()
 
@@ -107,7 +112,7 @@ const LandingPage = (props: any) => {
                         <div>
                             {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toSend, handleXInputChange})
+                                ExchangeRateInput({data: toSend, handleXInputChange, max, countries: payInCountries})
                             }
                         </div>
                         <div className="wrapper">
@@ -122,7 +127,7 @@ const LandingPage = (props: any) => {
                         <div className="receive">
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toReceive, handleXInputChange, key: 'landingPageToRecieve'})
+                                ExchangeRateInput({data: toReceive, handleXInputChange, key: 'landingPageToRecieve', countries: payOutCountries})
                             }
                         </div>
                     </form>

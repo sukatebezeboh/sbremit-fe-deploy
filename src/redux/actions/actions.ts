@@ -18,12 +18,12 @@ export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user");
     const sessionId = CookieService.get(env.SESSION_ID);
-    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || 'sbremit-web-uat';
+    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
 
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
         return {
-            isAuthenticated: true, 
+            isAuthenticated: true,
             user: JSON.parse(user),
             authToken: session,
             sessionId,
@@ -36,7 +36,7 @@ export const checkAuth = () => {
     }
 }
 
-export const signUpAction = (data: any) => {       
+export const signUpAction = (data: any) => {
     store.dispatch({type: SUBMITTING, payload: SIGN_UP})
     axios.post(config.API_HOST + endpoints.SIGN_UP, {...data})
     .then((res: any)=> {
@@ -78,7 +78,7 @@ export const signInAction = (data: any) => {
                     timeout: 5000,
                     message: `Welcome, ${res.data.data.profile.firstName}`
                 })
-                
+
                 CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
                 CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
                 CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
@@ -86,7 +86,7 @@ export const signInAction = (data: any) => {
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
                     store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: response.data.data}})
-                })            
+                })
         } else {
             toastAction({
                 show: true,
@@ -108,7 +108,6 @@ export const signOutAction = () => {
     CookieService.remove(env.SESSION_KEY);
     CookieService.remove(env.SESSION_ID);
     store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
-    
 }
 
 const runningTimeouts: any[] = [];
@@ -133,11 +132,15 @@ export const toastAction = (toastConfig: any) => {
 export const appValuesAction = async() => {
     const allValues = await AppService.getValues();
     const countries = await AppService.getValueById(2);
+    const payInCountries = await AppService.getValueById(8);
+    const payOutCountries = await AppService.getValueById(9);
     const services = await AppService.getServices();
     const values: any = {}
     values.values = allValues;
     values.countries = countries.data;
     values.services = services;
+    values.payInCountries = payInCountries.data;
+    values.payOutCountries = payOutCountries.data;
 
     store.dispatch({type: APP_VALUES, payload: values})
     getServiceRate()

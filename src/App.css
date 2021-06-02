@@ -246,3 +246,6 @@ button:disabled{
 .completed {
     background: #007B5D!important;
 }
+.float-right {
+    float: right;
+}
