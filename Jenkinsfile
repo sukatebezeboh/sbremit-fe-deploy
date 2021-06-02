@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'target_env', defaultValue: "uat", description: "The target build environment")
+        string(name: 'target_env', defaultValue: "prod", description: "The target build environment")
     }
     environment {
         HOME = '.'

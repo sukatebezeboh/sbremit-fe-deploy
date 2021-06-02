@@ -1,6 +1,6 @@
 const config = {
-    API_HOST: 'http://api-uat.sbremit.co.uk',
-    X_SERVICE_PROVIDER: "sbremit-web-prod"
+    X_SERVICE_PROVIDER: "sbremit-web-prod",
+    API_HOST: 'https://sbremit.com:9090',
 }
 
 export default config;
