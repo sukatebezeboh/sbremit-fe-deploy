@@ -213,7 +213,8 @@ const Body = styled.div`
 const CreateTransfer = () => {
     const history = useHistory();
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
-
+    console.log(transactionDetails);
+    
     const cancelPayment = () => {
         history.push(paths.PAYMENT_METHOD)
     }
@@ -273,7 +274,7 @@ const CreateTransfer = () => {
 
                             <div>
                                 <span>Reference</span>
-                                <span>SBR334908</span>
+                                <span>{transactionDetails.meta.transactionId}</span>
                             </div>
                             
                         </div>
@@ -285,7 +286,7 @@ const CreateTransfer = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent 100.95 GBP</button> </div>
+                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent {transactionDetails?.originAmount} {transactionDetails?.originCurrency}</button> </div>
             </div>
         </Body>
     )

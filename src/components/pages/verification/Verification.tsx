@@ -1,6 +1,10 @@
+import { Field, Form, Formik } from 'formik';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
+import { userVerificationAction } from '../../../redux/actions/actions';
+import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -316,100 +320,137 @@ const Verification = () => {
     const history = useHistory();
     const enableVerficationStep = false;
 
+    const user = useSelector((state: any) => state.auth.user);
+    
+
+    const initialValues: any = {
+        ...user?.profile,
+        phoneCode: '+01'
+    }
+
+
     return (
         // !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
         // :
         <Body>
             <NavBar />
             <ProgressBar point={1}/>
+            {/* <button onClick={()=> {
+                userVerificationAction({
+                    ...initialValues
+                }, () => history.push(paths.RECIPIENT))
+            }}>
+                test
+            </button> */}
             <div className="page-content">
                 <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
-                <div className="box-container">
-                    <div className="form part">
-                            <div className="heading mobile-hide">
-                                <div className="title">My personal details</div>
-                            </div>
-                            <hr className="mobile-hide"/>
+                <Formik
+                        initialValues={{...initialValues}}
+                        validationSchema={userVerificationValidator}
+                        onSubmit={values => {
+                            userVerificationAction(values, () => history.push(paths.RECIPIENT))
+                        }}>
+                        {
+                            ({errors, touched, values}: any) => (
+                                <Form>
+                                    <div className="box-container">
+                                        <div className="form part">
+                                                <div className="heading mobile-hide">
+                                                    <div className="title">My personal details</div>
+                                                </div>
+                                                <hr className="mobile-hide"/>
 
-                        <div className="inputs">
-                            <div className="names">
-                                <div>
-                                    <div>First Name<i>*</i></div>
-                                    <input type="text" placeholder="John" />
-                                </div>
-                                <div></div>
-                                <div>
-                                    <div>Last Name<i>*</i></div>
-                                    <input type="text" placeholder="Doe"/>
-                                </div>
-                            </div>
-                            <div className="grid-col-1-1 grid-gap-3">
-                                <div>
-                                    <div className="mobile-head">Mobile<i>*</i></div>
-                                    <input type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                                    <select name="" id="" >
-                                        <option value="">United Kingdom</option>
-                                    </select>
-                                    <img src="./assets/flags/UK.png" alt="uk"/>
-                                </div>
-                                <div>
-                                <div>Date of birth<i>*</i></div>
-                                    <div className="grid-col-1-2-1 grid-gap-3 dob">                              
-                                        <div><input type="text" placeholder="Day"/></div>
-                                        <div><input type="text" placeholder="Month"/></div>
-                                        <div><input type="text" placeholder="Year"/></div>
+                                            <div className="inputs">
+                                                <div className="names">
+                                                    <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
+                                                        <div>First Name<i>*</i></div>
+                                                        <Field type="text" name="firstName" placeholder="John" />
+                                                        {(touched.firstName && errors.firstName) && <div className="form-error-message">{errors.firstName}</div>}
+                                                    </div>
+                                                    <div></div>
+                                                    <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
+                                                        <div>Last Name<i>*</i></div>
+                                                        <Field type="text" name="lastName" placeholder="Doe"/>
+                                                        {(touched.lastName && errors.lastName) && <div className="form-error-message">{errors.lastName}</div>}
+                                                    </div>
+                                                </div>
+                                                <div className="grid-col-1-1 grid-gap-3">
+                                                    <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
+                                                        <div className="mobile-head">Mobile<i>*</i></div>
+                                                        <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
+                                                        <Field as="select" name="phoneCode" id="" >
+                                                            <option value="+44">United Kingdom</option>
+                                                        </Field>
+                                                        <img src="./assets/flags/UK.png" alt="uk"/>
+                                                        {(touched.mobile && errors.mobile) && <div className="form-error-message form-error-message-adjust-up">{errors.mobile}</div>}
+                                                    </div>
+                                                    <div>
+                                                    <div className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error': ''}>
+                                                        <div>Date of birth<i>*</i></div>
+                                                            <div className="grid-col-1-2-1 grid-gap-3 dob">                              
+                                                                <div><Field name="day" type="text" placeholder="Day"/></div>
+                                                                <div><Field name="month" type="text" placeholder="Month"/></div>
+                                                                <div><Field name="year" type="text" placeholder="Year"/></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className={(touched.gender && errors.gender) ? 'form-error': ''}>
+                                                    <div>Gender<i>*</i></div>
+                                                    <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
+                                                        <span className="grid-col-0-1 radio-span">
+                                                            <Field type="radio" name="gender" value="male" />
+                                                            <span className="radio-txt">Male</span>
+                                                        </span>
+                                                        <span className="grid-col-0-1 radio-span">
+                                                            <Field type="radio" name="gender" value="female" />
+                                                            <span className="radio-txt">Female</span>
+                                                        </span>
+                                                        <span className="grid-col-0-1 radio-span">
+                                                            <Field type="radio" name="gender" value={(values.gender !== "male" && values.gender !== "female") ? values.gender : ""} />
+                                                            <span className="radio-txt">Other</span>
+                                                        </span>
+                                                        <span className="m-grid-col-span-1-4"> <Field className="specify" name="gender" placeholder="Please specify" /> </span>
+                                                    </div>
+                                                    {(touched.gender && errors.gender) && <div className="form-error-message form-error-message-adjust-up">{errors.gender}</div>}
+                                                </div>
+                                                <div className={(touched.address1 && errors.address1) ? 'form-error': ''}>
+                                                    <div>Address line 1<i>*</i></div>
+                                                    <Field name="address1" type="text" placeholder="Street name and no." />
+                                                    {(touched.address1 && errors.address1) && <div className="form-error-message">{errors.address1}</div>}
+                                                </div>
+                                                <div className={(touched.address2 && errors.address2) ? 'form-error': ''}>
+                                                    <div>Address line 2</div>
+                                                    <Field name="address2" type="text" placeholder="Apartment, suite, unit, building, floor" />
+                                                    {(touched.address2 && errors.address2) && <div className="form-error-message">{errors.address2}</div>}
+                                                </div>
+                                                <div className={`city-town-div ${(touched.city && errors.city) ? 'form-error': ''}`}>
+                                                    <div>City / Town</div>
+                                                    <Field name="city" type="text" />
+                                                    {(touched.city && errors.city) && <div className="form-error-message form-error-message-adjust-up">{errors.city}</div>}
+                                                </div>
+                                                <div className={`state-input-div ${(touched.state && errors.state) ? 'form-error': ''}`}>
+                                                    <div>State</div>
+                                                    <Field name="state" type="text" />
+                                                    {(touched.state && errors.state) && <div className="form-error-message form-error-message-adjust-up">{errors.state}</div>}
+                                                </div>
+                                                <div className={(touched.zip && errors.zip) ? 'form-error': ''}>
+                                                    <div>Postal / zip code</div>
+                                                    <Field name="zip" type="text" />
+                                                    {(touched.zip && errors.zip) && <div className="form-error-message form-error-message-adjust-up">{errors.zip}</div>}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="mobile-hide">
+                                            <TransferDetailsBox />
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div>
-                                <div>Gender<i>*</i></div>
-                                <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Male" />
-                                        <span className="radio-txt">Male</span>
-                                    </span>
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Fenale" />
-                                        <span className="radio-txt">Female</span>
-                                    </span>
-                                    <span className="grid-col-0-1 radio-span">
-                                        <input type="radio" name="gender" value="Other" />
-                                        <span className="radio-txt">Other</span>
-                                    </span>
-                                    <span className="m-grid-col-span-1-4"> <input className="specify" placeholder="Please specify" /> </span>
-                                </div>
-                            </div>
-                            <div>
-                                <div>Address line 1<i>*</i></div>
-                                <input type="text" placeholder="Street name and no." />
-                            </div>
-                            <div>
-                                <div>Address line 2</div>
-                                <input type="text" placeholder="Apartment, suite, unit, building, floor" />
-                            </div>
-                            <div>
-                                <div>City / Town</div>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <div>State</div>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <div>Postal / zip code</div>
-                                <input type="text" />
-                            </div>
-
-
-                        </div>
-
-                    </div>
-                    <div className="mobile-hide">
-                        <TransferDetailsBox />
-                    </div>
-                 </div>
-                <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button onClick={()=>history.push('/recipient')} >Continue</button> </div>
-
+                                    <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button >Continue</button> </div>
+                                </Form>
+                            )
+                        }
+                </Formik>
             </div>
         </Body>
     )

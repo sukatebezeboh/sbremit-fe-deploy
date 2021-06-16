@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { resetPasswordAction } from '../../../redux/actions/actions';
 import { REDIRECT } from '../../../redux/actionTypes';
 import { ResetPasswordValidator } from '../../../util/form-validators';
@@ -65,7 +66,7 @@ const ResetPassword = () => {
                             )
                         }
                 </Formik>
-                <div className="footer">Remember your password? <span>Try Logging in</span></div>
+                <div className="footer">Remember your password? <Link to={paths.SIGN_IN}><span>Try Logging in</span></Link></div>
             </div>
             <div className="text">
                 <div>To protect your account the password must contain at least:</div>

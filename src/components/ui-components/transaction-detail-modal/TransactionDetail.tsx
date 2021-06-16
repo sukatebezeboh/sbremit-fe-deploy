@@ -505,7 +505,7 @@ const TransactionDetail = (props: any) => {
         <Modal ref={ref}>
             <div className="modal" id="TD-Modal" >
                 <div className="head">
-                    <div className="t-id">Transaction #: <span>SBR{data.dateCreated}</span></div>
+                    <div className="t-id">Transaction #: <span>{data.meta.transactionId}</span></div>
                     <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
                     <div className="close" onClick={()=>handleOpenTDModal(false)} >x</div>
                 </div>
@@ -524,13 +524,13 @@ const TransactionDetail = (props: any) => {
                             </div>
                         )}
                         </Pdf>
-                        <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
+                        {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
                         }, data.id)}>
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
-                        </div>
+                        </div> */}
                         <div className="resend" onClick={handleResend}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>

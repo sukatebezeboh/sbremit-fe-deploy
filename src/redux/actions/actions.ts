@@ -11,8 +11,11 @@ import { paths } from '../../util/paths';
 import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
 import http from '../../util/http';
 import { loadStripe } from '@stripe/stripe-js';
+import { Redirect } from 'react-router';
+import { BrowserRouter } from 'react-router-dom'
 
 const user = store.getState().auth.user;
+const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
 
 export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
@@ -36,9 +39,12 @@ export const checkAuth = () => {
     }
 }
 
-export const signUpAction = (data: any) => {
+export const signUpAction = (data: any, callback = () => {}) => {
+    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
     store.dispatch({type: SUBMITTING, payload: SIGN_UP})
-    axios.post(config.API_HOST + endpoints.SIGN_UP, {...data})
+    axios.post(config.API_HOST + endpoints.SIGN_UP, {...data}, {
+        headers: {'X-SERVICE-PROVIDER': serviceProvider}
+    })
     .then((res: any)=> {
         if (res.data.status === "200"){
             toastAction({
@@ -48,6 +54,7 @@ export const signUpAction = (data: any) => {
                 title: "You're signed up!",
                 message: `We have sent a verification mail to ${res.data.data.username}.`
             })
+            callback();
         } else {
             toastAction({
                 show: true, 
@@ -68,7 +75,7 @@ export const signUpAction = (data: any) => {
 export const signInAction = (data: any) => {       
     store.dispatch({type: SUBMITTING, payload: SIGN_IN})
     axios.post(config.API_HOST + endpoints.SIGN_IN, {...data}, {
-        headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'}
+        headers: {'X-SERVICE-PROVIDER': serviceProvider}
     })
     .then((res: any)=> {
         if (res.data.status === "200"){
@@ -234,9 +241,9 @@ export const resetPasswordAction = (values: any, stage="email") => {
             {
                 password: values.password,
                 confirmation: values.confirmation,
-                token: getQueryParam('t')
+                token: getQueryParam('token')
             }, {
-            headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'}
+            headers: {'X-SERVICE-PROVIDER': serviceProvider}
         })
         .then((res: any)=> {
             if (res.data.status === "200"){
@@ -664,16 +671,64 @@ export const editProfileAction = (values: any) => {
     const userId = store.getState().auth.user?.id;
 
     http.put(parseEndpointParameters(endpoints.USER, userId), {
+        profile: {...values}
+    })
+    .then(res => {
+        store.dispatch({type: LOADING, payload: false})
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 10000,
+                message: "Profile updated"
+            })
+            CookieService.put('user', JSON.stringify(res.data.data));
+            store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: "Could not update profile"
+            })
+        }      
+    })
+}
+
+export const userVerificationAction = (values: any, callback: Function) => {
+    store.dispatch({type: LOADING, payload: true})
+    const userId = store.getState().auth.user?.id;
+    http.post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
         ...values
     })
     .then(res => {
-        store.dispatch({type: LOADING, payload: true})
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: "Account verified!"
+            })
+            store.dispatch({type: LOADING, payload: false})
+            CookieService.put('user', JSON.stringify(res.data.data));
+            store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
+            callback?.()
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
 
-        toastAction({
-            show: true,
-            type: 'success',
-            timeout: 10000,
-            message: "Profile updated"
-        })
+    }).catch(()=> {
+        store.dispatch({type: LOADING, payload: false})
     })
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
+    // callback()
 }

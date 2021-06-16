@@ -8,6 +8,7 @@ import { checkAuth, appValuesAction } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/ui-components/app-loader/AppLoader';
+import { AppFooter } from './components/ui-components/app-footer/AppFooter';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
@@ -40,6 +41,8 @@ function App() {
             ))
         }
       </Switch>
+      <AppFooter />
+
     </React.Fragment>
   );
 }

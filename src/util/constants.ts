@@ -10,5 +10,5 @@ export const REASONS = [
     "Debt repayment",
     "Construction project",
     "Njangi",
-    "Others"
+    "Other"
 ];

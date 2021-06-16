@@ -189,9 +189,9 @@ const TransferComplete = () => {
                             Your transfer process will continue when SBremit receives the payment from your bank. You will receive an email confirmation
                         </div>
                         <div className="download">
-                            <div>
+                            {/* <div>
                                 <img src={asset('icons', 'download-file.svg')} alt="download"/><span>Download receipt</span>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="back">
                             <Link to="/dashboard" >Back to Dashboard</Link>

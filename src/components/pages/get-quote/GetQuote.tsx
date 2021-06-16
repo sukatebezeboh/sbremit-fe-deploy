@@ -70,6 +70,20 @@ const GetQuote = () => {
         getQuoteService(toSend.currency, toReceive.currency);
     }, [])
 
+    const handleContinue = () => {
+        if (!Number(toSend.value)) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 10000,
+                message: "You can't send "+toSend.value+ " "+toSend.currency
+            })
+            return
+        }
+        setNewQuote(toSend.currency, toReceive.currency);
+        history.push(paths.RECIPIENT)
+    }
+
     return (
         <Body>
             <NavBar />
@@ -90,7 +104,7 @@ const GetQuote = () => {
                             <div className="wrapper">
                                 <div className="timeline-box">
                                     <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                    <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
+                                    <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span>3rd Party Supplier Service Fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
                                     {/* <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> </span></div> */}
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> </span></div>
@@ -104,18 +118,7 @@ const GetQuote = () => {
 
                     </div>
                 </div>
-                <div className="btns"><span>Cancel</span> <button onClick={()=>{
-                    if (!Number(toSend.value) || Number(toSend.value) > max ) {
-                        toastAction({
-                            show: true,
-                            type: "warning",
-                            timeout: 10000,
-                            message: "You can't send "+toSend.value+ " "+toSend.currency
-                        })
-                        return
-                    } 
-                    setNewQuote(toSend.currency, toReceive.currency);
-                    history.push(paths.VERIFICATION)}}>Continue</button> </div>
+                <div className="btns"><span>Cancel</span> <button onClick={()=>handleContinue()}>Continue</button> </div>
             </div>
         </Body>
     )
