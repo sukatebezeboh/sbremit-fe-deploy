@@ -325,7 +325,8 @@ const Verification = () => {
 
     const initialValues: any = {
         ...user?.profile,
-        phoneCode: '+01'
+        phoneCode: '+01',
+        address2: ""
     }
 
 
