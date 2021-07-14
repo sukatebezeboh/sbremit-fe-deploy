@@ -243,7 +243,7 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
-                        <div className="radio-card" onClick={()=>setSelected('card')}>
+                        {/* <div className="radio-card" onClick={()=>setSelected('card')}>
                             <div className="radio-div">
                                 <RadioButton selected={selected==='card'}/>
                             </div>
@@ -261,7 +261,7 @@ const PaymentMethod = () => {
                                     Fast and easy transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
                             <div className="radio-div">

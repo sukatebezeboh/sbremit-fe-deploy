@@ -111,6 +111,10 @@ const TransferDetailsBox = () => {
                         <div className="right uppercase">+{transfer.serviceFee} GBP</div>
                     </div>
                     <div className="row">
+                        <div className="left">SB Remit Transfer Charge</div>
+                        <div className="right uppercase">{"0.00"} GBP</div>
+                    </div>
+                    <div className="row">
                         <div className="left">They get</div>
                         <div className="right uppercase"><b>{formatCurrency(transfer.toReceive.value)} {transfer.toReceive.currency}</b></div>
                     </div>
@@ -118,10 +122,10 @@ const TransferDetailsBox = () => {
                         <div className="left">Total to pay</div>
                         <div className="right uppercase"><b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b></div>
                     </div>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="left">Transfer time</div>
                         <div className="right">within 2 hours</div>
-                    </div>
+                    </div> */}
             </div>
         </Div>
 

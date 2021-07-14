@@ -21,7 +21,7 @@ const Recipient = () => {
     const user = useSelector((state: any)=> state.auth.user)
     console.log(transfer, user, "transfer", "------");
     
-    const toSend = transfer.toSend;
+    const {toSend, toReceive, serviceFee, transferMethod} = transfer; 
     const max  = transfer.transferMax;
 
     const dispatch = useDispatch()
@@ -46,6 +46,22 @@ const Recipient = () => {
                 type: "warning",
                 timeout: 15000,
                 message: "Please select a transfer method"
+            })
+            return
+        }
+        if (!Number(toSend.value)) {
+            history.replace(paths.GET_QUOTE)
+            return
+        }
+        const mobileMoneyMax = 500000;
+        if (transferMethod === "mobile_money" && (Number(toReceive.value) + Number(serviceFee)) > mobileMoneyMax) {
+            history.replace(paths.GET_QUOTE)
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 10000,
+                title: "Exceeded maximum!",
+                message: `The maximum transferable amount (inclusive of charges) form Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
             })
             return
         }

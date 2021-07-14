@@ -51,8 +51,8 @@ export const signUpAction = (data: any, callback = () => {}) => {
                 show: true, 
                 type: 'success',
                 timeout: 60000,
-                title: "You're signed up!",
-                message: `We have sent a verification mail to ${res.data.data.username}.`
+                title: "Almost there with account creation",
+                message: `Check your email ${res.data.data.username} to activate your account.`
             })
             callback();
         } else {
@@ -558,7 +558,7 @@ export const getNewQuote = ($_1: string, $_2: string) => {
     })
 }
 
-export const getServiceRate = () => {
+export const getServiceRate = (transferMethod = "") => {
     const transferMethodsIds: any = {
         mobile_money: "1",
         bank_transfer: "2",
@@ -566,7 +566,7 @@ export const getServiceRate = () => {
     }
    const services = store.getState().appValues.services;
    const transfer = store.getState().transfer
-   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transfer.transferMethod])[0] || services?.data?.[0];
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod || transfer.transferMethod])[0] || services?.data?.[0];
    const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees?.[0];
 
    store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee}})
@@ -731,4 +731,47 @@ export const userVerificationAction = (values: any, callback: Function) => {
         store.dispatch({type: LOADING, payload: false})
     })
     // callback()
+}
+
+
+export const confirmAccountEmail = (callback: Function) => {
+    store.dispatch({type: LOADING, payload: true})
+    const token = getQueryParam('token')
+    if (!token) {
+        toastAction({
+            show: true,
+            type: 'error',
+            timeout: 10000,
+            message: `No token provided`
+        })
+        store.dispatch({type: LOADING, payload: false})
+        // callback()
+        return;
+    }
+    axios.post(config.API_HOST + endpoints.CONFIRM_ACCOUNT,
+        {
+            token
+        }, {
+        headers: {'X-SERVICE-PROVIDER': serviceProvider}
+    })
+    .then((res: any)=> {
+        if (res.data.status === "200"){
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: `${res.data.data?.message}`
+            })
+            store.dispatch({type: LOADING, payload: false})
+            callback()
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: `Invalid token`
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
+    })
 }

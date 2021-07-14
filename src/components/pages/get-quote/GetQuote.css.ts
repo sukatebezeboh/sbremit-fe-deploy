@@ -36,7 +36,7 @@ const style = () => styled.div`
                 margin-top: 150px;
                 position: relative;
         }
-        div:nth-child(2){
+        >div:nth-child(2){
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             margin-top: 19px;
@@ -68,6 +68,8 @@ const style = () => styled.div`
             display: absolute;
             >div.flg-drp{
                 margin: 0px;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
             }
             .you-send {
                 color: #A3A3A3;
@@ -104,6 +106,35 @@ const style = () => styled.div`
                         padding-left: 5px;
                         position: absolute;
                     }
+                }
+                .hover-tab {
+                    position: absolute;
+                    display: none;
+                    width: 200px;
+                    background: #fff;
+                    box-shadow: 0px 1px 5px #CCCCCC80;
+                    z-index: +50;
+                    padding: 10px;
+                    cursor: pointer;
+                    margin-left: -80px;
+
+                    .tab-list {
+                        &:hover {
+                            background: #f8fcfb;
+                            color: #007B5D;
+                        }
+                    }
+                }
+                .click-hover-tab {
+                    cursor: pointer;
+                    color: #007B5D;
+                    font-style: oblique;
+                }
+                .click-hover-tab:hover ~ .hover-tab{
+                    display: inline-block!important;
+                }
+                .hover-tab:hover {
+                    display: inline-block!important;
                 }
                 .deep-green{
                     font: normal normal 600 15px/19px Montserrat;

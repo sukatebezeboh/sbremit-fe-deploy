@@ -5,6 +5,7 @@ export const paths = {
     SIGN_UP: "/sign-up",
     SIGN_IN: "/sign-in",
     CONFIRM_ACCOUNT_EMAIL: "/email/confirm-account",
+    CONFIRM_ACCOUNT: "/confirm-account",
     PASSWORD_RESET_EMAIL : "/email/password-reset",
     RESET_PASSWORD: "/reset-password",
     DASHBOARD: "/dashboard",
@@ -20,5 +21,11 @@ export const paths = {
     PAYMENT_METHOD: "/payment-method",
     CARD_PAYMENT: "/card-payment",
     CREATE_TRANSFER: "/create-transfer",
-    TRANSFER_COMPLETE: "/transfer-complete"
+    TRANSFER_COMPLETE: "/transfer-complete",
+
+    LEGAL: "/support/legal",
+    SUPPORT: "/support",
+    ABOUT: "/content/about",
+    CONTACT: "/content/contact",
+
 }

@@ -19,14 +19,20 @@ import CreateTransfer from '../components/pages/create-transfer/CreateTransfer';
 import TransferComplete from '../components/pages/transfer-complete/TransferComplete';
 import { paths } from './paths';
 import EditProfile from '../components/pages/edit-profile/EditProfile';
+import Legal from '../components/content-pages/support/legal-wrapper/Legal';
+import About from '../components/content-pages/about/About';
+import Support from '../components/content-pages/support/support/Support';
+import Contact from '../components/content-pages/contact/Contact';
+import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
 
 
 export interface IRoute {
     path: string,
     component: (props: any) => JSX.Element,
     protected?: boolean,
-    props?: any
-    exact?: boolean
+    props?: any,
+    exact?: boolean,
+    footerless?: boolean
 }
 export const Routing: IRoute[] = [
     {
@@ -50,6 +56,32 @@ export const Routing: IRoute[] = [
         props: {location: 'london'}
     },
     {
+        path: paths.LEGAL,
+        component: Legal,
+        protected: false,
+        exact: false,
+        footerless: true
+    },
+    {
+        path: paths.SUPPORT,
+        component: Support,
+        protected: false,
+        exact: true
+    },
+    {
+        path: paths.ABOUT,
+        component: About,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.CONTACT,
+        component: Contact,
+        protected: false,
+        exact: true
+    },
+    {
         path: paths.SIGN_UP,
         component: SignUp,
         protected: false,
@@ -62,6 +94,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.CONFIRM_ACCOUNT_EMAIL,
         component: AccountConfirmation,
+        protected: false,
+    },
+    {
+        path: paths.CONFIRM_ACCOUNT,
+        component: ConfirmAccount,
         protected: false,
     },
     { 

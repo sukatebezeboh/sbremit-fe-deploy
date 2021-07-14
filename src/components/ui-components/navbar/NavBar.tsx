@@ -42,9 +42,9 @@ const NavBar = () => {
         <Bar>
             <div>
                 <span className="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </span> 
                 <span className="logo">
                     <Link to="/dashboard"> <img src="./assets/main-logo.svg" alt="logo"/> </Link>

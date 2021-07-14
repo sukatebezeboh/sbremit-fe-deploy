@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const style = (bg = './assets/bg/london-bg.png') => styled.div`
+export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     background: url(${bg}) grey;
     max-height: 200vh;
     background-repeat: no-repeat;
@@ -14,38 +14,7 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
         display: none;
     }
     .nav {
-        width: 100%;
-        margin: 0px;
-        margin-top: -20px;
-        padding-top: 40px;
-        padding-right: 100px;
-        button, a {
-            float: right;
-            margin: 10px;
-            padding: 0px;
-        }
-        .sign-up{
-            border: 2px solid #007B5D;
-            border-radius: 8px;
-            width: 180px;
-            height: 48px;
-            background: transparent;
-            font: normal normal normal 20px/24px Montserrat;
-            color: #007B5D;
-            :hover{
-                background: #007B5D;
-                color: white;
-            }
-        }
-        a{
-            font: normal normal normal 20px/24px Montserrat;
-            letter-spacing: 0px;
-            color: #424242;
-            margin: 24px 15px;
-            display: inline-block;
-            float: right;
-            text-decoration: none;
-        }
+        margin-bottom: 150px;
     }
     .hero-grid{
         display: grid;
@@ -88,10 +57,22 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
             font: normal normal normal 25px/30px Montserrat;
             color: #A3A3A3;
         }
-        .receive{
-                margin-top: 206px;
+        .offset {
+            height: 180px;
+            visibility: hidden;
+            width: 100%;
+            display: inline-block;
+            pointer-events: none;
+            z-index: -10;
+            background: #00000006;
+            position: relative;
         }
-        div:nth-child(2){
+        .receive{
+            /* margin-top: 206px; */
+            position: relative;
+            z-index: 2;
+        }
+        >div:nth-child(2){
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             margin-top: 19px;
@@ -135,10 +116,14 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
         .x-input{
             >div.flg-drp{
                 margin: 0px;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
             }
         }
         .wrapper{
             position: relative;
+            pointer-events: all;
+            z-index: 1;
         }
         .timeline-box {
             height: 318px;
@@ -146,11 +131,12 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
             position: absolute;
             top: 0px;
             left: 30px;
-            z-index: -1;
+            z-index: 10;
             .timeline{
                 position: relative;
                 left: -10px;
                 margin-top: 30px;
+                z-index: 20;
                 span{
                     width: 350px;
                     i{
@@ -166,6 +152,35 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
                         color: #424242;
                         padding-left: 5px;
                         position: absolute;
+                    }
+                    .hover-tab {
+                        position: absolute;
+                        display: none;
+                        width: 200px;
+                        background: #fff;
+                        box-shadow: 0px 1px 5px #CCCCCC80;
+                        z-index: +50;
+                        padding: 10px;
+                        cursor: pointer;
+                        margin-left: -80px;
+
+                        .tab-list {
+                            &:hover {
+                                background: #f8fcfb;
+                                color: #007B5D;
+                            }
+                        }
+                    }
+                    .click-hover-tab {
+                        cursor: pointer;
+                        color: #007B5D;
+                        font-style: oblique;
+                    }
+                    .click-hover-tab:hover ~ .hover-tab{
+                        display: inline-block!important;
+                    }
+                    .hover-tab:hover {
+                        display: inline-block!important;
                     }
                 }
                 .deep-green{
@@ -190,6 +205,7 @@ export const style = (bg = './assets/bg/london-bg.png') => styled.div`
             }
 
         }
+
     }
     @media only screen and (max-width: 1700px) { 
         .hero-grid{

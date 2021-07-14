@@ -1,5 +1,7 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 
 const Footer = styled.div`
@@ -37,6 +39,7 @@ const Footer = styled.div`
             li {
                 margin-top: 20px;
                 white-space: nowrap;
+                cursor: pointer;
             }
         }
         .company-legal {
@@ -181,6 +184,7 @@ const Footer = styled.div`
     }
 `
 export const AppFooter = () => {
+    const history = useHistory();
     return (
         <Footer>
             <div className="up">
@@ -196,7 +200,7 @@ export const AppFooter = () => {
                     <div className="company">
                         <h3>Company</h3>
                         <ul>
-                            <li>About</li>
+                            <li onClick={() => history.push('/content/about')}>About</li>
                             <li>FAQs</li>
                             <li>Blog</li>
                         </ul>
@@ -204,13 +208,13 @@ export const AppFooter = () => {
                     <div className="legal">
                         <h3>Legal</h3>
                         <ul>
-                            <li>Privacy</li>
-                            <li>Terms & Conditions</li>
+                            <li onClick={() => history.push('/support/legal/privacy')}>Privacy</li>
+                            <li onClick={() => history.push('/support/legal/terms')}>Terms & Conditions</li>
                         </ul>
                     </div>
                 </div>
                 <div className="contact">
-                    <h3>Contact us</h3>
+                    <h3 onClick={() => history.push(paths.CONTACT)}>Contact us</h3>
                     <ul>
                         <li>+44 798 759 0594</li>
                         <li>contact@sbremit.com</li>

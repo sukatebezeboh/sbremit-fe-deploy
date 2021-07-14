@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useSelector } from 'react-redux';
 import { cancelTransfer, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
+import { formatCurrency } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -213,6 +214,7 @@ const Body = styled.div`
 const CreateTransfer = () => {
     const history = useHistory();
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
+    const transfer =  useSelector((state: any)=>state.transfer)
     console.log(transactionDetails);
     
     const cancelPayment = () => {
@@ -286,7 +288,7 @@ const CreateTransfer = () => {
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent {transactionDetails?.originAmount} {transactionDetails?.originCurrency}</button> </div>
+                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent {Number(formatCurrency(transfer?.toSend.value)) + Number(transfer?.serviceFee)} {transactionDetails?.originCurrency}</button> </div>
             </div>
         </Body>
     )

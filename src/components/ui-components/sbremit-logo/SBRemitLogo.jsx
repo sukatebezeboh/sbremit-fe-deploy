@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom';
+import { asset } from '../../../util/util';
 
 const Img = styled.img`
         width: 214px;
@@ -16,6 +17,6 @@ const Img = styled.img`
     }
 `
 
-const SBRemitLogo = () => <Link to="/"> <Img src="./assets/main-logo.svg" alt=""/> </Link>
+const SBRemitLogo = () => <Link to="/"> <Img src={asset('', 'main-logo.svg')} alt=""/> </Link>
 
 export default SBRemitLogo;

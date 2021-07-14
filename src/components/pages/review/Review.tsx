@@ -8,7 +8,7 @@ import styled from "styled-components";
 import RecipientDetailsBox from '../../ui-components/parts/RecipientDetailsBox';
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { confirmTransfer } from '../../../redux/actions/actions';
+import { confirmTransfer, toastAction } from '../../../redux/actions/actions';
 
 const Body = styled.div`
     .page-content {
@@ -177,8 +177,23 @@ const Review = () => {
         })
     }
 
+    const isRecipientValid = () => {
+        if (transfer.transferMethod === "bank_transfer") {
+            if (!Boolean(recipient?.profile?.bankName) || !Boolean(recipient?.profile?.accountNumber)) {
+                toastAction({
+                    show: true,
+                    type: "warning",
+                    timeout: 15000,
+                    message: "For bank transfer, you should select a recipient with account details or create a new one having those details"
+                })
+                return false;
+            }
+        }
+        return recipient.id;
+    }
+
     return (
-        !recipient.id ?
+        !isRecipientValid() ?
         <Redirect to={paths.RECIPIENT} />
         :
         <Body>
@@ -186,7 +201,7 @@ const Review = () => {
             <ProgressBar point={3} />
             <div className="page-content">
                 <div>
-                    <PageHeading heading="Review" subheading="Review the details of your transfer" back="/recipient-details" />
+                    <PageHeading heading="Review" subheading="Review the details of your transfer" back={paths.RECIPIENT} />
                 </div>
                 <div className="box-container details">
                     <RecipientDetailsBox hideType="mobile-hide" />
