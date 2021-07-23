@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import styled from "styled-components";
 import { getTransactionDetails } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
@@ -43,7 +43,35 @@ const Div = styled.div`
             }
         }
     }
+    .hover-tab {
+        position: absolute;
+        display: none;
+        width: 200px;
+        background: #fff;
+        box-shadow: 0px 1px 5px #CCCCCC80;
+        z-index: +50;
+        padding: 10px;
+        cursor: pointer;
+        margin-left: -80px;
 
+        .tab-list {
+            &:hover {
+                background: #f8fcfb;
+                color: #007B5D;
+            }
+        }
+    }
+    .click-hover-tab {
+        cursor: pointer;
+        color: #007B5D;
+        font-style: oblique;
+    }
+    .click-hover-tab:hover ~ .hover-tab{
+        display: inline-block!important;
+    }
+    .hover-tab:hover {
+        display: inline-block!important;
+    }   
     @media only screen and (max-width: 900px) { 
                 grid-template-columns: 1fr;
                 grid-gap: 15px;
@@ -72,16 +100,43 @@ const Div = styled.div`
             }
 `
 
-const TransferDetailsBox = () => {
+const TransferDetailsBox = ( { transferId } :any ) => {
+
     const transfer = useSelector((state: any) => state.transfer);    
+    const transaction = transfer.transactionDetails;
+    console.log(transferId, transfer, transaction);
+    
+    const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer.transferMethod.replace('_', ' ');
+    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
+    const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
+    const xBase = transferId ? transaction?.meta?.exchangeBase : transfer.conversionRate?.base;
+    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency(transfer.conversionRate?.rate);
+    const xTarget = transferId ? transaction?.meta?.exchangeTarget : transfer.conversionRate?.target;
+    const serviceFee = transferId ? transaction?.meta?.serviceFee : transfer.serviceFee;
+    const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer.toReceive.value);
+    const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer.toReceive.currency;
+    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`);
 
     useEffect(() => {
-        const transferId = getQueryParam('t');
         if ( transferId ) {
             getTransactionDetails( undefined, transferId )
         }
     }, [])
 
+    const getTransferFeeText = (selectedMethod: string) => {
+        const texts: any = {
+            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Transfer Fee</a>:
+                <div class="hover-tab">
+                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
+                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
+                </div>
+            `,
+            "bank_transfer": "Bank Transfer Fee: ",
+            "cash_pickup": "Cash Pick-up Fee: "
+        }
+
+        return texts[selectedMethod];
+    }
 
     return (
         // !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?
@@ -91,24 +146,24 @@ const TransferDetailsBox = () => {
             <div className="transfer-details part">
                     <div className="heading">
                         <div className="title">Transfer Details</div>
-                        <div className="update">Edit</div>
+                        <Link to={paths.TRANSFER_METHOD}><div className="update">Edit</div></Link>
                     </div>
                     <hr/>
                     <div className="row">
                         <div className="left">Transfer method</div>
-                        <div className="right sentence-case">{transfer.transferMethod.replace('_', ' ')}</div>
+                        <div className="right sentence-case">{transferMethod}</div>
                     </div>
                     <div className="row">
                         <div className="left">You send</div>
-                        <div className="right uppercase"><b>{formatCurrency(transfer.toSend.value)} {transfer.toSend.currency}</b></div>
+                        <div className="right uppercase"><b>{sendAmount} {sendCurrency}</b></div>
                     </div>
                     <div className="row">
                         <div className="left">Exchange rate</div>
-                        <div className="right uppercase">1 {transfer.conversionRate?.base} = {formatCurrency(transfer.conversionRate?.rate)} {transfer.conversionRate?.target}</div>
+                        <div className="right uppercase">1 {xBase} = {xRate} {xTarget}</div>
                     </div>
                     <div className="row">
-                        <div className="left">Service fee</div>
-                        <div className="right uppercase">+{transfer.serviceFee} GBP</div>
+                        <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer.transferMethod)}} ></div>
+                        <div className="right uppercase">+{serviceFee} GBP</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>
@@ -116,11 +171,11 @@ const TransferDetailsBox = () => {
                     </div>
                     <div className="row">
                         <div className="left">They get</div>
-                        <div className="right uppercase"><b>{formatCurrency(transfer.toReceive.value)} {transfer.toReceive.currency}</b></div>
+                        <div className="right uppercase"><b>{receiveAmount} {receiveCurrency}</b></div>
                     </div>
                     <div className="row">
                         <div className="left">Total to pay</div>
-                        <div className="right uppercase"><b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b></div>
+                        <div className="right uppercase"><b className="green-txt">{totalToPay} {sendCurrency}</b></div>
                     </div>
                     {/* <div className="row">
                         <div className="left">Transfer time</div>

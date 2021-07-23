@@ -5,7 +5,7 @@ import NavHeader from '../nav-header/NavHeader';
 
 const Body = styled.div`
     .hero {
-        background: url('https://wallpaperset.com/w/full/1/4/e/175629.jpg');
+        background: url('https://images.pexels.com/photos/6266681/pexels-photo-6266681.jpeg');
         background-repeat: no-repeat;
         background-size: cover;
         height: 917px;
@@ -282,7 +282,7 @@ const About = () => {
                 <br/>
                 <div className="hero-text">
                     <h2>SB Remit is a money remittance company trading under Sukate & Bezeboh Ltd.</h2>
-                    <p>We provide a platform for individuals and businesses to conveniently transfer money with an initial focus on Africa, our company transforms the way money transfer and bill payment is done by blending it with the culture of each country we serve.</p>
+                    <p>We provide a platform for individuals and businesses to conveniently transfer money with an initial focus on Africa. Our company transforms the way money transfer and bill payment is done by blending it with the culture of each country we serve.</p>
                 </div>
             </div>
 
@@ -329,7 +329,7 @@ const About = () => {
                         <img src={asset('icons', 'rocket.svg')} alt="fast" />
                         <div className="desc">
                             <div className="topic">Speed</div>
-                            <div className="detail">We carry out transactions in record time to meet with customers’ expectations</div>
+                            <div className="detail">We complete transactions in record time to meet with customers’ expectations</div>
                         </div>
                     </div>
 
@@ -337,7 +337,7 @@ const About = () => {
                         <img src={asset('icons', 'security.svg')} alt="secure" />
                         <div className="desc">
                             <div className="topic">Reliability</div>
-                            <div className="detail">We ensure that our transactions are fidel and secured</div>
+                            <div className="detail">We ensure that our transactions are safe and secured</div>
                         </div>
                     </div>
 
@@ -354,7 +354,7 @@ const About = () => {
                     <div className="body">
                             <p>Henry Eho and Gaston Fornimoh are Cameroonian migrants living in the UK for the last 15 years. They have worked in several industries including financial services, retail, digital and consultancy. Throughout this time, they have sent money home for several purposes including supporting friends and family, paying hospital bills, and investing in real estate amongst others.</p>
                             <p>They quickly realised that none of the money transfer agencies serving the continent offered tailored products to meet the needs of specific countries. Customers are treated as having the same need across the African continent.</p>
-                            <p>Above all, the customer was not getting the best value for their money due to poor exchange rates, high transfer charges and lack of fee transparency. Remittance into Africa remains the most expensive in the world currently standing at 8.9% cost of remitting $200 according to a report from the world bank’s. Sukate and Bezeboh are committed to driving down cost for the customers by offering them competitive exchange rates. They are determined to operate a business that they will use if they were a customer.</p>
+                            <p>Above all, the customer was not getting the best value for their money due to poor exchange rates, high transfer charges and lack of fee transparency. Remittance into Africa remains the most expensive in the world currently standing at 8.9% cost of remitting $200 according to a report from the World Bank. Henry and Gaston are committed to driving down cost for the customers by offering them competitive exchange rates. They are determined to operate a business that they will use if they were a customer.</p>
                     </div>
                 </div>
                 <div className="img">

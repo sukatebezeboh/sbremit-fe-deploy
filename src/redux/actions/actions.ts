@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, LOADING, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
+import { APP_VALUES, AUTH, LOADING, RECIPIENT, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -285,8 +285,22 @@ export const getRecipients = () => {
     })
 }
 
-export const getRecipient = () => {
+export const getRecipient = (id: string) => {
+    store.dispatch({type: LOADING, payload: true})
+    const user = store.getState().auth.user;
 
+    http.get(parseEndpointParameters(endpoints.RECIPIENT, user.id, id ))
+    .then((res: any) => {
+        if(res.data.status === "200"){
+            store.dispatch({type: RECIPIENT, payload: res.data.data})
+            store.dispatch({type: LOADING, payload: false})
+        }
+        else{}
+    }).catch(err=>{
+        console.log(err);
+    }).then(()=>{
+        store.dispatch({type: LOADING, payload: false})
+    })
 }
 
 export const createRecipient =  (recipientData: any, callback?:any) => {
@@ -336,14 +350,21 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
         originCurrency: transfer.toSend?.currency,
         originAmount: Number(transfer.toSend?.value),
         destinationCurrency: transfer.toReceive?.currency,
-        destinationAmount: Number(transfer.toReceive?.value),
-        paymentMethod: {}
+        destinationAmount: Number((transfer.toReceive?.value)),
+        paymentMethod: {},
+        meta: {
+            serviceFee: transfer.serviceFee,
+            exchangeBase: transfer.conversionRate?.base,
+            exchangeRate: formatCurrency(transfer.conversionRate?.rate),
+            exchangeTarget: transfer.conversionRate?.target,
+            totalToPay: formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)
+        }
     }
     const user = store.getState().auth.user
     http.post(parseEndpointParameters(endpoints.CREATE_TRANSFER, user.id), {...payload})
     .then(res=>{
         if (res.data.status === "200") {
-            callback()
+            callback(res.data.data.id)
             CookieService.put('transfer', JSON.stringify(res.data.data.id));
             getTransactionDetails(callback)
         } else {
@@ -366,7 +387,7 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
 }
 
 export const getTransactionDetails = (callback?: Function, id?: any) => {
-    const transferId = id ?? CookieService.get('transfer');
+    const transferId = id ??( getQueryParam('t') || CookieService.get('transfer'));
     if (!transferId) {
         callback?.()
         return toastAction({

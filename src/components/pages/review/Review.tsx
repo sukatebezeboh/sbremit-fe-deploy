@@ -172,8 +172,8 @@ const Review = () => {
     const transfer = useSelector((state: any)=>state.transfer)
 
     const handleConfirmClick = () => {
-        confirmTransfer(recipient, transfer, () => {
-            history.push(paths.PAYMENT_METHOD);
+        confirmTransfer(recipient, transfer, (id: string) => {
+            history.push(paths.PAYMENT_METHOD + '?t=' + id);
         })
     }
 

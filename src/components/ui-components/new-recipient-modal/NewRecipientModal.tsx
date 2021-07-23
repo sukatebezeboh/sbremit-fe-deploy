@@ -327,7 +327,7 @@ function NewRecipientModal(props: any) {
                                                 <div className="margin-adjust"></div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
-                                                <div>Email<i>*</i></div>
+                                                <div>Email</div>
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
                                             </div>
                                             <div className={(touched.state && errors.state) ? 'form-error': ''}>

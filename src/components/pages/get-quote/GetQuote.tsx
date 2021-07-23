@@ -87,11 +87,28 @@ const GetQuote = () => {
             toastAction({
                 show: true,
                 type: "warning",
-                timeout: 10000,
+                timeout: 15000,
                 title: "Exceeded maximum!",
-                message: `The maximum transfarable amount (inclusive of charges) form Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
+                message: `The maximum transferrable amount inclusive of Mobile Operator <a href="#" class='light-green click-hover-tab'> Transfer Fees </a> for mobile money is ${formatCurrency(`${mobileMoneyMax}`)} frs
+                    <div class="hover-tab">
+                        <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
+                        <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
+                    </div>
+                `
             })
             return
+        }
+
+        const transferAndCashPickupMax = 20000;
+        if ((transferMethod === "bank_transfer" || transferMethod === "cash_pickup") && (Number(toSend.value) + Number(serviceFee)) > transferAndCashPickupMax ) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 15000,
+                title: "Exceeded maximum!",
+                message: `The maximum transferrable amount for ${transferMethod.replace('_', ' ')} is ${formatCurrency(`${transferAndCashPickupMax}`)} ${toSend.currency}`
+            })
+            return;
         }
         setNewQuote(toSend.currency, toReceive.currency);
         history.push(paths.RECIPIENT)
@@ -102,8 +119,8 @@ const GetQuote = () => {
         const texts: any = {
             "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Transfer Fee </a> from: 
                 <div class="hover-tab">
-                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees">MTN MOMO Fees</a> </div>
-                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html"> Orange Money Fees </a> </div>
+                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
+                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
                 </div>
             `,
             "bank_transfer": "Bank Transfer Fee: ",
@@ -134,7 +151,7 @@ const GetQuote = () => {
                                 <div className="timeline-box">
                                     <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green no-wrap">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
                                     <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div> <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
-                                    {/* <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> </span></div> */}
+                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>SB Remit Transfer Charge <span className="deep-green">0.00 GBP</span> </span> </span></div>
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> </span></div>
                                 </div>
@@ -143,7 +160,7 @@ const GetQuote = () => {
                                 <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
                         </div>
-                        <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
+                        {/* <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div> */}
 
                     </div>
                 </div>

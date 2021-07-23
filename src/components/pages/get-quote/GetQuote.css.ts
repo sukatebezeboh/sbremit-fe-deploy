@@ -33,7 +33,7 @@ const style = () => styled.div`
             color: #A3A3A3;
         }
         .receive{
-                margin-top: 150px;
+                margin-top: 200px;
                 position: relative;
         }
         >div:nth-child(2){
@@ -80,7 +80,7 @@ const style = () => styled.div`
             z-index: 0;
         }
         .timeline-box {
-            height: 270px;
+            height: 320px;
             border-left: 1.5px solid #7FBCAD;
             position: absolute;
             top: -20px;

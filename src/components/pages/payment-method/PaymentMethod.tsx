@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -8,12 +8,12 @@ import styled from "styled-components";
 import RadioButton from '../../ui-components/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, getTransactionDetails, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../ui-components/confirm-modal/ConfirmModal';
 import { loadStripe } from '@stripe/stripe-js';
 import http from '../../../util/http';
-import { formatCurrency } from '../../../util/util';
+import { formatCurrency, getQueryParam } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -189,8 +189,12 @@ const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
     const recipient = useSelector((state: any)=>state.recipients.recipient)
-    const transfer = useSelector((state: any)=>state.transfer)
+    const transfer = useSelector((state: any)=>state.transfer);
+    const transaction = transfer.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    console.log(transfer, transaction, "---");
+    const transferId = getQueryParam('t');
+
     const dispatch = useDispatch()
 
     const handleProceed = async () => {
@@ -209,7 +213,7 @@ const PaymentMethod = () => {
             await makePaymentWithStripe()
         }
         else if (selected==="bank_transfer") {
-            history.push(paths.CREATE_TRANSFER)
+            history.push(paths.CREATE_TRANSFER + '?t=' + transferId)
         }
         else{
             return
@@ -219,6 +223,10 @@ const PaymentMethod = () => {
     const handleCancel = () => {
         cancelTransfer(() => history.push(paths.DASHBOARD))
     }
+
+    useEffect(() => {
+        getTransactionDetails(()=>{}, transferId);
+    }, [])
 
     return (
         <Body>
@@ -278,13 +286,13 @@ const PaymentMethod = () => {
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                        Low cost transfer - {transfer.serviceFee} GBP
+                                        {/* Low cost transfer - {transfer.serviceFee} GBP */}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="mobile-hide">
-                        <TransferDetailsBox />
+                        <TransferDetailsBox transferId={transferId} />
                     </div>
                 </div>
                 <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </div>

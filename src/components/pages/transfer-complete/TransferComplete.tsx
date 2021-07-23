@@ -5,7 +5,7 @@ import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import styled from "styled-components";
 import SuccessIcon from '../../ui-components/success-icon/SuccessIcon';
-import { asset } from '../../../util/util';
+import { asset, getQueryParam } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -170,6 +170,7 @@ const Body = styled.div`
 
 const TransferComplete = () => {
     const history = useHistory();
+    const transferId = getQueryParam('t');
 
     return (
         <Body>
@@ -197,7 +198,7 @@ const TransferComplete = () => {
                             <Link to="/dashboard" >Back to Dashboard</Link>
                         </div>
                     </div>
-                    <TransferDetailsBox />
+                    <TransferDetailsBox transferId={transferId} />
                 </div>
             </div>
         </Body>

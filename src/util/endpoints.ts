@@ -8,6 +8,7 @@ const endpoints = {
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
     RECIPIENTS: '/user/$_1/recipients',
+    RECIPIENT: '/user/$_1/recipient/$_2',
     CREATE_RECIPIENT: '/user/$_1/recipient',
     CREATE_TRANSFER: '/user/$_1/transfer',
     GET_TRANSFER: '/user/$_1/transfer/$_2',

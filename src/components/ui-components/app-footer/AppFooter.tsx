@@ -193,7 +193,7 @@ export const AppFooter = () => {
                         <img src={asset('', 'main-logo.svg')} alt="main logo" />
                     </div>
                     <p>
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet.
+                        SB  Remit  is  the  trading  name  of  Sukate  &  Bezeboh  Ltd,  registered  in  England  and  Wales,  company  number  12735266, registered office 78 Woodlands Way, Leeds, LS14 2AW. Sukate & Bezeboh Ltd is authorised by the Financial Conduct Authority (“FCA”) under the Electronic Money Regulations 2011 with firm reference number 935783 for the provision of payment services.
                     </p>
                 </div>
                 <div className="company-legal">
@@ -216,7 +216,7 @@ export const AppFooter = () => {
                 <div className="contact">
                     <h3 onClick={() => history.push(paths.CONTACT)}>Contact us</h3>
                     <ul>
-                        <li>+44 798 759 0594</li>
+                        <li>+44(0)3301334158</li>
                         <li>contact@sbremit.com</li>
                         <li className="socials">
                             <img src={asset('icons', 'instagram.svg')} alt="instagram" />
@@ -227,7 +227,7 @@ export const AppFooter = () => {
                     </ul>
                 </div>
                 <div className="subscribe">
-                    <p>Stay tuned for latest news from SB remit</p>
+                    <p>Stay tuned for latest news from SB Remit</p>
                     <div>
                         <input type="text" placeholder="Enter your email" />
                     </div>

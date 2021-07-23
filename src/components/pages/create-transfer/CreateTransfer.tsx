@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import { Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
 import styled from "styled-components";
 import { useSelector } from 'react-redux';
-import { cancelTransfer, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
+import { cancelTransfer, getRecipient, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { formatCurrency } from '../../../util/util';
 
@@ -36,7 +36,7 @@ const Body = styled.div`
             button {
                 background: #FCD20F 0% 0% no-repeat padding-box;
                 border-radius: 8px;
-                width: 300px;
+                width: 550px;
                 height: 80px;
                 text-align: center;
                 font: normal normal normal 25px/30px Montserrat;
@@ -216,23 +216,25 @@ const CreateTransfer = () => {
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
     const transfer =  useSelector((state: any)=>state.transfer)
     console.log(transactionDetails);
-    
+    const recipient = useSelector((state: any) => state.recipients.recipient)
+
     const cancelPayment = () => {
-        history.push(paths.PAYMENT_METHOD)
+        history.push(paths.PAYMENT_METHOD + '?t=' + transactionDetails.id)
     }
 
     const handleSubmit = () => {
-        initiatePayment(()=>history.push(paths.TRANSFER_COMPLETE))
+        initiatePayment(()=>history.push(paths.TRANSFER_COMPLETE + '?t=' + transactionDetails.id))
     }
 
     useEffect(() => {
-        getTransactionDetails( undefined )
+        getTransactionDetails( undefined );
     }, [])
 
+    useEffect(() => {
+        getRecipient( transactionDetails?.recipientId )
+    }, [transactionDetails])
+
     return (
-        !transactionDetails ?
-        <Redirect to={paths.REVIEW} />
-        :
         <Body>
             <NavBar />
             <div className="page-content">
@@ -249,7 +251,7 @@ const CreateTransfer = () => {
                                 <ul>
                                     <li>You must include the reference provided when making transfer</li>
                                     <li>Transfer must be done within 24 hours</li>
-                                    <li>We’ll process your transfer when we receive the payment from your bank</li>
+                                    <li>Your transfer will be processed once payment is received from your bank</li>
                                 </ul>
                             </div>
                         </div>
@@ -280,15 +282,15 @@ const CreateTransfer = () => {
                             </div>
                             
                         </div>
-                        <div className="green-txt cpm-text">Change payment method</div>
+                        <Link to={paths.PAYMENT_METHOD + '?t=' + transactionDetails.id} ><div className="green-txt cpm-text">Change payment method</div></Link>
 
                     </div>
                     <div className="mobile-hide">
-                        <TransferDetailsBox />
+                        <TransferDetailsBox transferId={transactionDetails.id} />
                     </div>
                     
                 </div>
-                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I’ve sent {Number(formatCurrency(transfer?.toSend.value)) + Number(transfer?.serviceFee)} {transactionDetails?.originCurrency}</button> </div>
+                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I am sending {formatCurrency(`${Number((transactionDetails?.originAmount) )}`)} {transactionDetails?.originCurrency} to {recipient.firstName} </button> </div>
             </div>
         </Body>
     )

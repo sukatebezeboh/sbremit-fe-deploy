@@ -81,7 +81,7 @@ const RecipientDetailsBox = (props: any) => {
                 </div>
                 <div className="row">
                     <div className="left">Email</div>
-                    <div className="right">{recipient.profile.email}</div>
+                    <div className="right">{recipient.profile.email || '-'}</div>
                 </div>
                 <div className="row">
                     <div className="left">City</div>
