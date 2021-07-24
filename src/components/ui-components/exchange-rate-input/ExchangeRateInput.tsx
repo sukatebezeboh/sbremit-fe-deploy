@@ -150,7 +150,7 @@ const ExchangeRateInput = (props: any) =>{
                 </div>
                 <div  className="flg-drp">
                     {
-                        max && <span className="float-right max-div">Max: <span className="max-value">{max} GBP</span> </span>
+                        // max && <span className="float-right max-div">Max: <span className="max-value">{max} GBP</span> </span>
                     }
                     <img onClick={() => setCountriesDropDown(!countriesDropDown)} src={`./assets/flags/${data?.image}.png`} alt={data?.currency}/>
                     <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="data-c">{data?.currency}</span>

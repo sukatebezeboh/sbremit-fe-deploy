@@ -1,5 +1,5 @@
 export const asset = (folder: string, name: string) => {
-    return `./assets/${folder}/${name}`;
+    return `/assets/${folder}/${name}`;
 }
 
 export const getQueryParam = (key: string): string => {
@@ -25,6 +25,7 @@ export const parseEndpointParameters = (
 
 export const formatCurrency = (value: string, currency: string = ""): string => {
     value = value || "0"
+    value = (Math.ceil((getMoneyValue(value)) * 100) / 100).toString()
     value = getMoneyValue(value).toFixed(2);
     return currency + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }

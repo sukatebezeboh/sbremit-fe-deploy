@@ -447,7 +447,7 @@ const Verification = () => {
                                             <TransferDetailsBox />
                                         </div>
                                     </div>
-                                    <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button >Continue</button> </div>
+                                    <div className="btns"><span onClick={()=>history.push('/get-quote')}>Back</span> <button type="submit">Continue</button> </div>
                                 </Form>
                             )
                         }

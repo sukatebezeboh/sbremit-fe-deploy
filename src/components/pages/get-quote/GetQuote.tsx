@@ -21,15 +21,16 @@ const GetQuote = () => {
     const appValues = useSelector((state: any) => state.appValues);
 
     const conversionRate = transfer.conversionRate;
-    const serviceFee = transfer.serviceFee;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
     toReceive.value = transfer.toSend.value * conversionRate?.rate
+    const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
     const dispatch = useDispatch()
     const history = useHistory();
     const max  = transfer.transferMax;
+    const transferMethod = transfer.transferMethod
 
     const handleXInputChange = (e: any, data: any) => {
         const caret = e.target.selectionStart
@@ -38,7 +39,8 @@ const GetQuote = () => {
             element.selectionStart = caret
             element.selectionEnd = caret
         })
-        const value = getMoneyValue(e.target.value);
+
+        const value = getMoneyValue(formatCurrency(e.target.value));
 
         // if(!value) return;
         if (data.isSend) {
@@ -80,8 +82,52 @@ const GetQuote = () => {
             })
             return
         }
+        const mobileMoneyMax = 500000;
+        if (transferMethod === "mobile_money" && (Number(toReceive.value) + Number(serviceFee)) > mobileMoneyMax) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 15000,
+                title: "Exceeded maximum!",
+                message: `The maximum transferrable amount inclusive of Mobile Operator <a href="#" class='light-green click-hover-tab'> Transfer Fees </a> for mobile money is ${formatCurrency(`${mobileMoneyMax}`)} frs
+                    <div class="hover-tab">
+                        <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
+                        <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
+                    </div>
+                `
+            })
+            return
+        }
+
+        const transferAndCashPickupMax = 20000;
+        if ((transferMethod === "bank_transfer" || transferMethod === "cash_pickup") && (Number(toSend.value) + Number(serviceFee)) > transferAndCashPickupMax ) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 15000,
+                title: "Exceeded maximum!",
+                message: `The maximum transferrable amount for ${transferMethod.replace('_', ' ')} is ${formatCurrency(`${transferAndCashPickupMax}`)} ${toSend.currency}`
+            })
+            return;
+        }
         setNewQuote(toSend.currency, toReceive.currency);
         history.push(paths.RECIPIENT)
+    }
+
+
+    const getTransferFeeText = (selectedMethod: string) => {
+        const texts: any = {
+            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Transfer Fee </a> from: 
+                <div class="hover-tab">
+                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
+                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
+                </div>
+            `,
+            "bank_transfer": "Bank Transfer Fee: ",
+            "cash_pickup": "Cash Pick-up Fee: "
+        }
+
+        return texts[selectedMethod];
     }
 
     return (
@@ -92,7 +138,7 @@ const GetQuote = () => {
                 <PageHeading heading="Get quote" subheading="How much would you like to send to your recipient?" back="/transfer-method" />
                 <div className="box">
                     <div className="head">
-                        <span>Bank Transfer</span>
+                        <span className="capitalize">{transferMethod?.replace("_", " ")}</span>
                         <span><Link to="/transfer-method">Change transfer method</Link></span>
                     </div>
 
@@ -103,9 +149,9 @@ const GetQuote = () => {
                             </div>
                             <div className="wrapper">
                                 <div className="timeline-box">
-                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                    <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span>3rd Party Supplier Service Fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
-                                    {/* <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> </span></div> */}
+                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className="deep-green no-wrap">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
+                                    <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div> <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
+                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>SB Remit Transfer Charge <span className="deep-green">0.00 GBP</span> </span> </span></div>
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> </span></div>
                                 </div>
@@ -114,7 +160,7 @@ const GetQuote = () => {
                                 <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
                         </div>
-                        <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
+                        {/* <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div> */}
 
                     </div>
                 </div>

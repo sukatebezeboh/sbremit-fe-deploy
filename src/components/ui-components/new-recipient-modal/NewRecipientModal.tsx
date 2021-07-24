@@ -7,7 +7,7 @@ import { paths } from '../../../util/paths';
 import { RecipientValidator } from "../../../util/form-validators";
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { REASONS } from '../../../util/constants';
 
 const Div = styled.div`
@@ -262,6 +262,7 @@ function NewRecipientModal(props: any) {
     const dispatch = useDispatch()
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
+    const transfer = useSelector((state: any) => state.transfer)
 
     const initialValues = {
         firstName: "",
@@ -326,7 +327,7 @@ function NewRecipientModal(props: any) {
                                                 <div className="margin-adjust"></div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
-                                                <div>Email<i>*</i></div>
+                                                <div>Email</div>
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
                                             </div>
                                             <div className={(touched.state && errors.state) ? 'form-error': ''}>
@@ -336,7 +337,7 @@ function NewRecipientModal(props: any) {
                                             <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
                                                 <div>Reason</div>                                               
                                                     
-                                                    <Field as="select"  name={otherReasons ? '' : 'reason'} id="reason" value={reasonValue} onChange={(e: any) => handleReasonsChange(e)}>
+                                                    <Field as="select"  name={otherReasons ? 'reason' : 'reason'} id="reason" value={reasonValue} onInput={(e: any) => handleReasonsChange(e)}>
                                                         <option value="">Select</option>
                                                         
                                                         {
@@ -351,19 +352,22 @@ function NewRecipientModal(props: any) {
                                                     </Field>
                                                 {
                                                     otherReasons ?
-                                                    <Field placeholder="Enter your reason here" value={reasonValue} onChange={(e :any) => setReasonValue(e.target.value)} type="text" name={otherReasons ? 'reason' : ''} id="" />
+                                                    <Field placeholder="Enter your reason here" value={reasonValue} onInput={(e :any) => setReasonValue(e.target.value)} type="text" name={otherReasons ? 'reason' : ''} id="" />
                                                     : <></>
                                                 }
                                             </div>
-                                            {/*
-                                            <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                <div>Recipient's bank name</div>
-                                                <Field type="text" name="bankName" placeholder="" />
-                                            </div>
-                                            <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
-                                                <div>Account number</div>
-                                                <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
-                                            </div> */}
+                                            
+                                            {transfer.transferMethod === "bank_transfer" ? 
+                                            <React.Fragment>
+                                                <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                                    <div>Recipient's bank name</div>
+                                                    <Field type="text" name="bankName" placeholder="" />
+                                                </div>
+                                                <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
+                                                    <div>Account number</div>
+                                                    <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
+                                                </div>
+                                            </React.Fragment> : ''}
                                     </div>
                                     <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton onClick={alert} label="Add" formName={paths.RECIPIENT} /> </div>
                                 </Form>
