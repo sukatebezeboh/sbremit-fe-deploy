@@ -10,7 +10,7 @@ pipeline {
         stage("Build React Application") {
             steps {
                 sh """
-                    npm install && npm run build
+                    npm install && npm run build:production
                 """
             }
         }
