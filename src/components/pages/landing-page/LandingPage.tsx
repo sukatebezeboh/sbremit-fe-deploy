@@ -5,6 +5,7 @@ import { getQuoteService, getServiceRate, setNewQuote, setNewQuoteWithoutAuth } 
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { formatCurrency, getMoneyValue } from '../../../util/util';
+import { AppFooter } from '../../ui-components/app-footer/AppFooter';
 import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
 import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
 import { style } from "./LandingPage.css";
@@ -118,8 +119,8 @@ const LandingPage = (props: any) => {
                         <div className="wrapper">
                             <div className="timeline-box">
                                 <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className="deep-green">1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span>Service fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
-                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>Transfers with SBremit costs you <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
+                                <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span>3rd Party Supplier Service Fee starts from <span className="deep-green">{serviceFee} GBP</span></span> </span></div>
+                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>SB Remit Transfer Charge <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
                                 <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${Number(toSend.value) + Number(serviceFee)}`)} GBP</span></span></span></div>
                                 <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> <span className="mobile we-conv">We’ll convert 99.05 GBP</span> </span></div>
                             </div>

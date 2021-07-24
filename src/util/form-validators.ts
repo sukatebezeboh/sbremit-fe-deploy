@@ -65,7 +65,19 @@ export const EditProfileValidator = Yup.object().shape({
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
   state: Yup.string().min(3, "Too short").max(25, "Too long"),
-  day: Yup.string().min(1, "Input day").max(2, "Input day"),
-  month: Yup.string().min(1, "Input month").max(15, "Input month"),
+  day: Yup.number().min(1, "Input day").max(31, "Input day"),
+  month: Yup.number().min(1, "Input month").max(12, "Input month"),
   year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month"),
+});
+
+export const userVerificationValidator = Yup.object().shape({
+  firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+  lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+  mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
+  gender: Yup.string().required("Required"),
+  state: Yup.string().min(3, "Too short").max(25, "Too long"),
+  day: Yup.number().min(1, "Input day").max(31, "Input day"),
+  month: Yup.number().min(1, "Input month").max(12, "Input month"),
+  year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month"),
+  address1: Yup.string().min(10, "Too short").max(150, "Too long").required("Required")
 });

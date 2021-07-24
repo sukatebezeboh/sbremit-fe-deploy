@@ -260,7 +260,8 @@ const Div = styled.div`
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient} = props;
     const dispatch = useDispatch()
-    const [otherReasons, setOtherReasons] = useState(false)
+    const [otherReasons, setOtherReasons] = useState(false);
+    const [reasonValue, setReasonValue] = useState('');
 
     const initialValues = {
         firstName: "",
@@ -272,6 +273,18 @@ function NewRecipientModal(props: any) {
         reason: "",
         bankName: "",
         accountNumber: ""
+    }
+
+    const handleReasonsChange = (e: any) => {
+        const {value} = e.target;
+        if (value == 'Other') {
+            setReasonValue('')
+            setOtherReasons(true);
+        }
+        else {
+            setReasonValue(value)
+            setOtherReasons(false)
+        }
     }
 
     return (
@@ -321,26 +334,26 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
                                             <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
-                                                <div>Reason</div>
-                                                {
-                                                    values.reason === "Others" ? setOtherReasons(true) : ''
-                                                }
-                                                
+                                                <div>Reason</div>                                               
                                                     
-                                                    <Field as="select"  name="reason" id="reason">
+                                                    <Field as="select"  name={otherReasons ? '' : 'reason'} id="reason" value={reasonValue} onChange={(e: any) => handleReasonsChange(e)}>
                                                         <option value="">Select</option>
+                                                        
                                                         {
-                                                            REASONS.map((reason: string) => (
+                                                            REASONS.map((reason: string) => ( 
+                                                                // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>) 
                                                                 <option value={reason}>{reason}</option>
-                                                            ))
+                                                                )
+                                                            )
                                                         }
+                                                            
+                                                    
                                                     </Field>
                                                 {
                                                     otherReasons ?
-                                                    <Field type="text" name="reason" id="reason" />
+                                                    <Field placeholder="Enter your reason here" value={reasonValue} onChange={(e :any) => setReasonValue(e.target.value)} type="text" name={otherReasons ? 'reason' : ''} id="" />
                                                     : <></>
                                                 }
-                                                {otherReasons ? <span className="reason-close" onClick={() => setOtherReasons(false)} >x</span> : ''}
                                             </div>
                                             {/*
                                             <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>

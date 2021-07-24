@@ -143,7 +143,7 @@ const ExchangeRateInput = (props: any) =>{
     }
        return (
         <Field key={data?.currency +'-field-'+ window.location.pathname}>
-            <div className={`x-input ${(max && data?.value > max) ? 'selected-border-red' : ''}`}>
+            <div className={`x-input ${(max && data?.value > max) ? 'selected-border-yellow' : ''}`}>
                 <div className="xi-1">
                     <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
                     <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? formatCurrency(data?.value) : formatCurrencyWithoutFloats(Math.floor(data?.value))} onChange={(e)=>{handleXInputChange(e, data)}}/>
@@ -161,7 +161,7 @@ const ExchangeRateInput = (props: any) =>{
                             <ul>
                                 {
                                     Object.keys(countries).map(country => (
-                                        <li onClick={() => handleCountrySelection(country)}>{country}</li>
+                                        <li  onClick={() => handleCountrySelection(country)}>{country}</li>
                                     ))
                                 }
                             </ul>

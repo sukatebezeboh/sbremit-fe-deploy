@@ -123,7 +123,7 @@ const Dashboard = () => {
                     </div>
                     <hr/>
                     <div className="down">
-                        <div>Transaction #: <span>SBR{transaction.dateCreated}</span></div>
+                        <div>Transaction #: <span>{transaction.meta.transactionId}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
                             <span 

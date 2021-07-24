@@ -1,5 +1,6 @@
 import { Field, Form, Formik } from 'formik';
 import React, {useState} from 'react'
+import { useSelector } from 'react-redux';
 import { changePasswordAction, editProfileAction } from '../../../redux/actions/actions';
 import { ChangePasswordValidator, EditProfileValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
@@ -36,20 +37,11 @@ const EditProfile = () => {
         })
     }
 
+    const user = useSelector((state: any) => state.auth.user);
+    
+
     const initialValues: any = {
-        firstName: 'Az',
-        lastName: 'Yea',
-        mobile: '',
-        phoneCode: 'uk',
-        day: '',
-        month: '',
-        year: '',
-        gender: 'male',
-        address1: '',
-        address2: '',
-        city: '',
-        state: '',
-        zip: ''
+        ...user?.profile
     }
 
 
@@ -79,13 +71,13 @@ const EditProfile = () => {
                                                 <div className="names">
                                                     <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
                                                         <div>First Name<i>*</i></div>
-                                                        <Field name="firstName" type="text" placeholder="John" disabled/>
+                                                        <Field name="firstName" type="text" placeholder="John"/>
                                                         {(touched.firstName && errors.firstName) && <div className="form-error-message form-error-message-adjust-up">{errors.firstName}</div>}
                                                     </div>
                                                     <div></div>
                                                     <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
                                                         <div>Last Name<i>*</i></div>
-                                                        <Field name="lastName" type="text" placeholder="Doe" disabled/>
+                                                        <Field name="lastName" type="text" placeholder="Doe"/>
                                                         {(touched.lastName && errors.lastName) && <div className="form-error-message form-error-message-adjust-up">{errors.lastName}</div>}
                                                     </div>
                                                 </div>
@@ -123,7 +115,7 @@ const EditProfile = () => {
                                                             <Field type="radio" name="gender" value="Other" />
                                                             <span className="radio-txt">Other</span>
                                                         </span>
-                                                        <span className="m-grid-col-span-1-4"> <Field name="other" className="specify" placeholder="Please specify" /> </span>
+                                                        <span className="m-grid-col-span-1-4"> <Field name="gender" className="specify" placeholder="Please specify" /> </span>
                                                     </div>
                                                     {(touched.gender && errors.gender) && <div className="form-error-message form-error-message-adjust-up">{errors.gender}</div>}
                                                 </div>

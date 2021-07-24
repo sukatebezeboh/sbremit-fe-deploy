@@ -9,6 +9,7 @@ import { signUpAction } from "../../../redux/actions/actions";
 import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
 import { SIGN_UP, SUBMITTING, TOAST } from "../../../redux/actionTypes";
 import Toast from "../../ui-components/toast-factory/toast/Toast";
+import { paths } from "../../../util/paths";
 
 
 
@@ -51,7 +52,7 @@ const SignUp = () => {
                         initialValues={{...initialValues}}
                         validationSchema={SignUpValidator}
                         onSubmit={values => {
-                            dispatch(signUpAction(values))
+                            dispatch(signUpAction(values, () => history.push(paths.SIGN_IN)))
                         }}>
                         {
                             ({errors, touched, values}: any) => (

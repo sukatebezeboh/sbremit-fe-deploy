@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getRecipients } from '../../../redux/actions/actions';
+import { getRecipients, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
@@ -17,6 +17,13 @@ const Recipient = () => {
     const history = useHistory();
     const recipients = useSelector((state: any)=>state.recipients.recipients);
     const recipient = useSelector((state: any)=>state.recipients.recipient);
+    const transfer = useSelector((state: any)=>state.transfer);
+    const user = useSelector((state: any)=> state.auth.user)
+    console.log(transfer, user, "transfer", "------");
+    
+    const toSend = transfer.toSend;
+    const max  = transfer.transferMax;
+
     const dispatch = useDispatch()
 
     const [openNRModal, setOpenNRModal] = useState(false)
@@ -24,7 +31,49 @@ const Recipient = () => {
     const [filteredRecipients, setFilteredRecipients] = useState(recipients);
     useEffect(() => {
         getRecipients();
+        getUserTransactions();
     }, [])
+
+    useEffect(() => {
+        checkPageAuthorization();
+    }, [transfer, user])
+
+    const checkPageAuthorization = () => {
+        if (!transfer.transferMethod) {
+            history.replace(paths.TRANSFER_METHOD);
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 15000,
+                message: "Please select a transfer method"
+            })
+            return
+        }
+        if (userIsVerified()) {
+            history.push(paths.RECIPIENT)
+        } else {
+            if (isUserFirstTransaction() && Number(toSend.value) < max) {
+                history.push(paths.RECIPIENT)
+            } else {
+                toastAction({
+                    show: true,
+                    type: "info",
+                    timeout: 15000,
+                    title: "Just a minute, please!",
+                    message: "We need to verify who you are to make this transaction"
+                })
+                history.replace(paths.VERIFICATION)
+            }
+        }
+    }
+
+    const userIsVerified = (): boolean => {
+        return Boolean(user.meta.verified);
+    }
+
+    const isUserFirstTransaction = (): boolean => {
+        return !Boolean(transfer.transactions.length);
+    }
 
     useEffect(() => {
         setFilteredRecipients( recipients )
