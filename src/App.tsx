@@ -18,30 +18,63 @@ function App() {
     checkAuth()
     appValuesAction()
   }, [isAuthenticated])
-  
   return (
     <React.Fragment>
       <ToastFactory />
       <AppLoader show={showAppLoader}/>
       <Switch>
         {
-            Routing.map((route: IRoute, i: number)=>(
+            Routing.map((route: IRoute, i: number) => (
+              
               route.protected ?
-                 (
-                   isAuthenticated === undefined ?
-                   <AppLoader show={true} />
-                   :
-                   !isAuthenticated ?
-                   <Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />
-                   :
-                   <Route path={route.path} render={(()=>(<route.component key={i} />))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
-                 )
+                  (
+                    isAuthenticated === undefined ?
+                    <AppLoader show={true} />
+                    :
+                    (
+                        !isAuthenticated ?
+                        (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
+                        :
+                        (
+                          
+
+                                <Route path={route.path} render={(()=>(
+
+                                        <React.Fragment>
+
+                                            <route.component key={i} />
+                                            {
+                                              route.footerless ? <></> :  <AppFooter/>
+                                            }
+
+                                        </React.Fragment>
+
+                                ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
+                          
+                        )
+                    )
+                  )
+                  
               :
-              <Route path={route.path} render={(()=>(<route.component {...route.props} />))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
+              (
+
+                    <Route path={route.path} render={(()=>(
+                                  <React.Fragment>
+
+                                        <route.component {...route.props} />
+                                        {
+                                          route.footerless ? <></> :  <AppFooter/>
+                                        }
+
+                                  </React.Fragment>
+
+                    ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
+                    
+
+              )
             ))
         }
       </Switch>
-      <AppFooter />
 
     </React.Fragment>
   );

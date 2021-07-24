@@ -111,6 +111,41 @@ const Div = styled.div`
     /* animation-delay: 10s; */
 }
 
+.hover-tab {
+    position: absolute;
+    display: none;
+    width: 200px;
+    background: #fff;
+    box-shadow: 0px 1px 5px #CCCCCC80;
+    z-index: +50;
+    padding: 10px;
+    cursor: pointer;
+    margin-left: -80px;
+    color: grey;
+
+    .tab-list {
+        &:hover {
+            background: #f8fcfb;
+            color: #007B5D;
+        }
+    }
+}
+.click-hover-tab {
+    cursor: pointer;
+    color: #007B5D;
+    font-style: oblique;
+}
+.click-hover-tab:hover ~ .hover-tab{
+    display: inline-block!important;
+}
+.hover-tab:hover {
+    display: inline-block!important;
+}
+.deep-green{
+    font: normal normal 600 15px/19px Montserrat;
+    color: #007B5D;
+    width: fit-content;
+}
 
 `
 export default function Toast(props: any) {
@@ -122,7 +157,7 @@ export default function Toast(props: any) {
                 </div>
                 <div className="content">
                     <div className="head">{config?.title || ""}</div>
-                    <div className="body">{config?.message || "Success"}</div>
+                    <div className="body" dangerouslySetInnerHTML={{__html: config?.message || "Success"}} ></div>
                 </div>
                 <div className="close">
                     <button>x</button>

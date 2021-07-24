@@ -1,5 +1,7 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 
 const Footer = styled.div`
@@ -37,6 +39,7 @@ const Footer = styled.div`
             li {
                 margin-top: 20px;
                 white-space: nowrap;
+                cursor: pointer;
             }
         }
         .company-legal {
@@ -181,6 +184,7 @@ const Footer = styled.div`
     }
 `
 export const AppFooter = () => {
+    const history = useHistory();
     return (
         <Footer>
             <div className="up">
@@ -189,14 +193,14 @@ export const AppFooter = () => {
                         <img src={asset('', 'main-logo.svg')} alt="main logo" />
                     </div>
                     <p>
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet.
+                        SB  Remit  is  the  trading  name  of  Sukate  &  Bezeboh  Ltd,  registered  in  England  and  Wales,  company  number  12735266, registered office 78 Woodlands Way, Leeds, LS14 2AW. Sukate & Bezeboh Ltd is authorised by the Financial Conduct Authority (“FCA”) under the Electronic Money Regulations 2011 with firm reference number 935783 for the provision of payment services.
                     </p>
                 </div>
                 <div className="company-legal">
                     <div className="company">
                         <h3>Company</h3>
                         <ul>
-                            <li>About</li>
+                            <li onClick={() => history.push('/content/about')}>About</li>
                             <li>FAQs</li>
                             <li>Blog</li>
                         </ul>
@@ -204,15 +208,15 @@ export const AppFooter = () => {
                     <div className="legal">
                         <h3>Legal</h3>
                         <ul>
-                            <li>Privacy</li>
-                            <li>Terms & Conditions</li>
+                            <li onClick={() => history.push('/support/legal/privacy')}>Privacy</li>
+                            <li onClick={() => history.push('/support/legal/terms')}>Terms & Conditions</li>
                         </ul>
                     </div>
                 </div>
                 <div className="contact">
-                    <h3>Contact us</h3>
+                    <h3 onClick={() => history.push(paths.CONTACT)}>Contact us</h3>
                     <ul>
-                        <li>+44 798 759 0594</li>
+                        <li>+44(0)3301334158</li>
                         <li>contact@sbremit.com</li>
                         <li className="socials">
                             <img src={asset('icons', 'instagram.svg')} alt="instagram" />
@@ -223,7 +227,7 @@ export const AppFooter = () => {
                     </ul>
                 </div>
                 <div className="subscribe">
-                    <p>Stay tuned for latest news from SB remit</p>
+                    <p>Stay tuned for latest news from SB Remit</p>
                     <div>
                         <input type="text" placeholder="Enter your email" />
                     </div>
