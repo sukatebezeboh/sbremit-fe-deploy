@@ -557,7 +557,7 @@ const Support = () => {
                         <div className="body">
                             <h5>Privacy Policy</h5>
                             <p>SB Remit is committed to your privacy. Read our customer Privacy Policy for a clear explanation of how we gather, use, disclose, and manage your information..</p>
-                            <Link to={'/support/legal/terms'}>
+                            <Link to={'/support/legal/privacy'}>
                                 <div className="link">
                                     Read SB Remit Privacy Policy <img src={asset('icons', 'right-arrow-angle.svg')} alt="goto" />
                                 </div>
