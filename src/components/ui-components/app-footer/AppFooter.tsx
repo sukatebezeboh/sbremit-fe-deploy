@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
@@ -201,8 +201,8 @@ export const AppFooter = () => {
                         <h3>Company</h3>
                         <ul>
                             <li onClick={() => history.push('/content/about')}>About</li>
-                            <li>FAQs</li>
-                            <li>Blog</li>
+                            <li onClick={() => history.push(paths.SUPPORT + "#faq")}>FAQs</li>
+                            <li onClick={() => history.push('/')} >Blog</li>
                         </ul>
                     </div>
                     <div className="legal">
@@ -221,7 +221,7 @@ export const AppFooter = () => {
                         <li className="socials">
                             <img src={asset('icons', 'instagram.svg')} alt="instagram" />
                             <img src={asset('icons', 'linkedin.svg')} alt="linkedin" />
-                            <img src={asset('icons', 'facebook.svg')} alt="facebook" />
+                            <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer"> <img src={asset('icons', 'facebook.svg')} alt="facebook" /> </a>
                             <img src={asset('icons', 'twitter.svg')} alt="twitter" />
                         </li>
                     </ul>

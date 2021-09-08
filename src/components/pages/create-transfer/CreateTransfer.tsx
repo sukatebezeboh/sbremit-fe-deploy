@@ -214,8 +214,9 @@ const Body = styled.div`
 const CreateTransfer = () => {
     const history = useHistory();
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
-    const transfer =  useSelector((state: any)=>state.transfer)
-    console.log(transactionDetails);
+    const state =  useSelector((state: any)=>state)
+    const user =  useSelector((state: any) => state.auth.user)
+    console.log(transactionDetails, "[[[[[");
     const recipient = useSelector((state: any) => state.recipients.recipient)
 
     const cancelPayment = () => {
@@ -244,7 +245,6 @@ const CreateTransfer = () => {
                 </div>
                 <div className="box-container details">
                     <div className="within">
-                        
                         <div>
                             <div className="pls-note">Please note</div>
                             <div className="list">
@@ -278,15 +278,15 @@ const CreateTransfer = () => {
 
                             <div>
                                 <span>Reference</span>
-                                <span>{transactionDetails.meta.transactionId}</span>
+                                <span>{ user.meta.customerId || transactionDetails?.meta?.transactionId?.substring(0, 10)}</span>
                             </div>
                             
                         </div>
-                        <Link to={paths.PAYMENT_METHOD + '?t=' + transactionDetails.id} ><div className="green-txt cpm-text">Change payment method</div></Link>
+                        <Link to={paths.PAYMENT_METHOD + '?t=' + transactionDetails?.id} ><div className="green-txt cpm-text">Change payment method</div></Link>
 
                     </div>
                     <div className="mobile-hide">
-                        <TransferDetailsBox transferId={transactionDetails.id} />
+                        <TransferDetailsBox transferId={transactionDetails?.id} />
                     </div>
                     
                 </div>

@@ -74,3 +74,5 @@ export const genPaginationHashTable = (array: any[], noPerPage: number) => {
 export const downloadPDF = (id: string) => {
     const element = document.getElementById(id)
 }
+
+export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object).length)

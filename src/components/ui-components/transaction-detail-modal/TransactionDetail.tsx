@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
@@ -8,6 +8,7 @@ import { paths } from '../../../util/paths';
 import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArray } from '../../../util/util';
 import PageHeading from '../page-heading/PageHeading';
 import Pdf from "react-to-pdf";
+import Receipt from '../receipt/Receipt';
 
 
 const style = () => styled.div`
@@ -456,7 +457,6 @@ const TransactionDetail = (props: any) => {
     const [isResending, setIsResending] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
-
     const showMobileModal = (bool: boolean) => {
         handleOpenMobileTimeline(bool)
     }
@@ -496,13 +496,21 @@ const TransactionDetail = (props: any) => {
         }, 1000 )
     }
 
+    const setReceiptVisibility = (visibility: string) => {
+        const receipt: any = document.querySelector('#receipt');
+        receipt.style.visibility = visibility;
+    }
     const pdfOptions = {
-        orientation: 'landscape',
-
+        orientation: 'portrait',
+        size: 'a3'
     }
     return (
         (openTDModal && data) && (
-        <Modal ref={ref}>
+        <Modal >
+
+            <div ref={ref} id="receipt" style={{width: '100%', height: 'fit-content', margin: 'auto', position: 'absolute', zIndex: -200, visibility: 'hidden' }}>
+                <Receipt data={data} recipient={recipient} />
+            </div>
             <div className="modal" id="TD-Modal" >
                 <div className="head">
                     <div className="t-id">Transaction #: <span>{data.meta.transactionId}</span></div>
@@ -515,10 +523,13 @@ const TransactionDetail = (props: any) => {
                         <div> <div>{convertDateString(data.dateCreated)}</div> <div>To <b>{recipient?.firstName} {recipient?.lastName}</b></div> </div>
                         <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
-                    <div className="actions">
-                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" options = {pdfOptions} x={-43.5} y={-7.5} scale={0.76}>
+                    <div className="actions" >
+                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" onComplete={() => setReceiptVisibility('hidden')} options = {pdfOptions} x={-43.5} y={3.5} scale={0.59}>
                         {({ toPdf }: any) =>(
-                            <div className="export" onClick={toPdf} >
+                            <div className="export" onClick={() => {
+                                setReceiptVisibility('visible')
+                                return toPdf();
+                            }} >
                                 <img src={asset('icons', 'export.svg')} alt="export"/>
                                 <div> Download <span className="mobile-hide"></span></div>
                             </div>

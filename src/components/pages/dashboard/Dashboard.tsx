@@ -84,15 +84,15 @@ const Dashboard = () => {
                 </Link>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
-                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>  
+                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>
                         <div>Complete Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
-                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>  
+                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>
                         <div>Pending Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter("cancelled")} className={selectedFilter === "cancelled" ? "selected-border-red" : ''}> 
-                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>  
+                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">
@@ -126,8 +126,8 @@ const Dashboard = () => {
                         <div>Transaction #: <span>{transaction.meta.transactionId}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
-                            <span 
-                            className="view-det" 
+                            <span
+                            className="view-det"
                             onClick={()=>{
                                 setModalData(transaction);
                                 handleOpenTDModal(true);

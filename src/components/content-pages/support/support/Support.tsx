@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components';
 import { asset } from '../../../../util/util';
 import NavHeader from '../../nav-header/NavHeader';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { paths } from '../../../../util/paths';
 
 const Body = styled.div`
@@ -498,6 +498,8 @@ const Support = () => {
         setOpenPanels( [...new Set([...openPanels, panelId])] )
     }
 
+    const history = useHistory()
+
     return (
         <Body>
             <NavHeader page="support" />
@@ -525,7 +527,7 @@ const Support = () => {
                             <div className="text">Tutorials</div>
                         </div>
 
-                        <div className="option">
+                        <div className="option" onClick={() => history.push(paths.CONTACT)}>
                             <img src={asset('icons', 'support.svg')} alt="support" />
                             <div className="text">Contact us</div>
                         </div>
@@ -566,7 +568,7 @@ const Support = () => {
                     </div>
                 </section>
 
-                <section className="faq">
+                <section className="faq" id="faq">
                     <h1>Frequently Asked Questions</h1>
                     <div className={`content ${isPanelOpen(0) || " collapsed"}`}>
                         <div className="open">

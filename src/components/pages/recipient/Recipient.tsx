@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { getRecipients, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset } from '../../../util/util';
+import { asset, getQueryParam } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import NewRecipientModal from '../../ui-components/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -20,7 +20,7 @@ const Recipient = () => {
     const transfer = useSelector((state: any)=>state.transfer);
     const user = useSelector((state: any)=> state.auth.user)
     console.log(transfer, user, "transfer", "------");
-    
+
     const {toSend, toReceive, serviceFee, transferMethod} = transfer; 
     const max  = transfer.transferMax;
 
@@ -29,6 +29,7 @@ const Recipient = () => {
     const [openNRModal, setOpenNRModal] = useState(false)
     const [selectedRecipient, setSelectedRecipient] = useState(recipient)
     const [filteredRecipients, setFilteredRecipients] = useState(recipients);
+    const [recipientDataForUpdate, setRecipientDataForUpdate] = useState({})
     useEffect(() => {
         getRecipients();
         getUserTransactions();
@@ -37,6 +38,8 @@ const Recipient = () => {
     useEffect(() => {
         checkPageAuthorization();
     }, [transfer, user])
+
+
 
     const checkPageAuthorization = () => {
         if (!transfer.transferMethod) {
@@ -66,10 +69,10 @@ const Recipient = () => {
             return
         }
         if (userIsVerified()) {
-            history.push(paths.RECIPIENT)
+            // history.push(paths.RECIPIENT)
         } else {
             if (isUserFirstTransaction() && Number(toSend.value) < max) {
-                history.push(paths.RECIPIENT)
+                // history.push(paths.RECIPIENT)
             } else {
                 toastAction({
                     show: true,
@@ -93,6 +96,7 @@ const Recipient = () => {
 
     useEffect(() => {
         setFilteredRecipients( recipients )
+        handleRecipientUpdate()
     }, [recipients])
 
     const handleRecipientClick = (recipient: any) => {
@@ -111,11 +115,20 @@ const Recipient = () => {
         setFilteredRecipients( filtered );
     }
 
+    const handleRecipientUpdate = () => {
+        const recipientId =  getQueryParam('update');
+        if (!recipientId) return;
+ 
+        const recipientData = recipients.find((recipient: any) => recipient.id == recipientId);
+        console.log(recipientData);
+        setRecipientDataForUpdate(recipientData);
+        setOpenNRModal(true);
+    }
     return (
         <Body>
             <NavBar />
             <ProgressBar point={2} />
-            <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} />
+            <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} recipientData={recipientDataForUpdate} />
             <div className="page-content">
                 <div className="search">
                     <div><input type="text" onChange={(e) => filterRecipients(e)} placeholder="Search recipients"/> <button className=""> <img src={asset("icons", "search.svg")} alt="search"/> </button> </div>

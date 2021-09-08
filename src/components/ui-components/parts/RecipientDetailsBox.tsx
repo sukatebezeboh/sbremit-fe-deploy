@@ -1,6 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { paths } from '../../../util/paths';
 
 const Div = styled.div`
             display: grid;
@@ -68,7 +70,7 @@ const RecipientDetailsBox = (props: any) => {
             <div className="recipient-details">
                 <div className="heading">
                     <div className="title">Recipient’s Details</div>
-                    <div className="update">Update</div>
+                    <Link to={`${paths.RECIPIENT}?update=${recipient.id}`}><div className="update">Update</div></Link>
                 </div>
                 <hr/>
                 <div className="row">
@@ -85,7 +87,7 @@ const RecipientDetailsBox = (props: any) => {
                 </div>
                 <div className="row">
                     <div className="left">City</div>
-                    <div className="right">{recipient.profile.city || '-'}</div>
+                    <div className="right">{recipient.profile.state || '-'}</div>
                 </div>
                 <div className="row">
                     <div className="left">Reason</div>

@@ -105,7 +105,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const transfer = useSelector((state: any) => state.transfer);    
     const transaction = transfer.transactionDetails;
     console.log(transferId, transfer, transaction);
-    
+
     const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer.transferMethod.replace('_', ' ');
     const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
     const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
@@ -162,7 +162,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="right uppercase">1 {xBase} = {xRate} {xTarget}</div>
                     </div>
                     <div className="row">
-                        <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer.transferMethod)}} ></div>
+                        <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer.transferMethod || transaction.transferMethod)}} ></div>
                         <div className="right uppercase">+{serviceFee} GBP</div>
                     </div>
                     <div className="row">

@@ -29,6 +29,8 @@ const LandingPage = (props: any) => {
     const payOutCountries = appValues.payOutCountries;
     const max  = transfer.transferMax;
 
+    console.log(transfer);
+    
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");

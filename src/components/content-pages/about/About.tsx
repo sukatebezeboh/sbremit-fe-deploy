@@ -5,7 +5,7 @@ import NavHeader from '../nav-header/NavHeader';
 
 const Body = styled.div`
     .hero {
-        background: url('https://images.pexels.com/photos/6266681/pexels-photo-6266681.jpeg');
+        background: url('/assets/bg/about-bg.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         height: 917px;
