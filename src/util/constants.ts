@@ -12,3 +12,10 @@ export const REASONS = [
     "Njangi",
     "Other"
 ];
+
+export const constants = {
+    HOME: "home",
+    ABOUT: "about",
+    SUPPORT: "support",
+    CONTACT: "contact"
+}

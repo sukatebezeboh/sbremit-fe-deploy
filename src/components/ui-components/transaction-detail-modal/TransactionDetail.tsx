@@ -496,9 +496,9 @@ const TransactionDetail = (props: any) => {
         }, 1000 )
     }
 
-    const setReceiptVisibility = (visibility: string) => {
+    const setReceiptVisible = (visibility: boolean) => {
         const receipt: any = document.querySelector('#receipt');
-        receipt.style.visibility = visibility;
+        receipt.style.display = visibility ? "block" : "none";
     }
     const pdfOptions = {
         orientation: 'portrait',
@@ -508,7 +508,7 @@ const TransactionDetail = (props: any) => {
         (openTDModal && data) && (
         <Modal >
 
-            <div ref={ref} id="receipt" style={{width: '100%', height: 'fit-content', margin: 'auto', position: 'absolute', zIndex: -200, visibility: 'hidden' }}>
+            <div ref={ref} id="receipt" style={{width: '1944px', height: 'fit-content', margin: 'auto', position: 'absolute', zIndex: -200, display: 'none' }}>
                 <Receipt data={data} recipient={recipient} />
             </div>
             <div className="modal" id="TD-Modal" >
@@ -524,10 +524,10 @@ const TransactionDetail = (props: any) => {
                         <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
                     <div className="actions" >
-                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" onComplete={() => setReceiptVisibility('hidden')} options = {pdfOptions} x={-43.5} y={3.5} scale={0.59}>
+                        <Pdf targetRef={ref} filename={`SB-payment-receipt-${data.meta.transactionId}.pdf`} onComplete={() => setReceiptVisible(false)} options = {pdfOptions} x={-43.5} y={3.5} scale={0.59}>
                         {({ toPdf }: any) =>(
                             <div className="export" onClick={() => {
-                                setReceiptVisibility('visible')
+                                setReceiptVisible(true)
                                 return toPdf();
                             }} >
                                 <img src={asset('icons', 'export.svg')} alt="export"/>

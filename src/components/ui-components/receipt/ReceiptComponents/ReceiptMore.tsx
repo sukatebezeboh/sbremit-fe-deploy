@@ -46,7 +46,7 @@ export const ReceiptDetails = ({data, recipient}: {data?: any, recipient?: any})
           <div className="body">
           <div className="section">
             <div className="unit">
-                <p>name</p>
+                <p>Name</p>
                 <p>{`${recipient?.firstName  || ""} ${recipient?.lastName  || ""}`}</p>
             </div>
             <div className="unit">

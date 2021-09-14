@@ -91,10 +91,95 @@ export default styled.div`
         }
     }
 
+    .mobile-nav {
+        display: none;
+    }
+
 
     @media only screen and (max-width: 900px) {
         .btns {
             padding-right: 20px;
+        }
+
+        .mobile-nav {
+            display: block;
+            background: red;
+            grid-column: 1/4;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: #F0F5F4;
+            height: 100%;
+            .header {
+                width: 100%;
+                height: 100px;
+                .logo {
+
+                }
+                .close-nav {
+                    float: right;
+                    font-size: 46px;
+                    color: #007B5D;
+                    cursor: pointer;
+                    margin: 20px;
+                }
+            }
+            .links {
+
+                ul {
+                    list-style-type: none;
+                    padding-left: 20px;
+                    margin-left: 0px;
+                    li {
+                        color: #424242;
+                        font-size: 13px;
+                        margin-bottom: 30px;
+                        width: fit-content;
+                        &.active {
+                            font-weight: bold;
+                            color: #007B5D;
+                            ::after {
+                                content: '';
+                                display: block;
+                                height: 1px;
+                                background: #007B5D;
+                                width: 15px;
+                            }
+                        }
+
+                    }
+
+                }
+            }
+
+            .sign-up-in-mobile {
+                display: grid;
+                grid-template-rows: 1fr 1fr;
+                margin-top: 50px;
+                a {
+                    font: normal normal normal 13px/16px Montserrat;
+                    color: #007B5D;
+                    display: inline-block;
+                    width: fit-content;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    margin: 7px auto;
+                    &:first-child {
+                        border: 1px solid #007B5D;
+                    }
+                    &:last-child {
+
+                    }
+                }
+            }
+
+            .img {
+                width: 100%;
+                margin-top: 30px;
+                img {
+                    width: 100%;
+                }
+            }
         }
     }
 `
