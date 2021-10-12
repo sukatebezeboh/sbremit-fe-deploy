@@ -603,7 +603,7 @@ const TransactionDetail = (props: any) => {
                     <div className="transfer-details" >
                         <div className="heading">
                                 <div className="title">Transfer Details</div>
-                                <div className="update">Update</div>
+                                {/* <div className="update">Update</div> */}
                             </div>
                             <hr/>
                             <div className="row">
@@ -616,24 +616,28 @@ const TransactionDetail = (props: any) => {
                             </div>
                             <div className="row">
                                 <div className="left">Exchange rate</div>
-                                <div className="right">1 GBP = 70.36 XAF</div>
+                                <div className="right"> 1 {data?.meta?.exchangeBase} = {data?.meta?.exchangeRate} {data?.meta?.exchangeTarget} </div>
                             </div>
                             <div className="row">
                                 <div className="left">Service fee</div>
-                                <div className="right">+0.95 GBP</div>
+                                <div className="right"> {data?.meta?.serviceFee} {data.originCurrency} </div>
                             </div>
+                            {data?.meta?.promoCode && <div className="row">
+                                <div className="left">Promo used</div>
+                                <div className="right"> {data?.meta?.promoCode}</div>
+                            </div>}
                             <div className="row">
                                 <div className="left">They get</div>
                                 <div className="right"><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b></div>
                             </div>
                             <div className="row">
-                                <div className="left">Total to pay</div>
-                                <div className="right"><b className="green">100.95 GBP</b></div>
+                                <div className="left">Total paid</div>
+                                <div className="right"><b className="green">{data?.meta?.totalToPay} {data.originCurrency} </b></div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="left">Transfer time</div>
                                 <div className="right">within 2 hours</div>
-                            </div>
+                            </div> */}
                     </div>
                     <div className="recipient-details desktop-hide">
                         <div className="heading">

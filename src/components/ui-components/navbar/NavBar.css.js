@@ -118,7 +118,7 @@ const style = () => styled.div`
                         color: #A3A3A3;
                     }
                 }
-                :nth-child(4), :nth-child(5) {
+                &.read {
                     opacity: 0.5;
                 }
                 :last-child {

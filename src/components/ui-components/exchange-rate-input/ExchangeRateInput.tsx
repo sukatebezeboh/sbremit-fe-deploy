@@ -161,7 +161,7 @@ const ExchangeRateInput = (props: any) =>{
                             <ul>
                                 {
                                     Object.keys(countries).map(country => (
-                                        <li  onClick={() => handleCountrySelection(country)}>{country}</li>
+                                        <li onClick={() => handleCountrySelection(country)}>{country}</li>
                                     ))
                                 }
                             </ul>

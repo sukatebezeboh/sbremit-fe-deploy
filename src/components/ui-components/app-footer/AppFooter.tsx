@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { subscribe } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 
@@ -185,6 +186,11 @@ const Footer = styled.div`
 `
 export const AppFooter = () => {
     const history = useHistory();
+    const [subscribeValue, setSubscribeValue] = useState<{email: string}>({email: ""})
+
+    const handleSubscribeClick = () => {
+        if (subscribeValue.email) subscribe(subscribeValue);
+    }
     return (
         <Footer>
             <div className="up">
@@ -229,10 +235,10 @@ export const AppFooter = () => {
                 <div className="subscribe">
                     <p>Stay tuned for latest news from SB Remit</p>
                     <div>
-                        <input type="text" placeholder="Enter your email" />
+                        <input onChange={(e) => setSubscribeValue({email: e.target.value})} type="email" placeholder="Enter your email" />
                     </div>
                     <div>
-                        <button>Subscribe</button>
+                        <button onClick={() => handleSubscribeClick()}>Subscribe</button>
                     </div>
                 </div>
             </div>

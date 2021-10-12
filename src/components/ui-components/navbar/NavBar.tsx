@@ -1,19 +1,19 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
-import { asset } from '../../../util/util';
+import { asset, convertDateString } from '../../../util/util';
 import style from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
-import { signOutAction } from '../../../redux/actions/actions';
+import { fetchUserNotifications, signOutAction } from '../../../redux/actions/actions';
 
 const Bar = style();
 
 const NavBar = () => {
-    const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
+    // const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
     const [showNotifDropdown, setShowNotifDropdown] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
     const user = useSelector((state: any)=> state.auth.user)
-
+    const notifs = useSelector((state: any) => state.notifications)
 
     const handleDropdownClick = (type: string) => {
         if (type === 'notif') {
@@ -27,16 +27,20 @@ const NavBar = () => {
     }
 
     const notifList = (notifs: any[]) => {
-        return notifs.map(notif => (
-            <div className={`notif-body ${notif.read ? 'read' : 'unread'}`}>
+        return notifs?.map(notif => (
+            <div className={`notif-body ${notif.status.toLowerCase() }`}>
                 <img src="./assets/images/noimage.png" alt="pic"/>
                 <div>
-                    <div>You transferred £150.00 to <b>David Lee</b></div>
-                    <div>4 min ago</div>
+                    <div> {notif.meta.message} <b>  </b></div>
+                    <div> {convertDateString(notif.dateCreated)} </div>
                 </div>
             </div>
         ))
     }
+
+    useEffect(() => {
+        fetchUserNotifications();
+    }, [])
 
     return (
         <Bar>

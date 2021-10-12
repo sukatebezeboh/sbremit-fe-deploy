@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import styled from "styled-components";
 import { getTransactionDetails } from '../../../redux/actions/actions';
+import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { formatCurrency, getQueryParam } from '../../../util/util';
 
@@ -110,9 +111,9 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
     const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
     const xBase = transferId ? transaction?.meta?.exchangeBase : transfer.conversionRate?.base;
-    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency(transfer.conversionRate?.rate);
+    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency( transfer?.promo?.settings?.rate || transfer.conversionRate?.rate);
     const xTarget = transferId ? transaction?.meta?.exchangeTarget : transfer.conversionRate?.target;
-    const serviceFee = transferId ? transaction?.meta?.serviceFee : transfer.serviceFee;
+    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer.serviceFee);
     const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer.toReceive.value);
     const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer.toReceive.currency;
     const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`);

@@ -6,7 +6,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
-    height: 155vh;
+    height: 165vh;
     .f-growing{
         display: none;
     }
@@ -45,7 +45,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
         margin-top: 45px;
         margin-bottom: 50px;
         width: 87%;
-        max-height: 900px;
+        max-height: 1100px;
         background: #fff;
         display: inline-block;
         background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -110,7 +110,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             font: normal normal normal 25px/30px Montserrat;
             color: #424242;
             border: none;
-            margin-top: 89px;
+            margin-top: 20px;
             outline: none;
         }
         .x-input{
