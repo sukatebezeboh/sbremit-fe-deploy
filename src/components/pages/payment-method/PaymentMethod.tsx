@@ -251,25 +251,7 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
-                        {/* <div className="radio-card" onClick={()=>setSelected('card')}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='card'}/>
-                            </div>
-                            <div>
-                                <div className="rc-head">Debit / Credit Card</div>
-                                <div className="rc-body">
-                                    <div>
-                                        Authorise SBremit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your Debit / Credit card
-                                    </div>
-                                    <div>
-                                        Should arrive in 2 hours
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                    Fast and easy transfer - {transfer.serviceFee} GBP
-                                </div>
-                            </div>
-                        </div> */}
+                        
 
                         <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
                             <div className="radio-div">
@@ -279,14 +261,40 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Bank Transfer</div>
                                 <div className="rc-body">
                                     <div>
-                                        Transfer <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your bank, we’ll proceed when we receive payment
+                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
                                     </div>
                                     <div>
-                                        Should arrive in 11 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
                                         {/* Low cost transfer - {transfer.serviceFee} GBP */}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className="radio-card disabled" onClick={() => {
+                            toastAction({
+                                show: true,
+                                type: 'info',
+                                timeout: 10000,
+                                message: 'Good choice, this service will be available very soon'
+                            })
+                            // setSelected('card')
+                            }}>
+                            <div className="radio-div">
+                                <RadioButton selected={selected==='card'}/>
+                            </div>
+                            <div>
+                                <div className="rc-head">Debit / Credit Card</div>
+                                <div className="rc-body">
+                                    <div>
+                                        You authorise SB Remit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> from your debit/credit card. Your credit card provider may charge cash advance fees. Use a debit card to avoid this charge.
+                                    </div>
+                                    <div>
+                                    </div>
+                                </div>
+                                <div className="rc-foot">
                                 </div>
                             </div>
                         </div>

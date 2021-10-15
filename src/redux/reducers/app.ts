@@ -1,6 +1,6 @@
 import { IAction } from ".";
 import { AppService } from "../../services/AppService";
-import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING } from "../actionTypes";
+import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS } from "../actionTypes";
 
 const initialSubmittingState = "";
 const initialToastState = {
@@ -65,4 +65,14 @@ export const loading = (state: any = initialLoadingState, {type, payload}: IActi
       default:
         return state;
     }
+}
+
+export const notifications = (state: any = [], {type, payload}: IAction) => {
+  switch (type) {
+    case NOTIFICATIONS: {
+      return payload
+    }
+    default:
+      return state;
+  }
 }

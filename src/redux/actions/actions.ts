@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { APP_VALUES, AUTH, LOADING, RECIPIENT, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
+import { APP_VALUES, AUTH, LOADING, NOTIFICATIONS, RECIPIENT, RECIPIENTS, REDIRECT, SIGN_IN, SIGN_UP, SUBMITTING, TOAST, TRANSFER } from "../actionTypes";
 import config from '../../env';
 import endpoints from "../../util/endpoints";
 import store from './../store';
@@ -352,12 +352,13 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
         destinationCurrency: transfer.toReceive?.currency,
         destinationAmount: Number((transfer.toReceive?.value)),
         paymentMethod: {},
+        promo: transfer.promo?.code,
         meta: {
             serviceFee: transfer.serviceFee,
             exchangeBase: transfer.conversionRate?.base,
             exchangeRate: formatCurrency(transfer.conversionRate?.rate),
             exchangeTarget: transfer.conversionRate?.target,
-            totalToPay: formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)
+            totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`)
         }
     }
     const user = store.getState().auth.user
@@ -426,7 +427,7 @@ export const getUserTransactions = () => {
         })
         const paginatedTransactions = genPaginationHashTable(transactions, 10);
         const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="cancelled"), 10)
-        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="completed"), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="complete"), 10)
         const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="pending"), 10)
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
     })
@@ -795,4 +796,54 @@ export const confirmAccountEmail = (callback: Function) => {
             store.dispatch({type: LOADING, payload: false})
         }
     })
+}
+
+export const subscribe = (data: {email: string}) => {
+    axios.post(endpoints.SUBSCRIBE, data, {
+         headers: {'X-SERVICE-PROVIDER': serviceProvider}
+        }
+    )
+    .then(res => {
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                title: "Subscribed",
+                message: "Your email has been subscribed to our newsletters"
+            })
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    })
+}
+
+export const fetchUserNotifications = () => {
+    const userId = store.getState().auth.user?.id;
+
+    http.get(parseEndpointParameters(endpoints.NOTIFICATIONS, userId))
+    .then( res => {
+        if (res.data.status === "200") {
+            store.dispatch({ type: NOTIFICATIONS, payload: [...res.data.data ] })
+        }
+    })
+}
+
+export const getPromo = async (code: string) => {
+    const res = await axios.get(parseEndpointParameters(config.API_HOST + endpoints.PROMO, code), {
+        headers: {'X-SERVICE-PROVIDER': serviceProvider}
+    })
+
+    if (res.data.status == 200) {
+        return res.data.data;
+    } else {
+        return undefined;
+    }
+
+
 }

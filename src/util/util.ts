@@ -25,7 +25,7 @@ export const parseEndpointParameters = (
 
 export const formatCurrency = (value: string, currency: string = ""): string => {
     value = value || "0"
-    value = (Math.ceil((getMoneyValue(value)) * 100) / 100).toString()
+    value = (((getMoneyValue(value)) * 100) / 100).toString()
     value = getMoneyValue(value).toFixed(2);
     return currency + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -73,4 +73,17 @@ export const genPaginationHashTable = (array: any[], noPerPage: number) => {
 
 export const downloadPDF = (id: string) => {
     const element = document.getElementById(id)
+}
+
+export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object).length)
+
+
+export const parseTransferMethod = (method: string) => {
+    return method?.replace('_', ' ')
+}
+
+export const compareDatesXLessThanY = (x: string, y: string) => {
+    const xDate = new Date(x);
+    const yDate = new Date(y); 
+    return xDate < yDate;
 }

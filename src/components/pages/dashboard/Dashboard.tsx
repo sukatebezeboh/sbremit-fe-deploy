@@ -47,7 +47,7 @@ const Dashboard = () => {
     const getTransactions = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
-            completed: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            complete: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
             cancelled: transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [],
             pending: transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [],
         }
@@ -57,7 +57,7 @@ const Dashboard = () => {
     const getCorrespondingPages = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.pages,
-            completed: transfer.paginatedCompletedTransactions.pages,
+            complete: transfer.paginatedCompletedTransactions.pages,
             cancelled: transfer.paginatedCancelledTransactions.pages,
             pending: transfer.paginatedPendingTransactions.pages,
         }
@@ -84,15 +84,15 @@ const Dashboard = () => {
                 </Link>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
-                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>  
+                        <div className="green-txt">{getTransactionStatusCount('complete')}</div>
                         <div>Complete Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
-                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>  
+                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>
                         <div>Pending Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter("cancelled")} className={selectedFilter === "cancelled" ? "selected-border-red" : ''}> 
-                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>  
+                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">
@@ -115,7 +115,7 @@ const Dashboard = () => {
                             <div>{convertDateString(transaction.dateCreated)}</div>
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                         </div>
-                        <div className={"status"}><span className={"sentence-case "+transaction.status?.toLowerCase()}>{transaction.status}</span></div>
+                        <div className={"status"}><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{transaction.status}</span></div>
                         <div>
                             <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
                             <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
@@ -126,8 +126,8 @@ const Dashboard = () => {
                         <div>Transaction #: <span>{transaction.meta.transactionId}</span></div>
                         <div>
                             <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
-                            <span 
-                            className="view-det" 
+                            <span
+                            className="view-det"
                             onClick={()=>{
                                 setModalData(transaction);
                                 handleOpenTDModal(true);

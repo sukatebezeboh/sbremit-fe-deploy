@@ -16,11 +16,10 @@ const TransferMethod = () => {
     const [selected, setSelected] = useState(transfer.transferMethod);
     const dispatch = useDispatch();
     const history = useHistory();
-    const [  mobileMoneyStartingFee, setMobileMoneyStartingFee ] = useState(0);
-    const [  bankTransferStartingFee, setBankTransferStartingFee ] = useState(0);
-    const [  cashPickUpStartingFee, setCashPickUpStartingFee ] = useState(0);
-    // let ;
-    // let ;
+    const [  mobileMoneyStartingFee, setMobileMoneyStartingFee ] = useState("0.00");
+    const [  bankTransferStartingFee, setBankTransferStartingFee ] = useState("0.00");
+    const [  cashPickUpStartingFee, setCashPickUpStartingFee ] = useState("0.00");
+    const { toSend } = transfer;
 
     const setTransferMethod = (method: string) => {
         setSelected(method);
@@ -32,11 +31,11 @@ const TransferMethod = () => {
     }, [transfer.transferMethod])
 
     useEffect(() => {
-        setMobileMoneyStartingFee(getServiceRate("mobile_money"));
-        setBankTransferStartingFee(getServiceRate("bank_transfer"));
-        setCashPickUpStartingFee(getServiceRate("cash_pickup"));
-        getServiceRate();
-    }, [])
+        Number(toSend.value) && setMobileMoneyStartingFee(getServiceRate("mobile_money"));
+        Number(toSend.value) &&  setBankTransferStartingFee(getServiceRate("bank_transfer"));
+        Number(toSend.value) &&  setCashPickUpStartingFee(getServiceRate("cash_pickup"));
+        Number(toSend.value) &&  getServiceRate();
+    }, [toSend])
 
     const handleStartClick = () => {
         if (!selected) {
@@ -51,6 +50,8 @@ const TransferMethod = () => {
     }
 
     const serviceFee = transfer.serviceFee;
+    // const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
+
 
     return (
         <Body>
@@ -62,20 +63,20 @@ const TransferMethod = () => {
                         <div className={`${selected === "mobile_money" && "selected"}`} onClick={() => setTransferMethod('mobile_money')}>
                             <img src={asset('icons', 'transfer4.svg')} alt="mobile money"/>
                             <div>Mobile Money</div>
-                            <div>Service fee from {mobileMoneyStartingFee} GBP</div>
+                            <div>Mobile Operator Transfer Fee from {mobileMoneyStartingFee} GBP</div>
                         </div>
                         <div className={`${selected === "bank_transfer" && "selected"}`} onClick={() => setTransferMethod('bank_transfer')}>
                             <img src={asset('icons', 'bank.svg')} alt="bank transfer"/>
                             <div>Bank Transfer</div>
-                            <div>Service fee from {bankTransferStartingFee} GBP</div>
+                            <div>Bank Transfer fee from {bankTransferStartingFee} GBP</div>
                         </div>
                         <div className={`pickup ${selected === "cash_pickup" && "selected"}`} onClick={() => setTransferMethod('cash_pickup')}>
                             <img src={asset('icons', 'cash.svg')} alt="cash pickup"/>
                             <div>Cash Pickup</div>
-                            <div>Service fee from {cashPickUpStartingFee} GBP</div>
+                            <div>Cash Pick-up fee from {cashPickUpStartingFee} GBP</div>
                         </div>
                     </div>
-                    <div className="footnote">SBremit charges you <b className="green-txt">{serviceFee} GBP</b> for this transfer</div>
+                    <div className="footnote">SBremit charges you <b className="green-txt"> 0.00 GBP</b> for this transfer</div>
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={handleStartClick}>Start</button> </div>
             </div>

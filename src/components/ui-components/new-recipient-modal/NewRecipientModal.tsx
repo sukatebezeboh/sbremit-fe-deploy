@@ -9,6 +9,7 @@ import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
 import { REASONS } from '../../../util/constants';
+import { isObjectNotEmpty } from '../../../util/util';
 
 const Div = styled.div`
     .overlay {
@@ -258,22 +259,22 @@ const Div = styled.div`
 `
 
 function NewRecipientModal(props: any) {
-    const {modalOpen, openModal, selectRecipient} = props;
+    const {modalOpen, openModal, selectRecipient, recipientData} = props;
     const dispatch = useDispatch()
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
     const transfer = useSelector((state: any) => state.transfer)
 
     const initialValues = {
-        firstName: "",
-        lastName: "",
-        mobile: "",
-        phoneCode: "+237",
-        email: "",
-        state: "",
-        reason: "",
-        bankName: "",
-        accountNumber: ""
+        firstName: recipientData?.firstName || "",
+        lastName: recipientData?.lastName || "",
+        mobile: recipientData?.profile?.mobile || "",
+        phoneCode: recipientData?.profile?.phoneCode || "+237",
+        email: recipientData?.profile?.email || "",
+        state: recipientData?.profile?.state || "",
+        reason: recipientData?.profile?.reason || "",
+        bankName: recipientData?.profile?.bankName || "",
+        accountNumber: recipientData?.profile?.accountNumber || ""
     }
 
     const handleReasonsChange = (e: any) => {
@@ -305,7 +306,6 @@ function NewRecipientModal(props: any) {
                         }}>
                         {
                             ({errors, touched, values}: any) => (
-                                
                                 <Form>
                                     <div className="form grid-col-1-1 grid-gap-3">
                                             <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
@@ -335,20 +335,17 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
                                             <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
-                                                <div>Reason</div>                                               
-                                                    
-                                                    <Field as="select"  name={otherReasons ? 'reason' : 'reason'} id="reason" value={reasonValue} onInput={(e: any) => handleReasonsChange(e)}>
+                                                <div>Reason</div>
+                                                    <Field as="select"  name='reason' id="reason" value={reasonValue || initialValues.reason} onInput={(e: any) => handleReasonsChange(e)}>
                                                         <option value="">Select</option>
-                                                        
                                                         {
-                                                            REASONS.map((reason: string) => ( 
+                                                            REASONS.map((reason: string) => (
                                                                 // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>) 
                                                                 <option value={reason}>{reason}</option>
                                                                 )
                                                             )
                                                         }
-                                                            
-                                                    
+
                                                     </Field>
                                                 {
                                                     otherReasons ?
@@ -356,8 +353,7 @@ function NewRecipientModal(props: any) {
                                                     : <></>
                                                 }
                                             </div>
-                                            
-                                            {transfer.transferMethod === "bank_transfer" ? 
+                                            {transfer.transferMethod === "bank_transfer" ?
                                             <React.Fragment>
                                                 <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
                                                     <div>Recipient's bank name</div>
@@ -369,7 +365,7 @@ function NewRecipientModal(props: any) {
                                                 </div>
                                             </React.Fragment> : ''}
                                     </div>
-                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton onClick={alert} label="Add" formName={paths.RECIPIENT} /> </div>
+                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton label={isObjectNotEmpty(recipientData) ? "Save" : "Add"} formName={paths.RECIPIENT} /> </div>
                                 </Form>
                             )
                         }
@@ -380,7 +376,6 @@ function NewRecipientModal(props: any) {
              <div className="desktop-hide mobile-modal">
                 <PageHeading heading="Add a new recipient" back="#" callBack={()=>openModal(false)} />
             </div>
-           
         </Div>
     )
 }

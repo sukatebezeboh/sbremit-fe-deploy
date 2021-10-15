@@ -1,6 +1,7 @@
-import React from 'react'
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { subscribe } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
 
@@ -185,6 +186,11 @@ const Footer = styled.div`
 `
 export const AppFooter = () => {
     const history = useHistory();
+    const [subscribeValue, setSubscribeValue] = useState<{email: string}>({email: ""})
+
+    const handleSubscribeClick = () => {
+        if (subscribeValue.email) subscribe(subscribeValue);
+    }
     return (
         <Footer>
             <div className="up">
@@ -201,8 +207,8 @@ export const AppFooter = () => {
                         <h3>Company</h3>
                         <ul>
                             <li onClick={() => history.push('/content/about')}>About</li>
-                            <li>FAQs</li>
-                            <li>Blog</li>
+                            <li onClick={() => history.push(paths.SUPPORT + "#faq")}>FAQs</li>
+                            <li onClick={() => history.push('/')} >Blog</li>
                         </ul>
                     </div>
                     <div className="legal">
@@ -221,7 +227,7 @@ export const AppFooter = () => {
                         <li className="socials">
                             <img src={asset('icons', 'instagram.svg')} alt="instagram" />
                             <img src={asset('icons', 'linkedin.svg')} alt="linkedin" />
-                            <img src={asset('icons', 'facebook.svg')} alt="facebook" />
+                            <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer"> <img src={asset('icons', 'facebook.svg')} alt="facebook" /> </a>
                             <img src={asset('icons', 'twitter.svg')} alt="twitter" />
                         </li>
                     </ul>
@@ -229,10 +235,10 @@ export const AppFooter = () => {
                 <div className="subscribe">
                     <p>Stay tuned for latest news from SB Remit</p>
                     <div>
-                        <input type="text" placeholder="Enter your email" />
+                        <input onChange={(e) => setSubscribeValue({email: e.target.value})} type="email" placeholder="Enter your email" />
                     </div>
                     <div>
-                        <button>Subscribe</button>
+                        <button onClick={() => handleSubscribeClick()}>Subscribe</button>
                     </div>
                 </div>
             </div>

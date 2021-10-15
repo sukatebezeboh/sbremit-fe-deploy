@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
-const style = () => styled.div`
+const Bar = styled.div.attrs(props => ({
+    className: props.className
+}))`
     box-shadow: 0px 2px 4px #CCCCCC80;
     height: 110px;
     background: #FFFFFF;
@@ -118,7 +120,7 @@ const style = () => styled.div`
                         color: #A3A3A3;
                     }
                 }
-                :nth-child(4), :nth-child(5) {
+                &.read {
                     opacity: 0.5;
                 }
                 :last-child {
@@ -360,4 +362,4 @@ const style = () => styled.div`
     }
     
 `
-export default style;
+export default Bar;

@@ -19,8 +19,10 @@ const endpoints = {
     GET_SERVICE: '/transfer/service/$_1',
     INITIATE_PAYMENT: '/user/$_1/payment',
     VERIFICATION: '/user/$_1/verification',
-    CONFIRM_ACCOUNT: '/user/email/confirm'
-
+    CONFIRM_ACCOUNT: '/user/email/confirm',
+    SUBSCRIBE: '/subscribe',
+    NOTIFICATIONS: '/user/$_1/notifications',
+    PROMO: '/promo/$_1'
 }
 
 export default endpoints;

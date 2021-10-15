@@ -349,15 +349,17 @@ const Contact = () => {
                             </div>
 
                             <div className="social">
-                                <img src={asset('icons', 'linkedin-green.svg')} alt="instagram" />
+                                <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
                             </div>
 
-                            <div className="social">
-                                <img src={asset('icons', 'facebook-green.svg')} alt="instagram" />
-                            </div>
+                            <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'facebook-green.svg')} alt="facebook" />
+                                </div>
+                            </a>
 
                             <div className="social">
-                                <img src={asset('icons', 'twitter-green.svg')} alt="instagram" />
+                                <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
                             </div>
                         </div>
                     </div>
@@ -376,7 +378,7 @@ const Contact = () => {
 
                             <div className="input-div">
                                 <label htmlFor="mobile">Mobile</label>
-                                <input type="text" name="mobile" placeholder="e.g. +23758490284657" />
+                                <input type="text" name="mobile" placeholder="e.g. +44(0)3301334158" />
                             </div>
                         </div>
 
@@ -412,15 +414,15 @@ const Contact = () => {
                             </div>
 
                             <div className="social">
-                                <img src={asset('icons', 'linkedin-green.svg')} alt="instagram" />
+                                <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
                             </div>
-
+                            <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'facebook-green.svg')} alt="facebook" />
+                                </div>
+                            </a>
                             <div className="social">
-                                <img src={asset('icons', 'facebook-green.svg')} alt="instagram" />
-                            </div>
-
-                            <div className="social">
-                                <img src={asset('icons', 'twitter-green.svg')} alt="instagram" />
+                                <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
                             </div>
                         </div>
                     </div>

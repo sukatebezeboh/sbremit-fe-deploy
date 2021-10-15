@@ -256,7 +256,7 @@ button:disabled{
 .cancelled {
     background: #CF0921!important;
 }
-.completed {
+.completed, .complete {
     background: #007B5D!important;
 }
 .float-right {
@@ -267,3 +267,6 @@ button:disabled{
     font-weight: bold;
 }
 
+.strikethrough {
+    text-decoration: line-through;
+}

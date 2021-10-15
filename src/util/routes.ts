@@ -129,7 +129,7 @@ export const Routing: IRoute[] = [
     { 
         path: paths.CHANGE_PASSWORD, 
         component: ChangePassword,
-        protected: true 
+        protected: true
     },
     { 
         path: paths.TRANSFER_METHOD, 
@@ -181,5 +181,4 @@ export const Routing: IRoute[] = [
         component: TransferComplete,
         protected: true
     },
-
 ]

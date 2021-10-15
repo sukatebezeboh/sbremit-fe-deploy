@@ -9,6 +9,7 @@ import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/ui-components/app-loader/AppLoader';
 import { AppFooter } from './components/ui-components/app-footer/AppFooter';
+import ComingSoon from './components/ui-components/coming-soon/ComingSoon';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
@@ -22,10 +23,10 @@ function App() {
     <React.Fragment>
       <ToastFactory />
       <AppLoader show={showAppLoader}/>
+      <ComingSoon />
       <Switch>
         {
             Routing.map((route: IRoute, i: number) => (
-              
               route.protected ?
                   (
                     isAuthenticated === undefined ?
@@ -36,8 +37,6 @@ function App() {
                         (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
                         :
                         (
-                          
-
                                 <Route path={route.path} render={(()=>(
 
                                         <React.Fragment>
@@ -50,11 +49,9 @@ function App() {
                                         </React.Fragment>
 
                                 ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
-                          
                         )
                     )
                   )
-                  
               :
               (
 
@@ -69,8 +66,6 @@ function App() {
                                   </React.Fragment>
 
                     ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
-                    
-
               )
             ))
         }

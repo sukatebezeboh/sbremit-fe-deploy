@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { TRANSFER } from '../../../redux/actionTypes';
@@ -126,7 +126,7 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...data, currency: countries[country], image: countryKey},
+                    toSend: {...transfer.toSend, currency: countries[country], image: countryKey},
                 }
             })
         }
@@ -135,18 +135,28 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toReceive: {...data, currency: countries[country], image: countryKey},
+                    toReceive: {...transfer.toReceive, currency: countries[country], image: countryKey},
                 }
             })
         }
         setCountriesDropDown(false)
     }
+
+    useEffect(() => {
+        console.count('toReceive');
+        console.log(data.isSend, data.value, "toReceive")
+    }, [transfer.toReceive.value]);
+
+    useEffect(() => {
+        console.count('data')
+        console.log(data.isSend, data.value, "data")
+    }, [data]);
        return (
         <Field key={data?.currency +'-field-'+ window.location.pathname}>
             <div className={`x-input ${(max && data?.value > max) ? 'selected-border-yellow' : ''}`}>
                 <div className="xi-1">
                     <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                    <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? formatCurrency(data?.value) : formatCurrencyWithoutFloats(Math.floor(data?.value))} onChange={(e)=>{handleXInputChange(e, data)}}/>
+                    <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? formatCurrency(data?.value) : formatCurrencyWithoutFloats(Math.round(data?.value))} onChange={(e) => {handleXInputChange(e, data)}}/>
                 </div>
                 <div  className="flg-drp">
                     {
@@ -161,7 +171,7 @@ const ExchangeRateInput = (props: any) =>{
                             <ul>
                                 {
                                     Object.keys(countries).map(country => (
-                                        <li  onClick={() => handleCountrySelection(country)}>{country}</li>
+                                        <li onClick={() => handleCountrySelection(country)}>{country}</li>
                                     ))
                                 }
                             </ul>
