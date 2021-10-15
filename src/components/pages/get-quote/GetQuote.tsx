@@ -26,18 +26,7 @@ const GetQuote = () => {
     const conversionRate = transfer.conversionRate;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
-    let rate= conversionRate?.rate;
-    if (
-        promo?.type === "FIXED_RATE"
-        && toSend.currency === promo.settings.baseCurrency
-        && toReceive.currency === promo.settings.targetCurrency
-        && Number(toSend.value) >= Number(promo.settings.minimumSpend)
-        && Number(toSend.value) <= Number(promo.settings.maximumSpend)
-    ) {
-        rate = promo.settings.rate
-        console.log(rate);
-    }
-    toReceive.value = transfer.toSend.value * rate
+
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
@@ -47,6 +36,8 @@ const GetQuote = () => {
     const transferMethod = transfer.transferMethod
 
     const handleXInputChange = (e: any, data: any) => {
+        console.log(e.target.value, data, "[[[[[[[[[[[[[[[[[[[-----1------]]]]]]]]]]]]]]]]");
+
         const caret = e.target.selectionStart
         const element = e.target
         window.requestAnimationFrame(() => {
@@ -55,6 +46,7 @@ const GetQuote = () => {
         })
 
         const value = getMoneyValue(formatCurrency(e.target.value));
+
 
         let rate = conversionRate?.rate;
         if (
@@ -65,7 +57,7 @@ const GetQuote = () => {
             && Number(value) <= Number(promo.settings.maximumSpend)
         ) {
             rate = promo.settings.rate
-            console.log(rate);
+            console.log(rate, "rate");
         }
         // if(!value) return;
         if (data.isSend) {
@@ -88,6 +80,8 @@ const GetQuote = () => {
                 }
             })
         }
+        console.log(e.target.value, data, "[[[[[[[[[[[[[[[[[[[------2-----]]]]]]]]]]]]]]]]");
+
     }
     useEffect(()=>{
         getServiceRate();
@@ -99,7 +93,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee])
+    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code])
 
     const setTotalValue = () => {
         let total = Number(toSend.value) + Number(serviceFee);
@@ -120,6 +114,18 @@ const GetQuote = () => {
                 case 'FIXED_RATE':
                     if (toSend.currency === promo.settings.baseCurrency && toReceive.currency === promo.settings.targetCurrency) {
                         setPromoText(`1 ${promo.settings.baseCurrency} = ${promo.settings.rate} ${promo.settings.targetCurrency} fixed rate`);
+                        console.log("in fixed rate", promo.settings.rate );
+                        
+
+                        // handleXInputChange({target: {value: toSend.value}}, {isSend: true});
+
+                        // dispatch({
+                        //     type: TRANSFER,
+                        //     payload: {
+                        //         ...transfer,
+                        //         toReceive: {...toReceive, value: `${toSend.value * promo.settings.rate}`}
+                        //     }
+                        // })
                     }
                     break;
                 case 'FREE_OPERATOR_FEE':
@@ -133,6 +139,8 @@ const GetQuote = () => {
         } else {
             setPromoText("");
         }
+        console.log( toReceive.value, "[[[[[[[[[[[[[[[[[[[------2-----]]]]]]]]]]]]]]]]");
+
         dispatch({
             type: TRANSFER, 
             payload: {

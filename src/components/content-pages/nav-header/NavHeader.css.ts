@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export default styled.div`
+export default styled.div.attrs(props => ({
+    className: 'navbar-custom'
+}))`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;

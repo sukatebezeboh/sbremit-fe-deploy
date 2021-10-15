@@ -1,0 +1,12 @@
+
+.navbar-custom .logo img {
+    top: 80px!important;
+}
+
+.navbar-custom .navs, .navbar-custom .btns, .navbar-custom .logo {
+    margin-top: 70px!important;
+}
+
+.navbar-custom {
+    min-height: 170px;
+}

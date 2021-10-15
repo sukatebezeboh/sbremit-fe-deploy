@@ -261,10 +261,9 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Bank Transfer</div>
                                 <div className="rc-body">
                                     <div>
-                                        Transfer <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your bank, we’ll proceed when we receive payment
+                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
                                     </div>
                                     <div>
-                                        Should arrive in 11 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
@@ -290,14 +289,12 @@ const PaymentMethod = () => {
                                 <div className="rc-head">Debit / Credit Card</div>
                                 <div className="rc-body">
                                     <div>
-                                        Authorise SBremit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b>  from your Debit / Credit card
+                                        You authorise SB Remit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> from your debit/credit card. Your credit card provider may charge cash advance fees. Use a debit card to avoid this charge.
                                     </div>
                                     <div>
-                                        Should arrive in 2 hours
                                     </div>
                                 </div>
                                 <div className="rc-foot">
-                                    Fast and easy transfer - {transfer.serviceFee} GBP
                                 </div>
                             </div>
                         </div>

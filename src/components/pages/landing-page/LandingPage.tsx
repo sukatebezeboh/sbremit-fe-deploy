@@ -36,7 +36,7 @@ const LandingPage = (props: any) => {
         rate = promo.settings.rate
         console.log(rate);
     }
-    toReceive.value = transfer.toSend.value * rate
+    // toReceive.value = transfer.toSend.value * rate
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
@@ -80,6 +80,7 @@ const LandingPage = (props: any) => {
     }
 
     const handleXInputChange = (e: any, data: any) => {
+
         const caret = e.target.selectionStart
         const element = e.target
         window.requestAnimationFrame(() => {
@@ -242,9 +243,12 @@ const LandingPage = (props: any) => {
 
                     </form>
                     <PromoCodeField />
-                    <button onClick={()=>{
+                    <button disabled onClick={()=>{
                         setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(paths.SIGN_UP));
-                        }}>Start sending money</button>
+                        }}>
+                            Start sending money
+                            <small>Launching soon...</small>
+                        </button>
                 </div>
             </div>
         </Body>

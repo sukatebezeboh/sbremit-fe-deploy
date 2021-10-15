@@ -112,6 +112,14 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             border: none;
             margin-top: 20px;
             outline: none;
+            small {
+                display: block;
+                opacity: 0.7;
+                font-size: 14px;
+                margin: 0px;
+                padding: 0px;
+                line-height: 10px;
+            }
         }
         .x-input{
             >div.flg-drp{

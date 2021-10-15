@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import { Link } from 'react-router-dom';
 import { asset, convertDateString } from '../../../util/util';
-import style from './NavBar.css';
+import Bar from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
 import { fetchUserNotifications, signOutAction } from '../../../redux/actions/actions';
 
-const Bar = style();
 
 const NavBar = () => {
     // const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
@@ -49,12 +48,12 @@ const NavBar = () => {
                     <span></span>
                     <span></span>
                     <span></span>
-                </span> 
+                </span>
                 <span className="logo">
                     <Link to="/"> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
             </div>
-            
+
             <div className="right-opt">
                 <span className="notif">
                     <img src="./assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
