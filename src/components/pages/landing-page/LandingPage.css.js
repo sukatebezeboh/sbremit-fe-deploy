@@ -112,6 +112,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             border: none;
             margin-top: 20px;
             outline: none;
+            cursor: pointer;
             small {
                 display: block;
                 opacity: 0.7;
@@ -194,6 +195,12 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 .deep-green{
                     font: normal normal 600 15px/19px Montserrat;
                     color: #007B5D;
+                }
+                .sb-charges {
+                    .deep-green {
+                        /* display: inline-block; */
+                        position: unset;
+                    }
                 }
             }
             .timeline-1{

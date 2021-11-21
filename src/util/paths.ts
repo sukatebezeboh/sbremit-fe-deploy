@@ -28,4 +28,6 @@ export const paths = {
     ABOUT: "/content/about",
     CONTACT: "/content/contact",
 
+    NOT_FOUND : "/404"
+
 }

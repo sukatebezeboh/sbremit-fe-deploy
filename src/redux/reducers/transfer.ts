@@ -23,6 +23,7 @@ const initialTransferState: {} = {
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {
     switch (type) {
         case TRANSFER: {
+
           return {
               ...payload
           }

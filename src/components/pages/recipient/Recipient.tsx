@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getRecipients, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
+import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { asset, getQueryParam } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -152,7 +153,7 @@ const Recipient = () => {
                                 {
                                     filteredRecipients.map((recipient: any, i: number)=>(
                                         <div key={i} className={`recipient ${selectedRecipient?.id == recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
-                                            <div><img src={`${recipient.profile.picture || asset("images", "noimage.png")}`} alt="user"/></div>
+                                            <div><img src={recipient.profile.picture || `${resources.DICE_BEAR_RECIPIENT}${recipient.id}.svg`} alt="user"/></div>
                                             <div>{recipient.firstName + ' ' + recipient.lastName}</div>
                                         </div>
 

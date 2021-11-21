@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:osb="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" x="0" y="0" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""
+     viewBox="0 0 541.17206 328.45184"
+     height="328.45184"
+     id="svg2"
+     version="1.1">
+    <metadata
+       id="metadata8">
+    </metadata>
+    <defs
+       id="defs6">
+      <pattern
+         patternUnits="userSpaceOnUse"
+         width="1.5"
+         height="1"
+         patternTransform="translate(0,0) scale(10,10)"
+         id="Strips2_1">
+        <rect
+           style="fill:black;stroke:none"
+           x="0"
+           y="-0.5"
+           width="1"
+           height="2"
+           id="rect5419" />
+      </pattern>
+      <linearGradient
+         osb:paint="solid"
+         id="linearGradient6096">
+        <stop
+           id="stop6094"
+           offset="0"
+           style="stop-color:#000000;stop-opacity:1;" />
+      </linearGradient>
+    </defs>
+
+    <g
+       id="layer3">
+      <g
+         id="text4526"
+         style="fill:url(#Strips2_1);fill-opacity:1;stroke:none;stroke-width:1.23488784;"
+         transform="matrix(0.97168718,0,0,1.0291378,170.14515,0.038164)"
+         aria-label="4">
+        <path
+           id="path4555"
+           style="fill:url(#Strips2_1);fill-opacity:1;stroke:#000000;stroke-width:1.23488784;stroke-opacity:1"
+           d="M -0.46490841,256.59082 H -26.166013 v 43.5298 h -41.214384 v -43.5298 h -75.829833 l -9.95629,-15.28174 64.136994,-140.0826 h 8.914347 l 33.573515,15.8606 -48.507941,89.60655 -11.461305,19.56526 h 39.130513 l 4.399288,-43.06672 h 36.815096 v 43.06672 h 25.70110459 z" />
+      </g>
+    </g>
+  </svg>
+
+<!-- SVG Credit: -->
+<!-- https://codepen.io/JuliaSS/pen/ZMaXQV -->
