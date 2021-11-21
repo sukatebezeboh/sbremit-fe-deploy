@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const style = () => styled.div`
+const style = styled.div`
     .page-content {
         margin-top: 0px;
     }
@@ -140,6 +140,12 @@ const style = () => styled.div`
                     font: normal normal 600 15px/19px Montserrat;
                     color: #007B5D;
                     width: fit-content;
+                }
+                .sb-charges {
+                    .deep-green {
+                        /* display: inline-block; */
+                        position: unset;
+                    }
                 }
             }
             .timeline-1{

@@ -112,6 +112,10 @@ a {
     color: inherit;
 }
 
+.is-clickable {
+    cursor: pointer;
+}
+
 .box {
     background: #ffffff;
     /* height: 706px; */

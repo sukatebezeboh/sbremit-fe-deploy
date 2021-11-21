@@ -220,7 +220,7 @@ export const AppFooter = () => {
                     </div>
                 </div>
                 <div className="contact">
-                    <h3 onClick={() => history.push(paths.CONTACT)}>Contact us</h3>
+                    <h3 className=" is-clickable" onClick={() => history.push(paths.CONTACT)}>Contact us</h3>
                     <ul>
                         <li>+44(0)3301334158</li>
                         <li>contact@sbremit.com</li>

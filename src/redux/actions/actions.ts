@@ -15,13 +15,13 @@ import { Redirect } from 'react-router';
 import { BrowserRouter } from 'react-router-dom'
 
 const user = store.getState().auth.user;
-const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
+const serviceProvider =  env.X_SERVICE_PROVIDER;
 
 export const checkAuth = () => {
     const session = CookieService.get(env.SESSION_KEY)
     const user = CookieService.get("user");
     const sessionId = CookieService.get(env.SESSION_ID);
-    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
+    const serviceProvider =  env.X_SERVICE_PROVIDER;
 
     if(session && user) {
         store.dispatch({type: AUTH, payload: {isAuthenticated: true, user: JSON.parse(user)}})
@@ -40,7 +40,7 @@ export const checkAuth = () => {
 }
 
 export const signUpAction = (data: any, callback = () => {}) => {
-    const serviceProvider = CookieService.get('X-SERVICE_PROVIDER') || env.X_SERVICE_PROVIDER;
+    const serviceProvider =  env.X_SERVICE_PROVIDER;
     store.dispatch({type: SUBMITTING, payload: SIGN_UP})
     axios.post(config.API_HOST + endpoints.SIGN_UP, {...data}, {
         headers: {'X-SERVICE-PROVIDER': serviceProvider}
@@ -74,7 +74,7 @@ export const signUpAction = (data: any, callback = () => {}) => {
 
 export const signInAction = (data: any) => {       
     store.dispatch({type: SUBMITTING, payload: SIGN_IN})
-    axios.post(config.API_HOST + endpoints.SIGN_IN, {...data}, {
+    axios.post(config.API_HOST + endpoints.SESSION, {...data}, {
         headers: {'X-SERVICE-PROVIDER': serviceProvider}
     })
     .then((res: any)=> {
@@ -88,7 +88,7 @@ export const signInAction = (data: any) => {
 
                 CookieService.put(env.SESSION_KEY, res.headers['x-auth-token']);
                 CookieService.put(env.SESSION_ID, res.headers['x-service-user-name']);
-                CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider']);
+                CookieService.put('X-SERVICE_PROVIDER', res.headers['x-service-provider'], 30);
                 axios.get(config.API_HOST + parseEndpointParameters(endpoints.USER, res.data.data.id))
                 .then(response=>{
                     CookieService.put('user', JSON.stringify(response.data.data));
@@ -112,9 +112,16 @@ export const signInAction = (data: any) => {
 }
 
 export const signOutAction = () => {
-    CookieService.remove(env.SESSION_KEY);
-    CookieService.remove(env.SESSION_ID);
-    store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+    store.dispatch({type: LOADING, payload: true})
+
+    http.delete(endpoints.SESSION)
+    .then(res => {
+        CookieService.remove(env.SESSION_KEY);
+        CookieService.remove(env.SESSION_ID);
+        store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+        store.dispatch({type: LOADING, payload: false})
+    })
+
 }
 
 const runningTimeouts: any[] = [];
@@ -179,7 +186,7 @@ export const editUserProfile = <T extends {profile: any}>(data: T) => {
 export const changePasswordAction = (values: any) => {
     store.dispatch({type: SUBMITTING, payload: paths.CHANGE_PASSWORD})
     const username = store.getState().auth.user.username;
-    axios.post(config.API_HOST + endpoints.SIGN_IN, 
+    axios.post(config.API_HOST + endpoints.SESSION, 
         {
             username,
             password: values.oldPassword
@@ -480,6 +487,7 @@ export const cancelTransfer = (callback: Function, id = null) => {
 }
 
 export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: any) => {
+    store.dispatch({type: LOADING, payload: true})
     const payload: {base: string, target: string, meta?: any} = {
         base,
         target
@@ -491,6 +499,7 @@ export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: 
         if(res.data.status === "200") {
             CookieService.put('QUOTE', res.data.data.id)
             CookieService.put('SKIP_QUOTE', "true")
+            store.dispatch({type: LOADING, payload: false})
             callback();
         }
         else {
@@ -503,6 +512,8 @@ export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: 
         }
     }).catch((error)=>{
         console.log(error);
+        store.dispatch({type: LOADING, payload: false})
+
     })
 }
 
@@ -589,11 +600,14 @@ export const getServiceRate = (transferMethod = "") => {
    const services = store.getState().appValues.services;
    const transfer = store.getState().transfer
    const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod || transfer.transferMethod])[0] || services?.data?.[0];
-   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toSend.value) && Number(f.upperLimit) >= Number(transfer.toSend.value))[0] || service?.fees?.[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toReceive.value) && Number(f.upperLimit) >= Number(transfer.toReceive.value))[0] || service?.fees?.[0];
 
-   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: fees?.fee}})
+   console.log(fees, "fees.fee")
+   const equiFee = fees?.type === "PERCENTAGE" ? ((fees?.fee * transfer.toReceive?.value)/100) : fees?.fee
+   const serviceFee = ((!transferMethod && transfer.transferMethod === "mobile_money") || ( transferMethod && transferMethod === "mobile_money")) ? (equiFee / (transfer.conversionRate?.rate)).toFixed(2): fees?.fee;
+   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee }})
 
-   return fees?.fee || 0;
+   return serviceFee || 0;
 }
 
 export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
@@ -688,7 +702,7 @@ export const makePaymentWithStripe = async () => {
     }
 }
 
-export const editProfileAction = (values: any) => {
+export const editProfileAction = (values: any, callback?: Function) => {
     store.dispatch({type: LOADING, payload: true})
     const userId = store.getState().auth.user?.id;
 
@@ -706,6 +720,7 @@ export const editProfileAction = (values: any) => {
             })
             CookieService.put('user', JSON.stringify(res.data.data));
             store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
+            callback?.()
         } else {
             toastAction({
                 show: true,

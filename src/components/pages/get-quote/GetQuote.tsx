@@ -11,10 +11,9 @@ import NavBar from '../../ui-components/navbar/NavBar';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
 import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
 import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
-import style from './GetQuote.css';
+import Body from './GetQuote.css';
 
 
-const Body = style();
 
 const GetQuote = () => {
     
@@ -34,9 +33,16 @@ const GetQuote = () => {
     const history = useHistory();
     const max  = transfer.transferMax;
     const transferMethod = transfer.transferMethod
+    const [changedInput, setChangedInput] :any = useState(null);
+
+
+    useEffect(() => {
+        if (!transferMethod) {
+            history.replace(paths.TRANSFER_METHOD)
+        }
+    }, [])
 
     const handleXInputChange = (e: any, data: any) => {
-        console.log(e.target.value, data, "[[[[[[[[[[[[[[[[[[[-----1------]]]]]]]]]]]]]]]]");
 
         const caret = e.target.selectionStart
         const element = e.target
@@ -46,21 +52,26 @@ const GetQuote = () => {
         })
 
         const value = getMoneyValue(formatCurrency(e.target.value));
-
+        if (isNaN(value)) {
+            return
+        }
 
         let rate = conversionRate?.rate;
-        if (
-            promo?.type === "FIXED_RATE"
-            && toSend.currency === promo.settings.baseCurrency
-            && toReceive.currency === promo.settings.targetCurrency
-            && Number(value) >= Number(promo.settings.minimumSpend)
-            && Number(value) <= Number(promo.settings.maximumSpend)
-        ) {
-            rate = promo.settings.rate
-            console.log(rate, "rate");
-        }
+        // debugger
         // if(!value) return;
+
         if (data.isSend) {
+            if (
+                promo?.type === "FIXED_RATE"
+                && toSend.currency === promo.settings.baseCurrency
+                && toReceive.currency === promo.settings.targetCurrency
+                && Number(value) >= Number(promo.settings.minimumSpend)
+                && Number(value) <= Number(promo.settings.maximumSpend)
+            ) {
+                rate = promo.settings.rate
+                console.log(rate, "rate");
+            }
+
             dispatch({
                 type: TRANSFER, 
                 payload: {
@@ -70,7 +81,24 @@ const GetQuote = () => {
                 }
             })
 
+
+
         } else {
+            console.log(promo, toSend, toReceive, value)
+            if (
+                promo?.type === "FIXED_RATE"
+                && toSend.currency === promo.settings.baseCurrency
+                && toReceive.currency === promo.settings.targetCurrency
+                && (Number(value) / promo.settings.rate) >= Number(promo.settings.minimumSpend)
+                && (Number(value) / promo.settings.rate) <= Number(promo.settings.maximumSpend)
+            ) {
+                rate = promo.settings.rate
+                console.log(rate, "rate");
+                
+            } else {
+                setPromoText("")
+            }
+
             dispatch({
                 type: TRANSFER, 
                 payload: {
@@ -80,7 +108,7 @@ const GetQuote = () => {
                 }
             })
         }
-        console.log(e.target.value, data, "[[[[[[[[[[[[[[[[[[[------2-----]]]]]]]]]]]]]]]]");
+        // console.log(e.target.value, data, "[[[[[[[[[[[[[[[[[[[------2-----]]]]]]]]]]]]]]]]");
 
     }
     useEffect(()=>{
@@ -94,6 +122,16 @@ const GetQuote = () => {
     useEffect(() => {
         setTotalValue()
     }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code])
+
+    const mutateInputValueDirectly = (rate: any) => {
+        if (changedInput === 'toSend') {
+            toReceive.value = toSend.value * rate
+        } else if (changedInput === 'toReceive'){
+            toSend.value = toReceive.value / rate
+        } else {
+
+        }
+    }
 
     const setTotalValue = () => {
         let total = Number(toSend.value) + Number(serviceFee);
@@ -114,18 +152,10 @@ const GetQuote = () => {
                 case 'FIXED_RATE':
                     if (toSend.currency === promo.settings.baseCurrency && toReceive.currency === promo.settings.targetCurrency) {
                         setPromoText(`1 ${promo.settings.baseCurrency} = ${promo.settings.rate} ${promo.settings.targetCurrency} fixed rate`);
-                        console.log("in fixed rate", promo.settings.rate );
-                        
-
-                        // handleXInputChange({target: {value: toSend.value}}, {isSend: true});
-
-                        // dispatch({
-                        //     type: TRANSFER,
-                        //     payload: {
-                        //         ...transfer,
-                        //         toReceive: {...toReceive, value: `${toSend.value * promo.settings.rate}`}
-                        //     }
-                        // })
+                        // handleXInputChange( 0 , {isSend: true})
+                        mutateInputValueDirectly(promo.settings.rate)
+                    } else {
+                        mutateInputValueDirectly(conversionRate?.rate)
                     }
                     break;
                 case 'FREE_OPERATOR_FEE':
@@ -134,12 +164,13 @@ const GetQuote = () => {
                     break;
                 default:
                     setPromoText('');
+                    mutateInputValueDirectly(conversionRate?.rate)
                     total = total * 1
             }
         } else {
             setPromoText("");
+            mutateInputValueDirectly(conversionRate?.rate)
         }
-        console.log( toReceive.value, "[[[[[[[[[[[[[[[[[[[------2-----]]]]]]]]]]]]]]]]");
 
         dispatch({
             type: TRANSFER, 
@@ -152,7 +183,8 @@ const GetQuote = () => {
 
     const isAcceptablePromoValue = (promo: any) => {
         return Number(toSend.value) >= Number(promo.settings.minimumSpend)
-        && Number(toSend.value) <= Number(promo.settings.maximumSpend);
+        && Number(toSend.value) <= Number(promo.settings.maximumSpend)
+        // && Math.floor(Number(toSend.value) * Number(promo.settings.rate)) === Math.floor(toReceive.value);
     }
 
     const handleContinue = () => {
@@ -228,20 +260,20 @@ const GetQuote = () => {
                     <div className="calc">
                         <div className="hero-rect">
                             <div>
-                                <ExchangeRateInput max={max} data={toSend} handleXInputChange={handleXInputChange} countries={payInCountries}/>
+                                <ExchangeRateInput setChangedInput={() => setChangedInput('toSend')}  max={max} data={toSend} handleXInputChange={handleXInputChange} countries={payInCountries}/>
                             </div>
                             <div className="wrapper">
                                 <div className="timeline-box">
-                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`} >1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
+                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && promoText ? "strikethrough" : ""}`} >1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
                                     <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div> <span className={`deep-green ${promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>{serviceFee} GBP</span></span> </span></div>
-                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span>SB Remit Transfer Charge <span className="deep-green">0.00 GBP</span> </span> </span></div>
+                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 GBP</span> for this transfer </span> </span></div>
                                     {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> </span></div>
                                 </div>
                             </div>
                             <div className="receive" style={promo ? {marginTop: "250px"} : {}}>
-                                <ExchangeRateInput data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
+                                <ExchangeRateInput setChangedInput={() => setChangedInput('toReceive')} data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
 
                             <PromoCodeField />

@@ -5,6 +5,8 @@ import Bar from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
 import { fetchUserNotifications, signOutAction } from '../../../redux/actions/actions';
+import { resources } from '../../../util/constants';
+import { paths } from '../../../util/paths';
 
 
 const NavBar = () => {
@@ -28,7 +30,7 @@ const NavBar = () => {
     const notifList = (notifs: any[]) => {
         return notifs?.map(notif => (
             <div className={`notif-body ${notif.status.toLowerCase() }`}>
-                <img src="./assets/images/noimage.png" alt="pic"/>
+                <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
                 <div>
                     <div> {notif.meta.message} <b>  </b></div>
                     <div> {convertDateString(notif.dateCreated)} </div>
@@ -50,7 +52,7 @@ const NavBar = () => {
                     <span></span>
                 </span>
                 <span className="logo">
-                    <Link to="/"> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
+                    <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
             </div>
 
@@ -69,17 +71,17 @@ const NavBar = () => {
                     </div> }
                 </span> 
                 <span className="pic">
-                    <img src="./assets/images/noimage.png" alt="pic" onClick={()=>handleDropdownClick('profile')}/>
+                    <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
                 <span className="name" onClick={()=>handleDropdownClick('profile')}>
                     <span>{user.profile.firstName}</span>
                     {showProfileDropdown && <div className="dropdown profile-dropdown">
                             <div>
                                 <div className="notif-body">
-                                    <img src="./assets/images/noimage.png" alt="pic"/>
+                                    <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
                                     <div>
                                         <div className="heading"><b>{user.profile.firstName + ' ' + user.profile.lastName}</b></div>
-                                        <div>Membership number SBR899065</div>
+                                        <div>Membership number SBR{user.meta.customerId}</div>
                                     </div>
                                 </div>
                             </div>
@@ -87,6 +89,10 @@ const NavBar = () => {
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'user.svg')} alt="user icon"/> </div>
                                 <div><Link to="/profile">View Profile</Link></div>
+                         </div>
+                         <div className="notif-option">
+                                <div> <img src={asset('icons', 'prev.svg')} alt="settings"/> </div>
+                                <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>
@@ -109,12 +115,6 @@ const NavBar = () => {
                 <div className={` notif ${showNotifDropdown || 'mobile-hide'}`}>
                         <PageHeading heading="Notification" callBack={()=>setShowNotifDropdown(false)} back="#" mobileHide="subheading" className="pgheading"/>
                             <div>
-                                {
-                                    notifList(notifs)
-                                }
-                                {
-                                    notifList(notifs)
-                                }
                                 {
                                     notifList(notifs)
                                 }

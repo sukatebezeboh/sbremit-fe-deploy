@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import React, {useState} from 'react'
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { changePasswordAction, editProfileAction } from '../../../redux/actions/actions';
 import { ChangePasswordValidator, EditProfileValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
@@ -38,10 +39,11 @@ const EditProfile = () => {
     }
 
     const user = useSelector((state: any) => state.auth.user);
-    
+    const history = useHistory();
 
     const initialValues: any = {
-        ...user?.profile
+        location_country: "gb",
+        ...user?.profile,
     }
 
 
@@ -54,7 +56,7 @@ const EditProfile = () => {
                         initialValues={{...initialValues}}
                         validationSchema={EditProfileValidator}
                         onSubmit={values => {
-                            editProfileAction(values)
+                            editProfileAction(values, () => history.push(paths.PROFILE))
                         }}>
                         {
                             ({errors, touched, values}: any) => (
@@ -62,7 +64,6 @@ const EditProfile = () => {
                                     <div className="box">
                                         <div>
                                             <div className="content">Edit your profile details below</div>
-
 
                                             <div className="form part">
                                                 <hr className="mobile-hide"/>
@@ -147,6 +148,15 @@ const EditProfile = () => {
                                                     <div>State</div>
                                                     <Field name="state" type="text" />
                                                     {(touched.state && errors.state) && <div className="form-error-message form-error-message-adjust-up">{errors.state}</div>}
+                                                </div>
+                                                <div className={`state-input-div ${(touched.location_country && errors.location_country) ? 'form-error': ''}`}>
+                                                    <div>Location Country</div>
+                                                    <Field name="location_country" as="select" type="text" >
+                                                        <option value=""></option>
+                                                        <option value="gb">United Kingdom</option>
+                                                    </Field>
+                                                    <img src="./assets/flags/UK.png" alt="uk"/>
+                                                    {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                                 </div>
                                                 <div className={(touched.zip && errors.zip) ? 'form-error': ''}>
                                                     <div>Postal / zip code</div>

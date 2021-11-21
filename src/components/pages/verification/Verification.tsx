@@ -324,9 +324,11 @@ const Verification = () => {
     
 
     const initialValues: any = {
-        ...user?.profile,
         phoneCode: '+01',
-        address2: ""
+        address2: "",
+        location_country: user?.profile?.location_country,
+        ...user?.profile,
+
     }
 
 
@@ -388,7 +390,7 @@ const Verification = () => {
                                                     <div>
                                                     <div className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error': ''}>
                                                         <div>Date of birth<i>*</i></div>
-                                                            <div className="grid-col-1-2-1 grid-gap-3 dob">                              
+                                                            <div className="grid-col-1-2-1 grid-gap-3 dob">
                                                                 <div><Field name="day" type="text" placeholder="Day"/></div>
                                                                 <div><Field name="month" type="text" placeholder="Month"/></div>
                                                                 <div><Field name="year" type="text" placeholder="Year"/></div>
@@ -430,10 +432,20 @@ const Verification = () => {
                                                     <Field name="city" type="text" />
                                                     {(touched.city && errors.city) && <div className="form-error-message form-error-message-adjust-up">{errors.city}</div>}
                                                 </div>
-                                                <div className={`state-input-div ${(touched.state && errors.state) ? 'form-error': ''}`}>
+                                                {/* <div className={`state-input-div ${(touched.state && errors.state) ? 'form-error': ''}`}>
                                                     <div>State</div>
                                                     <Field name="state" type="text" />
                                                     {(touched.state && errors.state) && <div className="form-error-message form-error-message-adjust-up">{errors.state}</div>}
+                                                </div> */}
+
+                                                <div className={`state-input-div ${(touched.location_country && errors.location_country) ? 'form-error': ''}`}>
+                                                    <div>Location Country</div>
+                                                    <Field name="location_country" as="select" type="text" >
+                                                        <option value=""></option>
+                                                        <option value="gb">United Kingdom</option>
+                                                    </Field>
+                                                    <img src="./assets/flags/UK.png" alt="uk"/>
+                                                    {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                                 </div>
                                                 <div className={(touched.zip && errors.zip) ? 'form-error': ''}>
                                                     <div>Postal / zip code</div>

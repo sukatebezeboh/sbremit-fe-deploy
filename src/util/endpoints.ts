@@ -1,6 +1,6 @@
 const endpoints = {
     SIGN_UP: '/users/registration',
-    SIGN_IN: '/session',
+    SESSION: '/session',
     SIGN_OUT: '/sign-out',
     VALUES: '/values',
     VALUE: '/value',

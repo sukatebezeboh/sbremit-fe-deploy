@@ -274,7 +274,8 @@ function NewRecipientModal(props: any) {
         state: recipientData?.profile?.state || "",
         reason: recipientData?.profile?.reason || "",
         bankName: recipientData?.profile?.bankName || "",
-        accountNumber: recipientData?.profile?.accountNumber || ""
+        accountNumber: recipientData?.profile?.accountNumber || "",
+        pickupPoint: recipientData?.profile?.pickupPoint || ""
     }
 
     const handleReasonsChange = (e: any) => {
@@ -360,10 +361,22 @@ function NewRecipientModal(props: any) {
                                                     <Field type="text" name="bankName" placeholder="" />
                                                 </div>
                                                 <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
-                                                    <div>Account number</div>
+                                                    <div>Account number <span className="red-txt">{errors.accountNumber}</span> </div>
                                                     <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
                                                 </div>
                                             </React.Fragment> : ''}
+
+                                            {transfer.transferMethod === "cash_pickup" ?
+                                                <div className={(touched.pickup_point && errors.pickup_point) ? 'form-error': ''}>
+                                                    <div>Pickup point</div>
+                                                    <Field as="select" type="text" name="pickupPoint" placeholder="e.g. 3450012398" >
+                                                        <option value=""> - Select - </option>
+                                                        <option value="SB Capital (Akwa)"> SB Capital (Akwa)</option>
+                                                    </Field>
+                                                </div>
+                                             : ''}
+
+
                                     </div>
                                     <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton label={isObjectNotEmpty(recipientData) ? "Save" : "Add"} formName={paths.RECIPIENT} /> </div>
                                 </Form>

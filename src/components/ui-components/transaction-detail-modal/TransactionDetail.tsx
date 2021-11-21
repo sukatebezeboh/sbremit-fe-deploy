@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
@@ -118,7 +118,7 @@ const style = () => styled.div`
             .actions {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                >div {
+                >div, a.export {
                     border-radius: 15px;
                     width: 124px;
                     height: 124px;
@@ -450,11 +450,10 @@ const Modal = style();
 const ref: any = React.createRef()
 
 const TransactionDetail = (props: any) => {
-    const {openTDModal, handleOpenTDModal, handleShowPlus, data} = props;
+    const {openTDModal, handleOpenTDModal, handleShowPlus, data, handleResend, isResending} = props;
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
     const recipients = useSelector((state: any) => state.recipients.recipients);
     const transfer = useSelector((state: any) => state.transfer);
-    const [isResending, setIsResending] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
     const showMobileModal = (bool: boolean) => {
@@ -463,38 +462,6 @@ const TransactionDetail = (props: any) => {
 
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
-
-    const handleResend = () => {
-        setIsResending(true)
-
-        const toSend = {
-            value: data.originAmount,
-            currency: data.originCurrency,
-            image: data.originCurrency
-        }
-
-        const toReceive = {
-            value: data.destinationAmount,
-            currency: data.destinationCurrency,
-            image: data.destinationCurrency
-        }
-
-        const transferMethod = data.transferMethod
-
-        dispatch({type: RECIPIENT, payload: recipient})
-        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
-        toastAction({
-            show: true,
-            type: 'info',
-            timeout: 10000,
-            message: "Okay. Let's start resending in a smooth sail..."
-        })
-
-        setTimeout(()=>{
-            history.push(paths.TRANSFER_METHOD)
-            setIsResending(false)
-        }, 1000 )
-    }
 
     const setReceiptVisible = (visibility: boolean) => {
         const receipt: any = document.querySelector('#receipt');
@@ -513,7 +480,7 @@ const TransactionDetail = (props: any) => {
             </div>
             <div className="modal" id="TD-Modal" >
                 <div className="head">
-                    <div className="t-id">Transaction #: <span>{data.meta.transactionId}</span></div>
+                    <div className="t-id">Transaction #: <span>SBR{data.meta.transactionId}</span></div>
                     <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
                     <div className="close" onClick={()=>handleOpenTDModal(false)} >x</div>
                 </div>
@@ -524,17 +491,10 @@ const TransactionDetail = (props: any) => {
                         <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
                     <div className="actions" >
-                        <Pdf targetRef={ref} filename={`SB-payment-receipt-${data.meta.transactionId}.pdf`} onComplete={() => setReceiptVisible(false)} options = {pdfOptions} x={-43.5} y={3.5} scale={0.59}>
-                        {({ toPdf }: any) =>(
-                            <div className="export" onClick={() => {
-                                setReceiptVisible(true)
-                                return toPdf();
-                            }} >
-                                <img src={asset('icons', 'export.svg')} alt="export"/>
-                                <div> Download <span className="mobile-hide"></span></div>
-                            </div>
-                        )}
-                        </Pdf>
+                        {data.meta.receipt_url && <a href={data.meta.receipt_url} target="_blank" rel="noreferrer"  className="export" >
+                            <img src={asset('icons', 'export.svg')} alt="export"/>
+                            <div> Download <span className="mobile-hide"></span></div>
+                        </a>}
                         {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
@@ -542,7 +502,7 @@ const TransactionDetail = (props: any) => {
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
                         </div> */}
-                        <div className="resend" onClick={handleResend}>
+                        <div className="resend" onClick={() => handleResend(data, recipient)}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>
                         </div>

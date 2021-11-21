@@ -216,7 +216,6 @@ const CreateTransfer = () => {
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
     const state =  useSelector((state: any)=>state)
     const user =  useSelector((state: any) => state.auth.user)
-    console.log(transactionDetails, "[[[[[");
     const recipient = useSelector((state: any) => state.recipients.recipient)
 
     const cancelPayment = () => {
@@ -256,39 +255,43 @@ const CreateTransfer = () => {
                             </div>
                         </div>
                         <div className="green-box">
-                            <div>
-                                <span>Bank</span>
-                                <span>Barclays Bank</span>
-                            </div>
 
                             <div>
                                 <span>Account name</span>
-                                <span>SBremit Ltd</span>
-                            </div>
-
-                            <div>
-                                <span>Sort code</span>
-                                <span>20-25-48</span>
+                                <span>SUKATE & BEZEBOH LTD</span>
                             </div>
 
                             <div>
                                 <span>Account number</span>
-                                <span>2348573900</span>
+                                <span>34690451</span>
                             </div>
 
                             <div>
-                                <span>Reference</span>
-                                <span>{ user.meta.customerId || transactionDetails?.meta?.transactionId?.substring(0, 10)}</span>
+                                <span>Sort code</span>
+                                <span>23-22-90</span>
                             </div>
-                            
+
+                            <div>
+                                <span>IBAN</span>
+                                <span>GB97IFXS23229034690451</span>
+                            </div>
+
+                            <div>
+                                <span>SWIFT / BIC</span>
+                                <span>IFXSGB2L</span>
+                            </div>
+
+
+                            <div>
+                                <span>Reference</span>
+                                <span>SBR{ user.meta.customerId || transactionDetails?.meta?.transactionId?.substring(0, 10)}</span>
+                            </div>
                         </div>
                         <Link to={paths.PAYMENT_METHOD + '?t=' + transactionDetails?.id} ><div className="green-txt cpm-text">Change payment method</div></Link>
-
                     </div>
                     <div className="mobile-hide">
                         <TransferDetailsBox transferId={transactionDetails?.id} />
                     </div>
-                    
                 </div>
                 <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I am sending {formatCurrency(`${Number((transactionDetails?.originAmount) )}`)} {transactionDetails?.originCurrency} to {recipient.firstName} </button> </div>
             </div>

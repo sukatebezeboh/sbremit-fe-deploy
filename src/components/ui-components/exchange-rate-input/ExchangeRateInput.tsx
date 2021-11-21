@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { formatCurrency, formatCurrencyWithoutFloats } from '../../../util/util';
+import { formatCurrency, formatCurrencyWithoutFloats, getMoneyValue } from '../../../util/util';
 
 const Field = styled.div`
         .max-div {
@@ -64,6 +64,7 @@ const Field = styled.div`
             background: #fff;
             .you-send{
                 font: normal normal normal 15px/19px Montserrat;
+                color: lightgray;
             }
             >div{
                 >input{
@@ -71,6 +72,8 @@ const Field = styled.div`
                     width: 100%;
                     border: none;
                     outline: none;
+                    font-weight: 900;
+                    color: #007B5D;
                     @media only screen and (max-width: 900px) { 
                         width: 120px;
                     }
@@ -111,12 +114,12 @@ const Field = styled.div`
 `
 
 const ExchangeRateInput = (props: any) =>{
-    const {data, handleXInputChange, max, countries} = props;
+    const {data, handleXInputChange, max, countries, setChangedInput} = props;
     const [countriesDropDown, setCountriesDropDown] = useState(false);
     const dispatch = useDispatch();
     const transfer = useSelector((state: any) => state.transfer)
     const appValues = useSelector((state: any) => state.appValues)
-
+    const promo = transfer.promo;
 
     const handleCountrySelection = (country: string) => {
         const countriesList = appValues.countries;
@@ -142,21 +145,12 @@ const ExchangeRateInput = (props: any) =>{
         setCountriesDropDown(false)
     }
 
-    useEffect(() => {
-        console.count('toReceive');
-        console.log(data.isSend, data.value, "toReceive")
-    }, [transfer.toReceive.value]);
-
-    useEffect(() => {
-        console.count('data')
-        console.log(data.isSend, data.value, "data")
-    }, [data]);
        return (
         <Field key={data?.currency +'-field-'+ window.location.pathname}>
             <div className={`x-input ${(max && data?.value > max) ? 'selected-border-yellow' : ''}`}>
                 <div className="xi-1">
                     <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                    <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? formatCurrency(data?.value) : formatCurrencyWithoutFloats(Math.round(data?.value))} onChange={(e) => {handleXInputChange(e, data)}}/>
+                    <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? getMoneyValue(formatCurrency(data?.value)).toFixed(2) : Math.round(data?.value)} onChange={(e) => {handleXInputChange(e, data); setChangedInput()}}/>
                 </div>
                 <div  className="flg-drp">
                     {

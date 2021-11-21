@@ -11,6 +11,7 @@ import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLanding
 import { style } from "./LandingPage.css";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
 import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
+import { CookieService } from '../../../services/CookieService';
 
 const bg = window.location.pathname.indexOf('/en/') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca/') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
     const Body = style(bg);
@@ -25,6 +26,8 @@ const LandingPage = (props: any) => {
     const conversionRate = transfer.conversionRate;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
+    const [changedInput, setChangedInput] :any = useState(null);
+
     let rate= conversionRate?.rate;
     if (
         promo?.type === "FIXED_RATE"
@@ -87,7 +90,12 @@ const LandingPage = (props: any) => {
             element.selectionStart = caret
             element.selectionEnd = caret
         })
+
         const value = getMoneyValue(formatCurrency(e.target.value));
+        if (isNaN(value)) {
+            return
+        }
+
         let rate = conversionRate?.rate;
         if (
             promo?.type === "FIXED_RATE"
@@ -141,6 +149,16 @@ const LandingPage = (props: any) => {
         setTotalValue()
     }, [promo, toSend.value, toReceive.value, serviceFee])
 
+    const mutateInputValueDirectly = (rate: any) => {
+        if (changedInput === 'toSend') {
+            toReceive.value = toSend.value * rate
+        } else if (changedInput === 'toReceive'){
+            toSend.value = toReceive.value / rate
+        } else {
+
+        }
+    }
+
     const setTotalValue = () => {
         let total = Number(toSend.value) + Number(serviceFee);
 
@@ -160,6 +178,9 @@ const LandingPage = (props: any) => {
                 case 'FIXED_RATE':
                     if (toSend.currency === promo.settings.baseCurrency && toReceive.currency === promo.settings.targetCurrency) {
                         setPromoText(`1 ${promo.settings.baseCurrency} = ${promo.settings.rate} ${promo.settings.targetCurrency} fixed rate`);
+                        mutateInputValueDirectly(promo.settings.rate)
+                    } else {
+                        mutateInputValueDirectly(conversionRate?.rate)
                     }
                     break;
                 case 'FREE_OPERATOR_FEE':
@@ -168,10 +189,12 @@ const LandingPage = (props: any) => {
                     break;
                 default:
                     setPromoText('');
+                    mutateInputValueDirectly(conversionRate?.rate)
                     total = total * 1
             }
         } else {
             setPromoText("");
+            mutateInputValueDirectly(conversionRate?.rate)
         }
         dispatch({
             type: TRANSFER, 
@@ -217,14 +240,14 @@ const LandingPage = (props: any) => {
                         <div>
                             {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toSend, handleXInputChange, max, countries: payInCountries})
+                                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange, max, countries: payInCountries})
                             }
                         </div>
                         <div className="wrapper">
                             <div className="timeline-box">
                                 <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
                                 <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div>  <span className={`deep-green ${promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}> {serviceFee} GBP</span>  </span> </span></div>
-                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span>SB Remit Transfer Charge <span className="deep-green">0.00 GBP</span> </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
+                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 GBP</span> for this transfer </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
                                 {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                 <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
                                 <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> 
@@ -236,15 +259,16 @@ const LandingPage = (props: any) => {
                         <div className="receive" style={promo ? {marginTop: "80px"} : {}}>
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toReceive, handleXInputChange, key: 'landingPageToRecieve', countries: payOutCountries})
+                                ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, key: 'landingPageToRecieve', countries: payOutCountries})
                             }
                         </div>
 
 
                     </form>
                     <PromoCodeField />
-                    <button disabled onClick={()=>{
-                        setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(paths.SIGN_UP));
+                    <button onClick={()=>{
+                        
+                        setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === "sbremit-web-uat" ? paths.SIGN_IN : paths.SIGN_UP));
                         }}>
                             Start sending money
                             <small>Launching soon...</small>

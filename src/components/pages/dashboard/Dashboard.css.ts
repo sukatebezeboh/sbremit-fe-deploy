@@ -30,6 +30,10 @@ const style = () => styled.div`
                 }
             }
         }
+        .is-resending {
+            transition: 3s ease-out;
+            transform: rotateZ(-720deg);
+        }
         .start-transfer {
             text-align: center;
             div {

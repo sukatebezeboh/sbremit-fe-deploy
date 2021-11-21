@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
-import { TRANSFER } from '../../../redux/actionTypes';
+import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
+import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -22,6 +23,8 @@ const Dashboard = () => {
     const [modalData, setModalData] = useState({});
     const [selectedFilter, setSelectedFilter] = useState("");
     const history = useHistory();
+    const [isResending, setIsResending] = useState(false);
+
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -64,6 +67,42 @@ const Dashboard = () => {
         return filters[selectedFilter||"all"]
     }
 
+    const handleResend = (data: any, recipient: any) => {
+        setIsResending(true)
+
+        if (Array.isArray(recipient)) {
+            recipient = recipient.find((r) => r.id === data.recipientId )
+        }
+
+        const toSend = {
+            value: data.originAmount,
+            currency: data.originCurrency,
+            image: data.originCurrency
+        }
+
+        const toReceive = {
+            value: data.destinationAmount,
+            currency: data.destinationCurrency,
+            image: data.destinationCurrency
+        }
+
+        const transferMethod = data.transferMethod
+
+        dispatch({type: RECIPIENT, payload: recipient})
+        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "Okay. Let's start resending in a smooth sail..."
+        })
+
+        setTimeout(()=>{
+            history.push(paths.TRANSFER_METHOD)
+            setIsResending(false)
+        }, 1000 )
+    }
+
     const transactions = getTransactions();
     const allTransactions = transfer.transactions;
     const pages = getCorrespondingPages();
@@ -76,7 +115,7 @@ const Dashboard = () => {
     return (
         <Body>
             <NavBar />
-            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
+            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} handleResend={(data: any, recipient: any) => handleResend(data, recipient)} isResending={isResending} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
@@ -110,7 +149,7 @@ const Dashboard = () => {
                             setModalData(transaction);
                             handleOpenTDModal(true);
                         }}>
-                        <div><img src={asset('images', 'noimage.png')} alt=""/></div>
+                        <div><img src={`${resources.DICE_BEAR_RECIPIENT}${transaction.recipientId}.svg`} alt=""/></div>
                         <div>
                             <div>{convertDateString(transaction.dateCreated)}</div>
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
@@ -123,9 +162,9 @@ const Dashboard = () => {
                     </div>
                     <hr/>
                     <div className="down">
-                        <div>Transaction #: <span>{transaction.meta.transactionId}</span></div>
+                        <div>Transaction #: <span>SBR{transaction.meta.transactionId}</span></div>
                         <div>
-                            <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
+                            <span className="is-clickable" onClick={() => handleResend(transaction, recipients)} ><img src={asset('icons', 'reload.svg')} alt="resend"  className={isResending ? "is-resending" : ""} /> Resend</span> 
                             <span
                             className="view-det"
                             onClick={()=>{
