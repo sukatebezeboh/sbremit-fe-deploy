@@ -5,7 +5,7 @@ import { getRecipients, getUserTransactions, toastAction } from '../../../redux/
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getQueryParam } from '../../../util/util';
+import { asset, getMax, getQueryParam, getValueFromArray, parseTransferMethod } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
 import NewRecipientModal from '../../ui-components/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../ui-components/page-heading/PageHeading';
@@ -20,10 +20,9 @@ const Recipient = () => {
     const recipient = useSelector((state: any)=>state.recipients.recipient);
     const transfer = useSelector((state: any)=>state.transfer);
     const user = useSelector((state: any)=> state.auth.user)
-    console.log(transfer, user, "transfer", "------");
 
     const {toSend, toReceive, serviceFee, transferMethod} = transfer; 
-    const max  = transfer.transferMax;
+    const max  = getMax(transfer.transferMethod);
 
     const dispatch = useDispatch()
 
@@ -58,7 +57,7 @@ const Recipient = () => {
             return
         }
         const mobileMoneyMax = 500000;
-        if (transferMethod === "mobile_money" && (Number(toReceive.value) + Number(serviceFee)) > mobileMoneyMax) {
+        if (transferMethod === "mobile_money" && (Number(toReceive.total)) > mobileMoneyMax) {
             history.replace(paths.GET_QUOTE)
             toastAction({
                 show: true,
@@ -92,6 +91,7 @@ const Recipient = () => {
     }
 
     const isUserFirstTransaction = (): boolean => {
+
         return !Boolean(transfer.transactions.length);
     }
 
@@ -101,6 +101,14 @@ const Recipient = () => {
     }, [recipients])
 
     const handleRecipientClick = (recipient: any) => {
+        if (recipient.profile.transferMethod !== transferMethod) {
+           return toastAction({
+                show: true,
+                type: "warning",
+                timeout: 5000,
+                message: `Select a recipient with ${transfer.transferMethod?.replace( '_', ' ' )} transfer method for this transaction`
+            })
+        }
         setSelectedRecipient(recipient);
         dispatch({type: RECIPIENT, payload: recipient})
     }
@@ -119,11 +127,19 @@ const Recipient = () => {
     const handleRecipientUpdate = () => {
         const recipientId =  getQueryParam('update');
         if (!recipientId) return;
- 
+
         const recipientData = recipients.find((recipient: any) => recipient.id == recipientId);
         console.log(recipientData);
         setRecipientDataForUpdate(recipientData);
         setOpenNRModal(true);
+    }
+
+    const handleContinue = () =>{
+        return recipient.id ? history.push(paths.REVIEW) : toastAction({
+            show: true,
+            type: "warning",
+            message: `Select / Add Recipient`
+        })
     }
     return (
         <Body>
@@ -138,7 +154,7 @@ const Recipient = () => {
                     <PageHeading heading="Recipient" subheading="Who are you sending money to?" back={paths.VERIFICATION} />
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
-                <RoundFloatingPlus showPlus={!openNRModal} callBack={()=>setOpenNRModal(true)} />
+                {/* <RoundFloatingPlus showPlus={!openNRModal} callBack={()=>setOpenNRModal(true)} /> */}
                 <div className="box-container">
                     <div className="right part">
                             <div className="heading mobile-hide">
@@ -146,15 +162,18 @@ const Recipient = () => {
                             </div>
                             <hr className="mobile-hide"/>
                             <div className="small-boxes">
-                                <div className="recipient plus mobile-hide" onClick={()=>setOpenNRModal(true)}>
+                                <div className="recipient plus" onClick={()=>setOpenNRModal(true)}>
                                     <img src={asset("icons", "add.svg")} alt="plus"/>
-                                    <span>New recipient</span>
+                                    <span>Add recipient</span>
                                 </div>
                                 {
                                     filteredRecipients.map((recipient: any, i: number)=>(
                                         <div key={i} className={`recipient ${selectedRecipient?.id == recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
-                                            <div><img src={recipient.profile.picture || `${resources.DICE_BEAR_RECIPIENT}${recipient.id}.svg`} alt="user"/></div>
-                                            <div>{recipient.firstName + ' ' + recipient.lastName}</div>
+                                            <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
+                                            <div>
+                                                <div>{recipient.firstName + ' ' + recipient.lastName}</div>
+                                                {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({parseTransferMethod(recipient.profile.transferMethod)})</small>}
+                                            </div>
                                         </div>
 
                                     ))
@@ -166,7 +185,7 @@ const Recipient = () => {
                         <TransferDetailsBox />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>history.push(paths.VERIFICATION)}>Back</span> <button onClick={()=>{return recipient.id ? history.push('/review'): '#'}}>Continue</button> </div>
+                <div className="btns"><span onClick={()=>history.push(paths.VERIFICATION)}>Back</span> <button onClick={handleContinue}>Continue</button> </div>
             </div>
         </Body>
     )

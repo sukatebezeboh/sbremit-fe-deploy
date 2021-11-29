@@ -77,7 +77,7 @@ const style = () => styled.div`
                                 border: 1px solid #FCD20F;
                                 pointer-events: none;
                                 @media only screen and (max-width: 900px) { 
-                                    top: 15%;
+                                    top: 27%;
                                 }
                             }
                             :checked{
@@ -96,7 +96,7 @@ const style = () => styled.div`
                                     z-index: 1;
                                     pointer-events: none;
                                     @media only screen and (max-width: 900px) { 
-                                        top: -57%;
+                                        /* top: -57%; */
                                     }
                                 }
                             }
@@ -291,7 +291,7 @@ const style = () => styled.div`
         padding: 0px;
         .content {
             font: normal normal normal 13px/20px Montserrat;
-            margin-bottom: 195px;
+            margin-bottom: 15px;
         }
         .form {
             margin-top: 15px;
@@ -304,7 +304,7 @@ const style = () => styled.div`
                 }
             }
             input{
-                height: 30px;
+                height: 25px;
                 border: 1px solid #7FBCAD;
                 width: 100%;
             }
@@ -318,7 +318,7 @@ const style = () => styled.div`
                 width: 100% ;
                 font: normal normal normal 13px/16px Montserrat;
             }
-            span {
+            >span {
                 width: 100%;
                 text-align: center;
                 margin: 0px;

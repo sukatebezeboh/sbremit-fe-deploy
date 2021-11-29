@@ -25,7 +25,7 @@ const UserProfile = () => {
                 <div className="box">
                     <div className="up">
                         <div className="left">
-                            <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="user pic"/>
+                            <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="user pic"/>
                             <div>
                                 <div>{user.profile.firstName + ' ' + user.profile.lastName}</div>
                                 <div>Membership number SBR{user.meta.customerId}</div>

@@ -227,7 +227,8 @@ const style = () => styled.div`
                     }
                 }
                 .start-transfer {
-                    display: none;
+                    /* display: none; */
+                    padding-top: 30px;
                 }
             }
 

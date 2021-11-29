@@ -12,7 +12,7 @@ import Receipt from '../receipt/Receipt';
 
 
 const style = () => styled.div`
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -587,8 +587,8 @@ const TransactionDetail = (props: any) => {
                                 <div className="right"> {data?.meta?.promoCode}</div>
                             </div>}
                             <div className="row">
-                                <div className="left">They get</div>
-                                <div className="right"><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b></div>
+                                <div className="left">They get <small className="sentence-case"> ({data?.transferMethod.replace("_", " ")} fee inclusive) </small> </div>
+                                <div className="right "><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b> </div>
                             </div>
                             <div className="row">
                                 <div className="left">Total paid</div>

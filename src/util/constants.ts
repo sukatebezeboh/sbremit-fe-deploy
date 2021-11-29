@@ -29,6 +29,6 @@ export const constants = {
 }
 
 export const resources = {
-    DICE_BEAR_USER: "https://avatars.dicebear.com/api/avataaars/",
-    DICE_BEAR_RECIPIENT: "https://avatars.dicebear.com/api/avataaars/"
+    DICE_BEAR_USER: "https://avatars.dicebear.com/api/initials/",
+    DICE_BEAR_RECIPIENT: "https://avatars.dicebear.com/api/initials/"
 }

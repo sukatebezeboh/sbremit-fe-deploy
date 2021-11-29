@@ -129,7 +129,7 @@ const style = () => styled.div`
                 width: 100% ;
                 font: normal normal normal 13px/16px Montserrat;
             }
-            span {
+            >span {
                 width: 100%;
                 text-align: center;
                 margin: 0px;
