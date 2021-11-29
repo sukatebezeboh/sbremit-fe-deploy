@@ -23,7 +23,7 @@ function App() {
     <React.Fragment>
       <ToastFactory />
       <AppLoader show={showAppLoader}/>
-      <ComingSoon />
+      {/* <ComingSoon /> */}
       <Switch>
         {
             Routing.map((route: IRoute, i: number) => (

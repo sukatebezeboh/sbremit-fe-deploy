@@ -41,8 +41,6 @@ const ChangePassword = () => {
         password: "",
         confirmation: ""
     }
-    
-
 
     return (
         <Body>

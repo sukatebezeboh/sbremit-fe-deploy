@@ -16,8 +16,8 @@ const initialTransferState: {} = {
     paginatedCancelledTransactions: {},
     paginatedPendingTransactions: {},
     currentTransactionsPage: 1,
-    transferMax: 800,
-    promo: undefined
+    promo: undefined,
+    allowOperatorFee: true
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {

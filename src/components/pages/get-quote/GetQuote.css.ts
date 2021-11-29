@@ -36,6 +36,20 @@ const style = styled.div`
                 margin-top: 200px;
                 position: relative;
         }
+        .x-error-message {
+            width: 200px;
+            position: absolute;
+            display: none;
+        }
+        .toggle {
+            width: 300px;
+            float: right;
+            z-index: 2;
+            position: relative;
+            @media only screen and (max-width: 900px) { 
+                width: 190px;
+            }
+        }
         >div:nth-child(2){
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -212,6 +226,7 @@ const style = styled.div`
         padding: 0px;
         .hero-rect {
             width: 100%;
+            margin-top: 50px;
         }
         .head {
             width: 100% ;
@@ -343,13 +358,13 @@ const style = styled.div`
                             width: 26px;
                             height: 26px; 
                         }
-                        span:nth-child(2){
+                        span.data-c{
                             font-size: 13px;
                             margin-right: 23px;
-                            margin-top: 0px;
+                            margin-top: 3px;
                             text-transform: uppercase;
                         }
-                        span:nth-child(3){
+                        span.span-angle{
                             font-size: 5px;
                             color: #007B5D;
                             margin-top: 10px;

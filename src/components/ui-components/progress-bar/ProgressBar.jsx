@@ -72,7 +72,7 @@ const Div = styled.div`
                 margin: 1px;
             }
             .point-1 {
-                width: 23px;
+                /* width: 23px; */
             }
         }
         .point-labels {

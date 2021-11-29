@@ -8,7 +8,7 @@ import { CookieService } from '../../services/CookieService';
 import env from '../../env'
 import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
-import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters } from '../../util/util';
+import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters, sortObjectByProperties } from '../../util/util';
 import http from '../../util/http';
 import { loadStripe } from '@stripe/stripe-js';
 import { Redirect } from 'react-router';
@@ -111,17 +111,22 @@ export const signInAction = (data: any) => {
     })
 }
 
-export const signOutAction = () => {
-    store.dispatch({type: LOADING, payload: true})
-
-    http.delete(endpoints.SESSION)
-    .then(res => {
+export const signOutAction = (ignoreRequest = false) => {
+    if (!ignoreRequest) {
+        store.dispatch({type: LOADING, payload: true})
+        http.delete(endpoints.SESSION)
+        .then(res => {
+            CookieService.remove(env.SESSION_KEY);
+            CookieService.remove(env.SESSION_ID);
+            store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
+            store.dispatch({type: LOADING, payload: false})
+        })
+    } else {
         CookieService.remove(env.SESSION_KEY);
         CookieService.remove(env.SESSION_ID);
         store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
         store.dispatch({type: LOADING, payload: false})
-    })
-
+    }
 }
 
 const runningTimeouts: any[] = [];
@@ -150,8 +155,9 @@ export const appValuesAction = async() => {
     const payOutCountries = await AppService.getValueById(9);
     const services = await AppService.getServices();
     const values: any = {}
+
     values.values = allValues;
-    values.countries = countries.data;
+    values.countries = sortObjectByProperties(countries.data);
     values.services = services;
     values.payInCountries = payInCountries.data;
     values.payOutCountries = payOutCountries.data;
@@ -185,32 +191,41 @@ export const editUserProfile = <T extends {profile: any}>(data: T) => {
 
 export const changePasswordAction = (values: any) => {
     store.dispatch({type: SUBMITTING, payload: paths.CHANGE_PASSWORD})
-    const username = store.getState().auth.user.username;
-    axios.post(config.API_HOST + endpoints.SESSION, 
+    const {oldPassword, password, confirmation } = values
+
+    http.post(endpoints.PASSWORD_CHANGE,
         {
-            username,
-            password: values.oldPassword
-        }, {
-        headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'}
-    })
-    .then((res: any)=> {
-        if (res.data.status === "200"){
-                // axios.post(config.API_HOST + endpoints.PASSWORD_REQUEST,
-                //     { username },
-                //     { headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'} })
-                // .then(response=>{
-                //     // ...
-                // })            
+            oldPassword,
+            password,
+            confirmation
+        })
+    .then(res=>{
+        store.dispatch({type: SUBMITTING, payload: ""})
+        if(res.data.status =="200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 20000,
+                title: `Password changed!`,
+                message: `You have successfully changed your password`
+            })
         } else {
             toastAction({
                 show: true,
-                type: 'error',
+                type: 'warning',
                 timeout: 10000,
-                message: `Password is incorrect`
+                message: res.data?.error?.message
             })
-            store.dispatch({type: SUBMITTING, payload: ""})
         }
     })
+    .catch((err)=>{
+        console.error(err);
+    })
+    .then(() => {
+        store.dispatch({type: SUBMITTING, payload: ""})
+    })
+
+
 }
 
 export const resetPasswordAction = (values: any, stage="email") => {
@@ -278,7 +293,7 @@ export const getRecipients = () => {
     store.dispatch({type: LOADING, payload: true})
     const user = store.getState().auth.user;
 
-    http.get(parseEndpointParameters(endpoints.RECIPIENTS, user.id))
+    http.get(parseEndpointParameters(endpoints.RECIPIENTS, user?.id))
     .then((res: any) => {
         if(res.data.status === "200"){
             store.dispatch({type: RECIPIENTS, payload: res.data.data})
@@ -311,11 +326,13 @@ export const getRecipient = (id: string) => {
 }
 
 export const createRecipient =  (recipientData: any, callback?:any) => {
+    const transferMethod = store.getState().transfer.transferMethod
     recipientData = {
         firstName: recipientData.firstName,
         lastName: recipientData.lastName,
         profile: {
-            ...recipientData
+            ...recipientData,
+            transferMethod
         }
     }
     store.dispatch({type: SUBMITTING, payload: paths.RECIPIENT})
@@ -357,7 +374,7 @@ export const confirmTransfer = (recipient: any, transfer: any, callback: Functio
         originCurrency: transfer.toSend?.currency,
         originAmount: Number(transfer.toSend?.value),
         destinationCurrency: transfer.toReceive?.currency,
-        destinationAmount: Number((transfer.toReceive?.value)),
+        destinationAmount: Number((transfer.toReceive?.total)),
         paymentMethod: {},
         promo: transfer.promo?.code,
         meta: {
@@ -591,24 +608,55 @@ export const getNewQuote = ($_1: string, $_2: string) => {
     })
 }
 
-export const getServiceRate = (transferMethod = "") => {
+export const getServiceRate = (transferMethod = "", getRecipientsValue = false) => {
+    const transfer = store.getState().transfer
+    if (!transfer.allowOperatorFee) {
+        store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: 0 }})
+        return 0;
+    }
     const transferMethodsIds: any = {
         mobile_money: "1",
         bank_transfer: "2",
         cash_pickup: "3"
     }
    const services = store.getState().appValues.services;
-   const transfer = store.getState().transfer
    const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod || transfer.transferMethod])[0] || services?.data?.[0];
    const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toReceive.value) && Number(f.upperLimit) >= Number(transfer.toReceive.value))[0] || service?.fees?.[0];
 
-   console.log(fees, "fees.fee")
    const equiFee = fees?.type === "PERCENTAGE" ? ((fees?.fee * transfer.toReceive?.value)/100) : fees?.fee
-   const serviceFee = ((!transferMethod && transfer.transferMethod === "mobile_money") || ( transferMethod && transferMethod === "mobile_money")) ? (equiFee / (transfer.conversionRate?.rate)).toFixed(2): fees?.fee;
+   const serviceFee = ((!transferMethod && transfer.transferMethod === "mobile_money") || ( transferMethod && transferMethod === "mobile_money")) ? (equiFee / (transfer.conversionRate?.rate)).toFixed(2): equiFee;
+   
    store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee }})
-
    return serviceFee || 0;
 }
+
+export const getServiceRateValue = (toReceiveValue: string|number, transferMethod: string, getRecipientsValue = false) => {
+    const transfer = store.getState().transfer
+    if (!transfer.allowOperatorFee) return 0;
+
+    const transferMethodsIds: any = {
+        mobile_money: "1",
+        bank_transfer: "2",
+        cash_pickup: "3"
+    }
+   const services = store.getState().appValues.services;
+   const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod])[0] || services?.data?.[0];
+   const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(toReceiveValue) && Number(f.upperLimit) >= Number(toReceiveValue))[0] || service?.fees?.[0];
+
+   const equiFee = fees?.type === "PERCENTAGE" ? ((fees?.fee * Number(toReceiveValue))/100) : fees?.fee
+
+   if (getRecipientsValue) {
+        if ((transferMethod && transferMethod === "mobile_money")) {
+            return equiFee;
+        } else {
+            return (equiFee * transfer.conversionRate?.rate).toFixed(2)
+        }
+   }
+
+   const serviceFee = (( transferMethod && transferMethod === "mobile_money")) ? (equiFee / (transfer.conversionRate?.rate)).toFixed(2): equiFee;
+   return serviceFee || 0;
+}
+
 
 export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
     store.dispatch({type: LOADING, payload: true})
@@ -744,7 +792,7 @@ export const userVerificationAction = (values: any, callback: Function) => {
                 show: true,
                 type: 'success',
                 timeout: 15000,
-                message: "Account verified!"
+                message: "Verification process initiated."
             })
             store.dispatch({type: LOADING, payload: false})
             CookieService.put('user', JSON.stringify(res.data.data));

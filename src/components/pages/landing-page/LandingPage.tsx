@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, setNewQuote, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMoneyValue } from '../../../util/util';
+import { asset, formatCurrency, getMax, getMoneyValue } from '../../../util/util';
 import { AppFooter } from '../../ui-components/app-footer/AppFooter';
 import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
 import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
@@ -12,9 +12,11 @@ import { style } from "./LandingPage.css";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
 import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
+import FancyToggle from '../../ui-components/parts/FancyToggle';
+import { constants } from '../../../util/constants';
 
-const bg = window.location.pathname.indexOf('/en/') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca/') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
-    const Body = style(bg);
+const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
+const Body = style(bg);
 const LandingPage = (props: any) => {
 
     const transfer = useSelector((state: any)=>state.transfer)
@@ -43,11 +45,23 @@ const LandingPage = (props: any) => {
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
-    const max  = transfer.transferMax;
 
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");
+    const allowOperatorFee = transfer.allowOperatorFee; 
+    const max  = getMax(selected);
+
+
+    const setAllowOperatorFee = (allow: boolean) => {
+        dispatch({
+            type: TRANSFER,
+            payload: {
+                ...transfer,
+                allowOperatorFee: allow
+            }
+        })
+    }
 
     const setTransferMethod = (method: string) => {
         setSelected(method);
@@ -55,11 +69,15 @@ const LandingPage = (props: any) => {
     }
 
     useEffect(()=>{
-        getServiceRate();
-    }, [transfer.toSend, transfer.transferMethod])
+        getServiceRate(selected);
+    }, [transfer.toSend, transfer.transferMethod, selected, transfer.allowOperatorFee])
 
     useEffect(() => {
-        setTransferMethod("mobile_money")
+        setTransferMethod(selected)
+    }, [transfer.toSend?.value, transfer.toReceive?.value, transfer.allowOperatorFee])
+
+    useEffect(() => {
+        setTransferMethod(selected)
         getQuoteService(toSend.currency, toReceive.currency);
     }, [])
 
@@ -92,6 +110,7 @@ const LandingPage = (props: any) => {
         })
 
         const value = getMoneyValue(formatCurrency(e.target.value));
+
         if (isNaN(value)) {
             return
         }
@@ -109,12 +128,34 @@ const LandingPage = (props: any) => {
         }
         // if(!value) return;
         if (data.isSend) {
+            if (
+                promo?.type === "FIXED_RATE"
+                && toSend.currency === promo.settings.baseCurrency
+                && toReceive.currency === promo.settings.targetCurrency
+                && Number(value) >= Number(promo.settings.minimumSpend)
+                && Number(value) <= Number(promo.settings.maximumSpend)
+            ) {
+                rate = promo.settings.rate
+            }
+
+            if (
+                promo?.type === "FIXED_RATE"
+                && toSend.currency === promo.settings.baseCurrency
+                && toReceive.currency === promo.settings.targetCurrency
+                && (Number(value) / promo.settings.rate) >= Number(promo.settings.minimumSpend)
+                && (Number(value) / promo.settings.rate) <= Number(promo.settings.maximumSpend)
+            ) {
+                rate = promo.settings.rate
+            } else {
+                setPromoText("")
+            }
+
             dispatch({
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value}`}, 
-                    toReceive: {...toReceive, value: `${value * rate}`}
+                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, selected, true))}
                 }
             })
 
@@ -124,7 +165,7 @@ const LandingPage = (props: any) => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value / rate}`},
-                    toReceive: {...toReceive, value: `${value}`}
+                    toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))}
                 }
             })
         }
@@ -132,13 +173,13 @@ const LandingPage = (props: any) => {
 
     const getTransferFeeText = (selectedMethod: string) => {
         const texts: any = {
-            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Transfer Fee </a> from: 
+            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Cash Out Fee </a> from: 
                 <div class="hover-tab">
                     <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
                     <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
                 </div>
             `,
-            "bank_transfer": "Bank Transfer Fee: ",
+            "bank_transfer": "Bank Pay Out Fee: ",
             "cash_pickup": "Cash Pick-up Fee: "
         }
 
@@ -147,19 +188,20 @@ const LandingPage = (props: any) => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee])
+    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, transfer.allowOperatorFee])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
-            toReceive.value = toSend.value * rate
+            toReceive.value = Number(toSend.value) * Number(rate)
         } else if (changedInput === 'toReceive'){
-            toSend.value = toReceive.value / rate
+            toSend.value = Number(toReceive.value) / Number(rate)
         } else {
 
         }
     }
 
     const setTotalValue = () => {
+        // debugger;
         let total = Number(toSend.value) + Number(serviceFee);
 
         if (
@@ -201,6 +243,7 @@ const LandingPage = (props: any) => {
             payload: {
                 ...transfer,
                 toSend: {...toSend, total: `${total}`}, 
+                toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, selected, true))} 
             }
         })
     }
@@ -240,13 +283,13 @@ const LandingPage = (props: any) => {
                         <div>
                             {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange, max, countries: payInCountries})
+                                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
                             }
                         </div>
                         <div className="wrapper">
                             <div className="timeline-box">
                                 <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i> <span> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div>  <span className={`deep-green ${promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}> {serviceFee} GBP</span>  </span> </span></div>
+                                <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} GBP</span></span> </span></div>
                                 <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 GBP</span> for this transfer </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
                                 {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                 <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
@@ -259,12 +302,15 @@ const LandingPage = (props: any) => {
                         <div className="receive" style={promo ? {marginTop: "80px"} : {}}>
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, key: 'landingPageToRecieve', countries: payOutCountries})
+                                ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
                             }
                         </div>
 
 
                     </form>
+                    <div className="toggle">
+                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
+                    </div>
                     <PromoCodeField />
                     <button onClick={()=>{
                         

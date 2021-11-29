@@ -66,11 +66,23 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             z-index: -10;
             background: #00000006;
             position: relative;
+            @media only screen and (max-width: 900px) { 
+                display: none;
+            }
         }
         .receive{
             /* margin-top: 206px; */
             position: relative;
             z-index: 2;
+        }
+        .toggle {
+            width: 300px;
+            float: right;
+            z-index: 2;
+            position: relative;
+            @media only screen and (max-width: 900px) { 
+                width: 190px;
+            }
         }
         >div:nth-child(2){
             display: grid;
@@ -255,7 +267,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             width: 268px;
             text-align: center;
             position: relative;
-            top: 55px;
+            /* top: 55px; */
             margin: auto;
             z-index: +3;
             span{
@@ -328,7 +340,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 div:nth-child(2){
                     display: grid;
                     grid-template-columns: 1fr 1fr 1fr;
-                    margin-top: 15px;
+                    /* margin-top: 15px; */
                     button{
                         font: normal normal normal 10px/13px Montserrat;
                         height: 30px;
@@ -352,16 +364,16 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                             width: 26px;
                             height: 26px; 
                         }
-                        span:nth-child(2){
+                        span.data-c{
                             font-size: 13px;
                             margin-right: 23px;
-                            margin-top: 0px;
+                            margin-top: 5px;
                             text-transform: uppercase;
                         }
-                        span:nth-child(3){
+                        span.span-angle{
                             font-size: 5px;
                             color: #007B5D;
-                            margin-top: 10px;
+                            margin-top: 15px;
                             img{
                                 height: 9px;
                                 width: 10px;

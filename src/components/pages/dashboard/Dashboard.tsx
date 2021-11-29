@@ -149,7 +149,7 @@ const Dashboard = () => {
                             setModalData(transaction);
                             handleOpenTDModal(true);
                         }}>
-                        <div><img src={`${resources.DICE_BEAR_RECIPIENT}${transaction.recipientId}.svg`} alt=""/></div>
+                        <div><img src={`${resources.DICE_BEAR_RECIPIENT}${getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName') + ' ' + getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName') + transaction.recipientId }.svg`} alt=""/></div>
                         <div>
                             <div>{convertDateString(transaction.dateCreated)}</div>
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>

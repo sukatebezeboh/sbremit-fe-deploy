@@ -41,8 +41,8 @@ http.interceptors.request.use((config: any) => {
 })
 
 http.interceptors.response.use((response: any) => {
-    if (response.data.status == "500") {
-        signOutAction();
+    if (response.data.status == "500" && response.data?.error?.message?.toLowerCase()?.includes('hash')) {
+        signOutAction(true);
     }
     return response;
 });

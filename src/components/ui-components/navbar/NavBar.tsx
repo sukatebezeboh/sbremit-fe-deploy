@@ -71,14 +71,14 @@ const NavBar = () => {
                     </div> }
                 </span> 
                 <span className="pic">
-                    <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
+                    <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
                 <span className="name" onClick={()=>handleDropdownClick('profile')}>
                     <span>{user.profile.firstName}</span>
                     {showProfileDropdown && <div className="dropdown profile-dropdown">
                             <div>
                                 <div className="notif-body">
-                                    <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
+                                    <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic"/>
                                     <div>
                                         <div className="heading"><b>{user.profile.firstName + ' ' + user.profile.lastName}</b></div>
                                         <div>Membership number SBR{user.meta.customerId}</div>
@@ -99,7 +99,7 @@ const NavBar = () => {
                                 <div>Settings</div>
                          </div>
                          <hr/>
-                         <div className="notif-option sign-out-option" onClick={signOutAction}>
+                         <div className="notif-option sign-out-option" onClick={() => signOutAction()}>
                                 <div> <img src={asset('icons', 'logout.svg')} alt="signout"/> </div>
                                 <div><b>Sign out</b></div>
                          </div>

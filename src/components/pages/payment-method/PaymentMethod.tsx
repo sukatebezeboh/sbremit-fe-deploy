@@ -251,7 +251,6 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
-                        
 
                         <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
                             <div className="radio-div">
@@ -286,7 +285,7 @@ const PaymentMethod = () => {
                                 <RadioButton selected={selected==='card'}/>
                             </div>
                             <div>
-                                <div className="rc-head">Debit / Credit Card</div>
+                                <div className="rc-head">Debit Card</div>
                                 <div className="rc-body">
                                     <div>
                                         You authorise SB Remit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> from your debit/credit card. Your credit card provider may charge cash advance fees. Use a debit card to avoid this charge.

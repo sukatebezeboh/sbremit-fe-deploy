@@ -7,6 +7,7 @@ const endpoints = {
     USER: '/user/$_1',
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
+    PASSWORD_CHANGE: '/user/password/change',
     RECIPIENTS: '/user/$_1/recipients',
     RECIPIENT: '/user/$_1/recipient/$_2',
     CREATE_RECIPIENT: '/user/$_1/recipient',
