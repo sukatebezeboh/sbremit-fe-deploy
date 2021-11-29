@@ -10,3 +10,4 @@ export const RECIPIENT = "RECIPIENT";
 export const NEW_RECIPIENT = "NEW_RECIPIENT";
 export const LOADING = "LOADING";
 export const TRANSFER = "TRANSFER";
+export const NOTIFICATIONS = "NOTIFICATIONS"

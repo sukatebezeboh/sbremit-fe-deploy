@@ -56,15 +56,11 @@ const Div = styled.div`
         padding: 20px;
     }
 }
-            
-            
 `
 
 const RecipientDetailsBox = (props: any) => {
     const {hideType} = props;
     const recipient = useSelector((state: any) => state.recipients.recipient)
-    console.log(recipient);
-    
     return (
         <Div className={hideType}>
             <div className="recipient-details">
@@ -93,14 +89,18 @@ const RecipientDetailsBox = (props: any) => {
                     <div className="left">Reason</div>
                     <div className="right">{recipient.profile.reason || '-'}</div>
                 </div>
-                <div className="row">
+                {recipient.profile.bankName && <div className="row">
                     <div className="left">Recipient’s Bank Name</div>
                     <div className="right">{recipient.profile.bankName || '-'}</div>
-                </div>
-                <div className="row">
+                </div>}
+                {recipient.profile.accountNumber && <div className="row">
                     <div className="left">Account Number</div>
                     <div className="right">{recipient.profile.accountNumber || '-'}</div>
-                </div>
+                </div>}
+                {recipient.profile.pickupPoint && <div className="row">
+                    <div className="left">Pickup point</div>
+                    <div className="right">{recipient.profile.pickupPoint || '-'}</div>
+                </div>}
         </div>
         </Div>
     )

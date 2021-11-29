@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
 import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
@@ -12,7 +12,7 @@ import Receipt from '../receipt/Receipt';
 
 
 const style = () => styled.div`
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;
@@ -118,7 +118,7 @@ const style = () => styled.div`
             .actions {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                >div {
+                >div, a.export {
                     border-radius: 15px;
                     width: 124px;
                     height: 124px;
@@ -450,11 +450,10 @@ const Modal = style();
 const ref: any = React.createRef()
 
 const TransactionDetail = (props: any) => {
-    const {openTDModal, handleOpenTDModal, handleShowPlus, data} = props;
+    const {openTDModal, handleOpenTDModal, handleShowPlus, data, handleResend, isResending} = props;
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
     const recipients = useSelector((state: any) => state.recipients.recipients);
     const transfer = useSelector((state: any) => state.transfer);
-    const [isResending, setIsResending] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
     const showMobileModal = (bool: boolean) => {
@@ -464,41 +463,9 @@ const TransactionDetail = (props: any) => {
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
 
-    const handleResend = () => {
-        setIsResending(true)
-
-        const toSend = {
-            value: data.originAmount,
-            currency: data.originCurrency,
-            image: data.originCurrency
-        }
-
-        const toReceive = {
-            value: data.destinationAmount,
-            currency: data.destinationCurrency,
-            image: data.destinationCurrency
-        }
-
-        const transferMethod = data.transferMethod
-
-        dispatch({type: RECIPIENT, payload: recipient})
-        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
-        toastAction({
-            show: true,
-            type: 'info',
-            timeout: 10000,
-            message: "Okay. Let's start resending in a smooth sail..."
-        })
-
-        setTimeout(()=>{
-            history.push(paths.TRANSFER_METHOD)
-            setIsResending(false)
-        }, 1000 )
-    }
-
-    const setReceiptVisibility = (visibility: string) => {
+    const setReceiptVisible = (visibility: boolean) => {
         const receipt: any = document.querySelector('#receipt');
-        receipt.style.visibility = visibility;
+        receipt.style.display = visibility ? "block" : "none";
     }
     const pdfOptions = {
         orientation: 'portrait',
@@ -508,12 +475,12 @@ const TransactionDetail = (props: any) => {
         (openTDModal && data) && (
         <Modal >
 
-            <div ref={ref} id="receipt" style={{width: '100%', height: 'fit-content', margin: 'auto', position: 'absolute', zIndex: -200, visibility: 'hidden' }}>
+            <div ref={ref} id="receipt" style={{width: '1944px', height: 'fit-content', margin: 'auto', position: 'absolute', zIndex: -200, display: 'none' }}>
                 <Receipt data={data} recipient={recipient} />
             </div>
             <div className="modal" id="TD-Modal" >
                 <div className="head">
-                    <div className="t-id">Transaction #: <span>{data.meta.transactionId}</span></div>
+                    <div className="t-id">Transaction #: <span>SBR{data.meta.transactionId}</span></div>
                     <div className="status"> <span className={`"sentence-case ${data.status?.toLowerCase()}`}>{data.status}</span> </div>
                     <div className="close" onClick={()=>handleOpenTDModal(false)} >x</div>
                 </div>
@@ -524,17 +491,10 @@ const TransactionDetail = (props: any) => {
                         <div className="uppercase"> <div>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</div> <div>{formatCurrency(data.originAmount)} {data.originCurrency}</div> </div>
                     </div>
                     <div className="actions" >
-                        <Pdf targetRef={ref} filename="SB-payment-receipt.pdf" onComplete={() => setReceiptVisibility('hidden')} options = {pdfOptions} x={-43.5} y={3.5} scale={0.59}>
-                        {({ toPdf }: any) =>(
-                            <div className="export" onClick={() => {
-                                setReceiptVisibility('visible')
-                                return toPdf();
-                            }} >
-                                <img src={asset('icons', 'export.svg')} alt="export"/>
-                                <div> Download <span className="mobile-hide"></span></div>
-                            </div>
-                        )}
-                        </Pdf>
+                        {data.meta.receipt_url && <a href={data.meta.receipt_url} target="_blank" rel="noreferrer"  className="export" >
+                            <img src={asset('icons', 'export.svg')} alt="export"/>
+                            <div> Download <span className="mobile-hide"></span></div>
+                        </a>}
                         {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
                             getUserTransactions();
                             handleOpenTDModal(false)
@@ -542,7 +502,7 @@ const TransactionDetail = (props: any) => {
                             <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
                             <div>Cancel</div>
                         </div> */}
-                        <div className="resend" onClick={handleResend}>
+                        <div className="resend" onClick={() => handleResend(data, recipient)}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>
                         </div>
@@ -603,7 +563,7 @@ const TransactionDetail = (props: any) => {
                     <div className="transfer-details" >
                         <div className="heading">
                                 <div className="title">Transfer Details</div>
-                                <div className="update">Update</div>
+                                {/* <div className="update">Update</div> */}
                             </div>
                             <hr/>
                             <div className="row">
@@ -616,24 +576,28 @@ const TransactionDetail = (props: any) => {
                             </div>
                             <div className="row">
                                 <div className="left">Exchange rate</div>
-                                <div className="right">1 GBP = 70.36 XAF</div>
+                                <div className="right"> 1 {data?.meta?.exchangeBase} = {data?.meta?.exchangeRate} {data?.meta?.exchangeTarget} </div>
                             </div>
                             <div className="row">
                                 <div className="left">Service fee</div>
-                                <div className="right">+0.95 GBP</div>
+                                <div className="right"> {data?.meta?.serviceFee} {data.originCurrency} </div>
+                            </div>
+                            {data?.meta?.promoCode && <div className="row">
+                                <div className="left">Promo used</div>
+                                <div className="right"> {data?.meta?.promoCode}</div>
+                            </div>}
+                            <div className="row">
+                                <div className="left">They get <small className="sentence-case"> ({data?.transferMethod.replace("_", " ")} fee inclusive) </small> </div>
+                                <div className="right "><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b> </div>
                             </div>
                             <div className="row">
-                                <div className="left">They get</div>
-                                <div className="right"><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b></div>
+                                <div className="left">Total paid</div>
+                                <div className="right"><b className="green">{data?.meta?.totalToPay} {data.originCurrency} </b></div>
                             </div>
-                            <div className="row">
-                                <div className="left">Total to pay</div>
-                                <div className="right"><b className="green">100.95 GBP</b></div>
-                            </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="left">Transfer time</div>
                                 <div className="right">within 2 hours</div>
-                            </div>
+                            </div> */}
                     </div>
                     <div className="recipient-details desktop-hide">
                         <div className="heading">

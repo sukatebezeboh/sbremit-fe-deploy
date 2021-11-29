@@ -24,6 +24,7 @@ import About from '../components/content-pages/about/About';
 import Support from '../components/content-pages/support/support/Support';
 import Contact from '../components/content-pages/contact/Contact';
 import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
+import NotFound from '../components/pages/not-found/NotFound';
 
 
 export interface IRoute {
@@ -54,6 +55,10 @@ export const Routing: IRoute[] = [
         component: LandingPage,
         protected: false,
         props: {location: 'london'}
+    },
+    {
+        path: paths.NOT_FOUND,
+        component: NotFound,
     },
     {
         path: paths.LEGAL,
@@ -181,4 +186,5 @@ export const Routing: IRoute[] = [
         component: TransferComplete,
         protected: true
     },
+
 ]

@@ -5,7 +5,7 @@ const initialTransferState: {} = {
     conversionRate: {},
     serviceFee: 0,
     service: {},
-    toSend: {value: "0", currency: 'GBP', image: "UK", isSend: true},
+    toSend: {value: "0", currency: 'GBP', image: "UK", total: "0", isSend: true},
     toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
     paymentMethod: "",
     transactionDetails: undefined,
@@ -16,12 +16,14 @@ const initialTransferState: {} = {
     paginatedCancelledTransactions: {},
     paginatedPendingTransactions: {},
     currentTransactionsPage: 1,
-    transferMax: 800
+    promo: undefined,
+    allowOperatorFee: true
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {
     switch (type) {
         case TRANSFER: {
+
           return {
               ...payload
           }

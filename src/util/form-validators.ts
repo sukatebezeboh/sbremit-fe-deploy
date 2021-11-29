@@ -46,10 +46,10 @@ export const RecipientValidator = Yup.object().shape({
     mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
     phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
     email: Yup.string().email("Enter valid email"),
-    state: Yup.string().min(3, "Too short").max(25, "Too long").required("Required"),
+    state: Yup.string().min(3, "Too short").max(25, "Too long"),
     reason: Yup.string(),
     // bankName: Yup.string().min(2, "Too short").max(100, "Too long"),
-    // accountNumber: Yup.string().min(5, "Too short").max(15, "Too long"),
+    accountNumber: Yup.string().matches(/^(\s)*(CM)[0-9]{2}(\s)*[0-9]{5}(\s)*[0-9]{5}(\s)*[0-9]{12}(\s)*[0-9]{2}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:CM12 10005 00001 012345678900 12'),
  });
 
 
@@ -75,7 +75,6 @@ export const userVerificationValidator = Yup.object().shape({
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
   gender: Yup.string().required("Required"),
-  state: Yup.string().min(3, "Too short").max(25, "Too long"),
   day: Yup.number().min(1, "Input day").max(31, "Input day"),
   month: Yup.number().min(1, "Input month").max(12, "Input month"),
   year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month"),

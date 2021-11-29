@@ -43,7 +43,7 @@ export default styled.div`
                     grid-template-rows: 1fr 1fr;
                     border-radius: 8px;
                     width: 92%;
-                    height: 170px;
+                    height: 175px;
                     text-align: center;
                     padding: 35px 0px;
                     box-shadow: 0px 2px 4px #CCCCCC80;
@@ -57,6 +57,9 @@ export default styled.div`
                         height: 55px; */
                         margin-bottom: 15px;
                         border-radius: 50%;
+                    }
+                    .recipient-transfer-method {
+                        color: #A3A3A3;
                     }
                     @media only screen and (min-width: 2550px) and (max-width: 4000px) { 
                         padding: 45px 0px;
@@ -78,7 +81,7 @@ export default styled.div`
             position: absolute;
             right: 14%;
             width: 30%;
-            z-index: 0;
+            z-index: 1;
             >div {
                 input {
                     background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -140,9 +143,8 @@ export default styled.div`
     .page-content {
         background: #fff;
         width: 100%;
-        height: 120vh;
+        height: fit-content;
         margin-top: -10px;
-        margin-bottom: -50px;
         padding-top: 10px;
         .page-heading {
             margin-top: 10px;
@@ -168,8 +170,17 @@ export default styled.div`
             }
             .small-boxes {
                 grid-template-columns: 1fr;
-                .recipient.plus.mobile-hide{
-                    display: none!important;
+                .recipient.plus{
+                    /* display: none!important; */
+                    color: white;
+                    height: 50px;
+                    padding: 5px 20px;
+                    width: fit-content;
+                    span {
+                        text-align: left;
+                        display: inline-block;
+                        padding: 10px 15px;
+                    }
                 }
                 .recipient {
                     grid-template-columns: 0fr 7fr;
@@ -181,7 +192,7 @@ export default styled.div`
                     width: 100%;
                     margin-top: 15px;
                     >div:last-child{
-                        padding: 12px 15px;
+                        padding: 6px 15px;
                         text-align: left;
                     }
                     img {

@@ -13,14 +13,14 @@ import { isObjectNotEmpty } from '../../../util/util';
 
 const Div = styled.div`
     .overlay {
-        position: absolute;
+        position: fixed;
         top: 0px;
         left: 0px;
         width: 100%;
         height: 150vh;
         background: rgba(0, 0, 0, 0.3);
         backdrop-filter: blur(2px);
-        z-index: 1;
+        z-index: 2;
     }
 
     .modal {
@@ -31,8 +31,8 @@ const Div = styled.div`
         background: #fff;
         margin: 0px auto;
         padding: 60px 0px 30px;
-        position: absolute;
-        z-index:1;
+        position: fixed;
+        z-index: 2;
         top: 240px;
         left: 22%;
         .head {
@@ -53,8 +53,7 @@ const Div = styled.div`
                 text-align: right;
                 font: normal normal normal 26px/24px Montserrat;
                 color: #A3A3A3;
-                cursor: default;
-                
+                cursor: pointer;
             }
         }
         .form {
@@ -187,6 +186,9 @@ const Div = styled.div`
         top: 50px;
         padding: 0px;
         box-shadow: none;
+        overflow-y: scroll;
+        height: 100vh;
+        padding-bottom: 100vh;
         .form {
             grid-template-columns: 1fr;
             grid-gap: 0px;
@@ -244,7 +246,7 @@ const Div = styled.div`
                 font: normal normal normal 13px/16px Montserrat;
                 border-radius: 6px;
             }
-            span {
+            >span {
                 font: normal normal normal 13px/16px Montserrat;
                 text-align: center;
                 display: block;
@@ -274,7 +276,8 @@ function NewRecipientModal(props: any) {
         state: recipientData?.profile?.state || "",
         reason: recipientData?.profile?.reason || "",
         bankName: recipientData?.profile?.bankName || "",
-        accountNumber: recipientData?.profile?.accountNumber || ""
+        accountNumber: recipientData?.profile?.accountNumber || "",
+        pickupPoint: recipientData?.profile?.pickupPoint || ""
     }
 
     const handleReasonsChange = (e: any) => {
@@ -331,7 +334,7 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
                                             </div>
                                             <div className={(touched.state && errors.state) ? 'form-error': ''}>
-                                                <div>City/State<i>*</i></div>
+                                                <div>City/State</div>
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
                                             <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
@@ -356,14 +359,26 @@ function NewRecipientModal(props: any) {
                                             {transfer.transferMethod === "bank_transfer" ?
                                             <React.Fragment>
                                                 <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                    <div>Recipient's bank name</div>
+                                                    <div> Beneficiary Bank Name</div>
                                                     <Field type="text" name="bankName" placeholder="" />
                                                 </div>
                                                 <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
-                                                    <div>Account number</div>
+                                                    <div>Recipient Account Number <span className="red-txt">{errors.accountNumber}</span> </div>
                                                     <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
                                                 </div>
                                             </React.Fragment> : ''}
+
+                                            {transfer.transferMethod === "cash_pickup" ?
+                                                <div className={(touched.pickup_point && errors.pickup_point) ? 'form-error': ''}>
+                                                    <div>Pickup point</div>
+                                                    <Field as="select" type="text" name="pickupPoint" placeholder="e.g. 3450012398" >
+                                                        <option value=""> - Select - </option>
+                                                        <option value="SB Capital (Akwa)"> SB Capital (Akwa)</option>
+                                                    </Field>
+                                                </div>
+                                             : ''}
+
+
                                     </div>
                                     <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton label={isObjectNotEmpty(recipientData) ? "Save" : "Add"} formName={paths.RECIPIENT} /> </div>
                                 </Form>

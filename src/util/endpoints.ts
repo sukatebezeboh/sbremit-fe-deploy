@@ -1,12 +1,13 @@
 const endpoints = {
     SIGN_UP: '/users/registration',
-    SIGN_IN: '/session',
+    SESSION: '/session',
     SIGN_OUT: '/sign-out',
     VALUES: '/values',
     VALUE: '/value',
     USER: '/user/$_1',
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
+    PASSWORD_CHANGE: '/user/password/change',
     RECIPIENTS: '/user/$_1/recipients',
     RECIPIENT: '/user/$_1/recipient/$_2',
     CREATE_RECIPIENT: '/user/$_1/recipient',
@@ -19,8 +20,10 @@ const endpoints = {
     GET_SERVICE: '/transfer/service/$_1',
     INITIATE_PAYMENT: '/user/$_1/payment',
     VERIFICATION: '/user/$_1/verification',
-    CONFIRM_ACCOUNT: '/user/email/confirm'
-
+    CONFIRM_ACCOUNT: '/user/email/confirm',
+    SUBSCRIBE: '/subscribe',
+    NOTIFICATIONS: '/user/$_1/notifications',
+    PROMO: '/promo/$_1'
 }
 
 export default endpoints;

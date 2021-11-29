@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const style = () => styled.div`
+const style = styled.div`
     .page-content {
         margin-top: 0px;
     }
@@ -35,6 +35,20 @@ const style = () => styled.div`
         .receive{
                 margin-top: 200px;
                 position: relative;
+        }
+        .x-error-message {
+            width: 200px;
+            position: absolute;
+            display: none;
+        }
+        .toggle {
+            width: 300px;
+            float: right;
+            z-index: 2;
+            position: relative;
+            @media only screen and (max-width: 900px) { 
+                width: 190px;
+            }
         }
         >div:nth-child(2){
             display: grid;
@@ -141,6 +155,12 @@ const style = () => styled.div`
                     color: #007B5D;
                     width: fit-content;
                 }
+                .sb-charges {
+                    .deep-green {
+                        /* display: inline-block; */
+                        position: unset;
+                    }
+                }
             }
             .timeline-1{
                 margin-top: 20px;
@@ -206,6 +226,7 @@ const style = () => styled.div`
         padding: 0px;
         .hero-rect {
             width: 100%;
+            margin-top: 50px;
         }
         .head {
             width: 100% ;
@@ -337,13 +358,13 @@ const style = () => styled.div`
                             width: 26px;
                             height: 26px; 
                         }
-                        span:nth-child(2){
+                        span.data-c{
                             font-size: 13px;
                             margin-right: 23px;
-                            margin-top: 0px;
+                            margin-top: 3px;
                             text-transform: uppercase;
                         }
-                        span:nth-child(3){
+                        span.span-angle{
                             font-size: 5px;
                             color: #007B5D;
                             margin-top: 10px;

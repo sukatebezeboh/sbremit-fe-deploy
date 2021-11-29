@@ -1,3 +1,5 @@
+import { settings } from "./settings";
+
 export const asset = (folder: string, name: string) => {
     return `/assets/${folder}/${name}`;
 }
@@ -25,7 +27,7 @@ export const parseEndpointParameters = (
 
 export const formatCurrency = (value: string, currency: string = ""): string => {
     value = value || "0"
-    value = (Math.ceil((getMoneyValue(value)) * 100) / 100).toString()
+    value = (((getMoneyValue(value)) * 100) / 100).toString()
     value = getMoneyValue(value).toFixed(2);
     return currency + value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -47,7 +49,7 @@ export const convertDateString = (value: any) => {
     return d.toDateString()
 }
 
-export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): T => {
+export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): any => {
     // eslint-disable-next-line eqeqeq
     const value = array.filter(a=>a[targetId] == id)[0];    
     return value?.[keyToReturn] || value;
@@ -76,3 +78,51 @@ export const downloadPDF = (id: string) => {
 }
 
 export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object).length)
+
+
+export const parseTransferMethod = (method: string) => {
+    return method?.replace('_', ' ')
+}
+
+export const reverseParseTransferMethod = (method: string) => {
+    return method?.replace(' ', '_')?.toLowerCase();
+}
+
+export const compareDatesXLessThanY = (x: string, y: string) => {
+    const xDate = new Date(x);
+    const yDate = new Date(y); 
+    return xDate < yDate;
+}
+
+export const getInclusiveText = (transferMethod: string) => {
+    const texts: any =  {
+        "mobile_money" : "(inclusive of cash out fee)",
+        "bank_transfer" : "(inclusive of payout partner fee)",
+        "cash_pickup" : "(inclusive of pick-up partner fee)",
+        "default": "(operator fee inclusive)"
+    }
+
+    return texts[transferMethod || "default"];
+
+}
+
+
+export const sortObjectByProperties = (object: any) => {
+    const values: string[] = Object.values(object);
+    const keys: string[] = Object.keys(object)
+    values.sort((a: any, b: any) => a > b ? 1 : -1);
+    const reverseObject: any = {}
+    keys.forEach(key => {
+        reverseObject[object[key]] = key
+    })
+
+    const sortedObject: any = {};
+    values.forEach((value: string) => {
+        sortedObject[reverseObject[value]] = value
+    })
+    return sortedObject;
+}
+
+export const getMax = (transferMethod: string) => {
+    return settings[ (transferMethod + '_MAX').toUpperCase() ]
+}

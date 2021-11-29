@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { useSelector } from 'react-redux';
 import { cancelTransfer, getRecipient, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
-import { formatCurrency } from '../../../util/util';
+import { formatCurrency, getInclusiveText, reverseParseTransferMethod } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -26,23 +26,36 @@ const Body = styled.div`
         .btns {
             text-align: right;
             margin: 65px 0px;
-            span {
+            display: grid;
+            grid-template-columns: 1fr 0fr;
+            >span {
                 display: inline-block;
-                margin-right: 50px;
+                margin-right: 0px;
                 font: normal normal normal 25px/30px Montserrat;
                 color: #424242;
                 cursor: default;
+                &.cancel {
+                    padding-top: 20px;
+                    margin-right: 40px;
+                }
             }
             button {
                 background: #FCD20F 0% 0% no-repeat padding-box;
                 border-radius: 8px;
-                width: 550px;
-                height: 80px;
+                min-width: 550px;
+                min-height: 80px;
                 text-align: center;
                 font: normal normal normal 25px/30px Montserrat;
                 color: #424242;
                 border: none;
                 outline: none;
+            }
+            .btn-group {
+                small {
+                    display: block;
+                    color: #A3A3A3;
+                    font-size: 16px;
+                }
             }
         }
         .details {
@@ -155,10 +168,13 @@ const Body = styled.div`
         .btns {
             margin-top: 0px;
             padding: 0px 2%;
+            grid-template-columns: 1fr;
+            grid-template-areas: 'a' 'b';
             button {
                 width: 100%;
-                height: 40px;
+                min-height: 40px;
                 font: normal normal normal 13px/16px Montserrat;
+                min-width: fit-content;
             }
             span {
                 font: normal normal normal 13px/16px Montserrat;
@@ -167,6 +183,9 @@ const Body = styled.div`
                 margin-right: 0px;
                 position: relative;
                 top: 70px;
+                &.cancel {
+                    grid-area: b;
+                }
             }
         }
         .cpm-text {
@@ -216,7 +235,6 @@ const CreateTransfer = () => {
     const transactionDetails =  useSelector((state: any)=>state.transfer.transactionDetails)
     const state =  useSelector((state: any)=>state)
     const user =  useSelector((state: any) => state.auth.user)
-    console.log(transactionDetails, "[[[[[");
     const recipient = useSelector((state: any) => state.recipients.recipient)
 
     const cancelPayment = () => {
@@ -240,7 +258,7 @@ const CreateTransfer = () => {
             <NavBar />
             <div className="page-content">
                 <div>
-                <PageHeading heading="Manual Bank Payment" subheading="Transfer the total to pay to SBremit’s GB account" back="/payment-method" />
+                <PageHeading heading="Manual Bank Payment" subheading="Transfer the total to pay to SBremit’s GB account" back={paths.PAYMENT_METHOD  + '?t=' + transactionDetails?.id} />
                 <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 <div className="box-container details">
@@ -256,41 +274,52 @@ const CreateTransfer = () => {
                             </div>
                         </div>
                         <div className="green-box">
-                            <div>
-                                <span>Bank</span>
-                                <span>Barclays Bank</span>
-                            </div>
 
                             <div>
                                 <span>Account name</span>
-                                <span>SBremit Ltd</span>
-                            </div>
-
-                            <div>
-                                <span>Sort code</span>
-                                <span>20-25-48</span>
+                                <span>SUKATE & BEZEBOH LTD</span>
                             </div>
 
                             <div>
                                 <span>Account number</span>
-                                <span>2348573900</span>
+                                <span>34690451</span>
                             </div>
 
                             <div>
-                                <span>Reference</span>
-                                <span>{ user.meta.customerId || transactionDetails?.meta?.transactionId?.substring(0, 10)}</span>
+                                <span>Sort code</span>
+                                <span>23-22-90</span>
                             </div>
-                            
+
+                            <div>
+                                <span>IBAN</span>
+                                <span>GB97IFXS23229034690451</span>
+                            </div>
+
+                            <div>
+                                <span>SWIFT / BIC</span>
+                                <span>IFXSGB2L</span>
+                            </div>
+
+
+                            <div>
+                                <span>Reference</span>
+                                <span>SBR{ user.meta.customerId || transactionDetails?.meta?.transactionId?.substring(0, 10)}</span>
+                            </div>
                         </div>
                         <Link to={paths.PAYMENT_METHOD + '?t=' + transactionDetails?.id} ><div className="green-txt cpm-text">Change payment method</div></Link>
-
                     </div>
                     <div className="mobile-hide">
                         <TransferDetailsBox transferId={transactionDetails?.id} />
                     </div>
-                    
                 </div>
-                <div className="btns"><span onClick={()=>cancelPayment()}>Cancel payment</span> <button onClick={handleSubmit}>I am sending {formatCurrency(`${Number((transactionDetails?.originAmount) )}`)} {transactionDetails?.originCurrency} to {recipient.firstName} </button> </div>
+                <div className="btns">
+                    <span className="cancel" onClick={()=>cancelPayment()}>Cancel payment</span> 
+                    <span className="btn-group">
+                        <button onClick={handleSubmit}>I am sending {formatCurrency(`${Number((transactionDetails?.destinationAmount) )}`)} {transactionDetails?.destinationCurrency} to {recipient.firstName} </button> 
+                        <small> {getInclusiveText(reverseParseTransferMethod(transactionDetails?.transferMethod))} </small> 
+                    </span>
+                </div>
+
             </div>
         </Body>
     )

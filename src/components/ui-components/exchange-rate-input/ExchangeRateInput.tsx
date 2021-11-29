@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { formatCurrency, formatCurrencyWithoutFloats } from '../../../util/util';
+import { formatCurrency, formatCurrencyWithoutFloats, getMoneyValue } from '../../../util/util';
 
 const Field = styled.div`
         .max-div {
@@ -11,8 +11,13 @@ const Field = styled.div`
             right: 0;
             color: #007B5D;
             font-weight: bolder;
+            width: fit-content;
+            white-space: nowrap;
             .max-value {
                 font-weight: lighter;
+            }
+            @media only screen and (max-width: 900px) { 
+                margin-top: -25px;
             }
         }
         .countries-dropdown {
@@ -64,6 +69,7 @@ const Field = styled.div`
             background: #fff;
             .you-send{
                 font: normal normal normal 15px/19px Montserrat;
+                color: lightgray;
             }
             >div{
                 >input{
@@ -71,6 +77,7 @@ const Field = styled.div`
                     width: 100%;
                     border: none;
                     outline: none;
+                    /* color: #007B5D; */
                     @media only screen and (max-width: 900px) { 
                         width: 120px;
                     }
@@ -111,12 +118,11 @@ const Field = styled.div`
 `
 
 const ExchangeRateInput = (props: any) =>{
-    const {data, handleXInputChange, max, countries} = props;
+    const {data, handleXInputChange, max, countries, setChangedInput} = props;
     const [countriesDropDown, setCountriesDropDown] = useState(false);
     const dispatch = useDispatch();
     const transfer = useSelector((state: any) => state.transfer)
     const appValues = useSelector((state: any) => state.appValues)
-
 
     const handleCountrySelection = (country: string) => {
         const countriesList = appValues.countries;
@@ -126,7 +132,7 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...data, currency: countries[country], image: countryKey},
+                    toSend: {...transfer.toSend, currency: countries[country], image: countryKey},
                 }
             })
         }
@@ -135,42 +141,43 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toReceive: {...data, currency: countries[country], image: countryKey},
+                    toReceive: {...transfer.toReceive, currency: countries[country], image: countryKey},
                 }
             })
         }
         setCountriesDropDown(false)
     }
+
+
        return (
-        <Field key={data?.currency +'-field-'+ window.location.pathname}>
-            <div className={`x-input ${(max && data?.value > max) ? 'selected-border-yellow' : ''}`}>
-                <div className="xi-1">
-                    <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                    <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" value={data.isSend ? formatCurrency(data?.value) : formatCurrencyWithoutFloats(Math.floor(data?.value))} onChange={(e)=>{handleXInputChange(e, data)}}/>
+            <Field key={data?.currency +'-field-'+ window.location.pathname}>
+                <div className={`x-input ${(max && data?.total > max) ? 'selected-border-re' : ''}`}>
+                    <div className="xi-1">
+                        <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
+                        <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" placeholder="0.00" value={(data.isSend ? getMoneyValue(formatCurrency(data?.value)) : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput()}}/>
+                    </div>
+                    <div  className="flg-drp">
+                        {
+                            max && <span className={`float-right max-div ${(max && Number(data?.total) > max) ? 'red-txt' : ''}`}> {(max && data?.total > max) ? 'Exceeded max:' : 'Max:'} <span className="max-value">{formatCurrencyWithoutFloats(max)} {data?.currency}</span> </span>
+                        }
+                        <img onClick={() => setCountriesDropDown(!countriesDropDown)} src={`/assets/flags/${data?.image}.png`} alt={data?.currency}/>
+                        <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="data-c">{data?.currency}</span>
+                        <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="span-angle"><img src="./assets/icons/angle-down.svg" alt=""/></span>
+                        {
+                            countriesDropDown &&
+                            <div className="countries-dropdown">
+                                <ul>
+                                    {
+                                        Object.keys(countries).map(country => (
+                                            <li onClick={() => handleCountrySelection(country)}>{country}</li>
+                                        ))
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div  className="flg-drp">
-                    {
-                        // max && <span className="float-right max-div">Max: <span className="max-value">{max} GBP</span> </span>
-                    }
-                    <img onClick={() => setCountriesDropDown(!countriesDropDown)} src={`./assets/flags/${data?.image}.png`} alt={data?.currency}/>
-                    <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="data-c">{data?.currency}</span>
-                    <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="span-angle"><img src="./assets/icons/angle-down.svg" alt=""/></span>
-                    {
-                        countriesDropDown &&
-                        <div className="countries-dropdown">
-                            <ul>
-                                {
-                                    Object.keys(countries).map(country => (
-                                        <li  onClick={() => handleCountrySelection(country)}>{country}</li>
-                                    ))
-                                }
-                            </ul>
-                        </div>
-                    }
-                </div>
-                
-            </div>
-        </Field>
+            </Field>
         )
 }
 

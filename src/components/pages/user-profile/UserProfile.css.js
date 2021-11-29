@@ -61,7 +61,7 @@ const style = () => styled.div`
         }
         div.down {
             display: grid;
-            grid-template-columns: 2fr 2fr 0.5fr;
+            grid-template-columns: 2fr 2fr 1fr;
             .detail-grp {
                 margin: 40px 0px;
                 div{

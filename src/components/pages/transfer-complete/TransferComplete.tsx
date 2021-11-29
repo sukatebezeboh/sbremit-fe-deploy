@@ -141,30 +141,30 @@ const Body = styled.div`
             grid-gap: 1%!important;
         }
         .details {
-                grid-template-columns: 1fr;
-                grid-gap: 15px;
-                width: 100%;
-                >div {
-                    padding: 15px 20px;
-                    .heading {
-                        .title {
-                            font: normal normal normal 13px/16px Montserrat;
-                        }
-                        .update {
-                            font: normal normal normal 11px/14px Montserrat;
-                        }
+            grid-template-columns: 1fr;
+            grid-gap: 15px;
+            width: 100%;
+            >div {
+                padding: 15px 20px;
+                .heading {
+                    .title {
+                        font: normal normal normal 13px/16px Montserrat;
                     }
-                    .row {
-                        font: normal normal normal 11px/22px Montserrat;
+                    .update {
+                        font: normal normal normal 11px/14px Montserrat;
                     }
                 }
-                .recipient-details {
-                    margin-left: auto;
-                }
-                .transfer-details {
-
+                .row {
+                    font: normal normal normal 11px/22px Montserrat;
                 }
             }
+            .recipient-details {
+                margin-left: auto;
+            }
+            .transfer-details {
+
+            }
+        }
 }
 `
 

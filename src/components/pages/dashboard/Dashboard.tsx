@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions } from '../../../redux/actions/actions';
-import { TRANSFER } from '../../../redux/actionTypes';
+import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
+import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import NavBar from '../../ui-components/navbar/NavBar';
@@ -22,6 +23,8 @@ const Dashboard = () => {
     const [modalData, setModalData] = useState({});
     const [selectedFilter, setSelectedFilter] = useState("");
     const history = useHistory();
+    const [isResending, setIsResending] = useState(false);
+
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -47,7 +50,7 @@ const Dashboard = () => {
     const getTransactions = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
-            completed: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
+            complete: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
             cancelled: transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [],
             pending: transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [],
         }
@@ -57,11 +60,47 @@ const Dashboard = () => {
     const getCorrespondingPages = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.pages,
-            completed: transfer.paginatedCompletedTransactions.pages,
+            complete: transfer.paginatedCompletedTransactions.pages,
             cancelled: transfer.paginatedCancelledTransactions.pages,
             pending: transfer.paginatedPendingTransactions.pages,
         }
         return filters[selectedFilter||"all"]
+    }
+
+    const handleResend = (data: any, recipient: any) => {
+        setIsResending(true)
+
+        if (Array.isArray(recipient)) {
+            recipient = recipient.find((r) => r.id === data.recipientId )
+        }
+
+        const toSend = {
+            value: data.originAmount,
+            currency: data.originCurrency,
+            image: data.originCurrency
+        }
+
+        const toReceive = {
+            value: data.destinationAmount,
+            currency: data.destinationCurrency,
+            image: data.destinationCurrency
+        }
+
+        const transferMethod = data.transferMethod
+
+        dispatch({type: RECIPIENT, payload: recipient})
+        dispatch({type: TRANSFER, payload: {...transfer, toSend, toReceive, transferMethod}})
+        toastAction({
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            message: "Okay. Let's start resending in a smooth sail..."
+        })
+
+        setTimeout(()=>{
+            history.push(paths.TRANSFER_METHOD)
+            setIsResending(false)
+        }, 1000 )
     }
 
     const transactions = getTransactions();
@@ -76,7 +115,7 @@ const Dashboard = () => {
     return (
         <Body>
             <NavBar />
-            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} />
+            <TransactionDetail openTDModal={openTDModal} data={modalData} handleOpenTDModal={handleOpenTDModal} handleShowPlus={handleShowPlus} handleResend={(data: any, recipient: any) => handleResend(data, recipient)} isResending={isResending} />
             <div className="page-content">
                 <PageHeading heading="Dashboard" subheading="View recent transactions and analytics"/>
                 <Link to="/transfer-method">
@@ -84,7 +123,7 @@ const Dashboard = () => {
                 </Link>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
-                        <div className="green-txt">{getTransactionStatusCount('completed')}</div>
+                        <div className="green-txt">{getTransactionStatusCount('complete')}</div>
                         <div>Complete Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
@@ -110,12 +149,12 @@ const Dashboard = () => {
                             setModalData(transaction);
                             handleOpenTDModal(true);
                         }}>
-                        <div><img src={asset('images', 'noimage.png')} alt=""/></div>
+                        <div><img src={`${resources.DICE_BEAR_RECIPIENT}${getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName') + ' ' + getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName') + transaction.recipientId }.svg`} alt=""/></div>
                         <div>
                             <div>{convertDateString(transaction.dateCreated)}</div>
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                         </div>
-                        <div className={"status"}><span className={"sentence-case "+transaction.status?.toLowerCase()}>{transaction.status}</span></div>
+                        <div className={"status"}><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{transaction.status}</span></div>
                         <div>
                             <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
                             <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
@@ -123,9 +162,9 @@ const Dashboard = () => {
                     </div>
                     <hr/>
                     <div className="down">
-                        <div>Transaction #: <span>{transaction.meta.transactionId}</span></div>
+                        <div>Transaction #: <span>SBR{transaction.meta.transactionId}</span></div>
                         <div>
-                            <span><img src={asset('icons', 'reload.svg')} alt="resend"/> Resend</span> 
+                            <span className="is-clickable" onClick={() => handleResend(transaction, recipients)} ><img src={asset('icons', 'reload.svg')} alt="resend"  className={isResending ? "is-resending" : ""} /> Resend</span> 
                             <span
                             className="view-det"
                             onClick={()=>{

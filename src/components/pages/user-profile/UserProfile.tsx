@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import style from './UserProfile.css'
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
+import { resources } from '../../../util/constants';
 
 const Body = style();
 
@@ -13,19 +14,21 @@ const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
     const history = useHistory()
+    console.log(user);
+    
     return (
         <Body>
             <NavBar />
-            <div className="page-content">
+            <div className="page-content"> 
                 <PageHeading heading="My Profile" subheading="View my personal and account information" mobileHide="subheading" />
 
                 <div className="box">
                     <div className="up">
                         <div className="left">
-                            <img src={asset('images', 'noimage.png')} alt="user pic"/>
+                            <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="user pic"/>
                             <div>
                                 <div>{user.profile.firstName + ' ' + user.profile.lastName}</div>
-                                <div>Membership number SBR899065</div>
+                                <div>Membership number SBR{user.meta.customerId}</div>
                             </div>
                             <div>
                                 <span className="status">{user.status}</span>
@@ -48,7 +51,7 @@ const UserProfile = () => {
                         </div>
                         <div className="detail-grp">
                             <div>Gender</div>
-                            <div>{user.profile.gender || '-'}</div>
+                            <div className="capitalize">{user.profile.gender || '-'}</div>
                         </div>
                         <div className="detail-grp">
                             <div>Email</div>
@@ -56,15 +59,19 @@ const UserProfile = () => {
                         </div>
                         <div className="detail-grp">
                             <div>Mobile</div>
-                            <div>{user.mobile || '-'}</div>
+                            <div>{user.profile.mobile || '-'}</div>
                         </div>
                         <div className="detail-grp">
                             <div>DOB</div>
-                            <div>{user.profile.dob || '-'}</div>
+                            <div>{user.profile.day ? ( user.profile.day + '/' + user.profile.month + '/' + user.profile.year )  : '-'}</div>
                         </div>
                         <div className="detail-grp">
-                            <div>Address</div>
-                            <div>{user.profile.address || '-'}</div>
+                            <div>Address 1</div>
+                            <div>{user.profile.address1 || '-'}</div>
+                        </div>
+                        <div className="detail-grp">
+                            <div>Address 2</div>
+                            <div>{user.profile.address2 || '-'}</div>
                         </div>
                         <div className="detail-grp">
                             <div>City / Town</div>
@@ -80,7 +87,7 @@ const UserProfile = () => {
                         </div>
                         <div className="detail-grp">
                             <div>Country</div>
-                            <div>{countries[user.profile.location_country] || '-'}</div>
+                            <div>{countries[user.profile.location_country?.toUpperCase()] || '-'}</div>
                         </div>
                     </div>
                 </div>

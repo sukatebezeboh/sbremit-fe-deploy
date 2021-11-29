@@ -9,6 +9,7 @@ const Button = styled.button`
         text-align: center;
         padding-left: 20px !important;
         padding-right: 20px !important;
+        cursor: pointer;
         span{
             display: inline-block;
             width: 100%;

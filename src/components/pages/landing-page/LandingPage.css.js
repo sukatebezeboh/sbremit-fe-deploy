@@ -6,7 +6,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
-    height: 125vh;
+    height: 165vh;
     .f-growing{
         display: none;
     }
@@ -45,7 +45,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
         margin-top: 45px;
         margin-bottom: 50px;
         width: 87%;
-        max-height: 900px;
+        max-height: 1100px;
         background: #fff;
         display: inline-block;
         background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -66,11 +66,23 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             z-index: -10;
             background: #00000006;
             position: relative;
+            @media only screen and (max-width: 900px) { 
+                display: none;
+            }
         }
         .receive{
             /* margin-top: 206px; */
             position: relative;
             z-index: 2;
+        }
+        .toggle {
+            width: 300px;
+            float: right;
+            z-index: 2;
+            position: relative;
+            @media only screen and (max-width: 900px) { 
+                width: 190px;
+            }
         }
         >div:nth-child(2){
             display: grid;
@@ -110,8 +122,17 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             font: normal normal normal 25px/30px Montserrat;
             color: #424242;
             border: none;
-            margin-top: 89px;
+            margin-top: 20px;
             outline: none;
+            cursor: pointer;
+            small {
+                display: block;
+                opacity: 0.7;
+                font-size: 14px;
+                margin: 0px;
+                padding: 0px;
+                line-height: 10px;
+            }
         }
         .x-input{
             >div.flg-drp{
@@ -187,6 +208,12 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                     font: normal normal 600 15px/19px Montserrat;
                     color: #007B5D;
                 }
+                .sb-charges {
+                    .deep-green {
+                        /* display: inline-block; */
+                        position: unset;
+                    }
+                }
             }
             .timeline-1{
                 margin-top: 20px;
@@ -240,7 +267,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             width: 268px;
             text-align: center;
             position: relative;
-            top: 55px;
+            /* top: 55px; */
             margin: auto;
             z-index: +3;
             span{
@@ -313,7 +340,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 div:nth-child(2){
                     display: grid;
                     grid-template-columns: 1fr 1fr 1fr;
-                    margin-top: 15px;
+                    /* margin-top: 15px; */
                     button{
                         font: normal normal normal 10px/13px Montserrat;
                         height: 30px;
@@ -337,16 +364,16 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                             width: 26px;
                             height: 26px; 
                         }
-                        span:nth-child(2){
+                        span.data-c{
                             font-size: 13px;
                             margin-right: 23px;
-                            margin-top: 0px;
+                            margin-top: 5px;
                             text-transform: uppercase;
                         }
-                        span:nth-child(3){
+                        span.span-angle{
                             font-size: 5px;
                             color: #007B5D;
-                            margin-top: 10px;
+                            margin-top: 15px;
                             img{
                                 height: 9px;
                                 width: 10px;
