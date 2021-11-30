@@ -317,7 +317,6 @@ const LandingPage = (props: any) => {
                         setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === "sbremit-web-uat" ? paths.SIGN_IN : paths.SIGN_UP));
                         }}>
                             Start sending money
-                            <small>Launching soon...</small>
                         </button>
                 </div>
             </div>
