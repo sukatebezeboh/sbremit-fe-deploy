@@ -23,6 +23,7 @@ http.interceptors.request.use((config: any) => {
             const authToken = authData.authToken
 
             const requestHash = payload ? sha1(url + payload + authToken) : sha1(url + authToken);
+            console.log( url, payload, authToken , requestHash);
 
             headers = {
                 'X-SERVICE-PROVIDER'    : authData.serviceProvider,
