@@ -11,10 +11,11 @@ const envs: any = {
 }
 let _env: any = development;
 const env = (config: string) => {
-    console.log('env', config);
-    _env = {...envs[config], ...common}
+    _env = { ...common, ...envs[config]}   
+     console.log( 'env', config)
+
 }
-const processEnv = process.env.NODE_ENV == 'production' && window.location.href.includes('netlify') ? 'staging' : process.env.NODE_ENV;
+// const processEnv = process.env.NODE_ENV == 'production' && window.location.href.includes('netlify') ? 'staging' : process.env.NODE_ENV;
 
 env(process.env.REACT_APP_ENV || 'development');
 

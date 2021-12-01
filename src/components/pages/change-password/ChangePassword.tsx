@@ -3,9 +3,9 @@ import React, {useState} from 'react'
 import { changePasswordAction } from '../../../redux/actions/actions';
 import { ChangePasswordValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
-import FormButton from '../../ui-components/form-button/FormButton';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
+import FormButton from '../../modules/form-button/FormButton';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
 import style from './ChangePassword.css'
 
 const Body = style();

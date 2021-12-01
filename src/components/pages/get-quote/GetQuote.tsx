@@ -8,12 +8,12 @@ import { paths } from '../../../util/paths';
 import { settings } from '../../../util/settings';
 import { formatCurrency, getMax, getMoneyValue } from '../../../util/util';
 // import { asset } from '../../../util/util';
-import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import FancyToggle from '../../ui-components/parts/FancyToggle';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
-import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
+import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import FancyToggle from '../../modules/parts/FancyToggle';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import Body from './GetQuote.css';
 
 const GetQuote = () => {
@@ -284,9 +284,10 @@ const GetQuote = () => {
                             <div className="toggle">
                                 <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                             </div>
+                            <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
+
                             <PromoCodeField />
                         </div>
-                        <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
                     </div>
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={()=>handleContinue()}>Continue</button> </div>

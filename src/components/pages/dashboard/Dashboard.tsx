@@ -1,15 +1,17 @@
+import { replace } from 'formik';
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
-import { resources } from '../../../util/constants';
+import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
-import TransactionDetail from '../../ui-components/transaction-detail-modal/TransactionDetail';
+import { asset, convertDateString, formatCurrency, getValueFromArray, replaceUnderscores } from '../../../util/util';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
+import TransactionDetail from '../../modules/transaction-detail-modal/TransactionDetail';
+import TransferExpiryCountDown from '../../modules/transfer-expiry-countdown/TransferExpiryCountDown';
 import style from './Dashboard.css';
 
 
@@ -111,6 +113,9 @@ const Dashboard = () => {
         return allTransactions.filter((t: any)=>t.status?.toLowerCase() === status).length
     }
 
+    const showTransactionExpiry = (transaction: any) => {
+        return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING_VERIFICATION?.toLowerCase() || transaction.meta.expired
+    }
 
     return (
         <Body>
@@ -150,12 +155,13 @@ const Dashboard = () => {
                             handleOpenTDModal(true);
                         }}>
                         <div><img src={`${resources.DICE_BEAR_RECIPIENT}${getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName') + ' ' + getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName') + transaction.recipientId }.svg`} alt=""/></div>
-                        <div>
+                        <div className="user-brief">
                             <div>{convertDateString(transaction.dateCreated)}</div>
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
+                            { showTransactionExpiry(transaction) && <TransferExpiryCountDown dateCreated={transaction.dateCreated} />}
                         </div>
-                        <div className={"status"}><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{transaction.status}</span></div>
-                        <div>
+                        <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{replaceUnderscores(transaction.status)}</span></div>
+                        <div className="figures">
                             <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
                             <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
                         </div>

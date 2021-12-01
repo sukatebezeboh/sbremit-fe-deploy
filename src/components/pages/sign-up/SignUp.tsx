@@ -1,14 +1,14 @@
 import React, {useState, useCallback} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import { Link, useHistory } from "react-router-dom";
-import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
+import SBRemitLogo from "../../modules/sbremit-logo/SBRemitLogo";
 import style from "../shared/auth.css";
 import {Formik, Form, Field} from 'formik';
 import { SignUpValidator } from "../../../util/form-validators";
 import { signUpAction } from "../../../redux/actions/actions";
-import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
+import ButtonLoader from "../../modules/button-loader/ButtonLoader";
 import { SIGN_UP, SUBMITTING, TOAST } from "../../../redux/actionTypes";
-import Toast from "../../ui-components/toast-factory/toast/Toast";
+import Toast from "../../modules/toast-factory/toast/Toast";
 import { paths } from "../../../util/paths";
 
 

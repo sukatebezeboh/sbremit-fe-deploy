@@ -5,15 +5,16 @@ import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setN
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMax, getMoneyValue } from '../../../util/util';
-import { AppFooter } from '../../ui-components/app-footer/AppFooter';
-import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
-import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
+import { AppFooter } from '../../modules/app-footer/AppFooter';
+import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
 import { style } from "./LandingPage.css";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
-import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
+import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
-import FancyToggle from '../../ui-components/parts/FancyToggle';
+import FancyToggle from '../../modules/parts/FancyToggle';
 import { constants } from '../../../util/constants';
+import config from '../../../env';
 
 const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
 const Body = style(bg);
@@ -39,7 +40,6 @@ const LandingPage = (props: any) => {
         && Number(toSend.value) <= Number(promo.settings.maximumSpend)
     ) {
         rate = promo.settings.rate
-        console.log(rate);
     }
     // toReceive.value = transfer.toSend.value * rate
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
@@ -124,7 +124,6 @@ const LandingPage = (props: any) => {
             && Number(value) <= Number(promo.settings.maximumSpend)
         ) {
             rate = promo.settings.rate
-            console.log(rate);
         }
         // if(!value) return;
         if (data.isSend) {
@@ -306,16 +305,14 @@ const LandingPage = (props: any) => {
                             }
                         </div>
 
-
                     </form>
                     <div className="toggle">
                         <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                     </div>
                     <PromoCodeField />
-                    <button onClick={()=>{
-                        
-                        setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === "sbremit-web-uat" ? paths.SIGN_IN : paths.SIGN_UP));
-                        }}>
+                        <button onClick={()=>{
+                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
+                            }}>
                             Start sending money
                         </button>
                 </div>

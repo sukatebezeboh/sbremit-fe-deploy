@@ -80,11 +80,11 @@ export const downloadPDF = (id: string) => {
 export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object).length)
 
 
-export const parseTransferMethod = (method: string) => {
-    return method?.replace('_', ' ')
+export const replaceUnderscores = (method: string) => {
+    return method?.replace('_', ' ');
 }
 
-export const reverseParseTransferMethod = (method: string) => {
+export const parseWithUnderscores = (method: string) => {
     return method?.replace(' ', '_')?.toLowerCase();
 }
 
@@ -126,3 +126,27 @@ export const sortObjectByProperties = (object: any) => {
 export const getMax = (transferMethod: string) => {
     return settings[ (transferMethod + '_MAX').toUpperCase() ]
 }
+
+export const secondsToHms = (value : any) => {
+    const sec = parseInt(value, 10); 
+    let hours: string|number = Math.floor(sec / 3600); 
+    let minutes: string|number = Math.floor((sec - hours * 3600) / 60); 
+    let seconds: string|number = sec - hours * 3600 - minutes * 60;
+    if (hours < 10) {      hours = '0' + hours;    }
+    if (minutes < 10) {      minutes = '0' + minutes;    }
+    if (seconds < 10) {      seconds = '0' + seconds;    }
+    if (hours == 0) {
+      return +minutes + ':' + seconds; // Return in MM:SS format
+    } else {
+      return hours + ':' + minutes + ':' + seconds; // Return in HH:MM:SS format
+    }
+}
+
+export const convertToJSTimestamp = (timestamp: number = 0) => {
+    return timestamp*1000
+}
+
+export const convertFromJSTimestamp = (timestamp: number = 0) => {
+    return Math.floor(timestamp/1000)
+}
+

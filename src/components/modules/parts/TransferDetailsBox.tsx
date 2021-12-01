@@ -6,7 +6,7 @@ import { getTransactionDetails } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getInclusiveText, getQueryParam, reverseParseTransferMethod } from '../../../util/util';
+import { formatCurrency, getInclusiveText, getQueryParam, parseWithUnderscores } from '../../../util/util';
 
 const Div = styled.div`
     .transfer-details {
@@ -106,8 +106,6 @@ const TransferDetailsBox = ( { transferId } :any ) => {
 
     const transfer = useSelector((state: any) => state.transfer);    
     const transaction = transfer.transactionDetails;
-    console.log(transferId, transfer, transaction);
-
     const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer.transferMethod.replace('_', ' ');
     const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
     const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
@@ -172,7 +170,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="right uppercase">{"0.00"} GBP</div>
                     </div>
                     <div className="row">
-                        <div className="left">They get <small> {getInclusiveText(reverseParseTransferMethod(transferMethod))} </small> </div>
+                        <div className="left">They get <small> {getInclusiveText(parseWithUnderscores(transferMethod))} </small> </div>
                         <div className="right uppercase"><b>{receiveAmount} {receiveCurrency}</b></div>
                     </div>
                     <div className="row">
