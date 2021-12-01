@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import styled from "styled-components";
 import { useSelector } from 'react-redux';
 import { cancelTransfer, getRecipient, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getInclusiveText, reverseParseTransferMethod } from '../../../util/util';
+import { formatCurrency, getInclusiveText, parseWithUnderscores } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -268,7 +268,8 @@ const CreateTransfer = () => {
                             <div className="list">
                                 <ul>
                                     <li>You must include the reference provided when making transfer</li>
-                                    <li>Transfer must be done within 24 hours</li>
+                                    <li>Bank transfer to our account must be done within an hour. </li>
+                                    <li>Pending transactions expire after one hour of initiating them and might need to be re-initiated </li>
                                     <li>Your transfer will be processed once payment is received from your bank</li>
                                 </ul>
                             </div>
@@ -316,7 +317,7 @@ const CreateTransfer = () => {
                     <span className="cancel" onClick={()=>cancelPayment()}>Cancel payment</span> 
                     <span className="btn-group">
                         <button onClick={handleSubmit}>I am sending {formatCurrency(`${Number((transactionDetails?.destinationAmount) )}`)} {transactionDetails?.destinationCurrency} to {recipient.firstName} </button> 
-                        <small> {getInclusiveText(reverseParseTransferMethod(transactionDetails?.transferMethod))} </small> 
+                        <small> {getInclusiveText(parseWithUnderscores(transactionDetails?.transferMethod))} </small> 
                     </span>
                 </div>
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
 import {asset} from '../../../util/util';
 import { Link, useHistory } from 'react-router-dom';
 import style from './UserProfile.css'

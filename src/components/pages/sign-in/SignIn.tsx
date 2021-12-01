@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import style from "../shared/auth.css";
-import ForgotPasswordModal from '../../ui-components/forgot-password-modal/ForgotPasswordModal';
-import SBRemitLogo from "../../ui-components/sbremit-logo/SBRemitLogo";
+import ForgotPasswordModal from '../../modules/forgot-password-modal/ForgotPasswordModal';
+import SBRemitLogo from "../../modules/sbremit-logo/SBRemitLogo";
 import { SignInValidator } from "../../../util/form-validators";
 import { Field, Form, Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "../../../redux/actions/actions";
-import ButtonLoader from "../../ui-components/button-loader/ButtonLoader";
+import ButtonLoader from "../../modules/button-loader/ButtonLoader";
 import { SIGN_IN } from "../../../redux/actionTypes";
 import { paths } from "../../../util/paths";
 

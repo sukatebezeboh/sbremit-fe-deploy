@@ -5,13 +5,13 @@ import { getRecipients, getUserTransactions, toastAction } from '../../../redux/
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getMax, getQueryParam, getValueFromArray, parseTransferMethod } from '../../../util/util';
-import NavBar from '../../ui-components/navbar/NavBar';
-import NewRecipientModal from '../../ui-components/new-recipient-modal/NewRecipientModal';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import { asset, getMax, getQueryParam, getValueFromArray, replaceUnderscores } from '../../../util/util';
+import NavBar from '../../modules/navbar/NavBar';
+import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import Body from './Recipient.css';
 
 const Recipient = () => {
@@ -172,7 +172,7 @@ const Recipient = () => {
                                             <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
                                             <div>
                                                 <div>{recipient.firstName + ' ' + recipient.lastName}</div>
-                                                {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({parseTransferMethod(recipient.profile.transferMethod)})</small>}
+                                                {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({replaceUnderscores(recipient.profile.transferMethod)})</small>}
                                             </div>
                                         </div>
 

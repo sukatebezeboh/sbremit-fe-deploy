@@ -6,8 +6,8 @@ import { resetPasswordAction } from '../../../redux/actions/actions';
 import { REDIRECT } from '../../../redux/actionTypes';
 import { ResetPasswordValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
-import FormButton from '../../ui-components/form-button/FormButton';
-import SBRemitLogo from '../../ui-components/sbremit-logo/SBRemitLogo'
+import FormButton from '../../modules/form-button/FormButton';
+import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo'
 import style from './ResetPassword.css'
 
 const Body = style();

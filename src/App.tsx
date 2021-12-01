@@ -3,13 +3,13 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import {Routing, IRoute} from './util/routes'
-import ToastFactory from './components/ui-components/toast-factory/ToastFactory';
+import ToastFactory from './components/modules/toast-factory/ToastFactory';
 import { checkAuth, appValuesAction } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
-import AppLoader from './components/ui-components/app-loader/AppLoader';
-import { AppFooter } from './components/ui-components/app-footer/AppFooter';
-import ComingSoon from './components/ui-components/coming-soon/ComingSoon';
+import AppLoader from './components/modules/app-loader/AppLoader';
+import { AppFooter } from './components/modules/app-footer/AppFooter';
+import ComingSoon from './components/modules/coming-soon/ComingSoon';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)

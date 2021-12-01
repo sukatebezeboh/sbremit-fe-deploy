@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import styled from "styled-components";
-import RadioButton from '../../ui-components/parts/RadioButton';
+import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { cancelTransfer, confirmTransfer, getTransactionDetails, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { ConfirmModal } from '../../ui-components/confirm-modal/ConfirmModal';
+import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import { loadStripe } from '@stripe/stripe-js';
 import http from '../../../util/http';
 import { formatCurrency, getQueryParam } from '../../../util/util';

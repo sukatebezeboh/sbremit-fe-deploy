@@ -5,8 +5,8 @@ import { getServiceRate, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset } from '../../../util/util';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
 import style from './TransferMethod.css'
 
 const Body = style();
