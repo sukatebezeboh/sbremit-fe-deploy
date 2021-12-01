@@ -77,7 +77,7 @@ const style = () => styled.div`
                     :first-child {
 
                     }
-                    :nth-child(2){
+                    &.user-brief{
                         /* display: grid;
                         grid-template-rows: 1fr 1fr; */
                         div:first-child {
@@ -90,7 +90,7 @@ const style = () => styled.div`
                             margin-top: 10px;
                         }
                     }
-                    :nth-child(3){
+                    &.status{
                         span {
                             background: #FCD20F;
                             color: white;
@@ -100,7 +100,7 @@ const style = () => styled.div`
                             font-size: 14px;
                         }
                     }
-                    :nth-child(4) {
+                    &.figures {
                         text-align: right;
                         div {
                             :first-child{
@@ -264,7 +264,7 @@ const style = () => styled.div`
                             width: 30px;
                             height: 30px;
                         }
-                        :nth-child(3) {
+                        &.status {
                             span {
                                 padding: 3px 10px;
                                 position: absolute;

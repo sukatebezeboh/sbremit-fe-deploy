@@ -1,6 +1,6 @@
 import React from 'react'
 import { constants } from '../../../../util/constants'
-import { parseTransferMethod } from '../../../../util/util'
+import { replaceUnderscores } from '../../../../util/util'
 
 
 export const ReceiptOverview = ({data, recipient}: {data?: any, recipient?: any}) => {
@@ -29,7 +29,7 @@ export const ReceiptOverview = ({data, recipient}: {data?: any, recipient?: any}
                 </div>
                 <div className="unit">
                   <p>Payout Method</p>
-                  <p className="capitalize">{parseTransferMethod(data?.transferMethod) || ""}</p>
+                  <p className="capitalize">{replaceUnderscores(data?.transferMethod) || ""}</p>
                 </div>
               </div>
             </div>

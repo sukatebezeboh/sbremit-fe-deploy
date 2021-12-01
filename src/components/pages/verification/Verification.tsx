@@ -6,10 +6,10 @@ import styled from 'styled-components'
 import { userVerificationAction } from '../../../redux/actions/actions';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 
 const Body = styled.div`
     .page-content {

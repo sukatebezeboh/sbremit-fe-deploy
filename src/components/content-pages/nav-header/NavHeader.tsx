@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { asset } from '../../../util/util';
-import SBRemitLogo from '../../ui-components/sbremit-logo/SBRemitLogo';
+import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo';
 import { Link, useHistory } from 'react-router-dom';
 import style from './NavHeader.css';
 import { constants } from '../../../util/constants';

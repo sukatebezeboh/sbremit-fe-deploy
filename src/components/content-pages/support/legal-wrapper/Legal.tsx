@@ -2,7 +2,7 @@ import React, { useState} from 'react'
 import styled from 'styled-components';
 import NavHeader from '../../nav-header/NavHeader';
 import SideNav from '../side-nav/SideNav';
-import { AppFooter } from '../../../ui-components/app-footer/AppFooter';
+import { AppFooter } from '../../../modules/app-footer/AppFooter';
 import TermsAndConditions from '../terms-and-conditions/TermsAndConditions';
 import PrivacyPolicy from '../privacy-policy/PrivacyPolicy';
 import {Switch, Route, Link, useHistory, useLocation} from 'react-router-dom';

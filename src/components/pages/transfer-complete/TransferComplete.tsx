@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link, useHistory } from 'react-router-dom';
-import NavBar from '../../ui-components/navbar/NavBar';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import NavBar from '../../modules/navbar/NavBar';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import styled from "styled-components";
-import SuccessIcon from '../../ui-components/success-icon/SuccessIcon';
+import SuccessIcon from '../../modules/success-icon/SuccessIcon';
 import { asset, getQueryParam } from '../../../util/util';
 
 const Body = styled.div`
