@@ -5,11 +5,11 @@ import { getQuoteService, getServiceRate, setNewQuote, setNewQuoteWithoutAuth } 
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMoneyValue } from '../../../util/util';
-import { AppFooter } from '../../ui-components/app-footer/AppFooter';
-import ExchangeRateInput from '../../ui-components/exchange-rate-input/ExchangeRateInput';
-import SBRemitLogo from "../../ui-components/sbremit-landing-logo/SBRemitLandingLogo";
+import { AppFooter } from '../../modules/app-footer/AppFooter';
+import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
-import PromoCodeField from '../../ui-components/promo-code-field/PromoCodeField';
+import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
 import styled from 'styled-components';
 

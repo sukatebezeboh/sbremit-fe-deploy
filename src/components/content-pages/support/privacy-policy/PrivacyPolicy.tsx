@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react';
-import PageHeading from '../../../ui-components/page-heading/PageHeading';
+import PageHeading from '../../../modules/page-heading/PageHeading';
 import styled from 'styled-components';
 
 const Div = styled.div`

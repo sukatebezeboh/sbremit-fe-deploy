@@ -133,8 +133,6 @@ const Toggle = styled.div`
 `
 
 const FancyToggle = ({ label, isActive, setIsActive }: any) => {
-    console.log(isActive);
-    
     return (
         <Toggle>
             <div className={`filter__item ${isActive && 'filter__item_is-active'}`} onClick={setIsActive}>

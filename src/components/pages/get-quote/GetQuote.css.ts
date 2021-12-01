@@ -239,6 +239,7 @@ const style = styled.div`
         }
         .footnote {
             font: italic normal normal 10px/13px Montserrat;
+            margin: 50px 10px -100px;
         }
     }
 

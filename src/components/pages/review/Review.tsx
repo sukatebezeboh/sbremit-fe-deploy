@@ -1,11 +1,11 @@
 import React from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import styled from "styled-components";
-import RecipientDetailsBox from '../../ui-components/parts/RecipientDetailsBox';
+import RecipientDetailsBox from '../../modules/parts/RecipientDetailsBox';
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { confirmTransfer, toastAction } from '../../../redux/actions/actions';

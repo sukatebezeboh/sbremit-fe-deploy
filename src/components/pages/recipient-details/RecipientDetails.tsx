@@ -3,10 +3,10 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
-import ProgressBar from '../../ui-components/progress-bar/ProgressBar';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
 
 const Body = styled.div`
     .page-content {
@@ -320,9 +320,6 @@ const Body = styled.div`
 const RecipientDetails = () => {
     const history = useHistory();
     const recipient = useSelector((state: any) => state.recipients.recipient)
-
-    console.log(recipient, '///');
-    
 
     return (
         <Body>

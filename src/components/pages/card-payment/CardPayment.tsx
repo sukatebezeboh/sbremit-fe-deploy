@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
 import { useHistory } from 'react-router-dom';
-import NavBar from '../../ui-components/navbar/NavBar';
-import PageHeading from '../../ui-components/page-heading/PageHeading';
-import TransferDetailsBox from '../../ui-components/parts/TransferDetailsBox';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import styled from "styled-components";
-import RadioButton from '../../ui-components/parts/RadioButton';
+import RadioButton from '../../modules/parts/RadioButton';
 import { asset } from '../../../util/util';
-import RoundFloatingPlus from '../../ui-components/parts/RoundFloatingPlus';
-import NewCardModal from '../../ui-components/new-card-modal/NewCardModal';
+import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
+import NewCardModal from '../../modules/new-card-modal/NewCardModal';
 
 
 const Body = styled.div`
