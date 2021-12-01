@@ -192,7 +192,6 @@ const PaymentMethod = () => {
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
-    console.log(transfer, transaction, "---");
     const transferId = getQueryParam('t');
 
     const dispatch = useDispatch()

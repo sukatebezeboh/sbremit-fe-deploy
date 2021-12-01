@@ -14,6 +14,7 @@ import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
 import FancyToggle from '../../modules/parts/FancyToggle';
 import { constants } from '../../../util/constants';
+import config from '../../../env';
 
 const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
 const Body = style(bg);
@@ -39,7 +40,6 @@ const LandingPage = (props: any) => {
         && Number(toSend.value) <= Number(promo.settings.maximumSpend)
     ) {
         rate = promo.settings.rate
-        console.log(rate);
     }
     // toReceive.value = transfer.toSend.value * rate
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
@@ -124,7 +124,6 @@ const LandingPage = (props: any) => {
             && Number(value) <= Number(promo.settings.maximumSpend)
         ) {
             rate = promo.settings.rate
-            console.log(rate);
         }
         // if(!value) return;
         if (data.isSend) {
@@ -312,7 +311,7 @@ const LandingPage = (props: any) => {
                     </div>
                     <PromoCodeField />
                         <button onClick={()=>{
-                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === "sbremit-web-uat" ? paths.SIGN_IN : paths.SIGN_UP));
+                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
                             }}>
                             Start sending money
                             <small>Launching soon...</small>

@@ -129,7 +129,6 @@ const Recipient = () => {
         if (!recipientId) return;
 
         const recipientData = recipients.find((recipient: any) => recipient.id == recipientId);
-        console.log(recipientData);
         setRecipientDataForUpdate(recipientData);
         setOpenNRModal(true);
     }

@@ -14,7 +14,6 @@ const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
     const history = useHistory()
-    console.log(user);
     
     return (
         <Body>

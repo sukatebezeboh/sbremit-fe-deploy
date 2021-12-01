@@ -321,9 +321,6 @@ const RecipientDetails = () => {
     const history = useHistory();
     const recipient = useSelector((state: any) => state.recipients.recipient)
 
-    console.log(recipient, '///');
-    
-
     return (
         <Body>
             <NavBar />

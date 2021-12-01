@@ -258,7 +258,7 @@ const CreateTransfer = () => {
             <NavBar />
             <div className="page-content">
                 <div>
-                <PageHeading heading="Manual Bank Payment" subheading="Transfer the total to pay to SBremit’s GB account" back={paths.PAYMENT_METHOD  + '?t=' + transactionDetails?.id} />
+                <PageHeading heading="Manual Bank Payment" subheading="Transfer the total to pay to SBremit’s account" back={paths.PAYMENT_METHOD  + '?t=' + transactionDetails?.id} />
                 <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 <div className="box-container details">
@@ -268,7 +268,7 @@ const CreateTransfer = () => {
                             <div className="list">
                                 <ul>
                                     <li>You must include the reference provided when making transfer</li>
-                                    <li>Bank transfer to our account must be done within an hour. </li>
+                                    <li>Bank transfer to SBRemit account must be done within an hour. </li>
                                     <li>Pending transactions expire after one hour of initiating them and might need to be re-initiated </li>
                                     <li>Your transfer will be processed once payment is received from your bank</li>
                                 </ul>

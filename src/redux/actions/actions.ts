@@ -65,7 +65,6 @@ export const signUpAction = (data: any, callback = () => {}) => {
         }
     })
     .catch(err=>{
-        console.log(err);
     })
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
@@ -104,7 +103,6 @@ export const signInAction = (data: any) => {
         }
     })
     .catch(err=>{
-        console.log('sign in request error:', err);
     })
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
@@ -164,7 +162,6 @@ export const appValuesAction = async() => {
 
     store.dispatch({type: APP_VALUES, payload: values})
     getServiceRate()
-    console.log(store.getState());
 }
 
 export const editUserProfile = <T extends {profile: any}>(data: T) => {
@@ -234,7 +231,7 @@ export const resetPasswordAction = (values: any, stage="email") => {
     if(stage === "email") {
         axios.post(config.API_HOST + endpoints.PASSWORD_REQUEST,
             { username: values.username },
-            { headers: {'X-SERVICE-PROVIDER': 'sbremit-web-uat'} })
+            { headers: {'X-SERVICE-PROVIDER': config.X_SERVICE_PROVIDER} })
         .then(res=>{
             if(res.status === 200) {
                 toastAction({
@@ -301,7 +298,6 @@ export const getRecipients = () => {
         }
         else{}
     }).catch(err=>{
-        console.log(err);
     }).then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
@@ -319,7 +315,6 @@ export const getRecipient = (id: string) => {
         }
         else{}
     }).catch(err=>{
-        console.log(err);
     }).then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
@@ -360,7 +355,7 @@ export const createRecipient =  (recipientData: any, callback?:any) => {
             })
         }
     })
-    .catch(err=>console.log(err))
+    .catch(err=>{})
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
     })
@@ -456,7 +451,6 @@ export const getUserTransactions = () => {
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
     })
     .catch(err=>{
-        console.log(err);
     })
     .then(()=>{
         store.dispatch({type: LOADING, payload: false})
@@ -528,7 +522,6 @@ export const setNewQuoteWithoutAuth = (base: string, target: string, callback?: 
             })
         }
     }).catch((error)=>{
-        console.log(error);
         store.dispatch({type: LOADING, payload: false})
 
     })
@@ -555,7 +548,6 @@ export const setNewQuote = (base: string, target: string) => {
             })
         }
     }).catch((error)=>{
-        console.log(error);
     })
 }
 
@@ -663,7 +655,6 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
 
     const transfer = store.getState().transfer
     const userId = store.getState().auth.user.id;
-    console.log(transfer);
 
     const payload = {
         transferId: transfer.transactionDetails.id,

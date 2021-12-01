@@ -106,8 +106,6 @@ const TransferDetailsBox = ( { transferId } :any ) => {
 
     const transfer = useSelector((state: any) => state.transfer);    
     const transaction = transfer.transactionDetails;
-    console.log(transferId, transfer, transaction);
-
     const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer.transferMethod.replace('_', ' ');
     const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
     const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
