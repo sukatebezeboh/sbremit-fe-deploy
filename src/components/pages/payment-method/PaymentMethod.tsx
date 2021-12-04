@@ -8,10 +8,9 @@ import styled from "styled-components";
 import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, getTransactionDetails, makePaymentWithStripe, toastAction } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
-import { loadStripe } from '@stripe/stripe-js';
 import http from '../../../util/http';
 import { formatCurrency, getQueryParam } from '../../../util/util';
 
@@ -209,7 +208,6 @@ const PaymentMethod = () => {
         }
         if (selected==="card"){
             // history.push(paths.CARD_PAYMENT)
-            await makePaymentWithStripe()
         }
         else if (selected==="bank_transfer") {
             history.push(paths.CREATE_TRANSFER + '?t=' + transferId)

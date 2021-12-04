@@ -10,7 +10,6 @@ import { AppService } from '../../services/AppService';
 import { paths } from '../../util/paths';
 import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters, sortObjectByProperties } from '../../util/util';
 import http from '../../util/http';
-import { loadStripe } from '@stripe/stripe-js';
 import { Redirect } from 'react-router';
 import { BrowserRouter } from 'react-router-dom'
 
@@ -688,57 +687,6 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
     .then(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
-}
-
-export const makePaymentWithStripe = async () => {
-    store.dispatch({type: LOADING, payload: true})
-
-    toastAction({
-        show: true,
-        type: 'info',
-        timeout: 10000,
-        title: "Redirecting...",
-        message: "All card payments are handled with Stripe. Please wait while we redirect you there"
-    })
-    try {
-        const transfer = store.getState().transfer
-        const stripePromise = await loadStripe("pk_test_51IRO98LR6ZSV0Ja4g66DDSiCPiUasKR3B2a1gZ8Qb7FfC6nmKSfJmTitbTa6mHi7f7nEfHBkYsc1kWLWmc2SZCXf00SPR70HyD");
-        const stripe = await stripePromise;
-        const response = await http.post("/stripe/payment/card", {
-            "items": [
-                {
-                    "name": "SBRemit Transfer - GBP->XAF",
-                    "unitCost": formatCurrency(transfer.toSend.value).replace(/,/g, '').replace(/\./, ''),
-                    "quantity": 1
-                },
-                {
-                    "name": "Service fee",
-                    "unitCost": formatCurrency(transfer.serviceFee).replace(/,/g, '').replace(/\./, ''),
-                    "quantity": 1
-                }
-            ]
-        });
-        const session = response.data;
-        // When the customer clicks on the button, redirect them to Checkout.
-        const result = await stripe?.redirectToCheckout({
-            sessionId: session.data.id
-        });
-        store.dispatch({type: LOADING, payload: false})
-
-        if (result?.error) {
-            // If `redirectToCheckout` fails due to a browser or network
-            // error, display the localized error message to your customer
-            // using `result.error.message`.
-        }
-    }catch (e){
-        store.dispatch({type: LOADING, payload: false})
-        toastAction({
-            show: true,
-            type: 'info',
-            timeout: 10000,
-            message: "An error occurred. Please, try again"
-        })
-    }
 }
 
 export const editProfileAction = (values: any, callback?: Function) => {

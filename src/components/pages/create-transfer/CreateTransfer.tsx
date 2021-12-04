@@ -268,8 +268,8 @@ const CreateTransfer = () => {
                             <div className="list">
                                 <ul>
                                     <li>You must include the reference provided when making transfer</li>
-                                    <li>Bank transfer to SBRemit account must be done within an hour. </li>
-                                    <li>Pending transactions expire after one hour of initiating them and might need to be re-initiated </li>
+                                    <li>Bank transfer to SBRemit account must be done within 24 hours. </li>
+                                    <li>Pending transactions expire after 24 hours of initiating them and might need to be re-initiated </li>
                                     <li>Your transfer will be processed once payment is received from your bank</li>
                                 </ul>
                             </div>
