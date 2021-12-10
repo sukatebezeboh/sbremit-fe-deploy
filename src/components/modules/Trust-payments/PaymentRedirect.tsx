@@ -26,7 +26,6 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     stringToHash += stprofile ?? ''
     stringToHash += ruleIdentifier ?? ''
     stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? ''
-    stringToHash += "timestamp="+siteSecurityTimestamp
     stringToHash += siteSecurityTimestamp ?? ''
     stringToHash += password ?? ''
     const siteSecurityHash = 'h' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(stringToHash));
@@ -45,7 +44,6 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
                 <input type="hidden" name="sitesecurity" value={siteSecurityHash} />
                 <input type="hidden" name="sitesecuritytimestamp" value={siteSecurityTimestamp} />
                 <input type="hidden" name="version" value={version} />
-                <input type="hidden" name="stextraurlnotifyfields" value={"timestamp="+siteSecurityTimestamp} />
 
                 <button type="submit" value="Pay"> Proceed to payment </button>
             </form>
