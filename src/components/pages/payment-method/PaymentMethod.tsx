@@ -13,6 +13,7 @@ import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
 import { formatCurrency, getQueryParam } from '../../../util/util';
+import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 
 const Body = styled.div`
     .page-content {
@@ -192,10 +193,11 @@ const PaymentMethod = () => {
     const transaction = transfer.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
+    const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
 
     const dispatch = useDispatch()
 
-    const handleProceed = async () => {
+    const handleProceed = async ( transfer: any) => {
         dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
         if(!selected){
             toastAction({
@@ -208,6 +210,7 @@ const PaymentMethod = () => {
         }
         if (selected==="card"){
             // history.push(paths.CARD_PAYMENT)
+            setRedirectToCardPaymentProvider(true)
         }
         else if (selected==="bank_transfer") {
             history.push(paths.CREATE_TRANSFER + '?t=' + transferId)
@@ -241,6 +244,7 @@ const PaymentMethod = () => {
             /> : <></>}
             <NavBar />
             <ProgressBar point={4} />
+
             <div className="page-content">
                 <div>
                     <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
@@ -270,13 +274,7 @@ const PaymentMethod = () => {
 
 
                         <div className="radio-card disabled" onClick={() => {
-                            toastAction({
-                                show: true,
-                                type: 'info',
-                                timeout: 10000,
-                                message: 'Good choice, this service will be available very soon'
-                            })
-                            // setSelected('card')
+                            setSelected('card')
                             }}>
                             <div className="radio-div">
                                 <RadioButton selected={selected==='card'}/>
@@ -299,7 +297,14 @@ const PaymentMethod = () => {
                         <TransferDetailsBox transferId={transferId} />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </div>
+                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
+                 {
+                    selected==="card" ?
+                    <PaymentRedirect mainamount = {transaction?.meta?.totalToPay} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} />
+                    :
+                    <span> <button onClick={()=>handleProceed(transfer)}>Proceed to payment</button> </span>
+                }
+                </div>
             </div>
         </Body>
     )

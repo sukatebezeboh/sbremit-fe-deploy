@@ -150,3 +150,34 @@ export const convertFromJSTimestamp = (timestamp: number = 0) => {
     return Math.floor(timestamp/1000)
 }
 
+export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS = () => {
+
+    const date = new Date();
+    const aaaa = date.getUTCFullYear();
+    let gg: any = date.getUTCDate();
+    let mm: any = (date.getUTCMonth() + 1);
+
+    if (gg < 10)
+        gg = "0" + gg;
+
+    if (mm < 10)
+        mm = "0" + mm;
+
+    const cur_day = aaaa + "-" + mm + "-" + gg;
+
+    let hours: any = date.getUTCHours()
+    let minutes: any = date.getUTCMinutes()
+    let seconds: any = date.getUTCSeconds();
+
+    if (hours < 10)
+        hours = "0" + hours;
+
+    if (minutes < 10)
+        minutes = "0" + minutes;
+
+    if (seconds < 10)
+        seconds = "0" + seconds;
+
+    return cur_day + " " + hours + ":" + minutes + ":" + seconds;
+
+}

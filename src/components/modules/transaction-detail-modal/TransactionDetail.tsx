@@ -463,14 +463,6 @@ const TransactionDetail = (props: any) => {
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
 
-    const setReceiptVisible = (visibility: boolean) => {
-        const receipt: any = document.querySelector('#receipt');
-        receipt.style.display = visibility ? "block" : "none";
-    }
-    const pdfOptions = {
-        orientation: 'portrait',
-        size: 'a3'
-    }
     return (
         (openTDModal && data) && (
         <Modal >
