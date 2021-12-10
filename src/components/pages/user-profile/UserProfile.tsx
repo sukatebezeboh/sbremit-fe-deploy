@@ -7,6 +7,7 @@ import style from './UserProfile.css'
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { resources } from '../../../util/constants';
+import http from '../../../util/http';
 
 const Body = style();
 
@@ -14,6 +15,26 @@ const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
     const history = useHistory()
+    
+    // Bringing the TruliooClient class into react
+        const newWindow:any = window;
+        const TruliooClient: any = newWindow.TruliooClient;
+
+        // const handleResponse = (e: any) => console.log("finally", e)
+        const handleResponse = async (truliooResponse: any) => {
+            try {
+                const {data, status} = await http.post('/verification/documents', {truliooResponse})
+                console.log({data, status})
+            } catch (error) {
+                console.log("trulioo Response error", error)
+            }
+        }
+
+        new TruliooClient({
+            publicKey: "",
+            accessTokenURL: "",
+            handleResponse,
+        });
     
     return (
         <Body>
@@ -91,6 +112,7 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
+            <div id="trulioo-embedid"></div>
         </Body>
     )
 }
