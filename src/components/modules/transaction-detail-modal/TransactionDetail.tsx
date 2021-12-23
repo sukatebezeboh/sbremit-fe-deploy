@@ -463,14 +463,6 @@ const TransactionDetail = (props: any) => {
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
 
-    const setReceiptVisible = (visibility: boolean) => {
-        const receipt: any = document.querySelector('#receipt');
-        receipt.style.display = visibility ? "block" : "none";
-    }
-    const pdfOptions = {
-        orientation: 'portrait',
-        size: 'a3'
-    }
     return (
         (openTDModal && data) && (
         <Modal >
@@ -518,9 +510,9 @@ const TransactionDetail = (props: any) => {
                     </div>
                     <div className="point-labels">
                         <div className="label-1"> <div>Transfer created</div> <div>{convertDateString(data.dateCreated)}</div> </div>
-                        <div className="label-2"> <div>Received GBP payment</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                        <div className="label-2"> <div>Received {data.originCurrency} payment</div> <div>{convertDateString(data.dateCreated)}</div> </div>
                         <div className="label-3"> <div>Vendor processing transfer</div> <div>{convertDateString(data.dateCreated)}</div> </div>
-                        <div className="label-4"> <div>Recipient receives XAF</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                        <div className="label-4"> <div>Recipient receives {data.destinationCurrency}</div> <div>{convertDateString(data.dateCreated)}</div> </div>
                     </div>
                 </div>
 
@@ -655,9 +647,9 @@ const TransactionDetail = (props: any) => {
                         </div>
                         <div className="point-labels">
                             <div className="label-1"> <div>Transfer created</div> <div>20 Nov 2020</div> </div>
-                            <div className="label-2"> <div>Received GBP payment</div> <div>20 Nov 2020</div> </div>
+                            <div className="label-2"> <div>Received {data.originCurrency} payment</div> <div>20 Nov 2020</div> </div>
                             <div className="label-3"> <div>Vendor processing transfer</div> <div>20 Nov 2020</div> </div>
-                            <div className="label-4"> <div>Recipient receives XAF</div> <div>20 Nov 2020</div> </div>
+                            <div className="label-4"> <div>Recipient receives {data.destinationCurrency}</div> <div>20 Nov 2020</div> </div>
                         </div>
                     </div>
                 </div>

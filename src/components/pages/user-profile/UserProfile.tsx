@@ -7,14 +7,15 @@ import style from './UserProfile.css'
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { resources } from '../../../util/constants';
+import http from '../../../util/http';
+require('dotenv').config();
 
 const Body = style();
 
 const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
-    const history = useHistory()
-    
+
     return (
         <Body>
             <NavBar />

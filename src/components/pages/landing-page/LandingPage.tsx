@@ -49,7 +49,7 @@ const LandingPage = (props: any) => {
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");
-    const allowOperatorFee = transfer.allowOperatorFee; 
+    const allowOperatorFee = transfer.allowOperatorFee;
     const max  = getMax(selected);
 
 
@@ -70,11 +70,11 @@ const LandingPage = (props: any) => {
 
     useEffect(()=>{
         getServiceRate(selected);
-    }, [transfer.toSend, transfer.transferMethod, selected, transfer.allowOperatorFee])
+    }, [transfer.toSend, transfer.transferMethod, selected, transfer.allowOperatorFee, transfer.toSend.currency, rate])
 
     useEffect(() => {
         setTransferMethod(selected)
-    }, [transfer.toSend?.value, transfer.toReceive?.value, transfer.allowOperatorFee])
+    }, [transfer.toSend?.value, transfer.toReceive?.value, transfer.allowOperatorFee, rate])
 
     useEffect(() => {
         setTransferMethod(selected)
@@ -101,7 +101,6 @@ const LandingPage = (props: any) => {
     }
 
     const handleXInputChange = (e: any, data: any) => {
-
         const caret = e.target.selectionStart
         const element = e.target
         window.requestAnimationFrame(() => {
@@ -187,7 +186,7 @@ const LandingPage = (props: any) => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, transfer.allowOperatorFee])
+    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, transfer.allowOperatorFee, rate])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
@@ -287,14 +286,14 @@ const LandingPage = (props: any) => {
                         </div>
                         <div className="wrapper">
                             <div className="timeline-box">
-                                <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} GBP</span></span> </span></div>
-                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 GBP</span> for this transfer </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 GBP</span> for this transfer</i> </span></div>
+                                <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
+                                <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> </span></div>
+                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 {toSend.currency}</span> for this transfer</i> </span></div>
                                 {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                 <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
                                 <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> 
                                 {/* <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> */}
-                                 <span className="mobile we-conv">We’ll convert {formatCurrency(toSend.value)} GBP</span> </span></div>
+                                 <span className="mobile we-conv">We’ll convert {formatCurrency(toSend.value)} {toSend.currency}</span> </span></div>
                             </div>
                         </div>
                         <div className="offset"></div>

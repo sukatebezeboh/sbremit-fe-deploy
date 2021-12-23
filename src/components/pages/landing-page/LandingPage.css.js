@@ -6,7 +6,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     overflow: hidden;
-    height: 165vh;
+    min-height: 165vh;
     .f-growing{
         display: none;
     }

@@ -87,7 +87,7 @@ const Recipient = () => {
     }
 
     const userIsVerified = (): boolean => {
-        return Boolean(user.meta.verified);
+        return Boolean(user.meta.verified) && user?.meta?.verified !== "retry";
     }
 
     const isUserFirstTransaction = (): boolean => {

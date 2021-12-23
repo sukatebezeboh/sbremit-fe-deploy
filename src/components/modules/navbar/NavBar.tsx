@@ -46,11 +46,11 @@ const NavBar = () => {
     return (
         <Bar>
             <div>
-                <span className="hamburger">
+                {/* <span className="hamburger">
                     <span></span>
                     <span></span>
                     <span></span>
-                </span>
+                </span> */}
                 <span className="logo">
                     <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
                 </span>

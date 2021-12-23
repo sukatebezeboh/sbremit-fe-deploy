@@ -14,6 +14,7 @@ import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
 import { formatCurrency, getQueryParam } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
+import axios from 'axios';
 
 const Body = styled.div`
     .page-content {
@@ -53,6 +54,11 @@ const Body = styled.div`
         }
         .details {
             div {
+                &.box-container-inner {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    grid-gap: 15px;
+                }
                 .radio-card {
                     display: grid;
                     grid-template-columns: 1.5fr 15fr;
@@ -61,23 +67,20 @@ const Body = styled.div`
                     box-shadow: 0px 10px 12px #CCCCCC80;
                     border-radius: 15px;
                     padding: 25px;
-                    .rc-head {
-                        font: normal normal 600 20px Montserrat;
-                        color: #424242;
-                    }
-                    .rc-body {
-                        margin-top: 20px;
-                        font: normal normal normal 14px Montserrat;
-                        color: #A3A3A3;
-                        >div {
-                            margin-top: 5px;
+                    .radio-card-inner {
+                        display: grid;
+                        padding: 0px 5px;
+                        text-align: center;
+                        .provider-icon {
+                            width: 40px;
+                            height: 40px;
+                            margin: auto;
+                        }
+                        .provider-name {
+
                         }
                     }
-                    .rc-foot {
-                        margin-top: 32px;
-                        font: normal normal normal 14px Montserrat;
-                        color: #424242;
-                    }
+
                 }
             }
             
@@ -161,6 +164,9 @@ const Body = styled.div`
                 }
             }
             div {
+                &.box-container-inner {
+
+                }
                 .radio-card {
                     padding: 15px;
                     grid-template-columns: 2.5fr 15fr;
@@ -185,7 +191,7 @@ const Body = styled.div`
 }
 `
 
-const PaymentMethod = () => {
+const TruelayerProviders = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
     const recipient = useSelector((state: any)=>state.recipients.recipient)
@@ -194,33 +200,53 @@ const PaymentMethod = () => {
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
-
+    const [tProviders, setTProviders]: any = useState([])
     const dispatch = useDispatch()
 
-    const handleProceed = async ( transfer: any) => {
-        dispatch({type: TRANSFER, payload: {...transfer, paymentMethod: selected}})
+    const handleProceed = async () => {
         if(!selected){
             toastAction({
                 show: true,
                 type: 'warning',
                 timeout: 10000,
-                message: 'Select a payment method to proceed'
+                message: 'Select a provider to proceed'
             })
             return
         }
-        if (selected==="card"){
-            // history.push(paths.CARD_PAYMENT)
-            setRedirectToCardPaymentProvider(true)
-        }
-        else if (selected==="bank_transfer") {
-            history.push(paths.CREATE_TRANSFER + '?t=' + transferId)
-        }
-        else if (selected==="truelayer") {
-            history.push(paths.TRUELAYER_PROVIDERS + '?t=' + transferId)
-        }
-        else{
-            return
-        }
+
+        axios.post('https://pay-api.truelayer-sandbox.com/v2/single-immediate-payment-initiation-requests',         {
+            "single_immediate_payment":
+            {
+                "beneficiary":
+                {
+                    "account":
+                    {
+                        "type": "sort_code_account_number",
+                        "sort_code":"23-22-90",
+                        "account_number":"34690451"
+                    }
+                },
+                "amount_in_minor": 100,
+                "currency":"GBP",
+                "provider_id": selected,
+                "scheme_id": "1"
+            },
+            "auth_flow": {
+                "type": "redirect",
+                "return_uri":"https://sbremit.netlify.app/transfer-complete"
+            },
+            "webhook_uri":"https://api-uat.sbremit.co.uk/truelayer/payment/notification" 
+        }, {
+        headers: {
+            Accept: 'application/json; charset=UTF-8',
+            'Content-Type': 'application/json; charset=UTF-8'
+            }}).then(function (response) {
+            console.log(response.data);
+        }).catch(function (error) {
+            console.error(error);
+        });
+
+
     }
 
     const handleCancel = () => {
@@ -229,6 +255,12 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
+
+        axios.get('https://auth.truelayer.com/api/providers?client_id=sandbox-sbremit-bba20c')
+        .then(res => {
+            console.log(res);
+            setTProviders(res.data);
+        });
     }, [])
 
     return (
@@ -239,7 +271,7 @@ const PaymentMethod = () => {
             onSave={{
                 label: 'Yes, cancel',
                 fn: ()=>handleCancel()
-            }} 
+            }}
             onCancel={{
                 label: "No, don't cancel",
                 fn: () => setOpenConfirmModal(false)
@@ -254,66 +286,22 @@ const PaymentMethod = () => {
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 <div className="box-container details">
-                    <div>
+                    <div className="box-container-inner">
 
-                        <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
+                      { tProviders.map((provider: any) => (
+                        <div className="radio-card" onClick={()=>setSelected(provider.provider_id)}>
                             <div className="radio-div">
-                                <RadioButton selected={selected==='bank_transfer'} />
+                                <RadioButton selected={selected===provider.provider_id} />
                             </div>
-                            <div>
-                                <div className="rc-head"> Manual Bank Transfer</div>
-                                <div className="rc-body">
-                                    <div>
-                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
-                                    </div>
-                                    <div>
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                        {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
+                            <div className="radio-card-inner">
+                                <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
+                                <div className="provider-name">
+                                    {provider.display_name}
                                 </div>
                             </div>
                         </div>
+                      ))  }
 
-
-                        <div className="radio-card disabled" onClick={() => {
-                            setSelected('card')
-                            }}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='card'}/>
-                            </div>
-                            <div>
-                                <div className="rc-head">Debit Card</div>
-                                <div className="rc-body">
-                                    <div>
-                                        You authorise SB Remit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> from your debit/credit card. Your credit card provider may charge cash advance fees. Use a debit card to avoid this charge.
-                                    </div>
-                                    <div>
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="radio-card" onClick={()=>setSelected('truelayer')}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='truelayer'} />
-                            </div>
-                            <div>
-                                <div className="rc-head">Bank Transfer with Truelayer</div>
-                                <div className="rc-body">
-                                    <div>
-                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account.
-                                    </div>
-                                    <div>
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                        {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div className="mobile-hide">
                         <TransferDetailsBox transferId={transferId} />
@@ -324,7 +312,7 @@ const PaymentMethod = () => {
                     selected==="card" ?
                     <PaymentRedirect mainamount = {transaction?.meta?.totalToPay} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} />
                     :
-                    <span> <button onClick={()=>handleProceed(transfer)}>Proceed to payment</button> </span>
+                    <span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </span>
                 }
                 </div>
             </div>
@@ -332,4 +320,4 @@ const PaymentMethod = () => {
     )
 }
 
-export default PaymentMethod;
+export default TruelayerProviders;

@@ -149,7 +149,7 @@ const style = () => styled.div`
                             padding: 9px;
                         }
                     }
-                    select+img{
+                    select+img, select+.phone-code-value{
                         position: relative;
                         top: -35px;
                         left: 20px;
@@ -158,6 +158,11 @@ const style = () => styled.div`
                         box-shadow: 0px 3px 6px #00000029;
                         border-radius: 1px;
                         pointer-events: none;
+                    }
+                    select+.phone-code-value {
+                        left: 15px;
+                        top: -38px;
+                        box-shadow: none;
                     }
                     >div:nth-child(3){
                         margin-top: 0px;

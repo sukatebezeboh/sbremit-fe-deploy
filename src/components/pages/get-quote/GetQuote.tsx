@@ -37,6 +37,17 @@ const GetQuote = () => {
     const allowOperatorFee = transfer.allowOperatorFee; 
     const max  = getMax(transferMethod);
 
+    let rate= conversionRate?.rate;
+    if (
+        promo?.type === "FIXED_RATE"
+        && toSend.currency === promo.settings.baseCurrency
+        && toReceive.currency === promo.settings.targetCurrency
+        && Number(toSend.value) >= Number(promo.settings.minimumSpend)
+        && Number(toSend.value) <= Number(promo.settings.maximumSpend)
+    ) {
+        rate = promo.settings.rate
+    }
+
     useEffect(() => {
         if (!transferMethod) {
             history.replace(paths.TRANSFER_METHOD)
@@ -120,7 +131,7 @@ const GetQuote = () => {
     }
     useEffect(()=>{
         getServiceRate();
-    }, [transfer.toSend, transfer.allowOperatorFee])
+    }, [transfer.toSend, transfer.allowOperatorFee, rate])
 
     useEffect(() => {
         getQuoteService(toSend.currency, toReceive.currency);
@@ -128,7 +139,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code])
+    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, rate])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
@@ -270,9 +281,9 @@ const GetQuote = () => {
                             </div>
                             <div className="wrapper">
                                 <div className="timeline-box">
-                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && promoText ? "strikethrough" : ""}`} >1 GBP = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                    <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{serviceFee} GBP</span></span> </span></div>
-                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 GBP</span> for this transfer </span> </span></div>
+                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && promoText ? "strikethrough" : ""}`} >1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} {toReceive.currency}</span></span></div>
+                                    <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{serviceFee} {toSend.currency}</span></span> </span></div>
+                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> </span></div>
                                     {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 30 minutes</b></span> </span></div>
@@ -284,7 +295,7 @@ const GetQuote = () => {
                             <div className="toggle">
                                 <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                             </div>
-                            <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 GBP</b> for this transfer</div>
+                            <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 {toSend.currency}</b> for this transfer</div>
 
                             <PromoCodeField />
                         </div>

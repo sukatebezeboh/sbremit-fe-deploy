@@ -23,7 +23,8 @@ const endpoints = {
     CONFIRM_ACCOUNT: '/user/email/confirm',
     SUBSCRIBE: '/subscribe',
     NOTIFICATIONS: '/user/$_1/notifications',
-    PROMO: '/promo/$_1'
+    PROMO: '/promo/$_1',
+    SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents'
 }
 
 export default endpoints;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
+import { settings } from '../../../util/settings';
 import { convertToJSTimestamp, secondsToHms } from '../../../util/util';
 
 const Div = styled.div`
@@ -17,7 +18,7 @@ const TransferExpiryCountDown = ( {dateCreated} : { dateCreated: number }) => {
         const now = Date.now();
         const timeDifferenceInMilliseconds = now - date;
         const timeDifferenceInSeconds = parseInt((timeDifferenceInMilliseconds / 1000).toFixed(0), 10);
-        const transferTimeLimitInSeconds = 3600 // 1 hour
+        const transferTimeLimitInSeconds = settings.TRANSFER_TIME_LIMIT_IN_SECONDS
         const timeRemainingInSeconds = transferTimeLimitInSeconds - timeDifferenceInSeconds;
         setTimeRemaining(timeRemainingInSeconds)
     }
