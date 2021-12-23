@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
 import { AppFooter } from './components/modules/app-footer/AppFooter';
 import ComingSoon from './components/modules/coming-soon/ComingSoon';
+import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
@@ -23,6 +24,7 @@ function App() {
     <React.Fragment>
       <ToastFactory />
       <AppLoader show={showAppLoader}/>
+      <FloatingWhatsAppWidget />
       <Switch>
         {
             Routing.map((route: IRoute, i: number) => (

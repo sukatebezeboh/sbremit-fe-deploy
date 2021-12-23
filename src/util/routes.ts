@@ -25,6 +25,7 @@ import Support from '../components/content-pages/support/support/Support';
 import Contact from '../components/content-pages/contact/Contact';
 import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
 import NotFound from '../components/pages/not-found/NotFound';
+import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
 
 
 export interface IRoute {
@@ -184,6 +185,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.TRANSFER_COMPLETE,
         component: TransferComplete,
+        protected: true
+    },
+    {
+        path: paths.TRUELAYER_PROVIDERS,
+        component: TruelayerProviders,
         protected: true
     },
 

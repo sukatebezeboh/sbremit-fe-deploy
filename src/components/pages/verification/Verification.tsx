@@ -1,15 +1,19 @@
 import { Field, Form, Formik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { userVerificationAction } from '../../../redux/actions/actions';
+import { saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
+import { constants } from '../../../util/constants';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
+import http from '../../../util/http';
 import { paths } from '../../../util/paths';
+import { asset } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import VerificationMethod from '../../modules/verification-method/VerificationMethod';
 
 const Body = styled.div`
     .page-content {
@@ -141,7 +145,7 @@ const Body = styled.div`
                             padding: 9px;
                         }
                     }
-                    select+img{
+                    select+img, select+.phone-code-value{
                         position: relative;
                         top: -35px;
                         left: 20px;
@@ -150,6 +154,12 @@ const Body = styled.div`
                         box-shadow: 0px 3px 6px #00000029;
                         border-radius: 1px;
                         pointer-events: none;
+                    }
+
+                    select+.phone-code-value {
+                        left: 15px;
+                        top: -38px;
+                        box-shadow: none;
                     }
                     >div:nth-child(3){
                         margin-top: 0px;
@@ -204,6 +214,14 @@ const Body = styled.div`
             }
         }
 
+    }
+
+    #trulioo-embedid:empty {
+        background: url('/assets/icons/rolling-loader-black.svg');
+        width: 100%;
+        min-height: 50vh;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 @media only screen and (max-width: 900px) { 
     .page-content {
@@ -319,17 +337,36 @@ const Body = styled.div`
 const Verification = () => {
     const history = useHistory();
     const enableVerficationStep = false;
+    const countries: any = useSelector((state: any) => state.appValues.countries)    
 
     const user = useSelector((state: any) => state.auth.user);
-    
 
     const initialValues: any = {
         phoneCode: '+01',
         address2: "",
         location_country: user?.profile?.location_country,
         ...user?.profile,
-
     }
+
+    const [method, setMethod] = useState("");
+
+    useEffect(() => {
+        if (method !== constants.VERIFICATION_TYPE_DOCUMENT) return;
+        const newWindow:any = window;
+        const TruliooClient: any = newWindow.TruliooClient;
+
+        const handleResponse = (truliooResponse: any) => {
+                saveTruliooTransactionId({
+                    experienceTransactionId: truliooResponse.experienceTransactionId
+                });
+        }
+
+        new TruliooClient({
+            publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
+            accessTokenURL: "https://api-uat.sbremit.co.uk",
+            handleResponse,
+        });
+    }, [method])
 
 
     return (
@@ -346,7 +383,8 @@ const Verification = () => {
                 test
             </button> */}
             <div className="page-content">
-                <PageHeading heading="Verification" subheading="Enter information to verify your identity" back="/get-quote" />
+                <PageHeading heading="Verification" subheading={ method === constants.VERIFICATION_TYPE_IDENTITY ?  "Enter information to verify your identity" : method === constants.VERIFICATION_TYPE_DOCUMENT ? "Follow the prompts to verify your documents" : "Select a verification method"} back={paths.GET_QUOTE} callBack={()=> { method ? setMethod("") : history.push(paths.GET_QUOTE)}} />
+                { method === constants.VERIFICATION_TYPE_IDENTITY ? 
                 <Formik
                         initialValues={{...initialValues}}
                         validationSchema={userVerificationValidator}
@@ -382,9 +420,14 @@ const Verification = () => {
                                                         <div className="mobile-head">Mobile<i>*</i></div>
                                                         <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
                                                         <Field as="select" name="phoneCode" id="" >
-                                                            <option value="+44">United Kingdom</option>
+                                                            {
+                                                                constants.COUNTRIES_PHONE_CODES.map((country) => (
+                                                                    <option value={country.code}>{country.code} - {country.name}</option>
+                                                                ))
+                                                            }
                                                         </Field>
-                                                        <img src="./assets/flags/UK.png" alt="uk"/>
+                                                        {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
+                                                        <b className="green-txt phone-code-value"> {values.phoneCode} </b>
                                                         {(touched.mobile && errors.mobile) && <div className="form-error-message form-error-message-adjust-up">{errors.mobile}</div>}
                                                     </div>
                                                     <div>
@@ -442,9 +485,13 @@ const Verification = () => {
                                                     <div>Location Country</div>
                                                     <Field name="location_country" as="select" type="text" >
                                                         <option value=""></option>
-                                                        <option value="gb">United Kingdom</option>
+                                                        {
+                                                            Object.keys(countries).map((key) => (
+                                                                <option value={key}>{countries[key]}</option>
+                                                            ))
+                                                        }
                                                     </Field>
-                                                    <img src="./assets/flags/UK.png" alt="uk"/>
+                                                    <img src={`./assets/flags/${values.location_country}.png`} alt="uk"/>
                                                     {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                                 </div>
                                                 <div className={(touched.zip && errors.zip) ? 'form-error': ''}>
@@ -464,6 +511,11 @@ const Verification = () => {
                             )
                         }
                 </Formik>
+                : method === constants.VERIFICATION_TYPE_DOCUMENT ?
+                <div id="trulioo-embedid"></div>
+                :
+                <VerificationMethod setMethod={setMethod} method={method} />
+                }
             </div>
         </Body>
     )

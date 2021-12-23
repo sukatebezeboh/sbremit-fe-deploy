@@ -112,7 +112,7 @@ a {
     color: inherit;
 }
 
-.is-clickable {
+.is-clickable, .is-link {
     cursor: pointer;
 }
 

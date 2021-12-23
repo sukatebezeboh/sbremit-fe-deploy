@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { changePasswordAction, editProfileAction } from '../../../redux/actions/actions';
+import { constants } from '../../../util/constants';
 import { ChangePasswordValidator, EditProfileValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
 import FormButton from '../../modules/form-button/FormButton';
@@ -14,6 +15,8 @@ import style from './EditProfile.css'
 const Body = style();
 
 const EditProfile = () => {
+
+    const countries: any = useSelector((state: any) => state.appValues.countries)    
 
     const [pwNewIcon, setPwNewIcon] = useState('show');
     const [newPasswordType, setNewPasswordType] = useState('password');
@@ -88,9 +91,15 @@ const EditProfile = () => {
                                                         <div className="mobile-head">Mobile<i>*</i></div>
                                                         <Field name="mobile" type="text" className="phone-no" placeholder="e.g 07967885952"/>
                                                         <Field as="select" name="phoneCode" id="" >
-                                                            <option value="uk">United Kingdom</option>
+                                                            {
+                                                                constants.COUNTRIES_PHONE_CODES.map((country) => (
+                                                                    <option value={country.code}>{country.code} - {country.name}</option>
+                                                                ))
+                                                            }
                                                         </Field>
-                                                        <img src="./assets/flags/UK.png" alt="uk"/>
+                                                        {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
+                                                        <b className="green-txt phone-code-value"> {values.phoneCode} </b>
+                                                        {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
                                                     </div>
 
                                                     <div className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error m-grid-span-1-3': 'm-grid-span-1-3'}>
@@ -154,9 +163,13 @@ const EditProfile = () => {
                                                     <div>Location Country</div>
                                                     <Field name="location_country" as="select" type="text" >
                                                         <option value=""></option>
-                                                        <option value="gb">United Kingdom</option>
+                                                        {
+                                                            Object.keys(countries).map((key) => (
+                                                                <option value={key}>{countries[key]}</option>
+                                                            ))
+                                                        }
                                                     </Field>
-                                                    <img src="./assets/flags/UK.png" alt="uk"/>
+                                                    <img src={`./assets/flags/${values.location_country}.png`} alt="uk"/>
                                                     {(touched.location_country && errors.location_country) && <div className="form-error-message form-error-message-adjust-up">{errors.location_country}</div>}
                                                 </div>
                                                 <div className={(touched.zip && errors.zip) ? 'form-error': ''}>

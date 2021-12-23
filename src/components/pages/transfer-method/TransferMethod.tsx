@@ -63,20 +63,20 @@ const TransferMethod = () => {
                         <div className={`${selected === "mobile_money" && "selected"}`} onClick={() => setTransferMethod('mobile_money')}>
                             <img src={asset('icons', 'transfer4.svg')} alt="mobile money"/>
                             <div>Mobile Money</div>
-                            <div>Mobile Operator Transfer Fee from {mobileMoneyStartingFee} GBP</div>
+                            <div>Mobile Operator Transfer Fee from {mobileMoneyStartingFee} {toSend.currency}</div>
                         </div>
                         <div className={`${selected === "bank_transfer" && "selected"}`} onClick={() => setTransferMethod('bank_transfer')}>
                             <img src={asset('icons', 'bank.svg')} alt="bank transfer"/>
                             <div>Bank Transfer</div>
-                            <div>Bank Transfer fee from {bankTransferStartingFee} GBP</div>
+                            <div>Bank Transfer fee from {bankTransferStartingFee} {toSend.currency}</div>
                         </div>
                         <div className={`pickup ${selected === "cash_pickup" && "selected"}`} onClick={() => setTransferMethod('cash_pickup')}>
                             <img src={asset('icons', 'cash.svg')} alt="cash pickup"/>
                             <div>Cash Pickup</div>
-                            <div>Cash Pick-up fee from {cashPickUpStartingFee} GBP</div>
+                            <div>Cash Pick-up fee from {cashPickUpStartingFee} {toSend.currency}</div>
                         </div>
                     </div>
-                    <div className="footnote">SBremit charges you <b className="green-txt"> 0.00 GBP</b> for this transfer</div>
+                    <div className="footnote">SBremit charges you <b className="green-txt"> 0.00 {toSend.currency}</b> for this transfer</div>
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={handleStartClick}>Start</button> </div>
             </div>

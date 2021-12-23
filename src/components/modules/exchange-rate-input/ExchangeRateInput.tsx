@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { getNewQuote, getQuoteService } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { formatCurrency, formatCurrencyWithoutFloats, getMoneyValue } from '../../../util/util';
 
@@ -119,10 +120,11 @@ const Field = styled.div`
 
 const ExchangeRateInput = (props: any) =>{
     const {data, handleXInputChange, max, countries, setChangedInput} = props;
-    const [countriesDropDown, setCountriesDropDown] = useState(false);
+    const [countriesDropDown, setCountriesDropDownOpen] = useState(false);
     const dispatch = useDispatch();
     const transfer = useSelector((state: any) => state.transfer)
     const appValues = useSelector((state: any) => state.appValues)
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleCountrySelection = (country: string) => {
         const countriesList = appValues.countries;
@@ -132,7 +134,7 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...transfer.toSend, currency: countries[country], image: countryKey},
+                    toSend: {...data, currency: countries[country], image: countryKey},
                 }
             })
         }
@@ -141,11 +143,17 @@ const ExchangeRateInput = (props: any) =>{
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toReceive: {...transfer.toReceive, currency: countries[country], image: countryKey},
+                    toReceive: {...data, currency: countries[country], image: countryKey},
                 }
             })
         }
-        setCountriesDropDown(false)
+        setCountriesDropDownOpen(false)
+        getNewQuote();
+        triggerInputChange()
+    }
+
+    const triggerInputChange = () => {
+        inputRef.current?.dispatchEvent( new Event( 'change', {bubbles: true} ) );
     }
 
 
@@ -154,15 +162,15 @@ const ExchangeRateInput = (props: any) =>{
                 <div className={`x-input ${(max && data?.total > max) ? 'selected-border-re' : ''}`}>
                     <div className="xi-1">
                         <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                        <input name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" placeholder="0.00" value={(data.isSend ? getMoneyValue(formatCurrency(data?.value)) : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput()}}/>
+                        <input ref={inputRef} name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" placeholder="0.00" value={(data.isSend ? getMoneyValue(formatCurrency(data?.value)) : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput(); }}/>
                     </div>
                     <div  className="flg-drp">
                         {
-                            max && <span className={`float-right max-div ${(max && Number(data?.total) > max) ? 'red-txt' : ''}`}> {(max && data?.total > max) ? 'Exceeded max:' : 'Max:'} <span className="max-value">{formatCurrencyWithoutFloats(max)} {data?.currency}</span> </span>
+                            max && <span className={`float-right max-div ${(max && Number(data?.total) > max) ? 'red-txt' : ''}`}> {(max && data?.total > max) ?  <span className="max-value">Exceeded max: {formatCurrencyWithoutFloats(max)} {data?.currency}</span> : '' } </span>
                         }
-                        <img onClick={() => setCountriesDropDown(!countriesDropDown)} src={`/assets/flags/${data?.image}.png`} alt={data?.currency}/>
-                        <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="data-c">{data?.currency}</span>
-                        <span onClick={() => setCountriesDropDown(!countriesDropDown)} className="span-angle"><img src="./assets/icons/angle-down.svg" alt=""/></span>
+                        <img onClick={() => setCountriesDropDownOpen(!countriesDropDown)} src={`/assets/flags/${data?.image}.png`} alt={data?.currency}/>
+                        <span onClick={() => setCountriesDropDownOpen(!countriesDropDown)} className="data-c">{data?.currency}</span>
+                        <span onClick={() => setCountriesDropDownOpen(!countriesDropDown)} className="span-angle"><img src="./assets/icons/angle-down.svg" alt=""/></span>
                         {
                             countriesDropDown &&
                             <div className="countries-dropdown">

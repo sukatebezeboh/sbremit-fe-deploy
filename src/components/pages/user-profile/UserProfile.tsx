@@ -16,28 +16,6 @@ const UserProfile = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const countries: any = useSelector((state: any) => state.appValues.countries)    
 
-    // Bringing the TruliooClient class into react
-        const newWindow:any = window;
-        const TruliooClient: any = newWindow.TruliooClient;
-
-        // const handleResponse = (e: any) => console.log("finally", e)
-        const handleResponse = async (truliooResponse: any) => {
-            try {
-                const {data, status} = await http.post('/verification/documents', {
-                    experienceTransactionId: truliooResponse.experienceTransactionId
-                })
-                console.log({data, status})
-            } catch (error) {
-                console.log("trulioo Response error", error)
-            }
-        }
-
-        new TruliooClient({
-            publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
-            accessTokenURL: "https://api-uat.sbremit.co.uk",
-            handleResponse,
-        });
-    
     return (
         <Body>
             <NavBar />
@@ -114,7 +92,6 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-            <div id="trulioo-embedid"></div>
         </Body>
     )
 }

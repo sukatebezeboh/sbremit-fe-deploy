@@ -583,8 +583,11 @@ export const getQuoteService = ($_1: string, $_2: string) => {
     }
 }
 
-export const getNewQuote = ($_1: string, $_2: string) => {
+export const getNewQuote = ($_1?: string, $_2?: string) => {
+    store.dispatch({type: LOADING, payload: true})
     const transfer = store.getState().transfer
+    $_1 = $_1 ?? transfer.toSend.currency;
+    $_2 = $_2 ?? transfer.toReceive.currency;
     axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
     .then(res => {
         if(res.data.status === "200"){
@@ -848,4 +851,27 @@ export const getPromo = async (code: string) => {
     }
 
 
+}
+
+export const saveTruliooTransactionId = (payload: any) => {
+
+    http.post(endpoints.SAVE_TRULIOO_DOCUMENT_VERIFICATION, payload)
+    .then(res => {
+        console.log(res)
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: "Your verification process has kickstarted and should be done in a few minutes."
+            })
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
+    })
 }

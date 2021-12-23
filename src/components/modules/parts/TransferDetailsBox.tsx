@@ -163,11 +163,11 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     </div>
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>
-                        <div className="right uppercase">+{serviceFee} GBP</div>
+                        <div className="right uppercase">+{serviceFee} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>
-                        <div className="right uppercase">{"0.00"} GBP</div>
+                        <div className="right uppercase">{"0.00"} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">They get <small> {getInclusiveText(parseWithUnderscores(transferMethod))} </small> </div>

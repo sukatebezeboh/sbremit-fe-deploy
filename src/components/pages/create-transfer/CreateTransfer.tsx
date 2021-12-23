@@ -269,8 +269,6 @@ const CreateTransfer = () => {
                                 <ul>
                                     <li>You must include the reference provided when making transfer</li>
                                     <li>Bank transfer to SBRemit account must be done within 24 hours. </li>
-                                    <li>Pending transactions expire after 24 hours of initiating them and might need to be re-initiated </li>
-                                    <li>Your transfer will be processed once payment is received from your bank</li>
                                 </ul>
                             </div>
                         </div>
@@ -290,17 +288,6 @@ const CreateTransfer = () => {
                                 <span>Sort code</span>
                                 <span>23-22-90</span>
                             </div>
-
-                            <div>
-                                <span>IBAN</span>
-                                <span>GB97IFXS23229034690451</span>
-                            </div>
-
-                            <div>
-                                <span>SWIFT / BIC</span>
-                                <span>IFXSGB2L</span>
-                            </div>
-
 
                             <div>
                                 <span>Reference</span>
