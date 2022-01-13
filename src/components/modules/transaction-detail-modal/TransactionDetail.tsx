@@ -9,6 +9,8 @@ import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArra
 import PageHeading from '../page-heading/PageHeading';
 import Pdf from "react-to-pdf";
 import Receipt from '../receipt/Receipt';
+import { constants } from '../../../util/constants';
+import ProgressBar from '../progress-bar/ProgressBar';
 
 
 const style = () => styled.div`
@@ -172,6 +174,10 @@ const style = () => styled.div`
                 }
                 .point-1 {
                     width: 43px;
+                    height: 6px;
+                }
+                .point-complete {
+                    width: 100%;
                     height: 6px;
                 }
             }
@@ -463,6 +469,10 @@ const TransactionDetail = (props: any) => {
     const recipient: any = data.recipientId ?  getValueFromArray(data?.recipientId, 'id', recipients) : {}
     openTDModal ? handleShowPlus(false) : handleShowPlus(true)
 
+    const transferPaymentMade  = () =>  {
+       return data.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || data.meta.paymentCompleted
+    }
+
     return (
         (openTDModal && data) && (
         <Modal >
@@ -498,14 +508,20 @@ const TransactionDetail = (props: any) => {
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>
                         </div>
+                        {
+                            !transferPaymentMade() && data.status?.toLowerCase()?.includes(constants.TRANSFER_STATUS_PENDING.toLowerCase()) && <div className="resend" onClick={() => history.push(paths.PAYMENT_METHOD + "?t=" + data.id)}>
+                                <img className={isResending ? "is-resending" : ""} src={asset('icons', 'cash.svg')} alt="reload"/>
+                                <div>Pay</div>
+                            </div>
+                        }
                     </div>
                 </div>
 
                 <div className="timeline">
                     <div className="bar">
-                        <div className="point point-1"></div>
-                        <div className="point point-2"></div>
-                        <div className="point point-3"></div>
+                        <div className={`point point-1 ${transferPaymentMade() && "point-complete"}`}></div>
+                        <div className={`point point-2 ${transferPaymentMade() && data.approved && "point-complete"}`}></div>
+                        <div className={`point point-3 ${data.status === constants.TRANSFER_STATUS_COMPLETE && "point-complete"}`}></div>
                         <div className="point point-4"></div>
                     </div>
                     <div className="point-labels">
@@ -525,7 +541,7 @@ const TransactionDetail = (props: any) => {
                         <hr/>
                         <div className="row">
                             <div className="left">Name</div>
-                            <div className="right">{recipient?.firstName} {recipient.lastName}</div>
+                            <div className="right">{recipient?.firstName} {recipient?.lastName}</div>
                         </div>
                         <div className="row">
                             <div className="left">Mobile No.</div>
@@ -599,7 +615,7 @@ const TransactionDetail = (props: any) => {
                         <hr/>
                         <div className="row">
                             <div className="left">Name</div>
-                            <div className="right">{recipient?.firstName} {recipient.lastName}</div>
+                            <div className="right">{recipient?.firstName} {recipient?.lastName}</div>
                         </div>
                         <div className="row">
                             <div className="left">Mobile No.</div>

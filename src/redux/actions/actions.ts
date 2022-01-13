@@ -12,6 +12,7 @@ import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointPar
 import http from '../../util/http';
 import { Redirect } from 'react-router';
 import { BrowserRouter } from 'react-router-dom'
+import { transfer } from '../reducers/transfer';
 
 const user = store.getState().auth.user;
 const serviceProvider =  env.X_SERVICE_PROVIDER;
@@ -106,6 +107,18 @@ export const signInAction = (data: any) => {
     .then(()=>{
         store.dispatch({type: SUBMITTING, payload: ""})
     })
+}
+
+export const refreshUserDetails = () => {
+    const user = store.getState().auth.user;
+    if(!user) {
+        return
+    }
+    axios.get(config.API_HOST + parseEndpointParameters(endpoints.USER, user.id))
+        .then(response=>{
+            CookieService.put('user', JSON.stringify(response.data.data));
+            store.dispatch({type: AUTH, payload: {...store.getState().auth, user: response.data.data}})
+        })
 }
 
 export const signOutAction = (ignoreRequest = false) => {
@@ -871,6 +884,35 @@ export const saveTruliooTransactionId = (payload: any) => {
                 type: 'error',
                 timeout: 10000,
                 message: res.data.error.message
+            })
+        }
+    })
+}
+
+export const updateTransferRecipient = (callback: Function, transferId: any) => {
+    store.dispatch({type: LOADING, payload: true})
+    const userId = store.getState().auth.user?.id;
+    const recipient = store.getState().recipients.recipient;
+
+    http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
+        recipient: recipient.id
+    })
+    .then(res => {
+        store.dispatch({type: LOADING, payload: false})
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 10000,
+                message: "Transfer updated"
+            })
+            callback?.()
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: "Could not update transfer"
             })
         }
     })

@@ -173,10 +173,10 @@ const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
 
         setMethod(constants.VERIFICATION_TYPE_IDENTITY)
 
-    })
+    }, [])
 
     const isUserAllowedThisType = (type: string) => {
-        if ( allowedRegions?.[type]?.["allowed"].includes(user?.profile?.location_country) || (allowedRegions?.[type]?.["allowed"].includes("all") && !allowedRegions?.[type]?.["exempted"].includes(user?.profile?.location_country)) ) {
+        if ( allowedRegions?.[type]?.["allowed"].includes(user?.profile?.location_country?.toLowerCase()) || (allowedRegions?.[type]?.["allowed"].includes("all") && !allowedRegions?.[type]?.["exempted"].includes(user?.profile?.location_country?.toLowerCase())) ) {
             return true;
         }
         return false;

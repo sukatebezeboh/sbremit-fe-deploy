@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getRecipients, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { getRecipients, getUserTransactions, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
-import { resources } from '../../../util/constants';
+import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getMax, getQueryParam, getValueFromArray, replaceUnderscores } from '../../../util/util';
+import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -39,9 +39,20 @@ const Recipient = () => {
         checkPageAuthorization();
     }, [transfer, user])
 
+    const paramTransferId = getQueryParam('t');
+    console.log(paramTransferId);
+    const editMode = () => {
+        const transferId = paramTransferId;
 
+        if (transferId) {
+
+            return true;
+        }
+        return false;
+    }
 
     const checkPageAuthorization = () => {
+        if (editMode()) return;
         if (!transfer.transferMethod) {
             history.replace(paths.TRANSFER_METHOD);
             toastAction({
@@ -68,10 +79,10 @@ const Recipient = () => {
             })
             return
         }
-        if (userIsVerified()) {
+        if (userIsVerified(user)) {
             // history.push(paths.RECIPIENT)
         } else {
-            if (isUserFirstTransaction() && Number(toSend.value) < max) {
+            if (isUserFirstTransaction(user) && Number(toSend.value) < max) {
                 // history.push(paths.RECIPIENT)
             } else {
                 toastAction({
@@ -86,15 +97,6 @@ const Recipient = () => {
         }
     }
 
-    const userIsVerified = (): boolean => {
-        return Boolean(user.meta.verified) && user?.meta?.verified !== "retry";
-    }
-
-    const isUserFirstTransaction = (): boolean => {
-
-        return !Boolean(transfer.transactions.length);
-    }
-
     useEffect(() => {
         setFilteredRecipients( recipients )
         handleRecipientUpdate()
@@ -102,12 +104,15 @@ const Recipient = () => {
 
     const handleRecipientClick = (recipient: any) => {
         if (recipient.profile.transferMethod !== transferMethod) {
-           return toastAction({
-                show: true,
-                type: "warning",
-                timeout: 5000,
-                message: `Select a recipient with ${transfer.transferMethod?.replace( '_', ' ' )} transfer method for this transaction`
-            })
+            if (!editMode()) {
+
+                return toastAction({
+                        show: true,
+                        type: "warning",
+                        timeout: 5000,
+                        message: `Select a recipient with ${transfer.transferMethod?.replace( '_', ' ' )} transfer method for this transaction`
+                    })
+            }
         }
         setSelectedRecipient(recipient);
         dispatch({type: RECIPIENT, payload: recipient})
@@ -140,6 +145,20 @@ const Recipient = () => {
             message: `Select / Add Recipient`
         })
     }
+
+    const handleContinueEditMode = () => {
+        if (!selectedRecipient) {
+            toastAction({
+                show: true,
+                type: 'warning',
+                timeout: 10000,
+                message: "Select a recipient"
+            })
+            return;
+        }
+
+        updateTransferRecipient(()=>history.push(paths.PAYMENT_METHOD + "?t=" + paramTransferId), paramTransferId);
+    }
     return (
         <Body>
             <NavBar />
@@ -150,7 +169,7 @@ const Recipient = () => {
                     <div><input type="text" onChange={(e) => filterRecipients(e)} placeholder="Search recipients"/> <button className=""> <img src={asset("icons", "search.svg")} alt="search"/> </button> </div>
                 </div>
                 <div className={openNRModal ? "mobile-hide" : ''}>
-                    <PageHeading heading="Recipient" subheading="Who are you sending money to?" back={paths.VERIFICATION} />
+                    <PageHeading heading="Recipient" subheading="Who are you sending money to?" back={paths.GET_QUOTE} />
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 {/* <RoundFloatingPlus showPlus={!openNRModal} callBack={()=>setOpenNRModal(true)} /> */}
@@ -181,10 +200,20 @@ const Recipient = () => {
 
                     </div>
                     <div className="mobile-hide">
-                        <TransferDetailsBox />
+                        
+                        <TransferDetailsBox transferId={paramTransferId} />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>history.push(paths.VERIFICATION)}>Back</span> <button onClick={handleContinue}>Continue</button> </div>
+                <div className="btns">
+                    {
+                       editMode() ? <>
+                            <button onClick={handleContinueEditMode}>Update transfer</button> 
+                        </> : <>
+                            <span onClick={()=>history.push(paths.VERIFICATION)}>Back</span> 
+                            <button onClick={handleContinue}>Continue</button> 
+                        </>
+                    }
+                </div>
             </div>
         </Body>
     )

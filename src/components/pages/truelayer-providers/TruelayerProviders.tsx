@@ -309,9 +309,6 @@ const TruelayerProviders = () => {
                 </div>
                 <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
                  {
-                    selected==="card" ?
-                    <PaymentRedirect mainamount = {transaction?.meta?.totalToPay} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} />
-                    :
                     <span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </span>
                 }
                 </div>

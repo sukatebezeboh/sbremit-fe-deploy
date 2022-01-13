@@ -108,7 +108,11 @@ const LandingPage = (props: any) => {
             element.selectionEnd = caret
         })
 
-        const value = getMoneyValue(formatCurrency(e.target.value));
+        const value = e.target.value;
+
+        if (value.split('.')[1]?.length > 2) {
+            return;
+        }
 
         if (isNaN(value)) {
             return
@@ -162,7 +166,7 @@ const LandingPage = (props: any) => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${value / rate}`},
+                    toSend: {...toSend, value: `${(value / rate).toFixed(2)}`},
                     toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))}
                 }
             })
@@ -192,7 +196,7 @@ const LandingPage = (props: any) => {
         if (changedInput === 'toSend') {
             toReceive.value = Number(toSend.value) * Number(rate)
         } else if (changedInput === 'toReceive'){
-            toSend.value = Number(toReceive.value) / Number(rate)
+            toSend.value = (Number(toReceive.value) / Number(rate)).toFixed(2)
         } else {
 
         }

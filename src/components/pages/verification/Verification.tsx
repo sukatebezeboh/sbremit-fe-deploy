@@ -194,6 +194,7 @@ const Body = styled.div`
         .btns {
             text-align: right;
             margin: 65px 0px;
+            z-index: 5;
             span {
                 display: inline-block;
                 margin-right: 50px;
@@ -211,11 +212,14 @@ const Body = styled.div`
                 color: #424242;
                 border: none;
                 outline: none;
+                cursor: pointer;
             }
         }
 
     }
-
+    #trulioo-embedid {
+        max-height: 750px;
+    }
     #trulioo-embedid:empty {
         background: url('/assets/icons/rolling-loader-black.svg');
         width: 100%;
@@ -337,7 +341,8 @@ const Body = styled.div`
 const Verification = () => {
     const history = useHistory();
     const enableVerficationStep = false;
-    const countries: any = useSelector((state: any) => state.appValues.countries)    
+    const countries: any = useSelector((state: any) => state.appValues.countries)
+    const [showContinueButton, setShowContinueButton] = useState(false)
 
     const user = useSelector((state: any) => state.auth.user);
 
@@ -359,6 +364,7 @@ const Verification = () => {
                 saveTruliooTransactionId({
                     experienceTransactionId: truliooResponse.experienceTransactionId
                 });
+                setShowContinueButton(true)
         }
 
         new TruliooClient({
@@ -383,7 +389,7 @@ const Verification = () => {
                 test
             </button> */}
             <div className="page-content">
-                <PageHeading heading="Verification" subheading={ method === constants.VERIFICATION_TYPE_IDENTITY ?  "Enter information to verify your identity" : method === constants.VERIFICATION_TYPE_DOCUMENT ? "Follow the prompts to verify your documents" : "Select a verification method"} back={paths.GET_QUOTE} callBack={()=> { method ? setMethod("") : history.push(paths.GET_QUOTE)}} />
+                <PageHeading heading="Verification" subheading={ method === constants.VERIFICATION_TYPE_IDENTITY ?  "Enter information to verify your identity" : method === constants.VERIFICATION_TYPE_DOCUMENT ? "Follow the prompts to verify your documents" : "Select a verification method"} back={paths.GET_QUOTE} callBack={()=> history.push(paths.GET_QUOTE)} />
                 { method === constants.VERIFICATION_TYPE_IDENTITY ? 
                 <Formik
                         initialValues={{...initialValues}}
@@ -512,7 +518,13 @@ const Verification = () => {
                         }
                 </Formik>
                 : method === constants.VERIFICATION_TYPE_DOCUMENT ?
-                <div id="trulioo-embedid"></div>
+                    <>
+                    <div id="trulioo-embedid"></div>
+                    {
+                       showContinueButton &&
+                        <div className="btns"><span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> <button onClick={() => history.push(paths.RECIPIENT)}>Continue</button> </div>
+                    }
+                    </>
                 :
                 <VerificationMethod setMethod={setMethod} method={method} />
                 }

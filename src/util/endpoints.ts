@@ -12,6 +12,7 @@ const endpoints = {
     RECIPIENT: '/user/$_1/recipient/$_2',
     CREATE_RECIPIENT: '/user/$_1/recipient',
     CREATE_TRANSFER: '/user/$_1/transfer',
+    UPDATE_TRANSFER: '/user/transfer/$_1',
     GET_TRANSFER: '/user/$_1/transfer/$_2',
     GET_TRANSFERS: '/user/$_1/transfers',
     QUOTE_SERVICE: '/exchange/$_1/$_2',

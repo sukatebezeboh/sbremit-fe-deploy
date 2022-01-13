@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
-import { checkAuth, appValuesAction } from './redux/actions/actions';
+import { checkAuth, appValuesAction, refreshUserDetails } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
@@ -16,10 +16,16 @@ function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
   const showAppLoader = useSelector((state: any)=>state.loading);
 
+
   useEffect(() => {
     checkAuth()
     appValuesAction()
   }, [isAuthenticated])
+
+  useEffect(() => {
+    refreshUserDetails()
+  }, [])
+
   return (
     <React.Fragment>
       <ToastFactory />
