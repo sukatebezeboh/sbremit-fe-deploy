@@ -66,7 +66,6 @@ const GetQuote = () => {
         })
     }
     const handleXInputChange = (e: any, data: any) => {        
-        let value;
         try {
                 const caret = e.target.selectionStart
                 const element = e.target
@@ -75,9 +74,12 @@ const GetQuote = () => {
                     element.selectionEnd = caret
                 })
 
-                value = getMoneyValue(formatCurrency(e.target.value));
         } catch ( error ) {
-            value = getMoneyValue(formatCurrency(e));
+        }
+        const value = e.target.value;
+
+        if (value.split('.')[1]?.length > 2) {
+            return;
         }
 
         if (isNaN(value)) {
@@ -98,7 +100,7 @@ const GetQuote = () => {
             }
 
             dispatch({
-                type: TRANSFER, 
+                type: TRANSFER,
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value}`}, 
@@ -123,7 +125,7 @@ const GetQuote = () => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${value / rate}`}, 
+                    toSend: {...toSend, value: `${(value / rate).toFixed(2)}`}, 
                     toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))}
                 }
             })
@@ -145,7 +147,7 @@ const GetQuote = () => {
         if (changedInput === 'toSend') {
             toReceive.value = toSend.value * rate
         } else if (changedInput === 'toReceive'){
-            toSend.value = toReceive.value / rate
+            toSend.value = (toReceive.value / rate).toFixed(2)
         } else {
 
         }

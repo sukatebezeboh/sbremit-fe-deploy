@@ -182,6 +182,13 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS = () => {
 
 }
 
+export const userIsVerified = (user: any): boolean => {
+    return Boolean(user.meta.verified) && user?.meta?.verified !== "retry";
+}
+
+export const isUserFirstTransaction = (user:any): boolean => {
+    return !Boolean(user.meta.exceededMaxUnverifiedTransactions);
+}
 
 export const isMobileOrTablet = ()  => {
     let check = false;

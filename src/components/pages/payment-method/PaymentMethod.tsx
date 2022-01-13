@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Redirect, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
@@ -12,7 +12,7 @@ import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } f
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
-import { formatCurrency, getQueryParam } from '../../../util/util';
+import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 
 const Body = styled.div`
@@ -189,6 +189,7 @@ const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
     const recipient = useSelector((state: any)=>state.recipients.recipient)
+    const user = useSelector((state: any)=>state.auth.user)
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
@@ -231,6 +232,31 @@ const PaymentMethod = () => {
         getTransactionDetails(()=>{}, transferId);
     }, [])
 
+    useEffect(() => {
+        autoSelectPaymentMethod()
+    }, [transaction])
+
+    const autoSelectPaymentMethod = () => {
+        if (!userIsVerified(user) && !isUserFirstTransaction(user)) {
+            toastAction({
+                show: true,
+                type: "info",
+                timeout: 15000,
+                title: "Just a minute, please!",
+                message: "We need to verify who you are to make this transaction"
+            })
+            history.push(paths.VERIFICATION)
+        }
+        if (transaction?.originCurrency === 'GBP') {
+            // setSelected('truelayer')
+            setSelected('card')
+        } else if ( (transaction?.originCurrency === "CAD" || transaction?.originCurrency === "EUR") ) {
+            setSelected('card')
+        } else {
+            setSelected('bank_transfer')
+        }
+    }
+
     return (
         <Body>
             {openConfirmModal ? 
@@ -255,65 +281,87 @@ const PaymentMethod = () => {
                 </div>
                 <div className="box-container details">
                     <div>
+                        {
+                            selected === "bank_transfer" 
+                            && <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
+                                <div className="radio-div">
+                                    {/* <RadioButton selected={selected==='bank_transfer'} /> */}
+                                </div>
+                                <div>
+                                    <div className="rc-head"> Manual Bank Transfer</div>
+                                    <div className="rc-body">
+                                        <div>
+                                            Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
+                                        </div>
+                                        <div>
+                                        </div>
+                                    </div>
+                                    <div className="rc-foot">
+                                            {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        { 
+                            selected==='card' 
+                            && <div className="radio-card disabled" onClick={() => {
+                                setSelected('card')
+                                }}>
+                                <div className="radio-div">
+                                    {/* <RadioButton selected={selected==='card'}/> */}
+                                </div>
+                                <div>
+                                    <div className="rc-head">Debit Card</div>
+                                    <div className="rc-body">
+                                        <div>
+                                            Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
+                                        </div>
+                                        <div className="green-txt">
+                                            <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to edit recipient detail</Link> 
+                                        </div>
+                                        <br /> <br /><br />
+                                        <div>
+                                            {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
+                                        </div>
+                                        <div>
+                                            If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> to complete your transfer
+                                        </div>
+                                    </div>
+                                    <div className="rc-foot">
+                                    </div>
+                                </div>
+                            </div>
+                        }
 
-                        <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='bank_transfer'} />
-                            </div>
-                            <div>
-                                <div className="rc-head"> Manual Bank Transfer</div>
-                                <div className="rc-body">
-                                    <div>
-                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
+                        {
+                            selected==='truelayer'
+                            && <div className="radio-card" onClick={()=>setSelected('truelayer')}>
+                                    <div className="radio-div">
+                                        {/* <RadioButton selected={selected==='truelayer'} /> */}
                                     </div>
                                     <div>
+                                        <div className="rc-head">Bank Transfer with Truelayer</div>
+                                        <div className="rc-body">
+                                            <div>
+                                                Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
+                                            </div>
+                                            <div className="green-txt">
+                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to edit recipient detail</Link> 
+                                            </div>
+                                            <br /> <br /><br />
+                                            <div>
+                                                {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
+                                            </div>
+                                            <div>
+                                                If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> to complete your transfer
+                                            </div>
+                                        </div>
+                                        <div className="rc-foot">
+                                                {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="rc-foot">
-                                        {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div className="radio-card disabled" onClick={() => {
-                            setSelected('card')
-                            }}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='card'}/>
-                            </div>
-                            <div>
-                                <div className="rc-head">Debit Card</div>
-                                <div className="rc-body">
-                                    <div>
-                                        You authorise SB Remit to debit <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> from your debit/credit card. Your credit card provider may charge cash advance fees. Use a debit card to avoid this charge.
-                                    </div>
-                                    <div>
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="radio-card" onClick={()=>setSelected('truelayer')}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected==='truelayer'} />
-                            </div>
-                            <div>
-                                <div className="rc-head">Bank Transfer with Truelayer</div>
-                                <div className="rc-body">
-                                    <div>
-                                        Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account.
-                                    </div>
-                                    <div>
-                                    </div>
-                                </div>
-                                <div className="rc-foot">
-                                        {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                     <div className="mobile-hide">
                         <TransferDetailsBox transferId={transferId} />
@@ -322,7 +370,7 @@ const PaymentMethod = () => {
                 <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
                  {
                     selected==="card" ?
-                    <PaymentRedirect mainamount = {transaction?.meta?.totalToPay} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} />
+                    <PaymentRedirect mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} transferId={transferId} />
                     :
                     <span> <button onClick={()=>handleProceed(transfer)}>Proceed to payment</button> </span>
                 }

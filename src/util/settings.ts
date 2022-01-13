@@ -5,5 +5,6 @@ export const settings : any = {
     TRANSFER_TIME_LIMIT_IN_SECONDS: 60 * 60 * 24, // 24 hrs
 
     TRUST_PAYMENT_SITE_REFERENCE: 'test_sukatebezebohltd89498',
-    TRUST_NOTIFICATION_WEBHOOK_URL: 'https://api-uat.sbremit.co.uk/trust/payment/notification'
+    TRUST_NOTIFICATION_WEBHOOK_URL: 'https://api-uat.sbremit.co.uk/trust/payment/notification',
+    TRUST_SUCCESSFUL_REDIRECT_URL: 'https://sbremit.netlify.app/transfer-complete?t='
 }
