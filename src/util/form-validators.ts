@@ -78,5 +78,6 @@ export const userVerificationValidator = Yup.object().shape({
   day: Yup.number().min(1, "Input day").max(31, "Input day").required(),
   month: Yup.number().min(1, "Input month").max(12, "Input month").required(),
   year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month").required(),
-  address1: Yup.string().min(10, "Too short").max(150, "Too long").required("Required")
+  buildingNumber: Yup.string().max(10, "Too long").required("Required"),
+  streetName: Yup.string().min(3, "Too long").max(250, "Too long").required("Required"),
 });

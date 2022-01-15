@@ -739,7 +739,8 @@ export const userVerificationAction = (values: any, callback: Function) => {
     store.dispatch({type: LOADING, payload: true})
     const userId = store.getState().auth.user?.id;
     http.post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
-        ...values
+        ...values,
+        address1: values.buildingNumber + ", " + values.streetName
     })
     .then(res => {
         if (res.data.status === "200") {

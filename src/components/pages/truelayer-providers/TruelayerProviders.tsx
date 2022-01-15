@@ -12,9 +12,10 @@ import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } f
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
-import { formatCurrency, getQueryParam } from '../../../util/util';
+import { formatCurrency, getQueryParam, parseEndpointParameters } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 import axios from 'axios';
+import endpoints from '../../../util/endpoints';
 
 const Body = styled.div`
     .page-content {
@@ -56,17 +57,19 @@ const Body = styled.div`
             div {
                 &.box-container-inner {
                     display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 250px));
                     grid-gap: 15px;
                 }
                 .radio-card {
                     display: grid;
-                    grid-template-columns: 1.5fr 15fr;
+                    /* grid-template-columns: 1.5fr 15fr; */
                     background: #FFF;
                     margin-bottom: 30px;
                     box-shadow: 0px 10px 12px #CCCCCC80;
                     border-radius: 15px;
                     padding: 25px;
+                    max-height: 200px;
+                    text-align: center;
                     .radio-card-inner {
                         display: grid;
                         padding: 0px 5px;
@@ -193,7 +196,7 @@ const Body = styled.div`
 
 const TruelayerProviders = () => {
     const history = useHistory();
-    const [selected, setSelected] = useState('')
+    const [selected, setSelected]: any = useState(null)
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer.transactionDetails;
@@ -214,39 +217,16 @@ const TruelayerProviders = () => {
             return
         }
 
-        axios.post('https://pay-api.truelayer-sandbox.com/v2/single-immediate-payment-initiation-requests',         {
-            "single_immediate_payment":
-            {
-                "beneficiary":
-                {
-                    "account":
-                    {
-                        "type": "sort_code_account_number",
-                        "sort_code":"23-22-90",
-                        "account_number":"34690451"
-                    }
-                },
-                "amount_in_minor": 100,
-                "currency":"GBP",
-                "provider_id": selected,
-                "scheme_id": "1"
-            },
-            "auth_flow": {
-                "type": "redirect",
-                "return_uri":"https://sbremit.netlify.app/transfer-complete"
-            },
-            "webhook_uri":"https://api-uat.sbremit.co.uk/truelayer/payment/notification" 
-        }, {
-        headers: {
-            Accept: 'application/json; charset=UTF-8',
-            'Content-Type': 'application/json; charset=UTF-8'
-            }}).then(function (response) {
-            console.log(response.data);
-        }).catch(function (error) {
-            console.error(error);
-        });
-
-
+        http.post(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT), {
+            'providerId' : selected.provider_id,
+            'schemeId': selected.single_immediate_payment_schemes[0]?.scheme_id,
+            'transferId': transferId,
+        })
+        .then((res) => {
+            if (res.data.status === 200) {
+                history.push(res.data.data.redirectUrl);
+            }
+        } )
     }
 
     const handleCancel = () => {
@@ -255,11 +235,10 @@ const TruelayerProviders = () => {
 
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
-
-        axios.get('https://auth.truelayer.com/api/providers?client_id=sandbox-sbremit-bba20c')
-        .then(res => {
+        axios.get('https://pay-api.truelayer-sandbox.com/v2/single-immediate-payments-providers?currency=GBP&auth_flow_type=redirect&account_type=sort_code_account_number,iban&client_id=sandbox-alexhastings-061876')
+        .then((res) => {
             console.log(res);
-            setTProviders(res.data);
+            setTProviders(res.data.results);
         });
     }, [])
 
@@ -289,10 +268,7 @@ const TruelayerProviders = () => {
                     <div className="box-container-inner">
 
                       { tProviders.map((provider: any) => (
-                        <div className="radio-card" onClick={()=>setSelected(provider.provider_id)}>
-                            <div className="radio-div">
-                                <RadioButton selected={selected===provider.provider_id} />
-                            </div>
+                        <div className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-yellow"}`} onClick={()=>setSelected(provider)}>
                             <div className="radio-card-inner">
                                 <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
                                 <div className="provider-name">

@@ -25,7 +25,8 @@ const endpoints = {
     SUBSCRIBE: '/subscribe',
     NOTIFICATIONS: '/user/$_1/notifications',
     PROMO: '/promo/$_1',
-    SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents'
+    SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents',
+    TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment'
 }
 
 export default endpoints;
