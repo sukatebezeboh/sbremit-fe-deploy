@@ -191,6 +191,6 @@ export const Routing: IRoute[] = [
         path: paths.TRUELAYER_PROVIDERS,
         component: TruelayerProviders,
         protected: true
-    },
+    }
 
 ]
