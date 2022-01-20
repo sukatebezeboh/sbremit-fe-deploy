@@ -129,12 +129,14 @@ export const signOutAction = (ignoreRequest = false) => {
         .then(res => {
             CookieService.remove(env.SESSION_KEY);
             CookieService.remove(env.SESSION_ID);
+            CookieService.remove("user");
             store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
             store.dispatch({type: LOADING, payload: false})
         })
     } else {
         CookieService.remove(env.SESSION_KEY);
         CookieService.remove(env.SESSION_ID);
+        CookieService.remove("user");
         store.dispatch({type: AUTH, payload: {isAuthenticated: false, user: undefined}})
         store.dispatch({type: LOADING, payload: false})
     }
