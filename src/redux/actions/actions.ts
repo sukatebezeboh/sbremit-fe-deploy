@@ -109,7 +109,7 @@ export const signInAction = (data: any) => {
     })
 }
 
-export const refreshUserDetails = () => {
+export const refreshUserDetails = (callback ?:Function) => {
     const user = store.getState().auth.user;
     if(!user) {
         return
@@ -118,6 +118,7 @@ export const refreshUserDetails = () => {
         .then(response=>{
             CookieService.put('user', JSON.stringify(response.data.data));
             store.dispatch({type: AUTH, payload: {...store.getState().auth, user: response.data.data}})
+            callback?.();
         })
 }
 

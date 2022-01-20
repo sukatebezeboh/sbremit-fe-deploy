@@ -33,8 +33,9 @@ const Div = styled.div`
         padding: 60px 0px 30px;
         position: fixed;
         z-index: 2;
-        top: 240px;
+        top: 50%;
         left: 22%;
+        transform: translateY(-50%);
         .head {
             border-bottom: 1px solid #F0F0F0;
             display: grid!important;
