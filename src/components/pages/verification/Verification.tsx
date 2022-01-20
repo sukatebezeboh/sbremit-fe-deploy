@@ -528,7 +528,7 @@ const Verification = () => {
                     <div id="trulioo-embedid"></div>
                     {
                        showContinueButton &&
-                        <div className="btns"><span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> <button onClick={() => history.push(paths.RECIPIENT)}>Continue</button> </div>
+                        <div className="btns p-relative"><span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> <button onClick={() => history.push(paths.RECIPIENT)}>Continue</button> </div>
                     }
                     </>
                 :
