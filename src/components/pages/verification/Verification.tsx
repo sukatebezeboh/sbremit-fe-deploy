@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
+import { refreshUserDetails, saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
 import { constants } from '../../../util/constants';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import http from '../../../util/http';
@@ -528,7 +528,7 @@ const Verification = () => {
                     <div id="trulioo-embedid"></div>
                     {
                        showContinueButton &&
-                        <div className="btns p-relative"><span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> <button onClick={() => history.push(paths.RECIPIENT)}>Continue</button> </div>
+                        <div className="btns p-relative"><span onClick={()=> refreshUserDetails(() => history.push(paths.GET_QUOTE))}>Back</span> <button onClick={()=> refreshUserDetails(() => history.push(paths.RECIPIENT))}>Continue</button> </div>
                     }
                     </>
                 :
