@@ -275,3 +275,7 @@ button:disabled{
 .strikethrough {
     text-decoration: line-through;
 }
+
+.p-relative {
+    position: relative;
+}
