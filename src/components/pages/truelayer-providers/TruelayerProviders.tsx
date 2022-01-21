@@ -92,9 +92,9 @@ const Body = styled.div`
 @media only screen and (max-width: 900px) { 
     .page-content {
         width: 100%;
-        height: 120vh;
+        min-height: 120vh;
         margin-top: -10px;
-        margin-bottom: -50px;
+        margin-bottom: 150px;
         padding-top: 10px;
         .page-heading {
             margin-top: 10px;
@@ -170,7 +170,7 @@ const Body = styled.div`
                 }
                 .radio-card {
                     padding: 15px;
-                    grid-template-columns: 2.5fr 15fr;
+                    grid-template-columns: 1fr;
                     min-height: fit-content;
                     border-radius: 8px;
                     .rc-head {

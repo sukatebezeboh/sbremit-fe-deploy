@@ -218,15 +218,15 @@ const GetQuote = () => {
             return
         }
 
-        if (Number(toSend.value) < 1 && toSend?.currency?.toLowerCase() === 'gbp' ) {
-            toastAction({
-                show: true,
-                type: "warning",
-                timeout: 10000,
-                message: "You can't send less than 1 GBP"
-            })
-            return
-        }
+        // if (Number(toSend.value) < 1 && toSend?.currency?.toLowerCase() === 'gbp' ) {
+        //     toastAction({
+        //         show: true,
+        //         type: "warning",
+        //         timeout: 10000,
+        //         message: "You can't send less than 1 GBP"
+        //     })
+        //     return
+        // }
 
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > max) {
             toastAction({
