@@ -926,3 +926,38 @@ export const updateTransferRecipient = (callback: Function, transferId: any) => 
         }
     })
 }
+
+export const fetchTruelayerProviders = (callback: Function) => {
+    store.dispatch({type: LOADING, payload: "Fetching available bank providers"})
+    http.get(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT))
+        .then((res) => {
+            console.log(res);
+            callback(res.data?.results);
+            // store.dispatch({type: LOADING, payload: false})
+        })
+        .catch()
+        .then(() => {
+            store.dispatch({type: LOADING, payload: false})
+        });
+}
+
+export const initiateTruelayerPayment = (selected: any, transferId: string|number) => {
+    store.dispatch({type: LOADING, payload: "Establishing secure connection with Truelayer. This may take up to a minute..."})
+
+    http.post(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT), {
+        'providerId' : selected.provider_id,
+        'schemeId': selected.single_immediate_payment_schemes[0]?.scheme_id,
+        'transferId': transferId,
+    })
+    .then((res) => {
+        console.log(res)
+        const result = res?.data?.result
+        if ( result ) {                
+            window.location.replace(result?.auth_flow?.uri);
+        }
+    })
+    .catch()
+    .then(() => {
+        store.dispatch({type: LOADING, payload: false})
+    })
+}

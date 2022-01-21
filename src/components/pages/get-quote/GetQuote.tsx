@@ -5,8 +5,7 @@ import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toas
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { settings } from '../../../util/settings';
-import { formatCurrency, getMax, getMoneyValue } from '../../../util/util';
+import { formatCurrency, getMax } from '../../../util/util';
 // import { asset } from '../../../util/util';
 import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
@@ -218,6 +217,17 @@ const GetQuote = () => {
             })
             return
         }
+
+        if (Number(toSend.value) < 1 && toSend?.currency?.toLowerCase() === 'gbp' ) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 10000,
+                message: "You can't send less than 1 GBP"
+            })
+            return
+        }
+
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > max) {
             toastAction({
                 show: true,
