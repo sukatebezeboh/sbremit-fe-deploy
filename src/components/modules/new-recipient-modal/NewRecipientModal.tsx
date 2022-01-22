@@ -184,7 +184,7 @@ const Div = styled.div`
     .modal {
         width: 100%;
         left: 0%;
-        top: 50px;
+        /* top: 50px; */
         padding: 0px;
         box-shadow: none;
         overflow-y: scroll;
