@@ -257,7 +257,6 @@ export const resetPasswordAction = (values: any, stage="email") => {
                     message: `The password reset link has been sent to you at ${values.username}`
                 })
                 store.dispatch({type: SUBMITTING, payload: ""})
-                store.dispatch({type: REDIRECT, payload: {...store.getState().redirect, resetPassword: true}})
             } else {
                 toastAction({
                     show: true,

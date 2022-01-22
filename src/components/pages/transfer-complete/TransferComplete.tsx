@@ -198,7 +198,8 @@ const TransferComplete = () => {
                             <Link to="/dashboard" >Back to Dashboard</Link>
                         </div>
                     </div>
-                    <TransferDetailsBox transferId={transferId} />
+
+                    { getQueryParam('t') && <TransferDetailsBox transferId={transferId} />}
                 </div>
             </div>
         </Body>
