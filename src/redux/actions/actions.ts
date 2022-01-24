@@ -632,14 +632,14 @@ export const getServiceRate = (transferMethod = "", getRecipientsValue = false) 
    const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod || transfer.transferMethod])[0] || services?.data?.[0];
    const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(transfer.toReceive.value) && Number(f.upperLimit) >= Number(transfer.toReceive.value))[0] || service?.fees?.[0];
 
-   const equiFee = fees?.type === "PERCENTAGE" ? ((fees?.fee * transfer.toReceive?.value)/100) : fees?.fee
+   const equiFee = fees?.type === "PERCENTAGE" ? ((Number(fees?.fee) * transfer.toReceive?.value)/100) : Number(fees?.fee)
 
    const mobileMoneyTax = Number((0.2 * (transfer.toReceive?.value || 0))/100);
 
-   const serviceFee = ((!transferMethod && transfer.transferMethod === "mobile_money") || ( transferMethod && transferMethod === "mobile_money")) ? ((Number(equiFee) + Number(mobileMoneyTax)) / (transfer.conversionRate?.rate)).toFixed(2): equiFee;
+   const serviceFee = ((!transferMethod && transfer.transferMethod === "mobile_money") || ( transferMethod && transferMethod === "mobile_money")) ? Number(((Number(equiFee) + Number(mobileMoneyTax)) / (transfer.conversionRate?.rate)).toFixed(2)) : Number(equiFee);
 
-   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee }})
-   return serviceFee || 0;
+   store.dispatch({type: TRANSFER, payload: {...transfer, serviceFee: Number(serviceFee) }})
+   return Number(serviceFee) || 0;
 }
 
 export const getServiceRateValue = (toReceiveValue: string|number, transferMethod: string, getRecipientsValue = false) => {
@@ -655,20 +655,21 @@ export const getServiceRateValue = (toReceiveValue: string|number, transferMetho
    const service = services?.data?.filter((s: any) => s.id === transferMethodsIds[transferMethod])[0] || services?.data?.[0];
    const fees = service?.fees?.filter((f: any) => Number(f.lowerLimit) <= Number(toReceiveValue) && Number(f.upperLimit) >= Number(toReceiveValue))[0] || service?.fees?.[0];
 
-   const equiFee = fees?.type === "PERCENTAGE" ? ((fees?.fee * Number(toReceiveValue))/100) : fees?.fee
+   const equiFee = fees?.type === "PERCENTAGE" ? ((Number(fees?.fee) * Number(toReceiveValue))/100) : Number(fees?.fee)
 
    const mobileMoneyTax = Number((0.2 * Number(toReceiveValue))/100);
 
    if (getRecipientsValue) {
         if ((transferMethod && transferMethod === "mobile_money")) {
-            return equiFee + mobileMoneyTax;
+            console.log((Number(equiFee) + mobileMoneyTax), "tx")
+            return Number(equiFee + mobileMoneyTax);
         } else {
-            return (equiFee * transfer.conversionRate?.rate).toFixed(2)
+            return Number((equiFee * transfer.conversionRate?.rate).toFixed(2))
         }
    }
 
    const serviceFee = (( transferMethod && transferMethod === "mobile_money")) ? ((Number(equiFee) + Number(mobileMoneyTax)) / (transfer.conversionRate?.rate)).toFixed(2): equiFee;
-   return serviceFee || 0;
+   return Number(serviceFee) || 0;
 }
 
 
@@ -705,7 +706,6 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
             })
             store.dispatch({type: LOADING, payload: false})
         }
-
     }).catch()
     .then(()=>{
         store.dispatch({type: LOADING, payload: false})
@@ -870,7 +870,6 @@ export const getPromo = async (code: string) => {
     } else {
         return undefined;
     }
-
 
 }
 
