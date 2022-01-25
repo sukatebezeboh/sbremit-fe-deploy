@@ -282,6 +282,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 display: none;
             }
             .hero-rect{
+                margin-top: 0;
                 width: 100%;
                 border-radius: 0px;
                 box-shadow: none;
