@@ -237,7 +237,6 @@ const style = styled.div`
     min-height: 100vh;
     .page-heading {
         margin-top: 30px;
-        
     }
     .box {
         margin: 0px;
@@ -245,10 +244,12 @@ const style = styled.div`
         padding: 0px;
         .hero-rect {
             width: 100%;
-            margin-top: 50px;
+            margin-top: -10px;
         }
         .head {
-            width: 100% ;
+            width: 100%;
+            margin-top: 50px;
+            margin-bottom: 0;
             span:first-child {
                 font: normal normal normal 13px/16px Montserrat;
             }
