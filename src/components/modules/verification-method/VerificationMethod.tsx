@@ -173,6 +173,7 @@ const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
 
         setMethod(constants.VERIFICATION_TYPE_IDENTITY)
 
+
     }, [])
 
     const isUserAllowedThisType = (type: string) => {

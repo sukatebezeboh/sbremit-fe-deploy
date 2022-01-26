@@ -606,7 +606,11 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
     .then(res => {
         if(res.data.status === "200"){
-            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...res.data.data}}})
+            const data = res.data.data;
+            if (data?.base?.toUpperCase() === "EUR") {
+                data.rate = 655.96;
+            }
+            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
             store.dispatch({type: LOADING, payload: false})
         }
     }).catch(()=>{
@@ -661,7 +665,6 @@ export const getServiceRateValue = (toReceiveValue: string|number, transferMetho
 
    if (getRecipientsValue) {
         if ((transferMethod && transferMethod === "mobile_money")) {
-            console.log((Number(equiFee) + mobileMoneyTax), "tx")
             return Number(equiFee + mobileMoneyTax);
         } else {
             return Number((equiFee * transfer.conversionRate?.rate).toFixed(2))
@@ -877,7 +880,6 @@ export const saveTruliooTransactionId = (payload: any) => {
 
     http.post(endpoints.SAVE_TRULIOO_DOCUMENT_VERIFICATION, payload)
     .then(res => {
-        console.log(res)
         if (res.data.status === "200") {
             toastAction({
                 show: true,
@@ -929,7 +931,6 @@ export const fetchTruelayerProviders = (callback: Function) => {
     store.dispatch({type: LOADING, payload: "Fetching available bank providers"})
     http.get(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT))
         .then((res) => {
-            console.log(res);
             callback(res.data?.results);
             // store.dispatch({type: LOADING, payload: false})
         })
@@ -948,7 +949,6 @@ export const initiateTruelayerPayment = (selected: any, transferId: string|numbe
         'transferId': transferId,
     })
     .then((res) => {
-        console.log(res)
         const result = res?.data?.result
         if ( result ) {                
             window.location.replace(result?.auth_flow?.uri);

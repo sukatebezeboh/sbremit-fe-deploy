@@ -40,7 +40,6 @@ const Recipient = () => {
     }, [transfer, user])
 
     const paramTransferId = getQueryParam('t');
-    console.log(paramTransferId);
     const editMode = () => {
         const transferId = paramTransferId;
 

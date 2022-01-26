@@ -12,7 +12,6 @@ const envs: any = {
 let _env: any = development;
 const env = (config: string) => {
     _env = { ...common, ...envs[config]}   
-     console.log( 'env', config )
 
 }
 // const processEnv = process.env.NODE_ENV == 'production' && window.location.href.includes('netlify') ? 'staging' : process.env.NODE_ENV;
