@@ -13,6 +13,7 @@ import http from '../../util/http';
 import { Redirect } from 'react-router';
 import { BrowserRouter } from 'react-router-dom'
 import { transfer } from '../reducers/transfer';
+import { constants } from '../../util/constants';
 
 const user = store.getState().auth.user;
 const serviceProvider =  env.X_SERVICE_PROVIDER;
@@ -459,9 +460,9 @@ export const getUserTransactions = () => {
             return 0
         })
         const paginatedTransactions = genPaginationHashTable(transactions, 10);
-        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="cancelled"), 10)
-        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="complete"), 10)
-        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()==="pending"), 10)
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_CANCELLED.toLowerCase()), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
     })
     .catch(err=>{
@@ -684,7 +685,7 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
         method: transfer.paymentMethod,
         amount: transfer.transactionDetails.originAmount,
         reference: `${transfer.transactionDetails.originAmount}`,
-        status: "PENDING",
+        status: constants.TRANSFER_STATUS_PENDING,
         dateCreated: Math.round(Date.now() / 1000),
         lastUpdated: null,
         meta,

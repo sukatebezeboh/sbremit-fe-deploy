@@ -648,7 +648,7 @@ const TransactionDetail = (props: any) => {
             {/* MOBILE TD MODAL */}
             <div className="desktop-hide mobile-modal">
                 <PageHeading heading="Transaction #: SBR334908" callBack={()=>handleOpenTDModal(false)} />
-                <div className="status"> <span>Pending</span> </div>
+                <div className="status"> <span>{constants.TRANSFER_STATUS_PENDING}</span> </div>
                 <div className="view-details" onClick={()=>showMobileModal(true)}>View transaction update</div>
             </div>
            {openMobileTimeline && (<div className="timeline-modal-container desktop-hide">
