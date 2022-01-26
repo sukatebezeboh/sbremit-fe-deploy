@@ -106,22 +106,23 @@ const Div = styled.div`
                 padding-left: 15px;
             }
             select.phone  {
-                background-position-x: 15%;
-                padding-left: 75px;
+                background-position-x: 25%;
+                padding-left: 85px;
             }
             input.phone-no {
                 position: relative;
                 top: 51px;
-                width: 79%;
+                width: 70%;
                 height: 44px;
                 margin-left: 20%;
                 border: 2px solid transparent;
                 background: #fff;
+                float: right;
             }
             div.mobile-head {
                 margin-bottom: -50px;
             }
-            select+img{
+            /* select+img{
                 position: relative;
                 top: -35px;
                 left: 20px;
@@ -130,6 +131,19 @@ const Div = styled.div`
                 box-shadow: 0px 3px 6px #00000029;
                 border-radius: 1px;
                 pointer-events: none;
+            } */
+            div.country-code{
+                position: relative;
+                top: -42px;
+                left: 10px;
+                display: flex;
+                align-items: center;
+                width: fit-content;
+                height: 25px;
+                img{
+                    width: 25px;
+                    height: 19px;
+                }
             }
             div.margin-adjust {
                 margin-bottom: -44px;
@@ -215,7 +229,7 @@ const Div = styled.div`
                         top: 32px;
                         height: 25px!important;
                         margin-left: 15%;
-                        width: 85%;
+                        width: calc(100% - 80px);
                         padding-left: 5px;
                         border: 1px solid transparent;
                         padding: 0px 5px;
@@ -226,14 +240,17 @@ const Div = styled.div`
                     select.phone{
                         padding: 10px 50%;
                         background-position-y: 3px;
-                        background-position-x: 10%;
+                        background-position-x: 55px;
                     }
                     .mobile-head {
                         margin-bottom: -31px;
                     }
-                    select+img{
+                    /* select+img{
                         top: -29px;
                         left: 10px;
+                    } */
+                    div.country-code{
+                        top: -32px;
                     }
             }
         }
@@ -327,7 +344,12 @@ function NewRecipientModal(props: any) {
                                                     <option value="+01">United Kingdom</option>
                                                     <option value="+237">Cameroon</option>
                                                 </Field>
-                                                <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
+                                                {/* <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/> */}
+                                                {/* <p className="country-code">{values.phoneCode}</p> */}
+                                                <div className="country-code">
+                                                    <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
+                                                    <p>{values.phoneCode}</p>
+                                                </div>
                                                 <div className="margin-adjust"></div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
