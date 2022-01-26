@@ -45,7 +45,7 @@ export const RecipientValidator = Yup.object().shape({
     lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     // mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
     mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-      return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and digits')
+      return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
     }),
     phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
     email: Yup.string().email("Enter valid email"),
