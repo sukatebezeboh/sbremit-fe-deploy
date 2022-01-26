@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 const Field = styled.div`
     .coupon {
-        margin-top: 100px;
+        margin-top: 60px;
         /* margin-bottom: 10px; */
         input.promo-code {
             border: 1px solid lightgrey;
