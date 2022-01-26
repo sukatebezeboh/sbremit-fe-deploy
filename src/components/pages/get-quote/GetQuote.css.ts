@@ -46,6 +46,9 @@ const style = styled.div`
             float: right;
             z-index: 2;
             position: relative;
+            @media only screen and (max-width: 1200px) { 
+                width: 250px;
+            }
             @media only screen and (max-width: 900px) { 
                 width: 190px;
             }
@@ -114,11 +117,14 @@ const style = styled.div`
                             height: 18px;
                         }
                     }
-                    span {
+                    span{
                         font: normal normal normal 15px/19px Montserrat;
                         color: #424242;
                         padding-left: 5px;
                         position: absolute;
+                        p{
+                            display: inline;
+                        }
                     }
                 }
                 .hover-tab {
@@ -164,6 +170,11 @@ const style = styled.div`
             }
             .timeline-1{
                 margin-top: 20px;
+            }
+            .timeline-3{
+                span.sb-charges{
+                    width: max-content;
+                }
             }
             .timeline-5{
                 margin-top: 115px;
@@ -212,6 +223,14 @@ const style = styled.div`
             outline: none;
         }
     }
+
+    @media only screen and (min-width: 901px) and (max-width: 1200px){
+    .timeline-5 {
+            p{
+                font-size: 10px;
+            }
+        }
+} 
 
 @media only screen and (max-width: 900px) { 
     background: white;
@@ -281,7 +300,7 @@ const style = styled.div`
                 .timeline-box{
                     left: 20px;
                     top: -15px;
-                    height: 240px;
+                    height: 300px;
                     .timeline {
                         span:not(.deep-green){
                             font-size: 12px;
@@ -293,7 +312,7 @@ const style = styled.div`
                             font: normal normal 600 10px/13px Montserrat;
                         }
                     }
-                    .timeline-3{
+                    /* .timeline-3{
                         position: absolute;
                         top: 235px;
                         left: -10px;
@@ -315,9 +334,18 @@ const style = styled.div`
                                 display: none;
                             }
                         }
+                    } */
+                    .timeline-3{
+                        span.sb-charges{
+                            width: max-content;
+                        }
                     }
                     .timeline-5 {
                         margin-top: 90px;
+                        span.not-mobile{
+                            width: fit-content;
+                            margin-top: 3.5px;
+                        }
                         .we-conv{
                             font: normal normal normal 11px Montserrat;
                             color: #424242;
@@ -325,7 +353,7 @@ const style = styled.div`
                     }
                 }
                 .receive{
-                    margin-top: 150px;
+                    margin-top: 212px;
                 }
                 
                 .md-txt{
