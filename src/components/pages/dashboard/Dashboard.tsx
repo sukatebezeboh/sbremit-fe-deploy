@@ -52,20 +52,23 @@ const Dashboard = () => {
     const getTransactions = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
-            complete: transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [],
-            cancelled: transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [],
-            pending: transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [],
         }
+
+        filters[constants.TRANSFER_STATUS_COMPLETE.toLowerCase()] = transfer.paginatedCompletedTransactions.paginated?.[transfer.currentTransactionsPage] || [];
+        filters[constants.TRANSFER_STATUS_CANCELLED.toLowerCase()] = transfer.paginatedCancelledTransactions.paginated?.[transfer.currentTransactionsPage] || [];
+        filters[constants.TRANSFER_STATUS_PENDING.toLowerCase()] = transfer.paginatedPendingTransactions.paginated?.[transfer.currentTransactionsPage] || [];
         return filters[selectedFilter||"all"]
     }
 
     const getCorrespondingPages = () => {
         const filters: any = {
             all: transfer.paginatedTransactions.pages,
-            complete: transfer.paginatedCompletedTransactions.pages,
-            cancelled: transfer.paginatedCancelledTransactions.pages,
-            pending: transfer.paginatedPendingTransactions.pages,
         }
+
+        filters[constants.TRANSFER_STATUS_COMPLETE.toLowerCase()]  = transfer.paginatedCompletedTransactions.pages;
+        filters[constants.TRANSFER_STATUS_CANCELLED.toLowerCase()] = transfer.paginatedCancelledTransactions.pages
+        filters[constants.TRANSFER_STATUS_PENDING.toLowerCase()] = transfer.paginatedPendingTransactions.pages
+
         return filters[selectedFilter||"all"]
     }
 
@@ -127,16 +130,16 @@ const Dashboard = () => {
                     <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
                 <div className="transactions">
-                    <div onClick={()=>_setSelectedFilter("complete")} className={selectedFilter === "complete" ? "selected-border-green" : ''}> 
-                        <div className="green-txt">{getTransactionStatusCount('complete')}</div>
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}> 
+                        <div className="green-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())}</div>
                         <div>Complete Transactions</div>
                     </div>
-                    <div onClick={()=>_setSelectedFilter("pending")} className={selectedFilter === "pending" ? "selected-border-yellow" : ''}> 
-                        <div className="yellow-txt">{getTransactionStatusCount('pending')}</div>
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_PENDING.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_PENDING.toLowerCase() ? "selected-border-yellow" : ''}> 
+                        <div className="yellow-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_PENDING.toLowerCase())}</div>
                         <div>Pending Transactions</div>
                     </div>
-                    <div onClick={()=>_setSelectedFilter("cancelled")} className={selectedFilter === "cancelled" ? "selected-border-red" : ''}> 
-                        <div className="red-txt">{getTransactionStatusCount('cancelled')}</div>
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_CANCELLED.toLowerCase() ? "selected-border-red" : ''}> 
+                        <div className="red-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())}</div>
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">

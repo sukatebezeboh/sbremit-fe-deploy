@@ -21,19 +21,14 @@ import endpoints from '../../util/endpoints'
 import store from './../store'
 import { CookieService } from '../../services/CookieService'
 import env from '../../env'
-import { AppService } from '../../services/AppService'
-import { paths } from '../../util/paths'
-import {
-  formatCurrency,
-  genPaginationHashTable,
-  getQueryParam,
-  parseEndpointParameters,
-  sortObjectByProperties,
-} from '../../util/util'
-import http from '../../util/http'
+import { AppService } from '../../services/AppService';
+import { paths } from '../../util/paths';
+import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters, sortObjectByProperties } from '../../util/util';
+import http from '../../util/http';
+import { constants } from '../../util/constants'
 
-const user = store.getState().auth.user
-const serviceProvider = env.X_SERVICE_PROVIDER
+const user = store.getState().auth.user;
+const serviceProvider =  env.X_SERVICE_PROVIDER;
 
 export const checkAuth = () => {
   const session = CookieService.get(env.SESSION_KEY)
@@ -520,43 +515,23 @@ export const getUserTransactions = () => {
   const user = store.getState().auth.user
   const transfer = store.getState().transfer
 
-  store.dispatch({ type: LOADING, payload: true })
-  http
-    .get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
-    .then((res) => {
-      let transactions: any[] = res.data.data?.sort((a: any, b: any) => {
-        if (a.dateCreated < b.dateCreated) {
-          return 1
-        }
-        if (a.dateCreated > b.dateCreated) {
-          return -1
-        }
-        return 0
-      })
-      const paginatedTransactions = genPaginationHashTable(transactions, 10)
-      const paginatedCancelledTransactions = genPaginationHashTable(
-        transactions.filter((t) => t.status?.toLowerCase() === 'cancelled'),
-        10,
-      )
-      const paginatedCompletedTransactions = genPaginationHashTable(
-        transactions.filter((t) => t.status?.toLowerCase() === 'complete'),
-        10,
-      )
-      const paginatedPendingTransactions = genPaginationHashTable(
-        transactions.filter((t) => t.status?.toLowerCase() === 'pending'),
-        10,
-      )
-      store.dispatch({
-        type: TRANSFER,
-        payload: {
-          ...transfer,
-          transactions,
-          paginatedTransactions,
-          paginatedCompletedTransactions,
-          paginatedCancelledTransactions,
-          paginatedPendingTransactions,
-        },
-      })
+    store.dispatch({type: LOADING, payload: true})
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
+    .then(res=>{
+        let transactions: any[] = res.data.data?.sort((a: any, b: any)=>{
+            if (a.dateCreated < b.dateCreated) {
+                return 1
+            }
+            if (a.dateCreated > b.dateCreated) {
+                return -1
+            }
+            return 0
+        })
+        const paginatedTransactions = genPaginationHashTable(transactions, 10);
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_CANCELLED.toLowerCase()), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
     })
     .catch((err) => {})
     .then(() => {
@@ -843,42 +818,41 @@ export const getServiceRateValue = (
 }
 
 export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
-  store.dispatch({ type: LOADING, payload: true })
+    store.dispatch({type: LOADING, payload: true})
 
-  const transfer = store.getState().transfer
-  const userId = store.getState().auth.user.id
+    const transfer = store.getState().transfer
+    const userId = store.getState().auth.user.id;
 
-  const payload = {
-    transferId: transfer.transactionDetails.id,
-    method: transfer.paymentMethod,
-    amount: transfer.transactionDetails.originAmount,
-    reference: `${transfer.transactionDetails.originAmount}`,
-    status: 'PENDING',
-    dateCreated: Math.round(Date.now() / 1000),
-    lastUpdated: null,
-    meta,
-    data,
-  }
+    const payload = {
+        transferId: transfer.transactionDetails.id,
+        method: transfer.paymentMethod,
+        amount: transfer.transactionDetails.originAmount,
+        reference: `${transfer.transactionDetails.originAmount}`,
+        status: constants.TRANSFER_STATUS_PENDING,
+        dateCreated: Math.round(Date.now() / 1000),
+        lastUpdated: null,
+        meta,
+        data
+    }
 
-  http
-    .post(parseEndpointParameters(endpoints.INITIATE_PAYMENT, userId), payload)
-    .then((res) => {
-      if (res.data.id) {
-        callback?.()
-        store.dispatch({ type: LOADING, payload: false })
-      } else {
-        toastAction({
-          show: true,
-          type: 'error',
-          timeout: 10000,
-          message: res.data.error.message,
-        })
-        store.dispatch({ type: LOADING, payload: false })
-      }
-    })
-    .catch()
-    .then(() => {
-      store.dispatch({ type: LOADING, payload: false })
+    http.post(parseEndpointParameters(endpoints.INITIATE_PAYMENT, userId), payload)
+    .then(res => {
+        if (res.data.id) {
+            callback?.()
+            store.dispatch({type: LOADING, payload: false})
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
+    }).catch()
+    .then(()=>{
+        store.dispatch({type: LOADING, payload: false})
     })
 }
 

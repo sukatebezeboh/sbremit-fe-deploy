@@ -248,8 +248,8 @@ const PaymentMethod = () => {
             history.push(paths.VERIFICATION)
         }
         if (transaction?.originCurrency === 'GBP') {
-            setSelected('truelayer')
-            // setSelected('card')
+            // setSelected('truelayer')
+            setSelected('card')
         } else if ( (transaction?.originCurrency === "CAD" || transaction?.originCurrency === "EUR") ) {
             setSelected('card')
         } else {
