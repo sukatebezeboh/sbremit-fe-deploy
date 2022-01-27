@@ -1,6 +1,6 @@
 import { IAction } from ".";
 import { AppService } from "../../services/AppService";
-import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS } from "../actionTypes";
+import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR } from "../actionTypes";
 
 const initialSubmittingState = "";
 const initialToastState = {
@@ -17,6 +17,8 @@ const initialAppValues = {
 }
 const initialLoadingState = false;
 
+const initialCreatingAccountState = null
+
 export const submitting = (state: any = initialSubmittingState, {type, payload}: IAction) => {
     switch (type) {
         case SUBMITTING: {
@@ -25,6 +27,26 @@ export const submitting = (state: any = initialSubmittingState, {type, payload}:
         default:
           return state;
       }
+}
+
+export const createAccountSuccess = (state: any = initialCreatingAccountState, {type, payload}: IAction) => {
+  switch (type) {
+      case CREATE_ACCOUNT_SUCCESS: {
+        return payload
+      }
+      default:
+        return state;
+    }
+}
+
+export const createAccountError = (state: any = initialCreatingAccountState, {type, payload}: IAction) => {
+  switch (type) {
+      case CREATE_ACCOUNT_ERROR: {
+        return payload
+      }
+      default:
+        return state;
+    }
 }
 
 export const toast = (state: any = initialToastState, {type, payload}: IAction) => {
