@@ -375,7 +375,7 @@ const Verification = () => {
 
         new TruliooClient({
             publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
-            accessTokenURL: "https://api-uat.sbremit.co.uk",
+            accessTokenURL: process.env.REACT_APP_TRULIOO_ACCESS_TOKEN_URL,
             handleResponse,
         });
     }, [method])

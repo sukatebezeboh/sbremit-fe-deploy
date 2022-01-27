@@ -164,7 +164,7 @@ const ExchangeRateInput = (props: any) =>{
                 <div className={`x-input ${(max && data?.total > max) ? 'selected-border-re' : ''}`}>
                     <div className="xi-1">
                         <div className="grey-txt you-send">{data?.isSend ? 'You send': 'They get'}</div>
-                        <input ref={inputRef} name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" placeholder="0.00" value={(data.isSend ? (data?.value || "") : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput(); }}/>
+                        <input autoComplete='off' ref={inputRef} name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} type="text" placeholder="0.00" value={(data.isSend ? (data?.value || "") : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput(); }}/>
                     </div>
                     <div  className="flg-drp">
                         {

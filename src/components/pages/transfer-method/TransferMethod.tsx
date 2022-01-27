@@ -16,9 +16,9 @@ const TransferMethod = () => {
     const [selected, setSelected] = useState(transfer.transferMethod);
     const dispatch = useDispatch();
     const history = useHistory();
-    const [  mobileMoneyStartingFee, setMobileMoneyStartingFee ] = useState("0.00");
-    const [  bankTransferStartingFee, setBankTransferStartingFee ] = useState("0.00");
-    const [  cashPickUpStartingFee, setCashPickUpStartingFee ] = useState("0.00");
+    const [  mobileMoneyStartingFee, setMobileMoneyStartingFee ] = useState(0.00);
+    const [  bankTransferStartingFee, setBankTransferStartingFee ] = useState(0.00);
+    const [  cashPickUpStartingFee, setCashPickUpStartingFee ] = useState(0.00);
     const { toSend } = transfer;
 
     const setTransferMethod = (method: string) => {

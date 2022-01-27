@@ -200,7 +200,6 @@ const Recipient = () => {
 
                     </div>
                     <div className="mobile-hide">
-                        
                         <TransferDetailsBox transferId={paramTransferId} />
                     </div>
                 </div>
@@ -209,7 +208,7 @@ const Recipient = () => {
                        editMode() ? <>
                             <button onClick={handleContinueEditMode}>Update transfer</button> 
                         </> : <>
-                            <span onClick={()=>history.push(paths.VERIFICATION)}>Back</span> 
+                            <span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> 
                             <button onClick={handleContinue}>Continue</button> 
                         </>
                     }

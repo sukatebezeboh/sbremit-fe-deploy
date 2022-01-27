@@ -5,11 +5,9 @@ import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import styled from "styled-components";
-import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } from '../../../redux/actions/actions';
-import { TRANSFER } from '../../../redux/actionTypes';
+import { cancelTransfer, fetchTruelayerProviders, getTransactionDetails, initiateTruelayerPayment, toastAction } from '../../../redux/actions/actions';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
 import { formatCurrency, getQueryParam, parseEndpointParameters } from '../../../util/util';
@@ -94,9 +92,9 @@ const Body = styled.div`
 @media only screen and (max-width: 900px) { 
     .page-content {
         width: 100%;
-        height: 120vh;
+        min-height: 120vh;
         margin-top: -10px;
-        margin-bottom: -50px;
+        margin-bottom: 150px;
         padding-top: 10px;
         .page-heading {
             margin-top: 10px;
@@ -172,7 +170,7 @@ const Body = styled.div`
                 }
                 .radio-card {
                     padding: 15px;
-                    grid-template-columns: 2.5fr 15fr;
+                    grid-template-columns: 1fr;
                     min-height: fit-content;
                     border-radius: 8px;
                     .rc-head {
@@ -217,16 +215,7 @@ const TruelayerProviders = () => {
             return
         }
 
-        http.post(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT), {
-            'providerId' : selected.provider_id,
-            'schemeId': selected.single_immediate_payment_schemes[0]?.scheme_id,
-            'transferId': transferId,
-        })
-        .then((res) => {
-            if (res.data.status === 200) {
-                history.push(res.data.data.redirectUrl);
-            }
-        } )
+        initiateTruelayerPayment(selected, transferId);
     }
 
     const handleCancel = () => {
@@ -235,11 +224,7 @@ const TruelayerProviders = () => {
 
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
-        axios.get('https://pay-api.truelayer-sandbox.com/v2/single-immediate-payments-providers?currency=GBP&auth_flow_type=redirect&account_type=sort_code_account_number,iban&client_id=sandbox-alexhastings-061876')
-        .then((res) => {
-            console.log(res);
-            setTProviders(res.data.results);
-        });
+        fetchTruelayerProviders(setTProviders);
     }, [])
 
     return (

@@ -202,6 +202,8 @@ const LandingPage = (props: any) => {
         }
     }
 
+    console.log(toReceive.total, 'receive total')
+
     const setTotalValue = () => {
         // debugger;
         let total = Number(toSend.value) + Number(serviceFee);

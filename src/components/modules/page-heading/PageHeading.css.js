@@ -25,6 +25,8 @@ const style = (back) => styled.div`
     @media only screen and (max-width: 900px) { 
         width: 90%;
         margin-top: 100px;
+        display: block;
+        margin: 10px;
         div {
             >.heading {
                 /* font-size: 18px; */

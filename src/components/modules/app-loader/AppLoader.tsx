@@ -16,6 +16,14 @@ const Div = styled.div`
         width: 50px;
         height: 50px;
     }
+    .text {
+        display: block;
+        font-size: 32px;
+        text-align: center;
+        color: white;
+        margin-top: -10%;
+        font-weight: 800;
+    }
 `
 
 const AppLoader = (props: any) => {
@@ -23,6 +31,8 @@ const AppLoader = (props: any) => {
     return (
         show ? <Div>
             <img src={asset('icons', 'rolling-loader.svg')} alt="page-loader"/>
+
+            <div className="text">{show}</div>
         </Div> : <></>
     )
 }
