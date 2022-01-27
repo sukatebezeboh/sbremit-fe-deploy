@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { refreshUserDetails, saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
+import { refreshUserDetails, saveTruliooTransactionId, stackNewToast, toastAction, userVerificationAction } from '../../../redux/actions/actions';
 import { constants } from '../../../util/constants';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import http from '../../../util/http';
@@ -13,6 +13,7 @@ import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import Toast from '../../modules/toast-factory/toast/Toast';
 import VerificationMethod from '../../modules/verification-method/VerificationMethod';
 
 const Body = styled.div`
@@ -346,7 +347,6 @@ const Body = styled.div`
 
 const Verification = () => {
     const history = useHistory();
-    const enableVerficationStep = false;
     const countries: any = useSelector((state: any) => state.appValues.countries)
     const [showContinueButton, setShowContinueButton] = useState(false)
 
@@ -382,9 +382,19 @@ const Verification = () => {
 
 
     const handleIDVerificationServerResponse = (verificationResult: any) => {
-        console.log(verificationResult, '========================>>>>>>');
-    }
+        const {verified} = verificationResult;
+        if (verified) {
+            stackNewToast({
+                name: "verification-success",
+                show: true,
+                type: 'success',
+                // timeout: 15000,
+                message: "Verification successful",
+            })
 
+            history.push(paths.RECIPIENT);
+        }
+    }
 
     return (
         // !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />

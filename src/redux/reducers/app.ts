@@ -1,9 +1,11 @@
 import { IAction } from ".";
 import { AppService } from "../../services/AppService";
-import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR } from "../actionTypes";
+import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR, ADD_TO_STACKED_TOASTS, REMOVE_FROM_STACKED_TOASTS } from "../actionTypes";
 
 const initialSubmittingState = "";
 const initialToastState = {
+  toast: {},
+  toasts: []
 }
 const initialRedirectState = {
   to: "/sign-in"
@@ -52,7 +54,15 @@ export const createAccountError = (state: any = initialCreatingAccountState, {ty
 export const toast = (state: any = initialToastState, {type, payload}: IAction) => {
   switch (type) {
       case TOAST: {
-        return  {...payload}
+        return  { ...state, toast: payload}
+      }
+      case ADD_TO_STACKED_TOASTS: {
+        return { ...state, toasts: [...state.toasts, payload] }
+      }
+      case REMOVE_FROM_STACKED_TOASTS: {
+        const toasts = state.toasts;
+        const newStack = toasts.filter((t: any) => t.name !== payload.name)
+        return { ...state, toasts: newStack }
       }
       default:
         return state;

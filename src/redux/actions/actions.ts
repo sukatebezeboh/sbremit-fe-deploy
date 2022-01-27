@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import {
+    ADD_TO_STACKED_TOASTS,
   APP_VALUES,
   AUTH,
   CREATE_ACCOUNT_ERROR,
@@ -10,6 +11,7 @@ import {
   RECIPIENT,
   RECIPIENTS,
   REDIRECT,
+  REMOVE_FROM_STACKED_TOASTS,
   SIGN_IN,
   SIGN_UP,
   SUBMITTING,
@@ -192,7 +194,11 @@ export const toastAction = (toastConfig: any) => {
   runningTimeouts.forEach((t) => {
     return clearTimeout(t)
   })
+  toastConfig.close = closeToasts
   store.dispatch({ type: TOAST, payload: { ...toastConfig } })
+  if (!toastConfig.timeout) {
+      return;
+  }
   const t_id_1 = setTimeout(
     () => {
       store.dispatch({
@@ -213,6 +219,40 @@ export const toastAction = (toastConfig: any) => {
   runningTimeouts.push(t_id_1)
   runningTimeouts.push(t_id_2)
 }
+
+export const closeToasts = () => {
+    runningTimeouts.forEach(t=>{
+        return clearTimeout(t);
+    })
+
+    const t_id_1 = setTimeout(()=>{
+        store.dispatch({type: TOAST, payload: { show: true, readyToClose: true}})
+    }, (80))
+
+   const t_id_2 = setTimeout(()=>{
+        store.dispatch({type: TOAST, payload: { show: false, readyToClose: false}})
+    }, 100)
+
+    runningTimeouts.push(t_id_1)
+    runningTimeouts.push(t_id_2)
+}
+
+export const stackNewToast = (toastConfig: any) => {
+    if (!toastConfig.name) {
+        throw new Error("Stacked toast must have a name");
+    }
+    toastConfig.close = () => unstackNewToast(toastConfig)
+    store.dispatch({ type: ADD_TO_STACKED_TOASTS, payload: toastConfig })
+}
+
+export const unstackNewToast = (toastConfig: any) => {
+    if (!toastConfig.name) {
+        throw new Error("Stacked toast name is required in config");
+    }
+    store.dispatch({ type: REMOVE_FROM_STACKED_TOASTS, payload: toastConfig })
+}
+
+
 
 export const appValuesAction = async () => {
   const allValues = await AppService.getValues()
@@ -924,12 +964,6 @@ export const userVerificationAction = (values: any, callback: Function) => {
     })
     .then(res => {
         if (res.data.status === "200") {
-            toastAction({
-                show: true,
-                type: 'success',
-                timeout: 15000,
-                message: "Verification process initiated."
-            })
             store.dispatch({type: LOADING, payload: false})
             // CookieService.put('user', JSON.stringify(res.data.data));
             // store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})

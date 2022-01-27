@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components';
+import { closeToasts } from '../../../../redux/actions/actions';
 
 const Div = styled.div`
+/* padding-top: 100px; */
 .container{
     width: 400px;
     min-height: 50px;
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: relative;
+    margin-top: 10px;
     display: none;
     grid-template-columns: 0fr 1fr 0fr; 
     color: white;
@@ -159,7 +160,7 @@ export default function Toast(props: any) {
                     <div className="head">{config?.title || ""}</div>
                     <div className="body" dangerouslySetInnerHTML={{__html: config?.message || "Success"}} ></div>
                 </div>
-                <div className="close">
+                <div className="close" onClick={config.close}>
                     <button>x</button>
                 </div>
             </div>
