@@ -279,3 +279,8 @@ button:disabled{
 .p-relative {
     position: relative;
 }
+
+.verif-toast-failed-extra-btn-class {
+    background: #FCD20F;
+    color: rgb(22, 22, 22);
+}

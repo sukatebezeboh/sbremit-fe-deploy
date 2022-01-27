@@ -52,7 +52,6 @@ const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, tran
     stringToHash += siteSecurityTimestamp ?? ''
     stringToHash += password ?? ''
     const siteSecurityHash = 'h' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(stringToHash));
-    console.log(orderReference, stringToHash, 'siteSecurityHash: ', siteSecurityHash)
 
     return (
         <span>

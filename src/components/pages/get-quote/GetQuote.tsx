@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -210,10 +210,11 @@ const GetQuote = () => {
     const handleContinue = () => {
         if (!Number(toSend.value)) {
             toastAction({
+                name: "no-value-sent",
                 show: true,
                 type: "warning",
                 timeout: 10000,
-                message: "You can't send "+toSend.value+ " "+toSend.currency
+                message: "You can't send "+(toSend.value || '0.00')+ " "+toSend.currency
             })
             return
         }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { refreshUserDetails, saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
+import { pollServerForVerificationStatus, refreshUserDetails, saveTruliooTransactionId, stackNewToast, toastAction, userVerificationAction } from '../../../redux/actions/actions';
 import { constants } from '../../../util/constants';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import http from '../../../util/http';
@@ -13,6 +13,8 @@ import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import { themeNames } from '../../modules/toast-factory/themes';
+import Toast from '../../modules/toast-factory/toast/Toast';
 import VerificationMethod from '../../modules/verification-method/VerificationMethod';
 
 const Body = styled.div`
@@ -346,7 +348,6 @@ const Body = styled.div`
 
 const Verification = () => {
     const history = useHistory();
-    const enableVerficationStep = false;
     const countries: any = useSelector((state: any) => state.appValues.countries)
     const [showContinueButton, setShowContinueButton] = useState(false)
 
@@ -370,6 +371,7 @@ const Verification = () => {
                 saveTruliooTransactionId({
                     experienceTransactionId: truliooResponse.experienceTransactionId
                 });
+                pollServerForVerificationStatus(10);
                 setShowContinueButton(true)
         }
 
@@ -380,6 +382,11 @@ const Verification = () => {
         });
     }, [method])
 
+
+    const handleIDVerificationServerResponse = () => {
+        pollServerForVerificationStatus(2)
+        history.push(paths.RECIPIENT);
+    }
 
     return (
         // !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
@@ -394,7 +401,7 @@ const Verification = () => {
                         initialValues={{...initialValues}}
                         validationSchema={userVerificationValidator}
                         onSubmit={values => {
-                            userVerificationAction(values, () => history.push(paths.RECIPIENT))
+                            userVerificationAction(values, () => handleIDVerificationServerResponse())
                         }}>
                         {
                             ({errors, touched, values}: any) => (

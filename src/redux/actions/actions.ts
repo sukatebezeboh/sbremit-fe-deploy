@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import {
+    ADD_TO_STACKED_TOASTS,
   APP_VALUES,
   AUTH,
   CREATE_ACCOUNT_ERROR,
@@ -10,6 +11,7 @@ import {
   RECIPIENT,
   RECIPIENTS,
   REDIRECT,
+  REMOVE_FROM_STACKED_TOASTS,
   SIGN_IN,
   SIGN_UP,
   SUBMITTING,
@@ -21,10 +23,17 @@ import endpoints from '../../util/endpoints'
 import store from './../store'
 import { CookieService } from '../../services/CookieService'
 import env from '../../env'
-import { AppService } from '../../services/AppService';
-import { paths } from '../../util/paths';
-import { formatCurrency, genPaginationHashTable, getQueryParam, parseEndpointParameters, sortObjectByProperties } from '../../util/util';
-import http from '../../util/http';
+import { AppService } from '../../services/AppService'
+import { paths } from '../../util/paths'
+import {
+  formatCurrency,
+  genPaginationHashTable,
+  getQueryParam,
+  parseEndpointParameters,
+  sortObjectByProperties,
+} from '../../util/util'
+import http from '../../util/http'
+import { themeNames } from '../../components/modules/toast-factory/themes'
 import { constants } from '../../util/constants'
 
 const user = store.getState().auth.user;
@@ -153,7 +162,7 @@ export const refreshUserDetails = (callback?: Function) => {
         type: AUTH,
         payload: { ...store.getState().auth, user: response.data.data },
       })
-      callback?.()
+      callback?.(response.data.data)
     })
 }
 
@@ -187,7 +196,11 @@ export const toastAction = (toastConfig: any) => {
   runningTimeouts.forEach((t) => {
     return clearTimeout(t)
   })
+  toastConfig.close = closeToasts
   store.dispatch({ type: TOAST, payload: { ...toastConfig } })
+  if (!toastConfig.timeout) {
+      return;
+  }
   const t_id_1 = setTimeout(
     () => {
       store.dispatch({
@@ -208,6 +221,40 @@ export const toastAction = (toastConfig: any) => {
   runningTimeouts.push(t_id_1)
   runningTimeouts.push(t_id_2)
 }
+
+export const closeToasts = () => {
+    runningTimeouts.forEach(t=>{
+        return clearTimeout(t);
+    })
+
+    const t_id_1 = setTimeout(()=>{
+        store.dispatch({type: TOAST, payload: { show: true, readyToClose: true}})
+    }, (80))
+
+   const t_id_2 = setTimeout(()=>{
+        store.dispatch({type: TOAST, payload: { show: false, readyToClose: false}})
+    }, 100)
+
+    runningTimeouts.push(t_id_1)
+    runningTimeouts.push(t_id_2)
+}
+
+export const stackNewToast = (toastConfig: any) => {
+    if (!toastConfig.name) {
+        throw new Error("Stacked toast must have a name");
+    }
+    toastConfig.close = () => unstackNewToast(toastConfig)
+    store.dispatch({ type: ADD_TO_STACKED_TOASTS, payload: toastConfig })
+}
+
+export const unstackNewToast = (toastConfig: any) => {
+    if (!toastConfig.name) {
+        throw new Error("Stacked toast name is required in config");
+    }
+    store.dispatch({ type: REMOVE_FROM_STACKED_TOASTS, payload: toastConfig })
+}
+
+
 
 export const appValuesAction = async () => {
   const allValues = await AppService.getValues()
@@ -688,23 +735,22 @@ export const getQuoteService = ($_1: string, $_2: string) => {
 }
 
 export const getNewQuote = ($_1?: string, $_2?: string) => {
-  store.dispatch({ type: LOADING, payload: true })
-  const transfer = store.getState().transfer
-  $_1 = $_1 ?? transfer.toSend.currency
-  $_2 = $_2 ?? transfer.toReceive.currency
-  axios
-    .get(
-      config.API_HOST +
-        parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2),
-    )
-    .then((res) => {
-      if (res.data.status === '200') {
-        store.dispatch({
-          type: TRANSFER,
-          payload: { ...transfer, conversionRate: { ...res.data.data } },
-        })
-        store.dispatch({ type: LOADING, payload: false })
-      }
+    store.dispatch({type: LOADING, payload: true})
+    const transfer = store.getState().transfer
+    $_1 = $_1 ?? transfer.toSend.currency;
+    $_2 = $_2 ?? transfer.toReceive.currency;
+    axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
+    .then(res => {
+        if(res.data.status === "200"){
+            const data = res.data.data;
+            if (data?.base?.toUpperCase() === "EUR") {
+                data.rate = 655.96;
+            }
+            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
+            store.dispatch({type: LOADING, payload: false})
+        }
+    }).catch(()=>{
+        store.dispatch({type: LOADING, payload: false})
     })
     .catch(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -891,40 +937,31 @@ export const editProfileAction = (values: any, callback?: Function) => {
 }
 
 export const userVerificationAction = (values: any, callback: Function) => {
-  store.dispatch({ type: LOADING, payload: true })
-  const userId = store.getState().auth.user?.id
-  http
-    .post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
-      ...values,
-      address1: values.buildingNumber + ', ' + values.streetName,
+    store.dispatch({type: LOADING, payload: true})
+    const userId = store.getState().auth.user?.id;
+    http.post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
+        ...values,
+        address1: values.buildingNumber + ", " + values.streetName
     })
-    .then((res) => {
-      if (res.data.status === '200') {
-        toastAction({
-          show: true,
-          type: 'success',
-          timeout: 15000,
-          message: 'Verification process initiated.',
-        })
-        store.dispatch({ type: LOADING, payload: false })
-        CookieService.put('user', JSON.stringify(res.data.data))
-        store.dispatch({
-          type: AUTH,
-          payload: { ...store.getState().auth, user: res.data.data },
-        })
-        callback?.()
-      } else {
-        toastAction({
-          show: true,
-          type: 'error',
-          timeout: 10000,
-          message: res.data.error.message,
-        })
-        store.dispatch({ type: LOADING, payload: false })
-      }
-    })
-    .catch(() => {
-      store.dispatch({ type: LOADING, payload: false })
+    .then(res => {
+        if (res.data.status === "200") {
+            store.dispatch({type: LOADING, payload: false})
+            // CookieService.put('user', JSON.stringify(res.data.data));
+            // store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
+            callback?.()
+        }
+        else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+            store.dispatch({type: LOADING, payload: false})
+        }
+
+    }).catch(()=> {
+        store.dispatch({type: LOADING, payload: false})
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -932,6 +969,45 @@ export const userVerificationAction = (values: any, callback: Function) => {
   // callback()
 }
 
+export const pollServerForVerificationStatus = (seconds: number) => {
+    const poll = setInterval(() => {
+        refreshUserDetails((user: any)=> {
+            if (user.meta.verified == 1) {
+                clearInterval(poll);
+                stackNewToast({
+                    name: "verification-success",
+                    show: true,
+                    type: 'success',
+                    // timeout: 15000,
+                    defaultThemeName: themeNames.CLEAR_MAMBA,
+                    title: "Verification was successful",
+                    message: "Your ID verification has been completed successfully",
+                })
+            } else if (user.meta.verified.toLowerCase() == "retry") {
+                clearInterval(poll);
+            } else if (!user.meta.verified) {
+                clearInterval(poll);
+            }
+        })
+    }, seconds * 1000 );
+}
+
+export const checkForVerificationStatusRetry = (user: any, history: any) => {
+    if (user?.meta?.verified?.toLowerCase() == "retry") {
+        stackNewToast({
+            name: "verification-failed",
+            show: true,
+            type: 'error',
+            // timeout: 15000,
+            defaultThemeName: themeNames.CLEAR_MAMBA,
+            title: "We were unable to verify your account",
+            message: "<div style='color: grey;'>Something went wrong with your account verification, please try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
+            extraBtnText: "Verify now",
+            extraBtnHandler: () => history.push(paths.VERIFICATION),
+            extraBtnClass: 'verif-toast-failed-extra-btn-class'
+        })        
+    }
+}
 export const confirmAccountEmail = (callback: Function) => {
   store.dispatch({ type: LOADING, payload: true })
   const token = getQueryParam('token')
@@ -1031,26 +1107,24 @@ export const getPromo = async (code: string) => {
 }
 
 export const saveTruliooTransactionId = (payload: any) => {
-  http
-    .post(endpoints.SAVE_TRULIOO_DOCUMENT_VERIFICATION, payload)
-    .then((res) => {
-      console.log(res)
-      if (res.data.status === '200') {
-        toastAction({
-          show: true,
-          type: 'success',
-          timeout: 15000,
-          message:
-            'Your verification process has kickstarted and should be done in a few minutes.',
-        })
-      } else {
-        toastAction({
-          show: true,
-          type: 'error',
-          timeout: 10000,
-          message: res.data.error.message,
-        })
-      }
+
+    http.post(endpoints.SAVE_TRULIOO_DOCUMENT_VERIFICATION, payload)
+    .then(res => {
+        if (res.data.status === "200") {
+            toastAction({
+                show: true,
+                type: 'success',
+                timeout: 15000,
+                message: "Your verification process has kickstarted and should be done in a few minutes."
+            })
+        } else {
+            toastAction({
+                show: true,
+                type: 'error',
+                timeout: 10000,
+                message: res.data.error.message
+            })
+        }
     })
 }
 
@@ -1088,21 +1162,16 @@ export const updateTransferRecipient = (
 }
 
 export const fetchTruelayerProviders = (callback: Function) => {
-  store.dispatch({
-    type: LOADING,
-    payload: 'Fetching available bank providers',
-  })
-  http
-    .get(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT))
-    .then((res) => {
-      console.log(res)
-      callback(res.data?.results)
-      // store.dispatch({type: LOADING, payload: false})
-    })
-    .catch()
-    .then(() => {
-      store.dispatch({ type: LOADING, payload: false })
-    })
+    store.dispatch({type: LOADING, payload: "Fetching available bank providers"})
+    http.get(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT))
+        .then((res) => {
+            callback(res.data?.results);
+            // store.dispatch({type: LOADING, payload: false})
+        })
+        .catch()
+        .then(() => {
+            store.dispatch({type: LOADING, payload: false})
+        });
 }
 
 export const initiateTruelayerPayment = (
@@ -1122,11 +1191,10 @@ export const initiateTruelayerPayment = (
       transferId: transferId,
     })
     .then((res) => {
-      console.log(res)
-      const result = res?.data?.result
-      if (result) {
-        window.location.replace(result?.auth_flow?.uri)
-      }
+        const result = res?.data?.result
+        if ( result ) {                
+            window.location.replace(result?.auth_flow?.uri);
+        }
     })
     .catch()
     .then(() => {

@@ -2,7 +2,7 @@ import { replace } from 'formik';
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import { checkSkip, getRecipients, getTransactionDetails, getUserTransactions, toastAction } from '../../../redux/actions/actions';
+import { checkForVerificationStatusRetry, checkSkip, getRecipients, getTransactionDetails, getUserTransactions, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -33,6 +33,7 @@ const Dashboard = () => {
         checkSkip(() => history.push(paths.RECIPIENT));
         getUserTransactions();
         getRecipients();
+        refreshUserDetails((user: any) => checkForVerificationStatusRetry(user, history));
     }, [])
 
     const _setSelectedFilter = (status: string) => {
