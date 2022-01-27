@@ -10,7 +10,7 @@ const Div = styled.div`
         border-radius: 15px;
         padding-bottom: 25px;
     }
-    
+
     .row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -34,7 +34,7 @@ const Div = styled.div`
             padding: 10px;
             cursor: pointer;
             :hover {
-                
+
             }
             img {
                 width: 40%;
@@ -51,7 +51,7 @@ const Div = styled.div`
                     color: #424242;
                 }
             }
-            
+
         }
     }
     .footnote {
@@ -80,7 +80,7 @@ const Div = styled.div`
             outline: none;
         }
     }
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     .box {
         padding: 5px;
         padding-bottom: 15px;
@@ -92,7 +92,7 @@ const Div = styled.div`
             >div {
                 min-height: 120px;
                 height: 180px;
-                @media only screen and (max-width: 490px) { 
+                @media only screen and (max-width: 490px) {
                     min-height: 120px;
                     height: 123px;
                 }
@@ -111,7 +111,7 @@ const Div = styled.div`
                         margin-top: -8px;
                     }
                 }
-                
+
             }
             .pickup {
                 position: relative;
@@ -148,7 +148,7 @@ interface IVerificationMethod {
 const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
 
     const user = useSelector((state: any) => state?.auth?.user);
-    const isVerificationSelectionEnabled = false 
+    const isVerificationSelectionEnabled = false
     const allowedRegions: any = {
         "IDENTITY" : {
             "allowed": ["gb"],
