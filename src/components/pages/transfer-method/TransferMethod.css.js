@@ -80,8 +80,8 @@ const style = () => styled.div`
     }
 @media only screen and (max-width: 900px) { 
     .box {
-        padding: 5px;
-        padding-bottom: 15px;
+        padding: 20px;
+        padding-bottom: 40px;
         .row {
             padding: 15px;
             grid-template-columns: 1fr 1fr;
@@ -89,14 +89,11 @@ const style = () => styled.div`
             >div {
                 min-height: 120px;
                 height: 180px;
-                @media only screen and (max-width: 490px) { 
-                    min-height: 120px;
-                    height: 123px;
-                }
                 padding: 15px;
-                margin-bottom: 10px;
+                margin-bottom: 30px;
                 img {
-                    margin: 5px;
+                    width: 20%;
+                    margin: 10px;
                 }
                 div {
                     :nth-child(2) {
@@ -112,6 +109,66 @@ const style = () => styled.div`
             .pickup {
                 position: relative;
                 left: 50% ;
+                margin-bottom: 10px;
+            }
+        }
+    }
+    .footnote {
+        font: italic normal normal 11px/14px Montserrat;
+    }
+    .btns {
+        margin-top: -30px;
+        button {
+            width: 100%;
+            height: 40px;
+            font: normal normal normal 13px/16px Montserrat;
+        }
+        span {
+            font: normal normal normal 13px/16px Montserrat;
+            text-align: center;
+            display: block;
+            margin-right: 0px;
+            position: relative;
+            top: 70px;
+        }
+    }
+}
+@media only screen and (max-width: 600px) { 
+    .box {
+        padding: 30px 25px 70px;
+        .row {
+            display: flex;
+            flex-direction: column;
+            >div {
+                min-height: 70px;
+                height: 70px;
+                position: relative;
+                width: 100%;
+                margin-bottom: 15px;
+                display: flex;
+                img {
+                    margin: 0;
+                    width: 30px;
+                }
+                div {
+                    :nth-child(2) {
+                        height: fit-content;
+                        position: absolute;
+                        left: 70px;
+                        top: 20px;
+                    }
+                    :last-child {
+                        height: fit-content;
+                        position: absolute;
+                        left: 70px;
+                        top: 45px;
+                    }
+                }
+                
+            }
+            .pickup {
+                position: relative;
+                left: 0 ;
             }
         }
     }
