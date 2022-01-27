@@ -148,6 +148,7 @@ interface IVerificationMethod {
 const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
 
     const user = useSelector((state: any) => state?.auth?.user);
+    console.log({user})
     const isVerificationSelectionEnabled = false 
     const allowedRegions: any = {
         "IDENTITY" : {
@@ -161,15 +162,15 @@ const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
     }
 
     useEffect(() => {
-        if (user?.meta?.verified === "retry") {
-            setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
-            return;
-        }
+        // if (user?.meta?.verified === "retry") {
+        //     setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
+        //     return;
+        // }
 
-        if (!isUserAllowedThisType(constants.VERIFICATION_TYPE_IDENTITY)) {
-            setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
-            return;
-        }
+        // if (!isUserAllowedThisType(constants.VERIFICATION_TYPE_IDENTITY)) {
+        //     setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
+        //     return;
+        // }
 
         setMethod(constants.VERIFICATION_TYPE_IDENTITY)
 
