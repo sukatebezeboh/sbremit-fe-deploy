@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components'
-import { refreshUserDetails, saveTruliooTransactionId, stackNewToast, toastAction, userVerificationAction } from '../../../redux/actions/actions';
+import { pollServerForVerificationStatus, refreshUserDetails, saveTruliooTransactionId, stackNewToast, toastAction, userVerificationAction } from '../../../redux/actions/actions';
 import { constants } from '../../../util/constants';
 import { EditProfileValidator, userVerificationValidator } from '../../../util/form-validators';
 import http from '../../../util/http';
@@ -13,6 +13,7 @@ import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import { themeNames } from '../../modules/toast-factory/themes';
 import Toast from '../../modules/toast-factory/toast/Toast';
 import VerificationMethod from '../../modules/verification-method/VerificationMethod';
 
@@ -370,6 +371,7 @@ const Verification = () => {
                 saveTruliooTransactionId({
                     experienceTransactionId: truliooResponse.experienceTransactionId
                 });
+                pollServerForVerificationStatus(10);
                 setShowContinueButton(true)
         }
 
@@ -381,19 +383,9 @@ const Verification = () => {
     }, [method])
 
 
-    const handleIDVerificationServerResponse = (verificationResult: any) => {
-        const {verified} = verificationResult;
-        if (verified) {
-            stackNewToast({
-                name: "verification-success",
-                show: true,
-                type: 'success',
-                // timeout: 15000,
-                message: "Verification successful",
-            })
-
-            history.push(paths.RECIPIENT);
-        }
+    const handleIDVerificationServerResponse = () => {
+        pollServerForVerificationStatus(2)
+        history.push(paths.RECIPIENT);
     }
 
     return (
@@ -409,7 +401,7 @@ const Verification = () => {
                         initialValues={{...initialValues}}
                         validationSchema={userVerificationValidator}
                         onSubmit={values => {
-                            userVerificationAction(values, (verificationResult: any) => handleIDVerificationServerResponse(verificationResult))
+                            userVerificationAction(values, () => handleIDVerificationServerResponse())
                         }}>
                         {
                             ({errors, touched, values}: any) => (

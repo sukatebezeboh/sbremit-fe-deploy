@@ -33,6 +33,7 @@ import {
   sortObjectByProperties,
 } from '../../util/util'
 import http from '../../util/http'
+import { themeNames } from '../../components/modules/toast-factory/themes'
 
 const user = store.getState().auth.user
 const serviceProvider = env.X_SERVICE_PROVIDER
@@ -160,7 +161,7 @@ export const refreshUserDetails = (callback?: Function) => {
         type: AUTH,
         payload: { ...store.getState().auth, user: response.data.data },
       })
-      callback?.()
+      callback?.(response.data.data)
     })
 }
 
@@ -967,7 +968,7 @@ export const userVerificationAction = (values: any, callback: Function) => {
             store.dispatch({type: LOADING, payload: false})
             // CookieService.put('user', JSON.stringify(res.data.data));
             // store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
-            callback?.(res.data.data)
+            callback?.()
         }
         else {
             toastAction({
@@ -988,6 +989,45 @@ export const userVerificationAction = (values: any, callback: Function) => {
   // callback()
 }
 
+export const pollServerForVerificationStatus = (seconds: number) => {
+    const poll = setInterval(() => {
+        refreshUserDetails((user: any)=> {
+            if (user.meta.verified == 1) {
+                clearInterval(poll);
+                stackNewToast({
+                    name: "verification-success",
+                    show: true,
+                    type: 'success',
+                    // timeout: 15000,
+                    defaultThemeName: themeNames.CLEAR_MAMBA,
+                    title: "Verification was successful",
+                    message: "Your ID verification has been completed successfully",
+                })
+            } else if (user.meta.verified.toLowerCase() == "retry") {
+                clearInterval(poll);
+            } else if (!user.meta.verified) {
+                clearInterval(poll);
+            }
+        })
+    }, seconds * 1000 );
+}
+
+export const checkForVerificationStatusRetry = (user: any, history: any) => {
+    if (user?.meta?.verified?.toLowerCase() == "retry") {
+        stackNewToast({
+            name: "verification-failed",
+            show: true,
+            type: 'error',
+            // timeout: 15000,
+            defaultThemeName: themeNames.CLEAR_MAMBA,
+            title: "We were unable to verify your account",
+            message: "<div style='color: grey;'>Something went wrong with your account verification, please try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
+            extraBtnText: "Verify now",
+            extraBtnHandler: () => history.push(paths.VERIFICATION),
+            extraBtnClass: 'verif-toast-failed-extra-btn-class'
+        })        
+    }
+}
 export const confirmAccountEmail = (callback: Function) => {
   store.dispatch({ type: LOADING, payload: true })
   const token = getQueryParam('token')

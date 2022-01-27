@@ -57,6 +57,9 @@ export const toast = (state: any = initialToastState, {type, payload}: IAction) 
         return  { ...state, toast: payload}
       }
       case ADD_TO_STACKED_TOASTS: {
+        const toasts = state.toasts;
+        const exists = toasts.filter((t: any) => t.name === payload.name)
+        if (exists.length) return state;
         return { ...state, toasts: [...state.toasts, payload] }
       }
       case REMOVE_FROM_STACKED_TOASTS: {

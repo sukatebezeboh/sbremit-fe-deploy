@@ -38,6 +38,7 @@ const Recipient = () => {
     useEffect(() => {
         checkPageAuthorization();
     }, [transfer, user])
+    // history.replace(paths.VERIFICATION)
 
     const paramTransferId = getQueryParam('t');
     const editMode = () => {
