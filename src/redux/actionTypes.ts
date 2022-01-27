@@ -1,6 +1,8 @@
 export const SIGN_UP = "SIGN_UP";
 export const SIGN_IN = "SIGN_IN";
 export const SUBMITTING = "SUBMITTING";
+export const CREATE_ACCOUNT_SUCCESS = "CREATE_ACCOUNT_SUCCESS";
+export const CREATE_ACCOUNT_ERROR = "CREATE_ACCOUNT_ERROR";
 export const TOAST = "TOAST";
 export const REDIRECT = "REDIRECT";
 export const AUTH = "AUTH";
