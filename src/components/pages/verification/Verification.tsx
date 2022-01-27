@@ -381,6 +381,11 @@ const Verification = () => {
     }, [method])
 
 
+    const handleIDVerificationServerResponse = (verificationResult: any) => {
+        console.log(verificationResult, '========================>>>>>>');
+    }
+
+
     return (
         // !enableVerficationStep ? <Redirect to={paths.RECIPIENT} />
         // :
@@ -394,7 +399,7 @@ const Verification = () => {
                         initialValues={{...initialValues}}
                         validationSchema={userVerificationValidator}
                         onSubmit={values => {
-                            userVerificationAction(values, () => history.push(paths.RECIPIENT))
+                            userVerificationAction(values, (verificationResult: any) => handleIDVerificationServerResponse(verificationResult))
                         }}>
                         {
                             ({errors, touched, values}: any) => (

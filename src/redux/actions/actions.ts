@@ -761,9 +761,9 @@ export const userVerificationAction = (values: any, callback: Function) => {
                 message: "Verification process initiated."
             })
             store.dispatch({type: LOADING, payload: false})
-            CookieService.put('user', JSON.stringify(res.data.data));
-            store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
-            callback?.()
+            // CookieService.put('user', JSON.stringify(res.data.data));
+            // store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
+            callback?.(res.data.data)
         }
         else {
             toastAction({
