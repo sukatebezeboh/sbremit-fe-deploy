@@ -253,6 +253,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     }
     @media only screen and (max-width: 780px) { 
         background: white;
+        min-height: 0;
         height: auto;
         .mobile {
             display: inline-block!important;
