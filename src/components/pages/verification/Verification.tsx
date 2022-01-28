@@ -408,8 +408,7 @@ const Verification = () => {
             initialValues={{ ...initialValues }}
             validationSchema={userVerificationValidator}
             onSubmit={(values) => {
-              userVerificationAction(values, () =>
-                history.push(paths.RECIPIENT),
+              userVerificationAction(values, () => handleIDVerificationServerResponse(),
               )
             }}
           >
