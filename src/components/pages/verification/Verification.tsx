@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Field, Form, Formik } from 'formik'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import {
-  refreshUserDetails,
-  saveTruliooTransactionId,
-  userVerificationAction,
-} from '../../../redux/actions/actions'
-import { constants } from '../../../util/constants'
-import { userVerificationValidator } from '../../../util/form-validators'
-import { paths } from '../../../util/paths'
-import NavBar from '../../modules/navbar/NavBar'
-import PageHeading from '../../modules/page-heading/PageHeading'
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox'
-import ProgressBar from '../../modules/progress-bar/ProgressBar'
-import VerificationMethod from '../../modules/verification-method/VerificationMethod'
+import { pollServerForVerificationStatus, refreshUserDetails, saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
+import { constants } from '../../../util/constants';
+import { userVerificationValidator } from '../../../util/form-validators';
+import { paths } from '../../../util/paths';
+import NavBar from '../../modules/navbar/NavBar';
+import PageHeading from '../../modules/page-heading/PageHeading';
+import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import VerificationMethod from '../../modules/verification-method/VerificationMethod';
 
 const Body = styled.div`
   .page-content {
@@ -351,39 +347,44 @@ const Verification = () => {
   const [showContinueButton, setShowContinueButton] = useState(false)
   const [selectedCountry, setSelectedCountry] = useState('')
 
-  const user = useSelector((state: any) => state.auth.user)
-
-  const initialValues: any = {
-    phoneCode: '+01',
-    address2: '',
-    location_country: user?.profile?.location_country,
-    ...user?.profile,
-  }
-
   const [method, setMethod] = useState('')
+    const user = useSelector((state: any) => state.auth.user);
 
-  useEffect(() => {
-    setSelectedCountry(initialValues.location_country)
-  }, [initialValues.location_country])
-
-  useEffect(() => {
-    if (method !== constants.VERIFICATION_TYPE_DOCUMENT) return
-    const newWindow: any = window
-    const TruliooClient: any = newWindow.TruliooClient
-
-    const handleResponse = (truliooResponse: any) => {
-      saveTruliooTransactionId({
-        experienceTransactionId: truliooResponse.experienceTransactionId,
-      })
-      setShowContinueButton(true)
+    const initialValues: any = {
+      phoneCode: '+01',
+      address2: '',
+      location_country: user?.profile?.location_country,
+      ...user?.profile,
     }
+    useEffect(() => {
+        if (method !== constants.VERIFICATION_TYPE_DOCUMENT) return;
+        const newWindow:any = window;
+        const TruliooClient: any = newWindow.TruliooClient;
 
-    new TruliooClient({
-      publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
-      accessTokenURL: process.env.REACT_APP_TRULIOO_ACCESS_TOKEN_URL,
-      handleResponse,
-    })
-  }, [method])
+        const handleResponse = (truliooResponse: any) => {
+                saveTruliooTransactionId({
+                    experienceTransactionId: truliooResponse.experienceTransactionId
+                });
+                pollServerForVerificationStatus(10);
+                setShowContinueButton(true)
+        }
+
+        new TruliooClient({
+            publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
+            accessTokenURL: process.env.REACT_APP_TRULIOO_ACCESS_TOKEN_URL,
+            handleResponse,
+        });
+    }, [method])
+
+
+    useEffect(() => {
+      setSelectedCountry(initialValues.location_country)
+    }, [initialValues.location_country])
+  
+    const handleIDVerificationServerResponse = () => {
+        pollServerForVerificationStatus(2)
+        history.push(paths.RECIPIENT);
+    }
 
   return (
     <Body>

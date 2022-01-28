@@ -192,7 +192,8 @@ const PaymentMethod = () => {
     const user = useSelector((state: any)=>state.auth.user)
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer.transactionDetails;
-    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
+    // const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
 
@@ -248,8 +249,8 @@ const PaymentMethod = () => {
             history.push(paths.VERIFICATION)
         }
         if (transaction?.originCurrency === 'GBP') {
-            setSelected('truelayer')
-            // setSelected('card')
+            // setSelected('truelayer')
+            setSelected('card')
         } else if ( (transaction?.originCurrency === "CAD" || transaction?.originCurrency === "EUR") ) {
             setSelected('card')
         } else {
@@ -259,7 +260,7 @@ const PaymentMethod = () => {
 
     return (
         <Body>
-            {openConfirmModal ? 
+            {openConfirmModal === 'forCancel' ? 
             <ConfirmModal 
             message="Are you sure you want to cancel this transfer?"
             onSave={{
@@ -268,7 +269,19 @@ const PaymentMethod = () => {
             }} 
             onCancel={{
                 label: "No, don't cancel",
-                fn: () => setOpenConfirmModal(false)
+                fn: () => setOpenConfirmModal(null)
+            }}
+            /> : 
+            openConfirmModal === 'forProceed' ? 
+            <ConfirmModal 
+            message="Are you sure you want to procced?"
+            onSave={{
+                label: 'Yes, proceed',
+                fn: ()=>handleProceed(transfer)
+            }} 
+            onCancel={{
+                label: "No, not yet",
+                fn: () => setOpenConfirmModal(null)
             }}
             /> : <></>}
             <NavBar />
@@ -289,6 +302,7 @@ const PaymentMethod = () => {
                                 </div>
                                 <div>
                                     <div className="rc-head"> Manual Bank Transfer</div>
+                                    <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
                                     <div className="rc-body">
                                         <div>
                                             Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
@@ -311,13 +325,14 @@ const PaymentMethod = () => {
                                     {/* <RadioButton selected={selected==='card'}/> */}
                                 </div>
                                 <div>
-                                    <div className="rc-head">Debit Card</div>
+                                    {/* <div className="rc-head">Debit Card</div> */}
+                                    <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
                                     <div className="rc-body">
-                                        <div>
+                                        {/* <div>
                                             Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
-                                        </div>
+                                        </div> */}
                                         <div className="green-txt">
-                                            <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to edit recipient detail</Link> 
+                                            <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link> 
                                         </div>
                                         <br /> <br /><br />
                                         <div>
@@ -340,13 +355,14 @@ const PaymentMethod = () => {
                                         {/* <RadioButton selected={selected==='truelayer'} /> */}
                                     </div>
                                     <div>
-                                        <div className="rc-head">Bank Transfer with Truelayer</div>
+                                        {/* <div className="rc-head">Bank Transfer with Truelayer</div> */}
+                                        <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
                                         <div className="rc-body">
-                                            <div>
+                                            {/* <div>
                                                 Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
-                                            </div>
+                                            </div> */}
                                             <div className="green-txt">
-                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to edit recipient detail</Link> 
+                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link> 
                                             </div>
                                             <br /> <br /><br />
                                             <div>
@@ -367,12 +383,12 @@ const PaymentMethod = () => {
                         <TransferDetailsBox transferId={transferId} />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
+                <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span> 
                  {
                     selected==="card" ?
                     <PaymentRedirect mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} transferId={transferId} />
                     :
-                    <span> <button onClick={()=>handleProceed(transfer)}>Proceed to payment</button> </span>
+                    <span> <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> </span>
                 }
                 </div>
             </div>

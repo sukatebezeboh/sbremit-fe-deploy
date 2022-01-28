@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { getNewQuote, getQuoteService } from '../../../redux/actions/actions';
+import { getNewQuote } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { formatCurrency, formatCurrencyWithoutFloats, getMoneyValue } from '../../../util/util';
+import { formatCurrencyWithoutFloats } from '../../../util/util';
 
 const Field = styled.div`
         .max-div {
@@ -42,7 +42,8 @@ const Field = styled.div`
 
             ::-webkit-scrollbar-thumb {
                 border-radius: 10px;
-                -webkit-box-shadow: inset 0 0 6px grey; 
+                -webkit-box-shadow: inset 0 0 6px grey;
+                box-shadow: inset 0 0 6px grey;
             }
             ul {
                 list-style-type: none;
@@ -129,7 +130,6 @@ const ExchangeRateInput = (props: any) =>{
     const handleCountrySelection = (country: string) => {
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
-        console.log(countriesList)
         const countryKey =  Object.keys(countriesList).find(key => countriesList[key] === country);
         if (data.isSend) {
             dispatch({

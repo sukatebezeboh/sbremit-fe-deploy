@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -210,10 +210,11 @@ const GetQuote = () => {
     const handleContinue = () => {
         if (!Number(toSend.value)) {
             toastAction({
+                name: "no-value-sent",
                 show: true,
                 type: "warning",
                 timeout: 10000,
-                message: "You can't send "+toSend.value+ " "+toSend.currency
+                message: "You can't send "+(toSend.value || '0.00')+ " "+toSend.currency
             })
             return
         }
@@ -298,7 +299,7 @@ const GetQuote = () => {
                                     <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> </span></div>
                                     {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
-                                    <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile">Transfer arrives <b>Within 30 minutes</b></span> </span></div>
+                                    <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile"><p>Transfer arrives <b>Within 30 minutes</b></p></span> </span></div>
                                 </div>
                             </div>
                             <div className="receive" style={promo ? {marginTop: "250px"} : {}}>
@@ -307,7 +308,7 @@ const GetQuote = () => {
                             <div className="toggle">
                                 <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                             </div>
-                            <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 {toSend.currency}</b> for this transfer</div>
+                            {/* <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 {toSend.currency}</b> for this transfer</div> */}
 
                             <PromoCodeField />
                         </div>

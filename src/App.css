@@ -7,7 +7,7 @@
 
 body{
   -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none; 
+  scrollbar-width: none;
   background: #F5F7F7;
   zoom: 0.8;
   height: 100vh;
@@ -278,4 +278,9 @@ button:disabled{
 
 .p-relative {
     position: relative;
+}
+
+.verif-toast-failed-extra-btn-class {
+    background: #FCD20F;
+    color: rgb(22, 22, 22);
 }

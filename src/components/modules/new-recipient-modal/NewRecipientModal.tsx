@@ -106,30 +106,39 @@ const Div = styled.div`
                 padding-left: 15px;
             }
             select.phone  {
-                background-position-x: 15%;
-                padding-left: 75px;
+                background-position-x: 22%;
+                padding-left: 85px;
             }
             input.phone-no {
                 position: relative;
                 top: 51px;
-                width: 79%;
+                width: 73%;
                 height: 44px;
                 margin-left: 20%;
-                border: 2px solid transparent;
+                margin-right: 2px;
+                padding-left: 10px;
+                border: none !important;
                 background: #fff;
+                float: right;
             }
             div.mobile-head {
                 margin-bottom: -50px;
             }
-            select+img{
+            div.country-code{
                 position: relative;
-                top: -35px;
-                left: 20px;
-                width: 25px;
-                height: 19px;
-                box-shadow: 0px 3px 6px #00000029;
-                border-radius: 1px;
-                pointer-events: none;
+                top: -42px;
+                left: 10px;
+                display: flex;
+                align-items: center;
+                width: fit-content;
+                height: 25px;
+                img{
+                    width: 25px;
+                    height: 19px;
+                }
+            }
+            div.phone-no-error-box{
+                margin-top: 15px;
             }
             div.margin-adjust {
                 margin-bottom: -44px;
@@ -215,7 +224,7 @@ const Div = styled.div`
                         top: 32px;
                         height: 25px!important;
                         margin-left: 15%;
-                        width: 85%;
+                        width: calc(100% - 80px);
                         padding-left: 5px;
                         border: 1px solid transparent;
                         padding: 0px 5px;
@@ -226,14 +235,20 @@ const Div = styled.div`
                     select.phone{
                         padding: 10px 50%;
                         background-position-y: 3px;
-                        background-position-x: 10%;
+                        background-position-x: 55px;
                     }
                     .mobile-head {
                         margin-bottom: -31px;
                     }
-                    select+img{
+                    /* select+img{
                         top: -29px;
                         left: 10px;
+                    } */
+                    div.country-code{
+                        top: -32px;
+                    }
+                    div.phone-no-error-box{
+                        margin-top: 0;
                     }
             }
         }
@@ -321,14 +336,19 @@ function NewRecipientModal(props: any) {
                                                 <Field type="text" name="lastName" placeholder="Doe" />
                                             </div>
                                             <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
+                                            {/* <div> */}
                                                 <div className="mobile-head">Mobile<i>*</i></div>
-                                                <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952"/>
+                                                <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
                                                     <option value="+01">United Kingdom</option>
                                                     <option value="+237">Cameroon</option>
                                                 </Field>
-                                                <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
+                                                <div className="country-code">
+                                                    <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
+                                                    <p>{values.phoneCode}</p>
+                                                </div>
                                                 <div className="margin-adjust"></div>
+                                                <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Email</div>
