@@ -26,7 +26,8 @@ const endpoints = {
     NOTIFICATIONS: '/user/$_1/notifications',
     PROMO: '/promo/$_1',
     SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents',
-    TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment'
+    TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment',
+    TOAST_NOTIF: '/user/toast'
 }
 
 export default endpoints;

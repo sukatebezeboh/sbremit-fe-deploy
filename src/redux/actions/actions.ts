@@ -243,7 +243,10 @@ export const stackNewToast = (toastConfig: any) => {
     if (!toastConfig.name) {
         throw new Error("Stacked toast must have a name");
     }
-    toastConfig.close = () => unstackNewToast(toastConfig)
+
+    if (!toastConfig.close) {
+          toastConfig.close = () => unstackNewToast(toastConfig)
+    }
     store.dispatch({ type: ADD_TO_STACKED_TOASTS, payload: toastConfig })
 }
 
@@ -971,8 +974,8 @@ export const userVerificationAction = (values: any, callback: Function) => {
 
 export const pollServerForVerificationStatus = (seconds: number) => {
     const poll = setInterval(() => {
-        refreshUserDetails((user: any)=> {
-            if (user.meta.verified == 1) {
+        refreshUserDetails((user: any) => {
+            if (user?.meta?.verified == 1) {
                 clearInterval(poll);
                 stackNewToast({
                     name: "verification-success",
@@ -982,17 +985,32 @@ export const pollServerForVerificationStatus = (seconds: number) => {
                     defaultThemeName: themeNames.CLEAR_MAMBA,
                     title: "Verification was successful",
                     message: "Your ID verification has been completed successfully",
+                    close: () => {
+                        unstackNewToast({name: "verification-success"})
+                        http.put(parseEndpointParameters(endpoints.USER), {
+                          displayVerificationToast: false
+                        })
+                        .then((response: any) => {
+                          CookieService.put('user', JSON.stringify(response.data.data))
+                          store.dispatch({
+                            type: AUTH,
+                            payload: { ...store.getState().auth, user: response.data.data },
+                          })
+                        })
+                        .catch()
+                    },
+                    closeBtnText: "Dismiss"
                 })
-            } else if (user.meta.verified.toLowerCase() == "retry") {
+            } else if (user?.meta?.verified?.toLowerCase() == "retry") {
                 clearInterval(poll);
-            } else if (!user.meta.verified) {
+            } else if (!user?.meta?.verified) {
                 clearInterval(poll);
             }
         })
     }, seconds * 1000 );
 }
 
-export const checkForVerificationStatusRetry = (user: any, history: any) => {
+export const checkForVerificationStatusToast = (user: any, history: any) => {
     if (user?.meta?.verified?.toLowerCase() == "retry") {
         stackNewToast({
             name: "verification-failed",
@@ -1006,6 +1024,32 @@ export const checkForVerificationStatusRetry = (user: any, history: any) => {
             extraBtnHandler: () => history.push(paths.VERIFICATION),
             extraBtnClass: 'verif-toast-failed-extra-btn-class'
         })        
+    } else if (user?.meta?.verified == 1 && user?.meta?.displayVerificationToast) {
+        stackNewToast({
+          name: "verification-success",
+          show: true,
+          type: 'success',
+          // timeout: 15000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: "Verification was successful",
+          message: "Your ID verification has been completed successfully",
+          close: () => {
+              unstackNewToast({name: "verification-success"})
+              http.put(parseEndpointParameters(endpoints.USER), {
+                displayVerificationToast: false
+              })
+              .then((response: any) => {
+                CookieService.put('user', JSON.stringify(response.data.data))
+                store.dispatch({
+                  type: AUTH,
+                  payload: { ...store.getState().auth, user: response.data.data },
+                })
+              })
+              .catch()
+          },
+          closeBtnText: "Dismiss"
+      })
+
     }
 }
 export const confirmAccountEmail = (callback: Function) => {

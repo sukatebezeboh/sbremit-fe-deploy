@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
-import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusRetry } from './redux/actions/actions';
+import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
@@ -24,7 +24,7 @@ function App() {
   }, [isAuthenticated])
 
   useEffect(() => {
-    refreshUserDetails((user: any) => checkForVerificationStatusRetry(user, history));
+    refreshUserDetails((user: any) => checkForVerificationStatusToast(user, history));
   }, [])
 
   return (
