@@ -283,6 +283,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
             .hero-rect{
                 margin-top: 0;
+                padding-top: 30px;
                 width: 100%;
                 border-radius: 0px;
                 box-shadow: none;
@@ -385,6 +386,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
         }
         .nav{
+            margin-bottom: 100px;
             
             .sign-up, .sign-in{
                 transform: scale(0.5, 0.5);
