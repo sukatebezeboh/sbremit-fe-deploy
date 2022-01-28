@@ -186,6 +186,9 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                         margin-left: -80px;
 
                         .tab-list {
+                            a {
+                                width: max-content;
+                            }
                             &:hover {
                                 background: #f8fcfb;
                                 color: #007B5D;
