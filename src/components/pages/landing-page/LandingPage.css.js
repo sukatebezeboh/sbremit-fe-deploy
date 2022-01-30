@@ -300,19 +300,19 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 }
                 .timeline-box{
                     left: 20px;
-                    height: 230px;
+                    height: 300px;
                     .timeline {
                         span{
                             font-size: 12px
                         }
                     }
-                    .timeline-3{
+                  /**  .timeline-3{
                         position: absolute;
                         top: 235px;
                         left: -10px;
                         >span{
                             >span{
-                              display: none;
+                              /* display: none; 
                             }
                             .sa{
                                 font-style: italic;
@@ -328,7 +328,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                                 display: none;
                             }
                         }
-                    }
+                    } **/
                     .timeline-5 {
                         margin-top: 90px;
                         .we-conv{
@@ -338,7 +338,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                     }
                 }
                 .receive{
-                    margin-top: 150px;
+                    margin-top: 210px;
                 }
                 
                 .md-txt{
