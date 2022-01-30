@@ -8,17 +8,20 @@ const Div = styled.div`
     background: #14141430;
     position: fixed;
     width: 100%;
-    height: 100vh;
+    height: 150vh;
     z-index: 1;
   }
   .confirm {
     background: #fff;
     position: fixed;
-    width: 50%;
+    width: fit-content;
+    max-width: 50%;
     height: auto;
     display: block;
     left: 20%;
-    margin: 150px auto;
+    /* margin: 150px auto; */
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 2;
     padding: 50px;
     border-radius: 10px;
@@ -56,6 +59,13 @@ const Div = styled.div`
         outline: none;
         font-size: 15px;
       }
+    }
+  }
+
+  @media only screen and (max-width: 650px) { 
+    .confirm {
+      max-width: 90%;
+      left: 5%;
     }
   }
 `

@@ -118,7 +118,7 @@ const Dashboard = () => {
     }
 
     const showTransactionExpiry = (transaction: any) => {
-        return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING_VERIFICATION?.toLowerCase() || transaction.meta.expired
+        return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.meta.expired
     }
 
     return (

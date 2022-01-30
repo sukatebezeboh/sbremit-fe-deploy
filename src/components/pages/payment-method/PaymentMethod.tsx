@@ -302,7 +302,7 @@ const PaymentMethod = () => {
                                 </div>
                                 <div>
                                     <div className="rc-head"> Manual Bank Transfer</div>
-                                    <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
+                                    <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
                                     <div className="rc-body">
                                         <div>
                                             Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
@@ -326,7 +326,7 @@ const PaymentMethod = () => {
                                 </div>
                                 <div>
                                     {/* <div className="rc-head">Debit Card</div> */}
-                                    <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
+                                    <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
                                     <div className="rc-body">
                                         {/* <div>
                                             Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
@@ -356,7 +356,7 @@ const PaymentMethod = () => {
                                     </div>
                                     <div>
                                         {/* <div className="rc-head">Bank Transfer with Truelayer</div> */}
-                                        <div className="rc-head">Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected</div>
+                                        <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
                                         <div className="rc-body">
                                             {/* <div>
                                                 Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected

@@ -258,7 +258,7 @@ const style = () => styled.div`
     @media only screen and (max-width: 900px) { 
         padding: 0px;
         background: #FFF;
-        height: 100vh;
+        height: 100%;
         position: fixed;
         overflow-y: scroll;;;
         .modal{
@@ -305,21 +305,38 @@ const style = () => styled.div`
                     padding-left: 60%;
                     >div {
                         text-align: center;
-                        width: 25px;
-                        height: 25px;
+                        width: 50px;
+                        height: 50px;
                         border-radius: 5px;
-                        padding-top: 0px;
+                        padding-top: 5px;
                         border-width: 1px !important;
+
                         img {
-                            width: 10px;
-                            height: 10px;
+                            width: 21px;
+                            height: 21px;
+                            filter: invert(0%) sepia(21%) saturate(28%) hue-rotate(346deg) brightness(204%) contrast(97%);
+                            
                         }
                         div {
                             margin-top: -3px;
-                            font: normal normal normal 4px Montserrat;
+                            font: normal normal normal 10px Montserrat;
                         }
                     }
                     .export {
+                    }
+                    .resend {
+                        color: white;
+                        border: 2px solid #007B5D;
+                        background: #007B5D;
+                        :hover {
+                            color: #007B5D;
+                            background: white;
+                            cursor: pointer;
+                            img {
+                                filter: none;
+
+                            }
+                        }
                     }
                 }
             }
@@ -510,7 +527,7 @@ const TransactionDetail = (props: any) => {
                         </div>
                         {
                             !transferPaymentMade() && data.status?.toLowerCase()?.includes(constants.TRANSFER_STATUS_PENDING.toLowerCase()) && <div className="resend" onClick={() => history.push(paths.PAYMENT_METHOD + "?t=" + data.id)}>
-                                <img className={isResending ? "is-resending" : ""} src={asset('icons', 'cash.svg')} alt="reload"/>
+                                <img className="" src={asset('icons', 'cash.svg')} alt="reload"/>
                                 <div>Pay</div>
                             </div>
                         }
@@ -647,7 +664,7 @@ const TransactionDetail = (props: any) => {
 
             {/* MOBILE TD MODAL */}
             <div className="desktop-hide mobile-modal">
-                <PageHeading heading="Transaction #: SBR334908" callBack={()=>handleOpenTDModal(false)} />
+                <PageHeading heading={`Transaction #: SBR${data.meta.transactionId}`} callBack={()=>handleOpenTDModal(false)} />
                 <div className="status"> <span>{constants.TRANSFER_STATUS_PENDING}</span> </div>
                 <div className="view-details" onClick={()=>showMobileModal(true)}>View transaction update</div>
             </div>

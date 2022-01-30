@@ -78,7 +78,7 @@ export const signUpAction = (data: any) => {
       },
     )
     .then((res: any) => {
-      if (res.data.status === '200') {
+      if (res.data.status == '200') {
         return store.dispatch({
           type: CREATE_ACCOUNT_SUCCESS,
           payload: res.data.data,
@@ -849,7 +849,6 @@ export const getServiceRateValue = (
 
   if (getRecipientsValue) {
     if (transferMethod && transferMethod === 'mobile_money') {
-      console.log(Number(equiFee) + mobileMoneyTax, 'tx')
       return Number(equiFee + mobileMoneyTax)
     } else {
       return Number((equiFee * transfer.conversionRate?.rate).toFixed(2))

@@ -784,14 +784,14 @@ const Verification = () => {
               <div className="btns p-relative">
                 <span
                   onClick={() =>
-                    refreshUserDetails(() => history.push(paths.GET_QUOTE))
+                    refreshUserDetails((user: any) => history.push(paths.GET_QUOTE))
                   }
                 >
                   Back
                 </span>{' '}
                 <button
                   onClick={() =>
-                    refreshUserDetails(() => history.push(paths.RECIPIENT))
+                    refreshUserDetails((user: any) => history.push(paths.RECIPIENT))
                   }
                 >
                   Continue

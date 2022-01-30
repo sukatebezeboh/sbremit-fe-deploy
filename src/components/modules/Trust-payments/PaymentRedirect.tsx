@@ -71,7 +71,7 @@ const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, tran
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier8} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier9} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier10} />
-                <input type="hidden" name="allurlnotification" value={settings.TRUST_NOTIFICATION_WEBHOOK_URL} />
+                <input type="hidden" name="successfulurlnotification" value={settings.TRUST_NOTIFICATION_WEBHOOK_URL} />
                 <input type="hidden" name="successfulurlredirect" value={successfulRedirectURL} />
                 <input type="hidden" name="orderreference" value={orderReference} />
                 <input type="hidden" name="sitesecurity" value={siteSecurityHash} />

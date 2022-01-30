@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getRecipients, getUserTransactions, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
+import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userIsVerified } from '../../../util/util';
+import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
+import { themeNames } from '../../modules/toast-factory/themes';
 import Body from './Recipient.css';
 
 const Recipient = () => {
@@ -36,8 +37,8 @@ const Recipient = () => {
     }, [])
 
     useEffect(() => {
-        checkPageAuthorization();
-    }, [transfer, user])
+        refreshUserDetails((user: any) => checkPageAuthorization(user));
+    }, [transfer])
     // history.replace(paths.VERIFICATION)
 
     const paramTransferId = getQueryParam('t');
@@ -51,7 +52,7 @@ const Recipient = () => {
         return false;
     }
 
-    const checkPageAuthorization = () => {
+    const checkPageAuthorization = (user: any) => {
         if (editMode()) return;
         if (!transfer.transferMethod) {
             history.replace(paths.TRANSFER_METHOD);
@@ -75,7 +76,7 @@ const Recipient = () => {
                 type: "warning",
                 timeout: 10000,
                 title: "Exceeded maximum!",
-                message: `The maximum transferable amount (inclusive of charges) form Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
+                message: `The maximum transferable amount (inclusive of charges) for Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
             })
             return
         }
@@ -84,7 +85,9 @@ const Recipient = () => {
         } else {
             if (isUserFirstTransaction(user) && Number(toSend.value) < max) {
                 // history.push(paths.RECIPIENT)
-            } else {
+            } 
+            else if (userHasReachedFinalVerificationStage(user)) {}
+            else {
                 toastAction({
                     show: true,
                     type: "info",
