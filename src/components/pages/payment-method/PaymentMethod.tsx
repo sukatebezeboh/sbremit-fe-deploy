@@ -12,7 +12,7 @@ import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } f
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
-import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userIsVerified } from '../../../util/util';
+import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 
 const Body = styled.div`
@@ -238,7 +238,7 @@ const PaymentMethod = () => {
     }, [transaction])
 
     const autoSelectPaymentMethod = () => {
-        if (!userIsVerified(user) && !isUserFirstTransaction(user)) {
+        if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
             toastAction({
                 show: true,
                 type: "info",

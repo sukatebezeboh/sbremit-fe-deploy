@@ -234,10 +234,11 @@ const Body = styled.div`
     .page-content {
       background: #fff;
       width: 100%;
-      height: 130vh;
+      /* height: 130vh; */
       margin-top: -10px;
       padding-top: 10px;
       margin-bottom: 0px;
+      padding-bottom: 20px;
       .page-heading {
         margin-top: 10px;
         .heading {
@@ -275,10 +276,11 @@ const Body = styled.div`
               padding-left: 5px;
             }
             select {
-              padding: 10px 50%;
+              /* padding: 10px 50%; */
               background-position-y: 3px;
               background-position-x: 10%;
             }
+
             .mobile-head {
               margin-bottom: -31px;
             }

@@ -3,6 +3,7 @@ import styled from "styled-components";
 const style = styled.div`
     .page-content {
         margin-top: 0px;
+        margin-bottom: 100px;
     }
 
     .head {

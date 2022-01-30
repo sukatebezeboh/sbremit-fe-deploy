@@ -6,6 +6,7 @@ import { asset, compareDatesXLessThanY } from '../../../util/util'
 import styled from 'styled-components';
 
 const Field = styled.div`
+    margin-top: 120px;
     .coupon {
         margin-top: 60px;
         /* margin-bottom: 10px; */

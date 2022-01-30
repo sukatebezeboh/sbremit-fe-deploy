@@ -273,6 +273,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             position: relative;
             /* top: 55px; */
             margin: auto;
+            margin-top: 130px;
             z-index: +3;
             span{
                 display: inline-block;
@@ -291,6 +292,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 width: 100%;
                 border-radius: 0px;
                 box-shadow: none;
+                margin-bottom: 0px;
                 >button{
                     font-size: 13px;
                     height: 54px;
