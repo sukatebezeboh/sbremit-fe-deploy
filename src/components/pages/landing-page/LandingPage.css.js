@@ -186,6 +186,9 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                         margin-left: -80px;
 
                         .tab-list {
+                            a {
+                                width: max-content;
+                            }
                             &:hover {
                                 background: #f8fcfb;
                                 color: #007B5D;
@@ -253,6 +256,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     }
     @media only screen and (max-width: 780px) { 
         background: white;
+        min-height: 0;
         height: auto;
         .mobile {
             display: inline-block!important;
@@ -283,6 +287,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
             .hero-rect{
                 margin-top: 0;
+                padding-top: 30px;
                 width: 100%;
                 border-radius: 0px;
                 box-shadow: none;
@@ -385,6 +390,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
         }
         .nav{
+            margin-bottom: 100px;
             
             .sign-up, .sign-in{
                 transform: scale(0.5, 0.5);

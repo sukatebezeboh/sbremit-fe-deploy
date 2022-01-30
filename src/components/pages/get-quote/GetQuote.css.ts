@@ -139,6 +139,9 @@ const style = styled.div`
                     margin-left: -80px;
 
                     .tab-list {
+                        a {
+                                width: max-content;
+                            }
                         &:hover {
                             background: #f8fcfb;
                             color: #007B5D;
@@ -303,9 +306,12 @@ const style = styled.div`
                     top: -15px;
                     height: 300px;
                     .timeline {
+                        span{
+                            width: max-content;
+                        }
                         span:not(.deep-green){
                             font-size: 12px;
-                            width: 180px;
+                            width: 250px;
                             font: normal normal normal 10px/13px Montserrat!important;
                         }
                         .deep-green{
