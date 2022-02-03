@@ -60,7 +60,7 @@ body::-webkit-scrollbar {
 }
 
 .desktop-hide {
-    display: none!important; 
+    display: none!important;
 }
 
 .mobile-hide {
@@ -94,9 +94,9 @@ body::-webkit-scrollbar {
 
 .white-bg-shadow>div{
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 2px 4px #CCCCCC80; 
+    box-shadow: 0px 2px 4px #CCCCCC80;
 }
-@media only screen and (max-width: 780px) { 
+@media only screen and (max-width: 780px) {
     .show-hide{
         top: -25px;
         left: 90%;
@@ -186,13 +186,13 @@ button:disabled{
     white-space: nowrap;
 }
 
-@media only screen and (max-width: 1444px) { 
+@media only screen and (max-width: 1444px) {
     div.page-content {
         width: 95%;
     }
 }
 
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     div.page-content{
         width: 90%;
         margin-top: 100px;
@@ -220,7 +220,7 @@ button:disabled{
 
     .no-white-bg-shadow>div{
         background: #FFFFFF 0% 0% no-repeat padding-box;
-        box-shadow: 0px 2px 4px #CCCCCC80; 
+        box-shadow: 0px 2px 4px #CCCCCC80;
     }
 }
 .selected-border {
@@ -260,9 +260,11 @@ button:disabled{
 
 .cancelled {
     background: #CF0921!important;
+    color: #ffffff !important;
 }
 .completed, .complete {
     background: #007B5D!important;
+    color: #ffffff !important;
 }
 .float-right {
     float: right;
