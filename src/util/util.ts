@@ -13,11 +13,11 @@ export const getQueryParam = (key: string): string => {
 
 export const parseEndpointParameters = (
     endpoint: string,
-    $_1: string = "", 
-    $_2: string = "", 
-    $_3: string = "", 
+    $_1: string = "",
+    $_2: string = "",
+    $_3: string = "",
     $_4: string = ""
-    ) => 
+    ) =>
 {
     return endpoint
     .replace('$_1', $_1)
@@ -52,7 +52,7 @@ export const convertDateString = (value: any) => {
 
 export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): any => {
     // eslint-disable-next-line eqeqeq
-    const value = array.filter(a=>a[targetId] == id)[0];    
+    const value = array.filter(a=>a[targetId] == id)[0];
     return value?.[keyToReturn] || value;
 }
 
@@ -70,7 +70,7 @@ export const genPaginationHashTable = (array: any[], noPerPage: number) => {
     })
 
     const pages = Object.keys(hashTable);
-    
+
     return {paginated: hashTable, pages }
 }
 
@@ -91,7 +91,7 @@ export const parseWithUnderscores = (method: string) => {
 
 export const compareDatesXLessThanY = (x: string, y: string) => {
     const xDate = new Date(x);
-    const yDate = new Date(y); 
+    const yDate = new Date(y);
     return xDate < yDate;
 }
 
@@ -105,6 +105,24 @@ export const getInclusiveText = (transferMethod: string) => {
 
     return texts[transferMethod || "default"];
 
+}
+
+export const translateTransactionStatus = (status: string) => {
+    const verboseStatus: any = {
+        pending_payment: "Pending payment",
+        expired: "Transfer Expired",
+        payment_completed: "Funds received by SB",
+        complete: "Funds received by SB",
+        transfer_completed: "Paid to recipient",
+        rejected: "Transfer Rejected",
+        refunded: "Transfer Refunded",
+        cancelled: "Transfer Cancelled",
+        pending_verification: "Pending account verification",
+        pending_documentation: "Pending documentation",
+        payment_suspended: "Payment suspended"
+    }
+
+    return verboseStatus[status]
 }
 
 
@@ -129,9 +147,9 @@ export const getMax = (transferMethod: string) => {
 }
 
 export const secondsToHms = (value : any) => {
-    const sec = parseInt(value, 10); 
-    let hours: string|number = Math.floor(sec / 3600); 
-    let minutes: string|number = Math.floor((sec - hours * 3600) / 60); 
+    const sec = parseInt(value, 10);
+    let hours: string|number = Math.floor(sec / 3600);
+    let minutes: string|number = Math.floor((sec - hours * 3600) / 60);
     let seconds: string|number = sec - hours * 3600 - minutes * 60;
     if (hours < 10) {      hours = '0' + hours;    }
     if (minutes < 10) {      minutes = '0' + minutes;    }

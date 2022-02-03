@@ -6,7 +6,7 @@ import { checkForVerificationStatusToast, checkSkip, getRecipients, getTransacti
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getValueFromArray, replaceUnderscores } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getValueFromArray, replaceUnderscores, translateTransactionStatus } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
@@ -131,29 +131,29 @@ const Dashboard = () => {
                     <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
                 <div className="transactions">
-                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}> 
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}>
                         <div className="green-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())}</div>
                         <div>Complete Transactions</div>
                     </div>
-                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_PENDING.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_PENDING.toLowerCase() ? "selected-border-yellow" : ''}> 
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_PENDING.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_PENDING.toLowerCase() ? "selected-border-yellow" : ''}>
                         <div className="yellow-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_PENDING.toLowerCase())}</div>
                         <div>Pending Transactions</div>
                     </div>
-                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_CANCELLED.toLowerCase() ? "selected-border-red" : ''}> 
+                    <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_CANCELLED.toLowerCase() ? "selected-border-red" : ''}>
                         <div className="red-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())}</div>
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to="/transfer-method">
-                        <div className="green-bg start-transfer"> 
-                            <div> <img src={asset('icons', 'add.svg')} alt=""/> </div>  
+                        <div className="green-bg start-transfer">
+                            <div> <img src={asset('icons', 'add.svg')} alt=""/> </div>
                             <div> Start new transfer</div>
                         </div>
                     </Link>
                 </div>
                 <div className="t-history">Transaction History <span>({allTransactions.length})</span></div>
                 {transactions && transactions.map((transaction: any) => <div className="history">
-                    <div 
-                    className="up" 
+                    <div
+                    className="up"
                     onClick={()=>{
                             setModalData(transaction);
                             handleOpenTDModal(true);
@@ -164,7 +164,8 @@ const Dashboard = () => {
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                             { showTransactionExpiry(transaction) && <TransferExpiryCountDown dateCreated={transaction.dateCreated} />}
                         </div>
-                        <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{replaceUnderscores(transaction.status)}</span></div>
+                        {/* <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{replaceUnderscores(transaction.status)}</span></div> */}
+                        <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{translateTransactionStatus(transaction.status.toLowerCase())}</span></div>
                         <div className="figures">
                             <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
                             <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
@@ -174,7 +175,7 @@ const Dashboard = () => {
                     <div className="down">
                         <div>Transaction #: <span>SBR{transaction.meta.transactionId}</span></div>
                         <div>
-                            <span className="is-clickable" onClick={() => handleResend(transaction, recipients)} ><img src={asset('icons', 'reload.svg')} alt="resend"  className={isResending ? "is-resending" : ""} /> Resend</span> 
+                            <span className="is-clickable" onClick={() => handleResend(transaction, recipients)} ><img src={asset('icons', 'reload.svg')} alt="resend"  className={isResending ? "is-resending" : ""} /> Resend</span>
                             <span
                             className="view-det"
                             onClick={()=>{
@@ -185,7 +186,7 @@ const Dashboard = () => {
                     </div>
                 </div>)}
                 {pages?.length > 1 ? <div className="pagination">
-                    <img src={asset('icons', 'prev.svg')} alt="prev"/> 
+                    <img src={asset('icons', 'prev.svg')} alt="prev"/>
                     {
                         pages?.map((page: string)=>(
                             <span className={transfer.currentTransactionsPage == page ? "active green-bg white-txt" : ""} onClick={()=>setPageTo(page)} >{page}</span>
