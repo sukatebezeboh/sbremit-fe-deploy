@@ -15,7 +15,7 @@ const style = () => styled.div`
                 padding: 30px;
                 border-radius: 15px;
                 background: #fff;
-                margin-bottom: 10px;    
+                margin-bottom: 10px;
                 >div{
                     :first-child {
                         font: normal normal 600 40px/40px Montserrat;
@@ -93,7 +93,7 @@ const style = () => styled.div`
                     &.status{
                         span {
                             background: #FCD20F;
-                            color: white;
+                            color: #424242;
                             display: inline-block;
                             padding: 7px 15px;
                             border-radius: 15px;
@@ -182,8 +182,8 @@ const style = () => styled.div`
             }
         }
     }
-    @media only screen and (max-width: 1444px) { 
-        
+    @media only screen and (max-width: 1444px) {
+
         >div.page-content {
             width: 95%;
             >.transactions {
@@ -191,12 +191,12 @@ const style = () => styled.div`
             }
         }
     }
-    @media only screen and (max-width: 900px) { 
-        
+    @media only screen and (max-width: 900px) {
+
         >div.page-content{
             width: 90%;
             margin-top: 100px;
-            
+
             >.heading {
                 font-size: 18px;
             }
@@ -252,7 +252,7 @@ const style = () => styled.div`
                             position: relative;
                         }
                     div{
-                        
+
                         z-index: 0;
                         div, span {
                             font: normal normal normal 10px/10px Montserrat!important;
@@ -276,8 +276,8 @@ const style = () => styled.div`
                         span {
                             /* position: relative;
                             left: 100%; */
-                            
-                            @media only screen and (max-width: 375px) { 
+
+                            @media only screen and (max-width: 375px) {
                                 /* left: 0%; */
                             }
                         }
@@ -302,13 +302,13 @@ const style = () => styled.div`
                 }
             }
             .pagination {
-                transform: scale(0.5, 0.5);  
+                transform: scale(0.5, 0.5);
                 width: 120%;
                 margin-left: -12%;
                 img {
                     margin: 0px;
-                    
-                }      
+
+                }
             }
         }
 

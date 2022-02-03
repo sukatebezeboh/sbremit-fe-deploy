@@ -164,8 +164,7 @@ const Dashboard = () => {
                             <div className="name">To <b>{getValueFromArray(transaction.recipientId, 'id', recipients, 'firstName')} {getValueFromArray(transaction.recipientId, 'id', recipients, 'lastName')}</b></div>
                             { showTransactionExpiry(transaction) && <TransferExpiryCountDown dateCreated={transaction.dateCreated} />}
                         </div>
-                        {/* <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{replaceUnderscores(transaction.status)}</span></div> */}
-                        <div className="status"><span className={`sentence-case ${transaction.status?.toLowerCase()}`}>{translateTransactionStatus(transaction.status.toLowerCase())}</span></div>
+                        <div className="status"><span className={transaction.status?.toLowerCase()}>{translateTransactionStatus(transaction.status.toLowerCase())}</span></div>
                         <div className="figures">
                             <div className="uppercase">{formatCurrency(transaction.destinationAmount)} {transaction.destinationCurrency}</div>
                             <div className="amt-gbp uppercase">{formatCurrency(transaction.originAmount)} {transaction.originCurrency}</div>
