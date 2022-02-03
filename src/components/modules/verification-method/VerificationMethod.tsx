@@ -167,7 +167,7 @@ const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
         }
 
         if (!isUserAllowedThisType(constants.VERIFICATION_TYPE_IDENTITY)) {
-            setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
+            setMethod(constants.VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR)
             return;
         }
 

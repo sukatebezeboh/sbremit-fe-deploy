@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
-import { constants, resources } from '../../../util/constants';
+import { constants, maxTransfersUnverified, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
@@ -83,7 +83,7 @@ const Recipient = () => {
         if (userIsVerified(user)) {
             // history.push(paths.RECIPIENT)
         } else {
-            if (isUserFirstTransaction(user) && Number(toSend.value) < max) {
+            if (isUserFirstTransaction(user) && Number(toSend.total) < maxTransfersUnverified[toSend?.currency?.toUpperCase()]) {
                 // history.push(paths.RECIPIENT)
             } 
             else if (userHasReachedFinalVerificationStage(user)) {}

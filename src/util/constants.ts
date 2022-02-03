@@ -13,6 +13,12 @@ export const REASONS = [
     "Other"
 ];
 
+export const maxTransfersUnverified: any = {
+  GBP: 800,
+  CAD: Number.MAX_SAFE_INTEGER,
+  EUR: Number.MAX_SAFE_INTEGER
+}
+
 export const constants = {
     HOME: "home",
     ABOUT: "about",
@@ -34,6 +40,7 @@ export const constants = {
 
     VERIFICATION_TYPE_DOCUMENT: "DOCUMENT",
     VERIFICATION_TYPE_IDENTITY: "IDENTITY",
+    VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR: "DOCUMENT_WITH_IDENTITY_PRECURSOR",
     VERIFICATION_TYPE_WATCHLIST: "WATCHLIST",
 
     VERIFICATION_STAGE_FINAL: "FINAL",
