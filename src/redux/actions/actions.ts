@@ -270,8 +270,8 @@ export const appValuesAction = async () => {
   values.values = allValues
   values.countries = sortObjectByProperties(countries.data)
   values.services = services
-  values.payInCountries = payInCountries.data
-  values.payOutCountries = payOutCountries.data
+  values.payInCountries = payInCountries?.data
+  values.payOutCountries = payOutCountries?.data
 
   store.dispatch({ type: APP_VALUES, payload: values })
   getServiceRate()
@@ -938,12 +938,13 @@ export const editProfileAction = (values: any, callback?: Function) => {
     })
 }
 
-export const userVerificationAction = (values: any, callback: Function) => {
+export const userVerificationAction = (values: any, callback: Function, skipVerification = false) => {
     store.dispatch({type: LOADING, payload: true})
     const userId = store.getState().auth.user?.id;
     http.post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
         ...values,
-        address1: values.buildingNumber + ", " + values.streetName
+        address1: values.buildingNumber + ", " + values.streetName,
+        skipVerification
     })
     .then(res => {
         if (res.data.status === "200") {
@@ -1018,7 +1019,7 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
             // timeout: 15000,
             defaultThemeName: themeNames.CLEAR_MAMBA,
             title: "We were unable to verify your account",
-            message: "<div style='color: grey;'>Something went wrong with your account verification, please try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
+            message: "<div style='color: grey;'>Something went wrong with your account verification. Please, try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
             extraBtnText: "Verify now",
             extraBtnHandler: () => history.push(paths.VERIFICATION),
             extraBtnClass: 'verif-toast-failed-extra-btn-class'

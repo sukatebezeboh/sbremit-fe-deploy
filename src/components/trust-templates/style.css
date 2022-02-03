@@ -1,0 +1,81 @@
+body {
+    padding-top: 17px;
+}
+
+.sb-logo {
+    width: 220px;
+    float: left;
+    margin: 10px 5px 10px 25%;
+}
+
+#st-block-orderdetailsdiv{
+    /* box-shadow: 1px 4px 14px 1px rgba(140,140,140,0.75);
+    -webkit-box-shadow: 1px 4px 14px 1px rgba(140,140,140,0.75);
+    -moz-box-shadow: 1px 4px 14px 1px rgba(140,140,140,0.75); */
+    background: white;
+    /* box-shadow: 1px 1px 3px 1px grey; */
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+#st-block-orderdetailsdiv .st-field-div {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    white-space: nowrap;
+    margin: 10px;
+}
+
+#st-block-orderdetailsdiv .st-field-div label {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    color: grey;
+}
+
+#st-block-orderdetailsdiv .st-field-div p {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    color: #397c5d;
+    font-weight: bold;
+}
+
+h2 {
+    color: grey;
+    font-weight: 100;
+    font-size: small;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.cancel-button {
+    background: #FCD20F 0% 0% no-repeat padding-box;
+    border-radius: 8px;
+    width: 212px;
+    height: 39px;
+    text-align: center;
+    /* font: normal normal normal 25px/30px Montserrat; */
+    color: #424242;
+    border: none;
+    outline: none;
+    margin: 20px 0px;
+    cursor: pointer;
+}
+
+div#st-block-billingcontactdiv {
+    display: none;
+}
+
+div#st-block-billingnamediv {
+    display: grid;
+    grid-template-areas: "a b c";
+    gap: 3%;
+}
+
+.st-inputs-style input, .st-inputs-style select {
+    border-radius: 2px;
+    padding: 5px;
+}

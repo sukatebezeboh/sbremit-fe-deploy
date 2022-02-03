@@ -1,0 +1,37 @@
+{{st.block.doctype}}
+<html>
+  <head>
+    {{st.block.metatags}}
+    {{st.block.defaultcss}}
+    {{st.block.profilecss}}
+    {{st.block.requiredjs}}
+    {{st.block.defaultjs}}
+    {{st.block.profilejs}}
+    <link rel="stylesheet" href="{{stresource.style.css}}">
+
+  </head>
+  <body class="{{st.bodyclass.value}} st-inputs-style st-blocks-style">
+    <img class="sb-logo" src="{{stresource.emaillogo.svg}}" alt="SB Logo" />
+
+    {{st.block.header}}
+    <div class="st-content">
+      {{st.block.messagesdiv}}
+      <h2>Order details</h2>
+      <hr>
+      {{st.block.orderdetailsdiv}}
+      <hr>
+      <h2>Change payment type</h2>
+      {{st.block.smallpaymentchoicesdiv}}
+      <form name="paymentsdetails" id="paymentsdetails" method="post" action="details">
+        {{st.block.hiddendiv}}
+        <h2>Billing details</h2>
+        {{st.block.billingdetailsdiv}}
+        <h2>Payment details</h2>
+        {{st.block.paymentdetailsdiv}}
+        {{st.block.requirednoticediv}}
+      </form>
+      <a href="https://sbremit.netlify.app/dashboard"><button class="cancel-button">Cancel</button></a>
+    </div>
+    {{st.block.footer}}
+  </body>
+</html>

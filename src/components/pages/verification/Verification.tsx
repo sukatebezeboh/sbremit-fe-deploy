@@ -383,7 +383,8 @@ const Verification = () => {
       setSelectedCountry(initialValues.location_country)
     }, [initialValues.location_country])
   
-    const handleIDVerificationServerResponse = () => {
+    const handleIDVerificationServerResponse = (isPrecursor = false) => {
+        if (isPrecursor) return setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
         pollServerForVerificationStatus(2)
         history.push(paths.RECIPIENT);
     }
@@ -400,17 +401,19 @@ const Verification = () => {
               ? 'Enter information to verify your identity'
               : method === constants.VERIFICATION_TYPE_DOCUMENT
               ? 'Follow the prompts to verify your documents'
-              : 'Select a verification method'
+              : 'Enter information to verify your identity'
           }
           back={paths.GET_QUOTE}
           callBack={() => history.push(paths.GET_QUOTE)}
         />
-        {method === constants.VERIFICATION_TYPE_IDENTITY ? (
+        {method === constants.VERIFICATION_TYPE_IDENTITY || method === constants.VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR
+         ? (
           <Formik
             initialValues={{ ...initialValues }}
             validationSchema={userVerificationValidator}
             onSubmit={(values) => {
-              userVerificationAction(values, () => handleIDVerificationServerResponse(),
+              userVerificationAction(values, () => handleIDVerificationServerResponse(method === constants.VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR),
+                method === constants.VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR
               )
             }}
           >
