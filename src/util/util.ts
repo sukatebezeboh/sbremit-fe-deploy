@@ -110,14 +110,13 @@ export const getInclusiveText = (transferMethod: string) => {
 export const translateTransactionStatus = (status: string) => {
     const verboseStatus: any = {
         pending_payment: "Pending payment",
-        expired: "Transfer Expired",
+        expired: "Transfer expired",
         payment_completed: "Funds received by SB",
-        complete: "Funds received by SB",
-        transfer_completed: "Paid to recipient",
-        rejected: "Transfer Rejected",
-        refunded: "Transfer Refunded",
-        cancelled: "Transfer Cancelled",
-        pending_verification: "Pending account verification",
+        complete: "Paid to recipient",
+        rejected: "Transfer rejected",
+        refunded: "Transfer refunded",
+        cancelled: "Transfer cancelled",
+        pending_verification: "Pending identity verification",
         pending_documentation: "Pending documentation",
         payment_suspended: "Payment suspended"
     }
