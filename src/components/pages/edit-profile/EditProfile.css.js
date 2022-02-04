@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const style = () => styled.div`
     .box {
-        padding: 100px 50px;
+        padding: 100px 5px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         .content {
@@ -76,7 +76,7 @@ const style = () => styled.div`
                                 visibility: visible;
                                 border: 1px solid #FCD20F;
                                 pointer-events: none;
-                                @media only screen and (max-width: 900px) { 
+                                @media only screen and (max-width: 900px) {
                                     top: 27%;
                                 }
                             }
@@ -95,7 +95,7 @@ const style = () => styled.div`
                                     border: 1px double #FCD20F;
                                     z-index: 1;
                                     pointer-events: none;
-                                    @media only screen and (max-width: 900px) { 
+                                    @media only screen and (max-width: 900px) {
                                         /* top: -57%; */
                                     }
                                 }
@@ -117,7 +117,7 @@ const style = () => styled.div`
                         color: #A3A3A3;
                         padding: 20px;
                         ::placeholder{
-                            color: #A3A3A3; 
+                            color: #A3A3A3;
                         }
                     }
                     select{
@@ -126,19 +126,32 @@ const style = () => styled.div`
                         background: transparent;
                         background-image: url("data:image/svg+xml;utf8,<svg fill='rgb(127, 188, 173)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
                         background-repeat: no-repeat;
-                        background-position-x: 15%;
+                        background-position-x: 10%;
                         background-position-y: 10px;
                         padding: 0px;
                         padding-left: 75px;
                     }
+                    .day-select {
+                        padding-left: 10px !important;
+                        background-position-x: 100% !important;
+                    }
+                    .month-select {
+                        padding-left: 3px !important;
+                        background-position-x: 100% !important;
+                    }
                     input.phone-no {
                         position: relative;
                         top: 51px;
-                        width: 79%;
+                        width: 65%;
                         height: 44px;
-                        margin-left: 20%;
+                        margin-left: 34%;
                         border: 2px solid transparent;
                         background: #fff;
+                        padding: 0 !important;
+                    }
+                    .phone-country-select {
+                        background-position-x: 26% !important;
+                        background-position-y: 12px;
                     }
                     div.mobile-head {
                         margin-bottom: -44px;
@@ -268,7 +281,7 @@ const style = () => styled.div`
                 margin-left: -2.5%;
                 list-style: none;
                 li{
-                    margin-top: 14px;  
+                    margin-top: 14px;
                     text-indent: 20px;
                     :before {
                         content: ' ';
@@ -276,16 +289,16 @@ const style = () => styled.div`
                         height: 10px;
                         border-radius: 50%;
                         background: #FCD20F;
-                        display: inline-block; 
-                        margin-right: 7%; 
+                        display: inline-block;
+                        margin-right: 7%;
                         margin-left: -7%;
                     }
                 }
             }
         }
     }
-    
-@media only screen and (max-width: 900px) { 
+
+@media only screen and (max-width: 900px) {
     background: #FFFFFF;
     padding: 1px 0px;
     min-height: 100vh;
@@ -356,7 +369,7 @@ const style = () => styled.div`
                     ::before{
                         width: 5px;
                         height: 5px;
-                        margin-right: 5%; 
+                        margin-right: 5%;
                         margin-left: -46px;
                     }
                 }
