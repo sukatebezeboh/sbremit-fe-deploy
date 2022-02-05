@@ -115,7 +115,8 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer.serviceFee);
     const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer.toReceive.total);
     const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer.toReceive.currency;
-    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`);
+    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer.toSend.total)}`);
+    const promoCode = transferId ? transaction?.meta?.promoCode : transfer?.promo?.code;
 
     useEffect(() => {
         if ( transferId ) {
@@ -137,6 +138,8 @@ const TransferDetailsBox = ( { transferId } :any ) => {
 
         return texts[selectedMethod];
     }
+
+    console.log(transfer)
 
     return (
         // !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?
@@ -161,6 +164,10 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="left">Exchange rate</div>
                         <div className="right uppercase">1 {xBase} = {xRate} {xTarget}</div>
                     </div>
+                    {promoCode && <div className="row ">
+                        <div className="left green-txt">Promo</div>
+                        <div className="right uppercase green-txt"> {promoCode} </div>
+                    </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>
                         <div className="right uppercase">+{serviceFee} {sendCurrency}</div>

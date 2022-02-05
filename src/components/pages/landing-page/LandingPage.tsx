@@ -303,7 +303,7 @@ const LandingPage = (props: any) => {
                             </div>
                         </div>
                         <div className="offset"></div>
-                        <div className="receive" style={promo ? {marginTop: "80px"} : {}}>
+                        <div className={`receive ${promo ? 'extend-margin-for-promo' : ''}`} >
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
                                 ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
@@ -314,7 +314,7 @@ const LandingPage = (props: any) => {
                     <div className="toggle">
                         <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                     </div>
-                    <PromoCodeField />
+                        <PromoCodeField transfer={transfer} />
                         <button onClick={()=>{
                             setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
                             }}>

@@ -317,7 +317,7 @@ const GetQuote = () => {
                             </div>
                             {/* <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 {toSend.currency}</b> for this transfer</div> */}
 
-                            <PromoCodeField />
+                            <PromoCodeField transfer={transfer} />
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPromo } from '../../../redux/actions/actions'
 import { TRANSFER } from '../../../redux/actionTypes'
@@ -28,11 +28,19 @@ const Field = styled.div`
     }
 `
 
-const PromoCodeField = () => {
+const PromoCodeField = ({transfer}: any) => {
+    const textInput: any = useRef(null);
+
     const [img, setImg] = useState<null | 'check-mark' | 'crossed' | 'rolling-loader-black'>(null)
-    const transfer = useSelector((state: any) => state.transfer)
+    // const transfer = useSelector((state: any) => state.transfer)
+    const user = useSelector((state: any) => state.auth.user)
     const promo = transfer.promo
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        handleCouponChange(textInput?.current?.value);
+        handleCouponChange(textInput?.current?.value);
+    }, [transfer?.toSend?.currency])
 
     const handleCouponChange = async (value: string) => {
         if (!value) return setImg(null);
@@ -64,15 +72,22 @@ const PromoCodeField = () => {
         const todayInString = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear()
         const expired = compareDatesXLessThanY( promo?.endDate, todayInString );
         const notDue = compareDatesXLessThanY( todayInString, promo?.startDate );
+        const exceededUsageLimit = !user ? false : Number(user.promos[promo?.code] || 0) >= Number(promo?.settings?.usageLimit);
 
-        return expired ? undefined : (notDue ? undefined : promo);
+        const incompatibleCurrency = promo?.settings?.currenciesValid !== "ALL" && promo?.settings?.currenciesValid?.indexOf(transfer.toSend.currency) === -1;
+
+        if ( !expired && !notDue && !exceededUsageLimit && !incompatibleCurrency) {
+            return promo
+        } else {
+            return undefined;
+        }
     }
 
     return (
         <Field>
             <div className="coupon">
-                <input type="text" className="promo-code" name="promo-code" placeholder={promo ? promo.code : "Got a promo code? Get a discount"} onChange={(e) => handleCouponChange(e.target.value)} />
-                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />} { promo &&  <b className="green-txt">: {getPromoValue(promo)} </b>}
+                <input ref={textInput} id="promo-field" type="text" className="promo-code" name="promo-code" placeholder={promo ? promo.code : "Got a promo code? Get a discount"} onChange={(e) => handleCouponChange(e.target.value)} />
+                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />} { promo &&  <span className='green-txt'> Value <b className="green-txt">: {getPromoValue(promo)} </b>  - (Valid for {promo?.settings?.currenciesValid } currencies) </span>}
             </div>
         </Field>
     )

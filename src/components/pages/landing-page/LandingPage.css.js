@@ -74,6 +74,10 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             /* margin-top: 206px; */
             position: relative;
             z-index: 2;
+
+            &.extend-margin-for-promo {
+                margin-top: 80px;
+            }
         }
         .toggle {
             width: 300px;
@@ -339,6 +343,9 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 }
                 .receive{
                     margin-top: 210px;
+                    &.extend-margin-for-promo {
+                        margin-top: 270px;
+                    }
                 }
                 
                 .md-txt{
