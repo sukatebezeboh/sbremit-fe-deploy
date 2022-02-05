@@ -52,7 +52,7 @@ export const RecipientValidator = Yup.object().shape({
     state: Yup.string().min(3, "Too short").max(25, "Too long"),
     reason: Yup.string(),
     // bankName: Yup.string().min(2, "Too short").max(100, "Too long"),
-    accountNumber: Yup.string().matches(/^(\s)*(CM)[0-9]{2}(\s)*[0-9]{5}(\s)*[0-9]{5}(\s)*[0-9]{12}(\s)*[0-9]{2}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:CM12 10005 00001 012345678900 12'),
+    accountNumber: Yup.string().matches(/^(\s)*(CM)[0-9]{2}(\s)*[0-9]{5}(\s)*[0-9]{5}(\s)*[0-9]{11}(\s)*[0-9]{2}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:CM12 10005 00001 01234567890 12'),
  });
 
 

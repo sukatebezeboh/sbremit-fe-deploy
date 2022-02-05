@@ -1,17 +1,26 @@
-import { useEffect, useState } from 'react'
-import { Field, Form, Formik } from 'formik'
-import { useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
-import { pollServerForVerificationStatus, refreshUserDetails, saveTruliooTransactionId, userVerificationAction } from '../../../redux/actions/actions';
-import { constants } from '../../../util/constants';
-import { userVerificationValidator } from '../../../util/form-validators';
-import { paths } from '../../../util/paths';
-import NavBar from '../../modules/navbar/NavBar';
-import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
-import ProgressBar from '../../modules/progress-bar/ProgressBar';
-import VerificationMethod from '../../modules/verification-method/VerificationMethod';
+import { useEffect, useState } from "react";
+import { Field, Form, Formik } from "formik";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+import {
+  pollServerForVerificationStatus,
+  refreshUserDetails,
+  saveTruliooTransactionId,
+  userVerificationAction,
+} from "../../../redux/actions/actions";
+import {
+  constants,
+  days,
+  months,
+} from "../../../util/constants";
+import { userVerificationValidator } from "../../../util/form-validators";
+import { paths } from "../../../util/paths";
+import NavBar from "../../modules/navbar/NavBar";
+import PageHeading from "../../modules/page-heading/PageHeading";
+import TransferDetailsBox from "../../modules/parts/TransferDetailsBox";
+import ProgressBar from "../../modules/progress-bar/ProgressBar";
+import VerificationMethod from "../../modules/verification-method/VerificationMethod";
 
 const Body = styled.div`
   .page-content {
@@ -54,7 +63,7 @@ const Body = styled.div`
         margin: 30px auto;
         width: 100%;
         .radio-span {
-          input[type='radio'] {
+          input[type="radio"] {
             width: 19px;
             :before {
               width: 19px;
@@ -64,7 +73,7 @@ const Body = styled.div`
               left: -5%;
               position: relative;
               background-color: white;
-              content: '';
+              content: "";
               display: inline-block;
               visibility: visible;
               border: 1px solid #fcd20f;
@@ -82,7 +91,7 @@ const Body = styled.div`
                 left: 15%;
                 position: relative;
                 background-color: #fcd20f;
-                content: '';
+                content: "";
                 display: inline-block;
                 visibility: visible;
                 border: 1px double #fcd20f;
@@ -109,7 +118,7 @@ const Body = styled.div`
           outline: none;
           font: normal normal normal 14px Montserrat;
           color: #a3a3a3;
-          padding: 20px;
+          padding: 19px;
           ::placeholder {
             color: #a3a3a3;
           }
@@ -120,7 +129,7 @@ const Body = styled.div`
           background: transparent;
           background-image: url("data:image/svg+xml;utf8,<svg fill='rgb(127, 188, 173)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
           background-repeat: no-repeat;
-          background-position-x: 15%;
+          background-position-x: 20%;
           background-position-y: 10px;
           padding: 0px;
           padding-left: 75px;
@@ -128,9 +137,9 @@ const Body = styled.div`
         input.phone-no {
           position: relative;
           top: 51px;
-          width: 79%;
+          width: 70%;
           height: 44px;
-          margin-left: 20%;
+          margin-left: 28%;
           border: 2px solid transparent;
           background: #fff;
         }
@@ -195,6 +204,15 @@ const Body = styled.div`
       }
     }
 
+    .day-select {
+      padding-left: 10px !important;
+      background-position-x: 100% !important;
+    }
+    .month-select {
+      padding-left: 3px !important;
+      background-position-x: 100% !important;
+    }
+
     .btns {
       text-align: right;
       margin: 65px 0px;
@@ -224,7 +242,7 @@ const Body = styled.div`
     max-height: 750px;
   }
   #trulioo-embedid:empty {
-    background: url('/assets/icons/rolling-loader-black.svg');
+    background: url("/assets/icons/rolling-loader-black.svg");
     width: 100%;
     min-height: 50vh;
     background-repeat: no-repeat;
@@ -266,13 +284,14 @@ const Body = styled.div`
             input,
             select {
               height: 30px !important;
-              font: normal normal normal 14px/18px Montserrat;
+              font: normal normal normal 14px/18px
+                Montserrat;
             }
             input.phone-no {
               top: 32px;
               height: 25px !important;
-              margin-left: 15%;
-              width: 85%;
+              margin-left: 25%;
+              width: 74%;
               padding-left: 5px;
             }
             select {
@@ -291,7 +310,8 @@ const Body = styled.div`
             > div {
               margin-top: 15px;
               > div {
-                font: normal normal normal 10px/13px Montserrat;
+                font: normal normal normal 10px/13px
+                  Montserrat;
                 line-height: 19px;
               }
               .show-hide {
@@ -305,11 +325,13 @@ const Body = styled.div`
             > button {
               margin-top: 25px;
               height: 40px;
-              font: normal normal normal 13px/16px Montserrat;
+              font: normal normal normal 13px/16px
+                Montserrat;
             }
             .radio-txt {
               padding: 10px 5px;
-              font: normal normal normal 14px/19px Montserrat;
+              font: normal normal normal 14px/19px
+                Montserrat;
             }
           }
         }
@@ -341,43 +363,50 @@ const Body = styled.div`
       }
     }
   }
-`
+`;
 
 const Verification = () => {
-  const history = useHistory()
-  const countries: any = useSelector((state: any) => state.appValues.countries)
-  const [showContinueButton, setShowContinueButton] = useState(false)
-  const [selectedCountry, setSelectedCountry] = useState('')
+  const history = useHistory();
+  const countries: any = useSelector(
+    (state: any) => state.appValues.countries,
+  );
+  const [showContinueButton, setShowContinueButton] =
+    useState(false);
+  const [selectedCountry, setSelectedCountry] =
+    useState("");
 
-  const [method, setMethod] = useState('')
-    const user = useSelector((state: any) => state.auth.user);
+  const [method, setMethod] = useState("");
+  const user = useSelector((state: any) => state.auth.user);
 
-    const initialValues: any = {
-      phoneCode: '+01',
-      address2: '',
-      location_country: user?.profile?.location_country,
-      ...user?.profile,
-    }
-    useEffect(() => {
-        if (method !== constants.VERIFICATION_TYPE_DOCUMENT) return;
-        const newWindow:any = window;
-        const TruliooClient: any = newWindow.TruliooClient;
+  const initialValues: any = {
+    phoneCode: "+01",
+    address2: "",
+    location_country: user?.profile?.location_country,
+    ...user?.profile,
+  };
+  useEffect(() => {
+    if (method !== constants.VERIFICATION_TYPE_DOCUMENT)
+      return;
+    const newWindow: any = window;
+    const TruliooClient: any = newWindow.TruliooClient;
 
-        const handleResponse = (truliooResponse: any) => {
-                saveTruliooTransactionId({
-                    experienceTransactionId: truliooResponse.experienceTransactionId
-                });
-                pollServerForVerificationStatus(10);
-                setShowContinueButton(true)
-        }
+    const handleResponse = (truliooResponse: any) => {
+      saveTruliooTransactionId({
+        experienceTransactionId:
+          truliooResponse.experienceTransactionId,
+      });
+      pollServerForVerificationStatus(10);
+      setShowContinueButton(true);
+    };
 
-        new TruliooClient({
-            publicKey: process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
-            accessTokenURL: process.env.REACT_APP_TRULIOO_ACCESS_TOKEN_URL,
-            handleResponse,
-        });
-    }, [method])
-
+    new TruliooClient({
+      publicKey:
+        process.env.REACT_APP_TRULIOO_EMBED_ID_PUBLIC_KEY,
+      accessTokenURL:
+        process.env.REACT_APP_TRULIOO_ACCESS_TOKEN_URL,
+      handleResponse,
+    });
+  }, [method]);
 
     useEffect(() => {
       setSelectedCountry(initialValues.location_country)
@@ -422,7 +451,9 @@ const Verification = () => {
                 <div className="box-container">
                   <div className="form part">
                     <div className="heading mobile-hide">
-                      <div className="title">My personal details</div>
+                      <div className="title">
+                        My personal details
+                      </div>
                     </div>
                     <hr className="mobile-hide" />
 
@@ -430,11 +461,11 @@ const Verification = () => {
                       <div className="names">
                         <div
                           className={
-                            touched.firstName && errors.firstName
-                              ? 'form-error'
-                              : ''
-                          }
-                        >
+                            touched.firstName &&
+                            errors.firstName
+                              ? "form-error"
+                              : ""
+                          }>
                           <div>
                             First Name<i>*</i>
                           </div>
@@ -444,20 +475,21 @@ const Verification = () => {
                             name="firstName"
                             placeholder="John"
                           />
-                          {touched.firstName && errors.firstName && (
-                            <div className="form-error-message">
-                              {errors.firstName}
-                            </div>
-                          )}
+                          {touched.firstName &&
+                            errors.firstName && (
+                              <div className="form-error-message">
+                                {errors.firstName}
+                              </div>
+                            )}
                         </div>
                         <div></div>
                         <div
                           className={
-                            touched.lastName && errors.lastName
-                              ? 'form-error'
-                              : ''
-                          }
-                        >
+                            touched.lastName &&
+                            errors.lastName
+                              ? "form-error"
+                              : ""
+                          }>
                           <div>
                             Last Name<i>*</i>
                           </div>
@@ -467,19 +499,21 @@ const Verification = () => {
                             name="lastName"
                             placeholder="Doe"
                           />
-                          {touched.lastName && errors.lastName && (
-                            <div className="form-error-message">
-                              {errors.lastName}
-                            </div>
-                          )}
+                          {touched.lastName &&
+                            errors.lastName && (
+                              <div className="form-error-message">
+                                {errors.lastName}
+                              </div>
+                            )}
                         </div>
                       </div>
                       <div className="grid-col-1-1 grid-gap-3">
                         <div
                           className={
-                            touched.mobile && errors.mobile ? 'form-error' : ''
-                          }
-                        >
+                            touched.mobile && errors.mobile
+                              ? "form-error"
+                              : ""
+                          }>
                           <div className="mobile-head">
                             Mobile<i>*</i>
                           </div>
@@ -493,59 +527,89 @@ const Verification = () => {
                             className="green-txt"
                             as="select"
                             name="phoneCode"
-                            id=""
-                          >
-                            {constants.COUNTRIES_PHONE_CODES.map((country) => (
-                              <option value={country.code}>
-                                {country.code} - {country.name}
-                              </option>
-                            ))}
+                            id="">
+                            {constants.COUNTRIES_PHONE_CODES.map(
+                              (country) => (
+                                <option
+                                  value={country.code}>
+                                  {country.code} -{" "}
+                                  {country.name}
+                                </option>
+                              ),
+                            )}
                           </Field>
                           {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
                           <b className="green-txt phone-code-value">
-                            {' '}
-                            {values.phoneCode}{' '}
+                            {" "}
+                            {values.phoneCode}{" "}
                           </b>
-                          {touched.mobile && errors.mobile && (
-                            <div className="form-error-message form-error-message-adjust-up">
-                              {errors.mobile}
-                            </div>
-                          )}
+                          {touched.mobile &&
+                            errors.mobile && (
+                              <div className="form-error-message form-error-message-adjust-up">
+                                {errors.mobile}
+                              </div>
+                            )}
                         </div>
                         <div>
                           <div
                             className={
                               (touched.day && errors.day) ||
-                              (touched.month && errors.month) ||
+                              (touched.month &&
+                                errors.month) ||
                               (touched.year && errors.year)
-                                ? 'form-error'
-                                : ''
-                            }
-                          >
+                                ? "form-error"
+                                : ""
+                            }>
                             <div>
                               Date of birth<i>*</i>
                             </div>
-                            <div className="grid-col-1-2-1 grid-gap-3 dob">
+                            <div className="grid-col-1-2-1 grid-gap-1 dob">
                               <div>
                                 <Field
-                                  className="green-txt"
+                                  className="day-select green-txt"
+                                  as="select"
                                   name="day"
-                                  type="text"
-                                  placeholder="Day"
-                                />
+                                  placeholder="day"
+                                  value={
+                                    days[Number(values.day)]
+                                  }>
+                                  {days.map((day: any) => (
+                                    <option
+                                      key={days[day]}
+                                      value={day + 1}>
+                                      {day + 1}
+                                    </option>
+                                  ))}
+                                </Field>
                               </div>
                               <div>
                                 <Field
-                                  className="green-txt"
+                                  className="month-select green-txt"
+                                  as="select"
                                   name="month"
-                                  type="text"
-                                  placeholder="Month"
-                                />
+                                  placeholder="month"
+                                  value={
+                                    Object.values(months)[
+                                      Number(values.month) -
+                                        1
+                                    ]
+                                  }>
+                                  {Object.entries(
+                                    months,
+                                  ).map((month: any) => (
+                                    <option
+                                      value={Number(
+                                        month[1],
+                                      )}>
+                                      {month[0]}
+                                    </option>
+                                  ))}
+                                </Field>
                               </div>
                               <div>
                                 <Field
-                                  className="green-txt"
                                   name="year"
+                                  className="green-txt"
                                   type="text"
                                   placeholder="Year"
                                 />
@@ -556,9 +620,10 @@ const Verification = () => {
                       </div>
                       <div
                         className={
-                          touched.gender && errors.gender ? 'form-error' : ''
-                        }
-                      >
+                          touched.gender && errors.gender
+                            ? "form-error"
+                            : ""
+                        }>
                         <div>
                           Gender<i>*</i>
                         </div>
@@ -570,7 +635,9 @@ const Verification = () => {
                               name="gender"
                               value="male"
                             />
-                            <span className="radio-txt">Male</span>
+                            <span className="radio-txt">
+                              Male
+                            </span>
                           </span>
                           <span className="grid-col-0-1 radio-span">
                             <Field
@@ -579,7 +646,9 @@ const Verification = () => {
                               name="gender"
                               value="female"
                             />
-                            <span className="radio-txt">Female</span>
+                            <span className="radio-txt">
+                              Female
+                            </span>
                           </span>
                           <span className="grid-col-0-1 radio-span">
                             <Field
@@ -587,36 +656,39 @@ const Verification = () => {
                               type="radio"
                               name="gender"
                               value={
-                                values.gender !== 'male' &&
-                                values.gender !== 'female'
+                                values.gender !== "male" &&
+                                values.gender !== "female"
                                   ? values.gender
-                                  : ''
+                                  : ""
                               }
                             />
-                            <span className="radio-txt">Other</span>
+                            <span className="radio-txt">
+                              Other
+                            </span>
                           </span>
                           <span className="m-grid-col-span-1-4">
-                            {' '}
+                            {" "}
                             <Field
                               className="green-txt specify"
                               name="gender"
                               placeholder="Please specify"
-                            />{' '}
+                            />{" "}
                           </span>
                         </div>
-                        {touched.gender && errors.gender && (
-                          <div className="form-error-message form-error-message-adjust-up">
-                            {errors.gender}
-                          </div>
-                        )}
+                        {touched.gender &&
+                          errors.gender && (
+                            <div className="form-error-message form-error-message-adjust-up">
+                              {errors.gender}
+                            </div>
+                          )}
                       </div>
                       <div
                         className={
-                          touched.buildingNumber && errors.buildingNumber
-                            ? 'form-error'
-                            : ''
-                        }
-                      >
+                          touched.buildingNumber &&
+                          errors.buildingNumber
+                            ? "form-error"
+                            : ""
+                        }>
                         <div>
                           House/Building Number<i>*</i>
                         </div>
@@ -628,11 +700,12 @@ const Verification = () => {
                           min="0"
                           placeholder="Building No"
                         />
-                        {touched.buildingNumber && errors.buildingNumber && (
-                          <div className="form-error-message">
-                            {errors.buildingNumber}
-                          </div>
-                        )}
+                        {touched.buildingNumber &&
+                          errors.buildingNumber && (
+                            <div className="form-error-message">
+                              {errors.buildingNumber}
+                            </div>
+                          )}
                       </div>
                       <div className="building-name">
                         <div>Building Name</div>
@@ -645,12 +718,13 @@ const Verification = () => {
                       </div>
                       <div
                         className={
-                          (touched.buildingNumber && errors.buildingNumber) ||
-                          (touched.streetName && errors.streetName)
-                            ? 'form-error'
-                            : ''
-                        }
-                      >
+                          (touched.buildingNumber &&
+                            errors.buildingNumber) ||
+                          (touched.streetName &&
+                            errors.streetName)
+                            ? "form-error"
+                            : ""
+                        }>
                         <div>
                           Street Name<i>*</i>
                         </div>
@@ -660,33 +734,39 @@ const Verification = () => {
                           type="text"
                           placeholder="Street name"
                         />
-                        {touched.streetName && errors.streetName && (
-                          <div className="form-error-message">
-                            {errors.streetName}
-                          </div>
-                        )}
+                        {touched.streetName &&
+                          errors.streetName && (
+                            <div className="form-error-message">
+                              {errors.streetName}
+                            </div>
+                          )}
                       </div>
                       <div
                         className={`city-town-div ${
-                          touched.city && errors.city ? 'form-error' : ''
-                        }`}
-                      >
+                          touched.city && errors.city
+                            ? "form-error"
+                            : ""
+                        }`}>
                         <div>City / Town</div>
-                        <Field className="green-txt" name="city" type="text" />
+                        <Field
+                          className="green-txt"
+                          name="city"
+                          type="text"
+                        />
                         {touched.city && errors.city && (
                           <div className="form-error-message form-error-message-adjust-up">
                             {errors.city}
                           </div>
                         )}
                       </div>
-                      {selectedCountry === 'CA' && (
+                      {selectedCountry === "CA" && (
                         <div
                           className={`city-town-div ${
-                            touched.province && errors.province
-                              ? 'form-error'
-                              : ''
-                          }`}
-                        >
+                            touched.province &&
+                            errors.province
+                              ? "form-error"
+                              : ""
+                          }`}>
                           <div>
                             Province<i>*</i>
                           </div>
@@ -696,19 +776,21 @@ const Verification = () => {
                             type="text"
                             placeholder="Province"
                           />
-                          {touched.province && errors.province && (
-                            <div className="form-error-message form-error-message-adjust-up">
-                              {errors.province}
-                            </div>
-                          )}
+                          {touched.province &&
+                            errors.province && (
+                              <div className="form-error-message form-error-message-adjust-up">
+                                {errors.province}
+                              </div>
+                            )}
                         </div>
                       )}
-                      {selectedCountry !== 'CA' && (
+                      {selectedCountry !== "CA" && (
                         <div
                           className={`city-town-div ${
-                            touched.county && errors.county ? 'form-error' : ''
-                          }`}
-                        >
+                            touched.county && errors.county
+                              ? "form-error"
+                              : ""
+                          }`}>
                           <div>County</div>
                           <Field
                             className="green-txt"
@@ -716,20 +798,21 @@ const Verification = () => {
                             type="text"
                             placeholder="county"
                           />
-                          {touched.county && errors.county && (
-                            <div className="form-error-message form-error-message-adjust-up">
-                              {errors.county}
-                            </div>
-                          )}
+                          {touched.county &&
+                            errors.county && (
+                              <div className="form-error-message form-error-message-adjust-up">
+                                {errors.county}
+                              </div>
+                            )}
                         </div>
                       )}
                       <div
                         className={`state-input-div ${
-                          touched.location_country && errors.location_country
-                            ? 'form-error'
-                            : ''
-                        }`}
-                      >
+                          touched.location_country &&
+                          errors.location_country
+                            ? "form-error"
+                            : ""
+                        }`}>
                         <div>Location Country</div>
                         <Field
                           className="green-txt"
@@ -737,13 +820,18 @@ const Verification = () => {
                           as="select"
                           type="text"
                           onClick={(e: any) => {
-                            setSelectedCountry(e.target.value)
-                          }}
-                        >
+                            setSelectedCountry(
+                              e.target.value,
+                            );
+                          }}>
                           <option value=""></option>
-                          {Object.keys(countries).map((key) => (
-                            <option value={key}>{countries[key]}</option>
-                          ))}
+                          {Object.keys(countries).map(
+                            (key) => (
+                              <option value={key}>
+                                {countries[key]}
+                              </option>
+                            ),
+                          )}
                         </Field>
                         <img
                           src={`./assets/flags/${values.location_country}.png`}
@@ -758,11 +846,16 @@ const Verification = () => {
                       </div>
                       <div
                         className={
-                          touched.zip && errors.zip ? 'form-error' : ''
-                        }
-                      >
+                          touched.zip && errors.zip
+                            ? "form-error"
+                            : ""
+                        }>
                         <div>Postal / zip code</div>
-                        <Field className="green-txt" name="zip" type="text" />
+                        <Field
+                          className="green-txt"
+                          name="zip"
+                          type="text"
+                        />
                         {touched.zip && errors.zip && (
                           <div className="form-error-message form-error-message-adjust-up">
                             {errors.zip}
@@ -776,40 +869,51 @@ const Verification = () => {
                   </div>
                 </div>
                 <div className="btns">
-                  <span onClick={() => history.push('/get-quote')}>Back</span>{' '}
-                  <button type="submit">Continue</button>{' '}
+                  <span
+                    onClick={() =>
+                      history.push("/get-quote")
+                    }>
+                    Back
+                  </span>{" "}
+                  <button type="submit">Continue</button>{" "}
                 </div>
               </Form>
             )}
           </Formik>
-        ) : method === constants.VERIFICATION_TYPE_DOCUMENT ? (
+        ) : method ===
+          constants.VERIFICATION_TYPE_DOCUMENT ? (
           <>
             <div id="trulioo-embedid"></div>
             {showContinueButton && (
               <div className="btns p-relative">
                 <span
                   onClick={() =>
-                    refreshUserDetails((user: any) => history.push(paths.GET_QUOTE))
-                  }
-                >
+                    refreshUserDetails((user: any) =>
+                      history.push(paths.GET_QUOTE),
+                    )
+                  }>
                   Back
-                </span>{' '}
+                </span>{" "}
                 <button
                   onClick={() =>
-                    refreshUserDetails((user: any) => history.push(paths.RECIPIENT))
-                  }
-                >
+                    refreshUserDetails((user: any) =>
+                      history.push(paths.RECIPIENT),
+                    )
+                  }>
                   Continue
-                </button>{' '}
+                </button>{" "}
               </div>
             )}
           </>
         ) : (
-          <VerificationMethod setMethod={setMethod} method={method} />
+          <VerificationMethod
+            setMethod={setMethod}
+            method={method}
+          />
         )}
       </div>
     </Body>
-  )
-}
+  );
+};
 
-export default Verification
+export default Verification;

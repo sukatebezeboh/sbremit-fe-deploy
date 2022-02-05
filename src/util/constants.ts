@@ -998,3 +998,20 @@ export const resources = {
     DICE_BEAR_RECIPIENT: "https://avatars.dicebear.com/api/initials/",
     TRUST_PAYMENT_URL: 'https://payments.securetrading.net/process/payments/choice'
 }
+
+export const days = Array.from(Array(31).keys())
+
+export const months: any = {
+    January: 1,
+    February: 2,
+    March: 3,
+    April: 4,
+    May: 5,
+    June: 6,
+    July: 7,
+    August: 8,
+    September: 9,
+    October: 10,
+    November: 11,
+    December: 12,
+}

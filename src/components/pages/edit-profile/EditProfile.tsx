@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { changePasswordAction, editProfileAction } from '../../../redux/actions/actions';
-import { constants } from '../../../util/constants';
+import { constants, days, months } from '../../../util/constants';
 import { ChangePasswordValidator, EditProfileValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
 import FormButton from '../../modules/form-button/FormButton';
@@ -16,7 +16,7 @@ const Body = style();
 
 const EditProfile = () => {
 
-    const countries: any = useSelector((state: any) => state.appValues.countries)    
+    const countries: any = useSelector((state: any) => state.appValues.countries)
 
     const [pwNewIcon, setPwNewIcon] = useState('show');
     const [newPasswordType, setNewPasswordType] = useState('password');
@@ -49,7 +49,6 @@ const EditProfile = () => {
         location_country: "gb",
         ...user?.profile,
     }
-
 
     return (
         <Body>
@@ -90,7 +89,7 @@ const EditProfile = () => {
                                                     <div className={(touched.mobile && errors.mobile) ? 'form-error m-grid-span-1-3': 'm-grid-span-1-3'}>
                                                         <div className="mobile-head">Mobile<i>*</i></div>
                                                         <Field name="mobile" type="text" className="phone-no" placeholder="e.g 07967885952"/>
-                                                        <Field as="select" name="phoneCode" id="" >
+                                                        <Field as="select" className="phone-country-select" name="phoneCode" id="" >
                                                             {
                                                                 constants.COUNTRIES_PHONE_CODES.map((country) => (
                                                                     <option value={country.code}>{country.code} - {country.name}</option>
@@ -104,9 +103,21 @@ const EditProfile = () => {
 
                                                     <div className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error m-grid-span-1-3': 'm-grid-span-1-3'}>
                                                         <div>Date of birth<i>*</i></div>
-                                                        <div className="grid-col-1-2-1 grid-gap-3 dob">
-                                                            <div><Field name="day" type="text" placeholder="Day"/></div>
-                                                            <div><Field name="month" type="text" placeholder="Month"/></div>
+                                                        <div className="grid-col-1-2-1 grid-gap-1 dob">
+                                                            <div>
+                                                                <Field className="day-select" as="select" name="day" placeholder="day" value={days[Number(values.day)]}>
+                                                                    {days.map((day: any) => (
+                                                                        <option key={days[day]} value={day + 1}>{day + 1}</option>
+                                                                    ))}
+                                                                </Field>
+                                                            </div>
+                                                            <div>
+                                                                <Field className="month-select" as="select" name="month" placeholder="month" value={Object.values(months)[Number(values.month) - 1]}>
+                                                                    {Object.entries(months).map((month: any) => (
+                                                                        <option value={Number(month[1])}>{month[0]}</option>
+                                                                    ))}
+                                                                </Field>
+                                                            </div>
                                                             <div><Field name="year" type="text" placeholder="Year"/></div>
                                                         </div>
                                                     </div>
