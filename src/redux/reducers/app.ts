@@ -1,6 +1,6 @@
 import { IAction } from ".";
 import { AppService } from "../../services/AppService";
-import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR, ADD_TO_STACKED_TOASTS, REMOVE_FROM_STACKED_TOASTS } from "../actionTypes";
+import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR, ADD_TO_STACKED_TOASTS, REMOVE_FROM_STACKED_TOASTS, CONFIRM } from "../actionTypes";
 
 const initialSubmittingState = "";
 const initialToastState = {
@@ -19,7 +19,14 @@ const initialAppValues = {
 }
 const initialLoadingState = false;
 
-const initialCreatingAccountState = null
+const initialCreatingAccountState = null;
+
+const initialConfirmDialogState = {
+  message: "Are you sure?",
+  isPositive: undefined,
+  callback: () => {},
+  open: false
+}
 
 export const submitting = (state: any = initialSubmittingState, {type, payload}: IAction) => {
     switch (type) {
@@ -110,4 +117,14 @@ export const notifications = (state: any = [], {type, payload}: IAction) => {
     default:
       return state;
   }
+}
+
+export const confirmDialog = (state: any = initialConfirmDialogState, {type, payload}: IAction) => {
+  switch (type) {
+      case CONFIRM: {
+        return payload
+      }
+      default:
+        return state;
+    }
 }

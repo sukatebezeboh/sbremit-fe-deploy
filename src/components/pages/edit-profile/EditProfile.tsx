@@ -1,9 +1,10 @@
+import { themeNames } from 'components/modules/toast-factory/themes';
 import { Field, Form, Formik } from 'formik';
 import React, {useState} from 'react'
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { changePasswordAction, editProfileAction } from '../../../redux/actions/actions';
+import { changePasswordAction, editProfileAction, toastAction } from '../../../redux/actions/actions';
 import { constants, days, months } from '../../../util/constants';
 import { ChangePasswordValidator, EditProfileValidator } from '../../../util/form-validators';
 import { paths } from '../../../util/paths';
@@ -39,6 +40,18 @@ const EditProfile = () => {
         })
         setPwOldIcon(prevValue=>{
             return prevValue === 'show' ? 'hide' : 'show';
+        })
+    }
+
+    const handleDOBClick = () => {
+        // alert()
+        toastAction({
+            show: true,
+            type: 'warning',
+            timeout: 10000,
+            title: "Action disallowed",
+            defaultThemeName: themeNames.CLEAR_MAMBA,
+            message: "You can not change your DOB. Please contact the Admin to make this change."
         })
     }
 
@@ -101,24 +114,24 @@ const EditProfile = () => {
                                                         {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
                                                     </div>
 
-                                                    <div className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error m-grid-span-1-3': 'm-grid-span-1-3'}>
+                                                    <div onClick={handleDOBClick} className={((touched.day && errors.day) || (touched.month && errors.month) || (touched.year && errors.year)) ? 'form-error m-grid-span-1-3': 'm-grid-span-1-3'}>
                                                         <div>Date of birth<i>*</i></div>
                                                         <div className="grid-col-1-2-1 grid-gap-1 dob">
                                                             <div>
-                                                                <Field className="day-select" as="select" name="day" placeholder="day" value={days[Number(values.day)]}>
+                                                                <Field onClick={handleDOBClick} disabled className="day-select" as="select" name="day" placeholder="day" value={days[Number(values.day)]}>
                                                                     {days.map((day: any) => (
                                                                         <option key={days[day]} value={day + 1}>{day + 1}</option>
                                                                     ))}
                                                                 </Field>
                                                             </div>
                                                             <div>
-                                                                <Field className="month-select" as="select" name="month" placeholder="month" value={Object.values(months)[Number(values.month) - 1]}>
+                                                                <Field onClick={handleDOBClick} disabled className="month-select" as="select" name="month" placeholder="month" value={Object.values(months)[Number(values.month) - 1]}>
                                                                     {Object.entries(months).map((month: any) => (
                                                                         <option value={Number(month[1])}>{month[0]}</option>
                                                                     ))}
                                                                 </Field>
                                                             </div>
-                                                            <div><Field name="year" type="text" placeholder="Year"/></div>
+                                                            <div><Field onClick={handleDOBClick} disabled name="year" type="text" placeholder="Year"/></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -188,7 +201,6 @@ const EditProfile = () => {
                                                     <Field name="zip" type="text" />
                                                     {(touched.zip && errors.zip) && <div className="form-error-message form-error-message-adjust-up">{errors.zip}</div>}
                                                 </div>
-
 
                                             </div>
 

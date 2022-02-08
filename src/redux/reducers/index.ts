@@ -9,6 +9,7 @@ import {
   notifications,
   createAccountSuccess,
   createAccountError,
+  confirmDialog
 } from './app'
 import { recipients } from './recipients'
 import { transfer } from './transfer'
@@ -30,4 +31,5 @@ export default combineReducers({
   loading,
   transfer,
   notifications,
+  confirmDialog
 })

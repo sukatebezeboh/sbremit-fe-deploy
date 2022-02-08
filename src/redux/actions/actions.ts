@@ -4,6 +4,7 @@ import {
     ADD_TO_STACKED_TOASTS,
   APP_VALUES,
   AUTH,
+  CONFIRM,
   CREATE_ACCOUNT_ERROR,
   CREATE_ACCOUNT_SUCCESS,
   LOADING,
@@ -146,6 +147,36 @@ export const signInAction = (data: any) => {
     .catch((err) => {})
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: '' })
+    })
+}
+
+export const confirmUserPassword = (password: string, callback: Function) => {
+  store.dispatch({ type: LOADING, payload: true })
+  const user = store.getState().auth.user
+  const username = user.username;
+  axios
+    .post(
+      config.API_HOST + endpoints.SESSION,
+      { username, password, skipSession: true },
+      {
+        headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+      },
+    )
+    .then((res: any) => {
+      if (res.data.status === '200') {
+        callback();
+      } else {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: `${res.data.error.message}`,
+        })
+      }
+    })
+    .catch((err) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
     })
 }
 
@@ -904,11 +935,34 @@ export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
     })
 }
 
-export const editProfileAction = (values: any, callback?: Function) => {
-  store.dispatch({ type: LOADING, payload: true })
-  const userId = store.getState().auth.user?.id
 
-  http
+export const confirmDialog = (data: {message: string, isPositive?: boolean, open: boolean, callback: Function, field?:any}) => {
+  store.dispatch({type: CONFIRM, payload: {
+      message: data.message,
+      isPositive: data.isPositive ?? false,
+      open: data.open,
+      field: data.field,
+      callback: data.callback
+  }})
+}
+
+export const editProfileAction = (values: any, callback?: Function) => {
+  // store.dispatch({ type: LOADING, payload: true })
+  const userId = store.getState().auth.user?.id
+  confirmDialog({
+      message: `Please, input your account password to make this change`,
+      isPositive: undefined,
+      open: true,
+      field: {
+          title: 'Password:',
+          placeholder: 'Your account password here...',
+          required: true
+      },
+      callback: (fieldValue: string) => confirmUserPassword(fieldValue, executeProfileEdit)
+  })
+
+  const executeProfileEdit = () => {
+    http
     .put(parseEndpointParameters(endpoints.USER, userId), {
       profile: { ...values },
     })
@@ -936,6 +990,8 @@ export const editProfileAction = (values: any, callback?: Function) => {
         })
       }
     })
+  }
+
 }
 
 export const userVerificationAction = (values: any, callback: Function, skipVerification = false) => {

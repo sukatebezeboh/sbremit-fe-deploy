@@ -15,7 +15,7 @@ interface IPaymentRedirect {
 }
 
 const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
-    // const stdefaultprofile = 'st_paymentcardonly'
+    const stdefaultprofile = 'st_paymentcardonly'
     const orderReference = transactionId;
     const password = process.env.REACT_APP_TRUST_SITE_PASSWORD
     const siteSecurityTimestamp = getDateTimeNowInYYYY_MM_DD__HH_MM_SS();
@@ -46,7 +46,7 @@ const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, tran
     stringToHash += ruleIdentifier8 ?? ''
     stringToHash += ruleIdentifier9 ?? ''
     stringToHash += ruleIdentifier10 ?? ''
-    // stringToHash += stdefaultprofile
+    stringToHash += stdefaultprofile
     stringToHash += successfulRedirectURL
     stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? ''
     stringToHash += siteSecurityTimestamp ?? ''
@@ -58,7 +58,7 @@ const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, tran
             <form method="POST" action={resources.TRUST_PAYMENT_URL}  >
                 <input type="hidden" name="sitereference" value={settings.TRUST_PAYMENT_SITE_REFERENCE} />
                 <input type="hidden" name="stprofile" value={stprofile} />
-                {/* <input type="hidden" name="stdefaultprofile" value={stdefaultprofile} /> */}
+                <input type="hidden" name="stdefaultprofile" value={stdefaultprofile} />
                 <input type="hidden" name="currencyiso3a" value={currencyiso3a} />
                 <input type="hidden" name="mainamount" value={mainamount} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier1} />

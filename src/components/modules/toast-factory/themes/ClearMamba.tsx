@@ -64,10 +64,10 @@ const Theme = styled.div`
 
     .container-warning {
         .title {
-            color: #FCD20F;
+            color: #bb7a00;
         }
         .message {
-            color: #FCD20F;
+            color: #bb7a00;
         }
     }
 
@@ -108,8 +108,8 @@ const ClearMamba: React.FC = ({config}: any) => {
     const icons: any = {
         success: 'checked.png',
         error: 'cancel.svg',
-        warning: 'warning.svg',
-        info: 'info.svg'
+        warning: 'warning.png',
+        info: 'info.png'
     }
   return <Theme>
             <div className={`container container-${config?.type} ${config?.show ? 'animate-in': '' } ${((config?.show && config?.readyToClose) ? 'animate-out': '')}`}>
