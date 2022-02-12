@@ -1043,15 +1043,17 @@ export const pollServerForVerificationStatus = (seconds: number) => {
                     message: "Your ID verification has been completed successfully",
                     close: () => {
                         unstackNewToast({name: "verification-success"})
-                        http.put(parseEndpointParameters(endpoints.USER), {
+                        http.put(parseEndpointParameters(endpoints.TOAST_NOTIF), {
                           displayVerificationToast: false
                         })
                         .then((response: any) => {
-                          CookieService.put('user', JSON.stringify(response.data.data))
-                          store.dispatch({
-                            type: AUTH,
-                            payload: { ...store.getState().auth, user: response.data.data },
-                          })
+                          if (response?.data?.data) {
+                              CookieService.put('user', JSON.stringify(response.data.data))
+                              store.dispatch({
+                                type: AUTH,
+                                payload: { ...store.getState().auth, user: response.data.data },
+                              })
+                          }
                         })
                         .catch()
                     },
@@ -1080,7 +1082,7 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
             extraBtnHandler: () => history.push(paths.VERIFICATION),
             extraBtnClass: 'verif-toast-failed-extra-btn-class'
         })        
-    } else if (user?.meta?.verified == 1 && user?.meta?.displayVerificationToast) {
+    } else if (user?.meta?.verified == 1 && user?.settings?.displayVerificationToast) {
         stackNewToast({
           name: "verification-success",
           show: true,
@@ -1091,15 +1093,17 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
           message: "Your ID verification has been completed successfully",
           close: () => {
               unstackNewToast({name: "verification-success"})
-              http.put(parseEndpointParameters(endpoints.USER), {
+              http.put(parseEndpointParameters(endpoints.TOAST_NOTIF), {
                 displayVerificationToast: false
               })
               .then((response: any) => {
-                CookieService.put('user', JSON.stringify(response.data.data))
-                store.dispatch({
-                  type: AUTH,
-                  payload: { ...store.getState().auth, user: response.data.data },
-                })
+                if (response?.data?.data) {
+                    CookieService.put('user', JSON.stringify(response.data.data))
+                    store.dispatch({
+                      type: AUTH,
+                      payload: { ...store.getState().auth, user: response.data.data },
+                    })
+                }
               })
               .catch()
           },
