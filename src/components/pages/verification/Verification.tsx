@@ -384,6 +384,11 @@ const Verification = () => {
     location_country: user?.profile?.location_country,
     ...user?.profile,
   };
+
+  useEffect(() => {
+    refreshUserDetails()
+  }, [])
+
   useEffect(() => {
     if (method !== constants.VERIFICATION_TYPE_DOCUMENT)
       return;

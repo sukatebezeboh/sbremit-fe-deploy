@@ -14,7 +14,7 @@ interface IPaymentRedirect {
     transferId: string
 }
 
-const PaymentRedirect = ({stprofile = 'sbremit', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
+const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
     const stdefaultprofile = 'st_paymentcardonly'
     const orderReference = transactionId;
     const password = process.env.REACT_APP_TRUST_SITE_PASSWORD
