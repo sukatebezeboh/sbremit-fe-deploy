@@ -398,7 +398,7 @@ function NewRecipientModal(props: any) {
                                 state: values.state,
                                 reason: values.reason,
                                 bankName: values.bankName,
-                                accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode}-${values.bankCode}-${values.branchCode}-${values.accountNumber}-${values.key}` : values.recipientAccountNumber}`,
+                                accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
                             }
                             dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                         }}>
