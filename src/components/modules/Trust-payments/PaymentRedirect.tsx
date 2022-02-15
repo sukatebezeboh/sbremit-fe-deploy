@@ -41,7 +41,7 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     stringToHash += ruleIdentifier3 ?? ''
     stringToHash += ruleIdentifier4 ?? ''
     stringToHash += ruleIdentifier5 ?? ''
-    stringToHash += ruleIdentifier6 ?? ''
+    // stringToHash += ruleIdentifier6 ?? ''
     stringToHash += ruleIdentifier7 ?? ''
     stringToHash += ruleIdentifier8 ?? ''
     stringToHash += ruleIdentifier9 ?? ''
@@ -66,7 +66,7 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier3} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier4} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier5} />
-                <input type="hidden" name="ruleidentifier" value={ruleIdentifier6} />
+                {/* <input type="hidden" name="ruleidentifier" value={ruleIdentifier6} /> */}
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier7} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier8} />
                 <input type="hidden" name="ruleidentifier" value={ruleIdentifier9} />

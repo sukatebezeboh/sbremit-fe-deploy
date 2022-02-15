@@ -1,0 +1,32 @@
+{{st.block.doctype}}
+<html>
+  <head>
+    {{st.block.metatags}}
+    {{st.block.defaultcss}}
+    {{st.block.profilecss}}
+    {{st.block.defaultjs}}
+    {{st.block.profilejs}}
+
+    <link rel="stylesheet" href="{{stresource.style.css}}">
+  </head>
+  <body class="{{st.bodyclass.value}} st-inputs-style st-blocks-style">
+    {{st.block.header}}
+    <div class="st-content">
+      {{st.block.messagesdiv}}
+      <h2>Order details</h2>
+      {{st.block.orderdetailsdiv}}
+      <h2>Transaction response</h2>
+      {{st.block.transactionresponsediv}}
+      <h2>Billing details</h2>
+      {{st.block.billingresponsediv}}
+      <h2>Delivery details</h2>
+      {{st.block.deliveryresponsediv}}
+    </div>
+    {{st.block.footer}}
+    <script>
+        setTimeout(() => {
+            window.location.href = "{{st.successfulurlredirect.value}}"
+        }, 10000)
+    </script>
+  </body>
+</html>
