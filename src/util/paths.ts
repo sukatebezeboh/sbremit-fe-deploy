@@ -9,6 +9,7 @@ export const paths = {
     PASSWORD_RESET_EMAIL : "/email/password-reset",
     RESET_PASSWORD: "/reset-password",
     DASHBOARD: "/dashboard",
+    MARKETING_PERMISSION: "/marketing-permission",
     PROFILE: "/profile",
     EDIT_PROFILE: "/edit-profile",
     CHANGE_PASSWORD: "/change-password",
