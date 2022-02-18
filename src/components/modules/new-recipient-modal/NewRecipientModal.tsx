@@ -26,7 +26,7 @@ const Div = styled.div`
     .modal {
         box-shadow: 0px 10px 12px #CCCCCC80;
         border-radius: 15px;
-        width: 87%;
+        width: 70%;
         min-height: 661px;
         background: #fff;
         margin: 0px auto;
@@ -34,7 +34,7 @@ const Div = styled.div`
         position: fixed;
         z-index: 2;
         top: 50%;
-        left: 7%;
+        left: 14%;
         transform: translateY(-50%);
         .transfer-fields {
             select {
@@ -42,7 +42,7 @@ const Div = styled.div`
                 margin-right: 5px;
             }
             .branch-code, .bank-code{
-                width: 20%; !important;
+                width: 17%; !important;
                 margin-right: 5px;
             }
             .key {
@@ -62,16 +62,17 @@ const Div = styled.div`
                 list-style: none;
                 li {
                     cursor: pointer;
-                    color: #A3A3A3;
-                    font-size: 13px;
+                    color: #818080;
+                    font-size: 16px;
+                    font-weight: 600;
                     margin-left: -40px;
                     :hover {
-                        border-bottom: 1px solid #a3a3a3a6;
+                        border-bottom: 1px solid #818080;
                     }
                 }
                 .underline {
-                    border-bottom: 1px solid #7FBCAD;
-                    color: #7FBCAD;
+                    border-bottom: 1px solid #4c8778;
+                    color: #4c8778;
                 }
                 .microfinance {
                     margin-left: 20px !important;
@@ -341,7 +342,7 @@ function NewRecipientModal(props: any) {
         branchCode: "",
         bankCode: "",
         key: "",
-        countryCode: "CM12",
+        countryCode: "CM21",
         accountBranch: "",
         recipientAccountNumber: ""
     }
@@ -460,21 +461,21 @@ function NewRecipientModal(props: any) {
                                             <React.Fragment>
                                                 {modeTransfer === "bankTransfer" && (
                                                 <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                    <div> Beneficiary Bank Name</div>
+                                                    <div> Beneficiary Bank Name<i>*</i></div>
                                                     <Field type="text" name="bankName" placeholder="" />
                                                 </div>
                                                 )}
                                                 {modeTransfer === "microfinanceTransfer" && (
                                                     <>
                                                         <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                            <div> Micro Finance Name</div>
+                                                            <div> Micro Finance Name<i>*</i></div>
                                                             <Field type="text" name="bankName" placeholder="" />
                                                         </div>
                                                     </>
                                                 )}
                                                 {modeTransfer === "bankTransfer" && (
                                                 <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
-                                                    <div>Recipient Account Number <span className="red-txt">{errors.accountNumber || errors.bankCode || errors.branchCode ||errors.key}</span> </div>
+                                                    <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.accountNumber || errors.bankCode || errors.branchCode ||errors.key}</span> </div>
                                                     <Field as="select" name="countryCode">
                                                         <option value="CM12">CM12</option>
                                                     </Field>
@@ -487,11 +488,11 @@ function NewRecipientModal(props: any) {
                                                 {modeTransfer === "microfinanceTransfer" && (
                                                     <>
                                                         <div>
-                                                        <div>Account Number</div>
+                                                        <div>Account Number<i>*</i></div>
                                                         <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
                                                         </div>
                                                         <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                            <div> Account Branch</div>
+                                                            <div> Account Branch<i>*</i></div>
                                                             <Field type="text" name="accountBranch" placeholder="" />
                                                         </div>
                                                     </>
