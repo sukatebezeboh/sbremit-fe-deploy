@@ -416,7 +416,7 @@ const Verification = () => {
     useEffect(() => {
       setSelectedCountry(initialValues.location_country)
     }, [initialValues.location_country])
-  
+
     const handleIDVerificationServerResponse = (isPrecursor = false) => {
         if (isPrecursor) return setMethod(constants.VERIFICATION_TYPE_DOCUMENT)
         pollServerForVerificationStatus(2)
@@ -701,8 +701,7 @@ const Verification = () => {
                         <Field
                           className="green-txt building-number"
                           name="buildingNumber"
-                          type="number"
-                          min="0"
+                          type="text"
                           placeholder="Building No"
                         />
                         {touched.buildingNumber &&
