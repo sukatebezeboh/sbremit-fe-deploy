@@ -29,6 +29,7 @@ const Div = styled.div`
         }
     }
     .contact {
+        display: none;
         position: fixed;
         bottom: 0;
         padding: 40px 20px 40px 40px ;
