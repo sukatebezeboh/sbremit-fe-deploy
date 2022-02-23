@@ -47,10 +47,6 @@ export const constants = {
 
     COUNTRIES_PHONE_CODES: [
         {
-          "code": "+7 840",
-          "name": "Abkhazia"
-        },
-        {
           "code": "+93",
           "name": "Afghanistan"
         },
