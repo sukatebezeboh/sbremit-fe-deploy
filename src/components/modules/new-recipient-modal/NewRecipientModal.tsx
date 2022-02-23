@@ -477,7 +477,7 @@ function NewRecipientModal(props: any) {
                                                 <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
                                                     <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.accountNumber || errors.bankCode || errors.branchCode ||errors.key}</span> </div>
                                                     <Field as="select" name="countryCode">
-                                                        <option value="CM12">CM12</option>
+                                                        <option value="CM12">CM21</option>
                                                     </Field>
                                                     <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
                                                     <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
