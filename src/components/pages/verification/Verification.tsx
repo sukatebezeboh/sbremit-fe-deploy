@@ -578,6 +578,7 @@ const Verification = () => {
                                   value={
                                     days[Number(values.day)]
                                   }>
+                                  <option value="">--</option>
                                   {days.map((day: any) => (
                                     <option
                                       key={days[day]}
@@ -599,6 +600,7 @@ const Verification = () => {
                                         1
                                     ]
                                   }>
+                                  <option value="">---</option>
                                   {Object.entries(
                                     months,
                                   ).map((month: any) => (
