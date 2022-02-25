@@ -126,7 +126,17 @@ const SignUp = () => {
           <Formik
             initialValues={{ ...initialValues }}
             validationSchema={SignUpValidator}
-            onSubmit={(values) => handleSubmit(values)}
+            onSubmit={(values) => {
+              const {checked, ...newValue}  = values
+
+              const newValues = {
+                ...newValue,
+                settings: {
+                  marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+                }
+              }
+
+              handleSubmit(newValues)}}
           >
             {({ errors, touched, values }: any) => (
               <Form className="form">
@@ -241,6 +251,13 @@ const SignUp = () => {
                         {errors.password}
                       </div>
                     )}
+                  </div>
+
+                  <div className="marketing-permission-box">
+                    <Field type="checkbox" name="checked" value="checked" />
+                    <label>
+                      By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
+                    </label>
                   </div>
 
                   <button

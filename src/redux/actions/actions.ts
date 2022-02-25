@@ -994,6 +994,53 @@ export const editProfileAction = (values: any, callback?: Function) => {
 
 }
 
+export const editUserSettingsAction = (values: any, callback?: Function) => {
+  const userId = store.getState().auth.user?.id
+  confirmDialog({
+      message: `Please, input your account password to make this change`,
+      isPositive: undefined,
+      open: true,
+      field: {
+          title: 'Password:',
+          placeholder: 'Your account password here...',
+          required: true
+      },
+      callback: (fieldValue: string) => confirmUserPassword(fieldValue, executeSettingsEdit)
+  })
+
+  const executeSettingsEdit = () => {
+    http
+    .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), {
+      settings: { ...values },
+    })
+    .then((res) => {
+      store.dispatch({ type: LOADING, payload: false })
+      if (res.data.status === '200') {
+        toastAction({
+          show: true,
+          type: 'success',
+          timeout: 10000,
+          message: 'Profile updated',
+        })
+        CookieService.put('user', JSON.stringify(res.data.data))
+        store.dispatch({
+          type: AUTH,
+          payload: { ...store.getState().auth, user: res.data.data },
+        })
+        callback?.()
+      } else {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: 'Could not update profile',
+        })
+      }
+    })
+  }
+
+}
+
 export const userVerificationAction = (values: any, callback: Function, skipVerification = false) => {
     store.dispatch({type: LOADING, payload: true})
     const userId = store.getState().auth.user?.id;
@@ -1081,7 +1128,7 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
             extraBtnText: "Verify now",
             extraBtnHandler: () => history.push(paths.VERIFICATION),
             extraBtnClass: 'verif-toast-failed-extra-btn-class'
-        })        
+        })
     } else if (user?.meta?.verified == 1 && user?.settings?.displayVerificationToast) {
         stackNewToast({
           name: "verification-success",
@@ -1296,7 +1343,7 @@ export const initiateTruelayerPayment = (
     })
     .then((res) => {
         const result = res?.data?.result
-        if ( result ) {                
+        if ( result ) {
             window.location.replace(result?.auth_flow?.uri);
         }
     })

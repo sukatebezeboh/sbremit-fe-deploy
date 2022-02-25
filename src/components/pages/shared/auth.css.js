@@ -37,7 +37,7 @@ const style = (page) => styled.div`
             .inputs{
                 margin-top: 50px;
                 margin: 30px auto;
-                width: 40%;
+                width: 60%;
                 div.email{
                     margin-bottom: 25px;
                 }
@@ -58,7 +58,7 @@ const style = (page) => styled.div`
                     color: #A3A3A3;
                     padding: 20px;
                     ::placeholder{
-                        color: #A3A3A3; 
+                        color: #A3A3A3;
                     }
                 }
                 select{
@@ -139,13 +139,35 @@ const style = (page) => styled.div`
                 }
             }
         }
-        
+
     }
 
-    @media only screen and (max-width: 1140px) { 
+    .marketing-permission-box {
+        input[type="checkbox"] {
+            width: auto !important;
+            height: auto !important;
+            -webkit-transform: scale(1.5);
+            outline: none;
+        }
+        label {
+            margin-left: 10px;
+        }
+    }
+
+    @media only screen and (max-width: 1140px) {
         grid-template-columns: 1fr 2fr;
     }
-    @media only screen and (max-width: 780px) { 
+    @media only screen and (max-width: 780px) {
+        .marketing-permission-box {
+            input[type="checkbox"] {
+                width: auto !important;
+                height: auto !important;
+                -webkit-transform: scale(1.5);
+            }
+            label {
+                margin-left: 10px;
+            }
+        }
         grid-template-columns: 1fr;
         >div:first-child{
             display: none;
@@ -175,7 +197,7 @@ const style = (page) => styled.div`
                         padding: 10px 20px;
                     }
                     input, select{
-                        height: 30px!important;
+                        height: 30px;
                         font: normal normal normal 14px/18px Montserrat;
                         border: 1px solid #7FBCAD;
                     }
@@ -197,7 +219,7 @@ const style = (page) => styled.div`
                             top: -25px;
                             left: 90%;
                         }
-                        
+
                     }
                     div.email{
                          margin-bottom: 20px;
@@ -217,7 +239,7 @@ const style = (page) => styled.div`
                         font: normal normal 600 13px/20px Montserrat;
                     }
                 }
-                
+
             }
 
         }
