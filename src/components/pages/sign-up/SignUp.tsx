@@ -9,6 +9,7 @@ import { signUpAction } from '../../../redux/actions/actions'
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
 import { SIGN_UP } from '../../../redux/actionTypes'
 import { paths } from '../../../util/paths'
+import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
 
@@ -35,6 +36,7 @@ const SignUp = () => {
     (state: any) => state.createAccountError,
   )
   const countries: any = useSelector((state: any) => state.appValues.countries)
+
 
   useEffect(() => {
     setOpenModal(false)
@@ -194,7 +196,7 @@ const SignUp = () => {
                       Country of Residence<i>*</i>
                     </div>
                     <Field as="select" name="location_country" id="">
-                      {Object.keys(countries).map((key) => (
+                      {Object.keys(constants.SIGNUP_COUNTRIES).map((key) => (
                         <option value={key}>{countries[key]}</option>
                       ))}
                     </Field>
