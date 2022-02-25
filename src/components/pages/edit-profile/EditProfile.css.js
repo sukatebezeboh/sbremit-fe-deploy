@@ -150,7 +150,7 @@ const style = () => styled.div`
                         padding: 0 !important;
                     }
                     .phone-country-select {
-                        background-position-x: 26% !important;
+                        background-position-x: 26%;
                         background-position-y: 12px;
                     }
                     div.mobile-head {
@@ -302,6 +302,12 @@ const style = () => styled.div`
     background: #FFFFFF;
     padding: 1px 0px;
     min-height: 100vh;
+    input.phone-no {
+        margin-left: 21% !important;
+    }
+    .phone-country-select {
+        background-position-x: 16% !important;
+    }
     .box{
         box-shadow: none;
         grid-template-columns: 1fr;
