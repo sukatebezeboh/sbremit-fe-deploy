@@ -566,7 +566,11 @@ const Verification = () => {
                                 : ""
                             }>
                             <div>
-                              Date of birth<i>*</i>
+                              Date of birth<i>* &nbsp; &nbsp; &nbsp; { (
+                              <span className="form-error-message form-error-message-adjust-up ">
+                                {errors.day || errors.month || errors.year}
+                              </span>
+                            )} </i>
                             </div>
                             <div className="grid-col-1-2-1 grid-gap-1 dob">
                               <div>
@@ -578,6 +582,7 @@ const Verification = () => {
                                   value={
                                     days[Number(values.day)]
                                   }>
+                                  <option value="">  -- </option>
                                   {days.map((day: any) => (
                                     <option
                                       key={days[day]}
@@ -599,6 +604,7 @@ const Verification = () => {
                                         1
                                     ]
                                   }>
+                                  <option value="">  --- </option>
                                   {Object.entries(
                                     months,
                                   ).map((month: any) => (
