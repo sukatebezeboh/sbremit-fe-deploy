@@ -5,6 +5,7 @@ const endpoints = {
     VALUES: '/values',
     VALUE: '/value',
     USER: '/user/$_1',
+    USER_SETTINGS: '/user/settings',
     PASSWORD_REQUEST: '/user/password/request',
     PASSWORD_RESET: '/user/password/reset',
     PASSWORD_CHANGE: '/user/password/change',

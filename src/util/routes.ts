@@ -26,6 +26,7 @@ import Contact from '../components/content-pages/contact/Contact';
 import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
 import NotFound from '../components/pages/not-found/NotFound';
 import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
+import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
 
 
 export interface IRoute {
@@ -107,55 +108,60 @@ export const Routing: IRoute[] = [
         component: ConfirmAccount,
         protected: false,
     },
-    { 
-        path: paths.PASSWORD_RESET_EMAIL, 
-        component: PasswordReset, 
-        protected: false 
+    {
+        path: paths.PASSWORD_RESET_EMAIL,
+        component: PasswordReset,
+        protected: false
     },
-    { 
-        path: paths.RESET_PASSWORD, 
-        component: ResetPassword, 
-        protected: false 
+    {
+        path: paths.RESET_PASSWORD,
+        component: ResetPassword,
+        protected: false
     },
-    { 
-        path: paths.DASHBOARD, 
-        component: Dashboard, 
-        protected: true 
+    {
+        path: paths.DASHBOARD,
+        component: Dashboard,
+        protected: true
     },
-    { 
-        path: paths.PROFILE, 
+    {
+        path: paths.MARKETING_PERMISSION,
+        component: marketingPermission,
+        protected: true
+    },
+    {
+        path: paths.PROFILE,
         component: UserProfile,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.EDIT_PROFILE, 
+    {
+        path: paths.EDIT_PROFILE,
         component: EditProfile,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.CHANGE_PASSWORD, 
+    {
+        path: paths.CHANGE_PASSWORD,
         component: ChangePassword,
         protected: true
     },
-    { 
-        path: paths.TRANSFER_METHOD, 
+    {
+        path: paths.TRANSFER_METHOD,
         component: TransferMethod,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.GET_QUOTE, 
+    {
+        path: paths.GET_QUOTE,
         component: GetQuote,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.VERIFICATION, 
+    {
+        path: paths.VERIFICATION,
         component: Verification,
-        protected: true 
+        protected: true
     },
-    { 
-        path: paths.RECIPIENT, 
+    {
+        path: paths.RECIPIENT,
         component: Recipient,
-        protected: true 
+        protected: true
     },
     {
         path: paths.RECIPIENT_DETAILS,
