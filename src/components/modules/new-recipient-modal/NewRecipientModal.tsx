@@ -1,5 +1,5 @@
-import { Field, Form, Formik } from 'formik';
-import React, { useState } from 'react'
+import { Field, Form, Formik, useFormikContext } from 'formik';
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
 import { createRecipient } from '../../../redux/actions/actions';
@@ -26,16 +26,60 @@ const Div = styled.div`
     .modal {
         box-shadow: 0px 10px 12px #CCCCCC80;
         border-radius: 15px;
-        width: 55%;
+        width: 70%;
         min-height: 661px;
         background: #fff;
         margin: 0px auto;
-        padding: 60px 0px 30px;
+        padding: 60px 0px 20px;
         position: fixed;
         z-index: 2;
         top: 50%;
-        left: 22%;
+        left: 14%;
         transform: translateY(-50%);
+        .transfer-fields {
+            select {
+                width: 17% !important;
+                margin-right: 5px;
+            }
+            .branch-code, .bank-code{
+                width: 17%; !important;
+                margin-right: 5px;
+            }
+            .key {
+                width: 12% !important;
+            }
+            .account-number {
+                width: 25% !important;
+                margin-right: 5px;
+            }
+        }
+        .transfer-type {
+            width: 80%;
+            margin: 0px auto;
+            padding: 0;
+            ul {
+                display: flex;
+                list-style: none;
+                li {
+                    cursor: pointer;
+                    color: #818080;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-left: -40px;
+                    :hover {
+                        border-bottom: 1px solid #818080;
+                    }
+                }
+                .underline {
+                    border-bottom: 1px solid #4c8778;
+                    color: #4c8778;
+                }
+                .microfinance {
+                    margin-left: 20px !important;
+                }
+
+            }
+        }
         .head {
             border-bottom: 1px solid #F0F0F0;
             display: grid!important;
@@ -47,7 +91,7 @@ const Div = styled.div`
                 font: normal normal normal 20px/24px Montserrat;
                 color: #A3A3A3;
                 span {
-                    color: #424242; 
+                    color: #424242;
                 }
             }
             .close {
@@ -89,9 +133,9 @@ const Div = styled.div`
                 outline: none;
                 font: normal normal normal 14px Montserrat;
                 color: #A3A3A3;
-                padding: 20px;
+                padding: 10px;
                 ::placeholder{
-                    color: #A3A3A3; 
+                    color: #A3A3A3;
                 }
             }
             select{
@@ -103,11 +147,11 @@ const Div = styled.div`
                 background-position-x: 95%;
                 background-position-y: 10px;
                 padding: 0px;
-                padding-left: 15px;
+                padding-left: 7px;
             }
             select.phone  {
                 background-position-x: 22%;
-                padding-left: 85px;
+                padding-left: 200px;
             }
             input.phone-no {
                 position: relative;
@@ -176,18 +220,18 @@ const Div = styled.div`
             }
         }
     }
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     padding:0px;
     .overlay {
         background: #fff;
     }
     .mobile-modal {
         .page-heading {
-            
+
             .heading {
                 z-index: 2;
             }
-            
+
         }
     }
     .modal {
@@ -281,6 +325,7 @@ function NewRecipientModal(props: any) {
     const dispatch = useDispatch()
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
+    const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const transfer = useSelector((state: any) => state.transfer)
 
     const initialValues = {
@@ -293,7 +338,13 @@ function NewRecipientModal(props: any) {
         reason: recipientData?.profile?.reason || "",
         bankName: recipientData?.profile?.bankName || "",
         accountNumber: recipientData?.profile?.accountNumber || "",
-        pickupPoint: recipientData?.profile?.pickupPoint || ""
+        pickupPoint: recipientData?.profile?.pickupPoint || "",
+        branchCode: "",
+        bankCode: "",
+        key: "",
+        countryCode: "CM21",
+        accountBranch: "",
+        recipientAccountNumber: ""
     }
 
     const handleReasonsChange = (e: any) => {
@@ -317,11 +368,40 @@ function NewRecipientModal(props: any) {
                     <div className="t-id">Add a new recipient</div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
+                {transfer.transferMethod === "bank_transfer" && (
+                <div className="transfer-type">
+                    <ul>
+                        <li
+                            className={`${modeTransfer === 'bankTransfer' ? 'underline' : ''}`}
+                            onClick={() => setModeTransfer('bankTransfer')}
+                        >
+                            Bank transfer
+                        </li>
+                        <li
+                            className={`${modeTransfer === 'microfinanceTransfer' ? 'underline microfinance' : 'microfinance'}`}
+                            onClick={() => setModeTransfer('microfinanceTransfer')}
+                        >
+                            Microfinance transfer
+                        </li>
+                    </ul>
+                </div>
+                )}
                 <Formik
                         initialValues={{...initialValues}}
                         validationSchema={RecipientValidator}
                         onSubmit={values => {
-                            dispatch(createRecipient(values, { openModal, selectRecipient }))
+                            const newValue = {
+                                firstName: values.firstName,
+                                lastName: values.lastName,
+                                mobile: values.mobile,
+                                phoneCode: values.phoneCode,
+                                email: values.email,
+                                state: values.state,
+                                reason: values.reason,
+                                bankName: values.bankName,
+                                accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
+                            }
+                            dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                         }}>
                         {
                             ({errors, touched, values}: any) => (
@@ -364,7 +444,7 @@ function NewRecipientModal(props: any) {
                                                         <option value="">Select</option>
                                                         {
                                                             REASONS.map((reason: string) => (
-                                                                // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>) 
+                                                                // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>)
                                                                 <option value={reason}>{reason}</option>
                                                                 )
                                                             )
@@ -379,14 +459,44 @@ function NewRecipientModal(props: any) {
                                             </div>
                                             {transfer.transferMethod === "bank_transfer" ?
                                             <React.Fragment>
+                                                {modeTransfer === "bankTransfer" && (
                                                 <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                    <div> Beneficiary Bank Name</div>
+                                                    <div> Beneficiary Bank Name<i>*</i></div>
                                                     <Field type="text" name="bankName" placeholder="" />
                                                 </div>
-                                                <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error': ''}>
-                                                    <div>Recipient Account Number <span className="red-txt">{errors.accountNumber}</span> </div>
-                                                    <Field type="text" name="accountNumber" placeholder="e.g. 3450012398" />
+                                                )}
+                                                {modeTransfer === "microfinanceTransfer" && (
+                                                    <>
+                                                        <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                                            <div> Micro Finance Name<i>*</i></div>
+                                                            <Field type="text" name="bankName" placeholder="" />
+                                                        </div>
+                                                    </>
+                                                )}
+                                                {modeTransfer === "bankTransfer" && (
+                                                <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
+                                                    <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.accountNumber || errors.bankCode || errors.branchCode ||errors.key}</span> </div>
+                                                    <Field as="select" name="countryCode">
+                                                        <option value="CM12">CM12</option>
+                                                    </Field>
+                                                    <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
+                                                    <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
+                                                    <Field type="text" className="account-number" name="accountNumber" placeholder="Account no" />
+                                                    <Field type="text" className="key" name="key" placeholder="key" />
                                                 </div>
+                                                )}
+                                                {modeTransfer === "microfinanceTransfer" && (
+                                                    <>
+                                                        <div>
+                                                        <div>Account Number<i>*</i></div>
+                                                        <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
+                                                        </div>
+                                                        <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                                            <div> Account Branch<i>*</i></div>
+                                                            <Field type="text" name="accountBranch" placeholder="" />
+                                                        </div>
+                                                    </>
+                                                )}
                                             </React.Fragment> : ''}
 
                                             {transfer.transferMethod === "cash_pickup" ?
