@@ -69,7 +69,7 @@ const NavBar = () => {
                          <hr/>
                          <div className="notif-more">View all notifications </div>
                     </div> }
-                </span> 
+                </span>
                 <span className="pic">
                     <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
@@ -93,6 +93,10 @@ const NavBar = () => {
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'prev.svg')} alt="settings"/> </div>
                                 <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
+                         </div>
+                         <div className="notif-option">
+                                <div> <img src={asset('icons', 'download-file.svg')} alt="settings"/> </div>
+                                <div><Link to={paths.MARKETING_PERMISSION}>Marketing permissions</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>

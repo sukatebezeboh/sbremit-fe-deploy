@@ -614,13 +614,30 @@ const TermsAndConditions = (props: {setNavLink: Function}) => {
                     text: [`Severability: If any provision of this Agreement is held invalid, illegal or unenforceable, the validity, legality and enforceability of the remaining provisions will not be affected or impaired in any way, and you agree to accept a replacement of such invalid, illegal and unenforceable provision with a valid, legal and enforceable provision that achieves, to the greatest lawful extent under this Agreement, the economic, business and other purposes of such invalid, illegal or unenforceable provision.`]
                 }
             ]
+        },
+        {
+            title: "Promotions and Campaigns",
+            content: [
+                {
+                    text: [`Promotions have a set time period. Meaning there is a start and end date to every promotion`]
+                },
+                {
+                    text:[`To receive your discount, simply enter your promo code on the home page`]
+                },
+                {
+                    text:[`Promotions are subject to availability and may be withdrawn or amended without notice at any time at SB Remit's sole discretion`]
+                },
+                {
+                    text:[`The sender can only participate in the promotion during the promotion period and only in the manner described in the Special Terms and Conditions of Promotions. If the Participant submits his entry late, early, in a way other than the prescribed manner, or otherwise incomplete, he shall be excluded from participation without further notice`]
+                }
+            ]
         }
     ]
 
     useEffect(() => {
         const list = data.map(d=> d.title);
         setNavLink(list)
-        
+
     }, [])
 
     const generateContent = (content: any, numbering: string|number) => {
@@ -638,7 +655,7 @@ const TermsAndConditions = (props: {setNavLink: Function}) => {
                                     c.type === "list" ?
                                     (
                                         c.text.constructor === Object ?
-                                            <ul> 
+                                            <ul>
                                                 {
                                                     (Object.keys(c.text).map(key => {
                                                         return <li>

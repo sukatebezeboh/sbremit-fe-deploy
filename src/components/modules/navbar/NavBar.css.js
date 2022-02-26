@@ -78,6 +78,7 @@ const Bar = styled.div.attrs(props => ({
             border-radius: 15px;
             box-shadow: 0px 1px 16px #CCCCCC80;
             padding: 5px 0;
+            z-index: 2;
             ::before{
                 content: '';
                 width: 0px;

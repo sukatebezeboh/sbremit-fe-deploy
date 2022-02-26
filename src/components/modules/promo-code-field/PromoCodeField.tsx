@@ -73,7 +73,7 @@ const PromoCodeField = ({transfer}: any) => {
         const expired = compareDatesXLessThanY( promo?.endDate, todayInString );
         const notDue = compareDatesXLessThanY( todayInString, promo?.startDate );
         const exceededUsageLimit = !user ? false : Number(user.promos[promo?.code] || 0) >= Number(promo?.settings?.usageLimit);
-
+        
         const incompatibleCurrency = promo?.settings?.currenciesValid !== "ALL" && promo?.settings?.currenciesValid?.indexOf(transfer.toSend.currency) === -1;
 
         if ( !expired && !notDue && !exceededUsageLimit && !incompatibleCurrency) {

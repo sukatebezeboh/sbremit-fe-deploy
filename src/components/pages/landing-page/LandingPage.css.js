@@ -7,6 +7,30 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
     background-size: cover;
     overflow: hidden;
     min-height: 165vh;
+    .header-links {
+        display: none;
+        background: #007B5D;
+        height: 50px;
+        padding: 0px 20px;
+        align-items: center;
+        color: #FFFFFF;
+        .start-sending-header-link {
+            background: none;
+            border: none;
+            outline: none;
+            color: #FFFFFF;
+        }
+        .authentication-buttons {
+            margin-left: auto;
+            font-size: 12px;
+            .signup-link {
+                margin-right: 14px;
+                border: 1px solid #FFFFFF;
+                padding: 5px 10px;
+                border-radius: 5px;
+            }
+        }
+    }
     .f-growing{
         display: none;
     }
@@ -66,7 +90,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             z-index: -10;
             background: #00000006;
             position: relative;
-            @media only screen and (max-width: 900px) { 
+            @media only screen and (max-width: 900px) {
                 display: none;
             }
         }
@@ -84,7 +108,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             float: right;
             z-index: 2;
             position: relative;
-            @media only screen and (max-width: 900px) { 
+            @media only screen and (max-width: 900px) {
                 width: 190px;
             }
         }
@@ -241,12 +265,12 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
         }
 
     }
-    @media only screen and (max-width: 1700px) { 
+    @media only screen and (max-width: 1700px) {
         .hero-grid{
             grid-template-columns: 1.5fr 2fr;
         }
     }
-    @media only screen and (max-width: 1140px) { 
+    @media only screen and (max-width: 1140px) {
         .hero-grid{
             grid-template-columns: 1fr 2fr;
             .hero-texts{
@@ -258,10 +282,13 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
         }
     }
-    @media only screen and (max-width: 780px) { 
+    @media only screen and (max-width: 780px) {
         background: white;
         min-height: 0;
         height: auto;
+        .header-links {
+            display: flex;
+        }
         .mobile {
             display: inline-block!important;
         }
@@ -316,7 +343,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                         left: -10px;
                         >span{
                             >span{
-                              /* display: none; 
+                              /* display: none;
                             }
                             .sa{
                                 font-style: italic;
@@ -347,7 +374,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                         margin-top: 270px;
                     }
                 }
-                
+
                 .md-txt{
                     font: normal normal normal 13px/16px Montserrat;
                     color: #A3A3A3;
@@ -370,14 +397,14 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                     div{
                         font-size: 10px;
                         input {
-                            font-size: 15px; 
+                            font-size: 15px;
                         }
                     }
                     .flg-drp{
                         margin-top: 7px;
                         img{
                             width: 26px;
-                            height: 26px; 
+                            height: 26px;
                         }
                         span.data-c{
                             font-size: 13px;
@@ -399,8 +426,8 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             }
         }
         .nav{
-            margin-bottom: 100px;
-            
+            margin-bottom: 77px;
+
             .sign-up, .sign-in{
                 transform: scale(0.5, 0.5);
                 float: none;
@@ -411,7 +438,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             .sign-in{
                 right: 120px;
                 top: -3px;
-            } 
+            }
         }
     }
 

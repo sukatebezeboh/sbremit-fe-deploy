@@ -9,6 +9,7 @@ import { signUpAction } from '../../../redux/actions/actions'
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
 import { SIGN_UP } from '../../../redux/actionTypes'
 import { paths } from '../../../util/paths'
+import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
 
@@ -35,6 +36,7 @@ const SignUp = () => {
     (state: any) => state.createAccountError,
   )
   const countries: any = useSelector((state: any) => state.appValues.countries)
+
 
   useEffect(() => {
     setOpenModal(false)
@@ -126,7 +128,17 @@ const SignUp = () => {
           <Formik
             initialValues={{ ...initialValues }}
             validationSchema={SignUpValidator}
-            onSubmit={(values) => handleSubmit(values)}
+            onSubmit={(values) => {
+              const {checked, ...newValue}  = values
+
+              const newValues = {
+                ...newValue,
+                settings: {
+                  marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+                }
+              }
+
+              handleSubmit(newValues)}}
           >
             {({ errors, touched, values }: any) => (
               <Form className="form">
@@ -184,7 +196,7 @@ const SignUp = () => {
                       Country of Residence<i>*</i>
                     </div>
                     <Field as="select" name="location_country" id="">
-                      {Object.keys(countries).map((key) => (
+                      {Object.keys(constants.SIGNUP_COUNTRIES).map((key) => (
                         <option value={key}>{countries[key]}</option>
                       ))}
                     </Field>
@@ -241,6 +253,13 @@ const SignUp = () => {
                         {errors.password}
                       </div>
                     )}
+                  </div>
+
+                  <div className="marketing-permission-box">
+                    <Field type="checkbox" name="checked" value="checked" />
+                    <label>
+                      By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
+                    </label>
                   </div>
 
                   <button
