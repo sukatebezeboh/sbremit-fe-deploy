@@ -11,22 +11,40 @@
   </head>
   <body class="{{st.bodyclass.value}} st-inputs-style st-blocks-style">
     {{st.block.header}}
+
+    <div id="sbremit-countdown" style="text-align: center;"></div>
     <div class="st-content">
       {{st.block.messagesdiv}}
       <h2>Order details</h2>
       {{st.block.orderdetailsdiv}}
       <h2>Transaction response</h2>
       {{st.block.transactionresponsediv}}
-      <h2>Billing details</h2>
-      {{st.block.billingresponsediv}}
-      <h2>Delivery details</h2>
-      {{st.block.deliveryresponsediv}}
+
+      <div>
+        <button onclick="goToSB()" class="cancel-button">Back to SBRemit</button>
+      </div>
+
     </div>
     {{st.block.footer}}
     <script>
-        setTimeout(() => {
+
+        const countDownDiv = document.querySelector('#sbremit-countdown')
+
+        let duration = 10;
+        const countdownInterval = setInterval(() => {
+          if (duration <= 0) {
             window.location.href = "{{st.successfulurlredirect.value}}"
-        }, 10000)
+            clearInterval(countdownInterval)
+            return
+          }
+          countDownDiv.innerHTML = `You will be redirected to SBRemit in <b style="color: darkseagreen;">${duration}</b> seconds `;
+          duration--
+        }, 1000)
+
+        function goToSB() {
+          window.location.href = "{{st.successfulurlredirect.value}}"
+        }
+
     </script>
   </body>
 </html>
