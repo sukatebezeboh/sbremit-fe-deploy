@@ -51,10 +51,13 @@ export const RecipientValidator = Yup.object().shape({
     email: Yup.string().email("Enter valid email"),
     state: Yup.string().min(3, "Too short").max(25, "Too long"),
     reason: Yup.string(),
-    accountNumber: Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890'),
-    bankCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The bank code provided is not correct. A sample account number looks like:10005'),
-    branchCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The branch code provided is not correct. A sample account number looks like:00001'),
-    key: Yup.string().matches(/^(\s)*[0-9]{2}(\s)*$/, 'The key code provided is not correct. A sample account number looks like:12'),
+    bankName: Yup.string().required("Required"),
+    bankCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The bank code provided is not correct. A sample bank code looks like:10005').required("bank code is required"),
+    branchCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The branch code provided is not correct. A sample branch code looks like:00001').required("branch code is required"),
+    accountNumber: Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890').required("account number is required"),
+    recipientAccountNumber: Yup.string().required("The account number is required"),
+    accountBranch: Yup.string().required("The account branch is required"),
+    key: Yup.string().matches(/^(\s)*[0-9]{2}(\s)*$/, 'The key code provided is not correct. A sample key code  looks like:12').required("Key is required"),
  });
 
 
