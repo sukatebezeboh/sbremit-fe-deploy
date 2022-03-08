@@ -529,6 +529,7 @@ export const confirmTransfer = (
     destinationAmount: Number(transfer.toReceive?.total),
     paymentMethod: {},
     promo: transfer.promo?.code,
+    referralDiscount: transfer?.referralDiscount,
     meta: {
       serviceFee: transfer.serviceFee,
       exchangeBase: transfer.conversionRate?.base,

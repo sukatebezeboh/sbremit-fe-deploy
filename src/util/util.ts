@@ -51,6 +51,7 @@ export const convertDateString = (value: any) => {
 }
 
 export const getValueFromArray = <T>(id: string|number, targetId: string|number, array: any[], keyToReturn?: any): any => {
+    if (!array) return {};
     // eslint-disable-next-line eqeqeq
     const value = array.filter(a=>a[targetId] == id)[0];
     return value?.[keyToReturn] || value;
@@ -219,3 +220,6 @@ export const isMobileOrTablet = ()  => {
     return check;
 };
 
+export const getAppValue = (key: string) => {
+
+}

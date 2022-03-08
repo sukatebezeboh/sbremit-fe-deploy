@@ -255,6 +255,26 @@ const SignUp = () => {
                     )}
                   </div>
 
+                  <div
+                    className={
+                      touched.referral && errors.referral ? 'form-error' : ''
+                    }
+                  >
+                    <div>
+                      Referral Code <i>(optional)</i>
+                    </div>
+                    <Field
+                      name="referral"
+                      type="text"
+                      placeholder="Referred by someone? Use their referral code here"
+                    />
+                    {touched.referral && errors.referral && (
+                      <div className="form-error-message">
+                        {errors.referral}
+                      </div>
+                    )}
+                  </div>
+
                   <div className="marketing-permission-box">
                     <Field type="checkbox" name="checked" value="checked" />
                     <label>
@@ -281,7 +301,7 @@ const SignUp = () => {
             )}
           </Formik>
         </div>
-      </Body>
+      </Body> 
     </>
   )
 }
