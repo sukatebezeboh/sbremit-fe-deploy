@@ -74,6 +74,7 @@ const SignUp = () => {
     username: '',
     password: '',
     mobile: '',
+    checked: true,
   }
 
   const handleSubmit = (values: any) => {
@@ -256,7 +257,7 @@ const SignUp = () => {
                   </div>
 
                   <div className="marketing-permission-box">
-                    <Field type="checkbox" name="checked" value="checked" />
+                    <Field type="checkbox" name="checked" />
                     <label>
                       By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
                     </label>
