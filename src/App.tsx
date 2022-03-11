@@ -20,8 +20,6 @@ function App() {
 
   const history = useHistory();
 
-
-
   useEffect(() => {
     checkAuth()
     appValuesAction()

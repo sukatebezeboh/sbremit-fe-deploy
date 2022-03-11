@@ -529,6 +529,7 @@ export const confirmTransfer = (
     destinationAmount: Number(transfer.toReceive?.total),
     paymentMethod: {},
     promo: transfer.promo?.code,
+    referralDiscount: transfer?.referralDiscount,
     meta: {
       serviceFee: transfer.serviceFee,
       exchangeBase: transfer.conversionRate?.base,
@@ -1346,6 +1347,20 @@ export const initiateTruelayerPayment = (
         if ( result ) {
             window.location.replace(result?.auth_flow?.uri);
         }
+    })
+    .catch()
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
+
+
+export const getUserReferrals = (setDetailsCallback: Function) => {
+  store.dispatch({ type: LOADING, payload: false })
+
+    http.get(endpoints.USER_REFERRALS)
+    .then(res => {
+      setDetailsCallback(res.data.data)
     })
     .catch()
     .then(() => {

@@ -26,6 +26,8 @@ const Dashboard = () => {
     const [selectedFilter, setSelectedFilter] = useState("");
     const history = useHistory();
     const [isResending, setIsResending] = useState(false);
+    const appValues = useSelector((state: any) => state.appValues)
+    const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
 
 
     const dispatch = useDispatch()
@@ -121,6 +123,7 @@ const Dashboard = () => {
         return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.meta.expired
     }
 
+
     return (
         <Body>
             <NavBar />
@@ -130,6 +133,14 @@ const Dashboard = () => {
                 <Link to="/transfer-method">
                     <RoundFloatingPlus showPlus={showPlus} />
                 </Link>
+
+                <div className="green-txt invite d-block px-75 bold font-larger">
+                    <span className='text-align-right d-block'>
+                        <Link to={paths.REFERRALS}>
+                            Refer and earn £{referralSettings?.data?.referrerDiscountValue}
+                        </Link>
+                    </span>                    
+                </div>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}>
                         <div className="green-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())}</div>

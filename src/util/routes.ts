@@ -27,6 +27,7 @@ import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
 import NotFound from '../components/pages/not-found/NotFound';
 import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
 import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
+import Referrals from 'components/pages/referrals/Referrals';
 
 
 export interface IRoute {
@@ -171,6 +172,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.REVIEW,
         component: Review,
+        protected: true
+    },
+    {
+        path: paths.REFERRALS,
+        component: Referrals,
         protected: true
     },
     {

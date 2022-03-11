@@ -582,7 +582,7 @@ const Verification = () => {
                                   value={
                                     days[Number(values.day)]
                                   }>
-                                  <option value="">  -- </option>
+                                  <option value=""> -- </option>
                                   {days.map((day: any) => (
                                     <option
                                       key={days[day]}

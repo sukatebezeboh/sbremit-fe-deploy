@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -6,9 +6,10 @@ import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import styled from "styled-components";
 import RecipientDetailsBox from '../../modules/parts/RecipientDetailsBox';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { confirmTransfer, toastAction } from '../../../redux/actions/actions';
+import { TRANSFER } from 'redux/actionTypes';
 
 const Body = styled.div`
     .page-content {
@@ -170,13 +171,24 @@ const Review = () => {
     const history = useHistory();
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer)
+    const dispatch = useDispatch();
 
     const handleConfirmClick = () => {
         confirmTransfer(recipient, transfer, (id: string) => {
+            dispatch({
+                type: TRANSFER,
+                payload: undefined
+            })
             history.push(paths.PAYMENT_METHOD + '?t=' + id);
         })
     }
 
+    useEffect(() => {
+      if (!transfer?.toSend?.value) {
+        history.replace(paths.RECIPIENT);
+      }
+    }, [])
+    
     const isRecipientValid = () => {
         if (transfer.transferMethod === "bank_transfer") {
             if (!Boolean(recipient?.profile?.bankName) || !Boolean(recipient?.profile?.accountNumber)) {

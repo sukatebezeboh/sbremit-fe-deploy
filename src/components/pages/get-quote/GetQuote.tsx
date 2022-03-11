@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
+import { AppService } from 'services/AppService';
 import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getValueFromArray } from '../../../util/util';
 // import { asset } from '../../../util/util';
 import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
@@ -19,6 +20,7 @@ const GetQuote = () => {
 
     const transfer = useSelector((state: any)=>state.transfer);
     const appValues = useSelector((state: any) => state.appValues);
+    const user = useSelector((state: any) => state.auth.user);
     const promo = transfer.promo
     const [promoText, setPromoText] = useState("")
 
@@ -36,6 +38,8 @@ const GetQuote = () => {
     const allowOperatorFee = transfer.allowOperatorFee; 
     const max  = getMax(transferMethod);
 
+    const userReferralDiscount = getUserReferralDiscount(user, appValues);
+
     let rate= conversionRate?.rate;
     if (
         promo?.type === "FIXED_RATE"
@@ -52,6 +56,7 @@ const GetQuote = () => {
             history.replace(paths.TRANSFER_METHOD)
         }
     }, [])
+
 
 
 
@@ -103,7 +108,11 @@ const GetQuote = () => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value}`}, 
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))}
+                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    referralDiscount: {
+                        value: userReferralDiscount?.value,
+                        type: userReferralDiscount?.type
+                    }
                 }
             })
 
@@ -125,7 +134,11 @@ const GetQuote = () => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${(value / rate).toFixed(2)}`}, 
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))}
+                    toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    referralDiscount: {
+                        value: userReferralDiscount?.value,
+                        type: userReferralDiscount?.type
+                    }
                 }
             })
         }
@@ -140,7 +153,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, rate])
+    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, rate, userReferralDiscount?.value])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
@@ -153,7 +166,7 @@ const GetQuote = () => {
     }
 
     const setTotalValue = () => {
-        let total = Number(toSend.value) + Number(serviceFee);
+        let total = Number(toSend.value) + Number(serviceFee) - Number(userReferralDiscount?.value);
 
         if (
             promo
@@ -208,13 +221,13 @@ const GetQuote = () => {
     }
 
     const handleContinue = () => {
-        if (!Number(toSend.value)) {
+        if ( Number(toSend.total) <= 0) {
             toastAction({
                 name: "no-value-sent",
                 show: true,
                 type: "warning",
                 timeout: 10000,
-                message: "You can't send "+(toSend.value || '0.00')+ " "+toSend.currency
+                message: "You can't send "+(formatCurrency(toSend.total) || '0.00')+ " "+toSend.currency
             })
             return
         }
@@ -305,11 +318,12 @@ const GetQuote = () => {
                                     </div>
                                     <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> </span></div>
                                     {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
+                                    { Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span> Referral bonus { <span className="deep-green"> { userReferralDiscount?.value } {toSend?.currency} </span> }</span> </span></div>}
                                     <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile"><p>Transfer arrives <b>Within 30 minutes</b></p></span> </span></div>
                                 </div>
                             </div>
-                            <div className="receive" style={promo ? {marginTop: "250px"} : {}}>
+                            <div className="receive" style={(promo &&  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive))  ? {marginTop: "300px"} : (promo ||  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive)) ? {marginTop: "250px"} : {}}>
                                 <ExchangeRateInput setChangedInput={() => setChangedInput('toReceive')} max={transferMethod === constants.MOBILE_MONEY ? max : undefined} data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
                             <div className="toggle">
