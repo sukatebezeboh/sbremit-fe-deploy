@@ -105,22 +105,22 @@ const Div = styled.div`
 const TransferDetailsBox = ( { transferId } :any ) => {
 
     const transfer = useSelector((state: any) => state.transfer);    
-    const transaction = transfer.transactionDetails;
-    const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer.transferMethod.replace('_', ' ');
-    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer.toSend.value);
-    const sendCurrency = transferId ? transaction?.originCurrency : transfer.toSend.currency;
-    const xBase = transferId ? transaction?.meta?.exchangeBase : transfer.conversionRate?.base;
-    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency( transfer?.promo?.settings?.rate || transfer.conversionRate?.rate);
-    const xTarget = transferId ? transaction?.meta?.exchangeTarget : transfer.conversionRate?.target;
-    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer.serviceFee);
-    const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer.toReceive.total);
-    const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer.toReceive.currency;
-    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer.toSend.total)}`);
+    const transaction = transfer?.transactionDetails;
+    const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer?.transferMethod?.replace('_', ' ');
+    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer?.toSend?.value);
+    const sendCurrency = transferId ? transaction?.originCurrency : transfer?.toSend?.currency;
+    const xBase = transferId ? transaction?.meta?.exchangeBase : transfer?.conversionRate?.base;
+    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency( transfer?.promo?.settings?.rate || transfer?.conversionRate?.rate);
+    const xTarget = transferId ? transaction?.meta?.exchangeTarget : transfer?.conversionRate?.target;
+    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer?.serviceFee);
+    const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer?.toReceive?.total);
+    const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer?.toReceive?.currency;
+    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer?.toSend?.total)}`);
     const promoCode = transferId ? transaction?.meta?.promoCode : transfer?.promo?.code;
     const referralDiscount = transferId ? transaction?.meta?.referralDiscount : transfer?.referralDiscount;
 
 
-    // console.log(transfer)
+    console.log(transfer)
     useEffect(() => {
         if ( transferId ) {
             getTransactionDetails( undefined, transferId )
@@ -169,7 +169,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="left green-txt">Promo</div>
                         <div className="right uppercase green-txt"> {promoCode} </div>
                     </div>}
-                    {referralDiscount && <div className="row ">
+                    {Boolean(referralDiscount?.value) && <div className="row ">
                         <div className="left green-txt">Referral Discount</div>
                         <div className="right uppercase green-txt"> {referralDiscount?.value} {sendCurrency} </div>
                     </div>}

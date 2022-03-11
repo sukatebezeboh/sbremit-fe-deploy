@@ -191,7 +191,7 @@ const PaymentMethod = () => {
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const user = useSelector((state: any)=>state.auth.user)
     const transfer = useSelector((state: any)=>state.transfer);
-    const transaction = transfer.transactionDetails;
+    const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     // const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
@@ -305,7 +305,7 @@ const PaymentMethod = () => {
                                     <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
                                     <div className="rc-body">
                                         <div>
-                                            Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer.toSend.value) + Number(transfer.serviceFee)}`)} {transfer.toSend.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
+                                            Pay the sum of <b className="green-txt">{formatCurrency(`${Number(transfer?.toSend?.value) + Number(transfer?.serviceFee)}`)} {transfer?.toSend?.currency}</b> directly from your bank account. Your transfer will be completed as soon as your payment reflects on our account.
                                         </div>
                                         <div>
                                         </div>
@@ -339,7 +339,7 @@ const PaymentMethod = () => {
                                             {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
                                         </div>
                                         <div>
-                                            If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> to complete your transfer
+                                            If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer
                                         </div>
                                     </div>
                                     <div className="rc-foot">
@@ -369,7 +369,7 @@ const PaymentMethod = () => {
                                                 {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
                                             </div>
                                             <div>
-                                                If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> to complete your transfer
+                                                If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer
                                             </div>
                                         </div>
                                         <div className="rc-foot">
@@ -386,7 +386,7 @@ const PaymentMethod = () => {
                 <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span> 
                  {
                     selected==="card" ?
-                    <PaymentRedirect mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} currencyiso3a = {transaction.originCurrency} transactionId={transaction?.meta?.transactionId} transferId={transferId} />
+                    <PaymentRedirect mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} currencyiso3a = {transaction?.originCurrency} transactionId={transaction?.meta?.transactionId} transferId={transferId} />
                     :
                     <span> <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> </span>
                 }

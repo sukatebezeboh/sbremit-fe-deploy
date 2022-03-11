@@ -12,6 +12,7 @@ import { paths } from '../../../util/paths'
 import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
+import { getQueryParam } from '../../../util/util'
 
 const Body = style('signup')
 
@@ -74,6 +75,7 @@ const SignUp = () => {
     username: '',
     password: '',
     mobile: '',
+    referral: getQueryParam('referral') ?? ''
   }
 
   const handleSubmit = (values: any) => {

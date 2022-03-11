@@ -24,6 +24,7 @@ export const paths = {
     CREATE_TRANSFER: "/create-transfer",
     TRANSFER_COMPLETE: "/transfer-complete",
     TRUELAYER_PROVIDERS: "/truelayer-providers",
+    REFERRALS: "/referrals",
 
     LEGAL: "/support/legal",
     SUPPORT: "/support",

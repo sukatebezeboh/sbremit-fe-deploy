@@ -1353,3 +1353,17 @@ export const initiateTruelayerPayment = (
       store.dispatch({ type: LOADING, payload: false })
     })
 }
+
+
+export const getUserReferrals = (setDetailsCallback: Function) => {
+  store.dispatch({ type: LOADING, payload: false })
+
+    http.get(endpoints.USER_REFERRALS)
+    .then(res => {
+      setDetailsCallback(res.data.data)
+    })
+    .catch()
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}

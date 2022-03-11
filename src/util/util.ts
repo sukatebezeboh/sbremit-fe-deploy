@@ -1,3 +1,4 @@
+import { toastAction } from "redux/actions/actions";
 import { constants } from "./constants";
 import { settings } from "./settings";
 
@@ -220,6 +221,38 @@ export const isMobileOrTablet = ()  => {
     return check;
 };
 
-export const getAppValue = (key: string) => {
+export const getUserReferralDiscount = (user: any, appValues: any) => {
+    // console.log(appValues)
+    // console.log(getValueFromArray('settings', 'name', appValues?.values?.data), "uset")
+    const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
+    let discount = Number(user?.referral?.useCount || 0) * Number(referralSettings?.data?.referrerDiscountValue);
 
+    if ( user?.referral?.newUserBonusActive ) {
+        discount += (Number(referralSettings?.data?.referredUserDiscountValue))
+    }
+
+    return {
+        value: discount,
+        type: referralSettings?.data?.referralDiscountType
+    };
+}
+
+export const copyToClipBoard = (text: string) => {
+    const elem = document.createElement('textarea');
+    elem.value = text;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand('copy');
+    document.body.removeChild(elem);
+
+    toastAction({
+        show: true,
+        type: 'info',
+        timeout: 5000,
+        message: "Text copied to clipboard",
+    })
+}
+
+export const getPercentage = ( needle: number|string, haystack: number|string, rounding = 0) => {
+    return ((Number(needle)/Number(haystack)) * 100).toFixed(rounding)
 }
