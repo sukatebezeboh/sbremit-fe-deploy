@@ -375,3 +375,7 @@ button:disabled{
     background: #FCD20F;
     color: rgb(22, 22, 22);
 }
+
+.no-bg {
+    background: none!important;
+}

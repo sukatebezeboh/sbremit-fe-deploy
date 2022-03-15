@@ -117,8 +117,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer?.toReceive?.currency;
     const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer?.toSend?.total)}`);
     const promoCode = transferId ? transaction?.meta?.promoCode : transfer?.promo?.code;
-    const referralDiscount = transferId ? transaction?.meta?.referralDiscount : transfer?.referralDiscount;
-
+    const referralDiscountValue = transferId ? transaction?.meta?.referralDiscountValue : transfer?.referralDiscountValue;
 
     console.log(transfer)
     useEffect(() => {
@@ -169,9 +168,9 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="left green-txt">Promo</div>
                         <div className="right uppercase green-txt"> {promoCode} </div>
                     </div>}
-                    {Boolean(referralDiscount?.value) && <div className="row ">
+                    {Boolean(referralDiscountValue) && <div className="row ">
                         <div className="left green-txt">Referral Discount</div>
-                        <div className="right uppercase green-txt"> {referralDiscount?.value} {sendCurrency} </div>
+                        <div className="right uppercase green-txt"> {referralDiscountValue} {sendCurrency} </div>
                     </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>

@@ -6,7 +6,7 @@ import { checkForVerificationStatusToast, checkSkip, getRecipients, getTransacti
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getValueFromArray, replaceUnderscores, translateTransactionStatus } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getUserDefaultCurrency, getValueFromArray, replaceUnderscores, translateTransactionStatus } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
@@ -28,6 +28,7 @@ const Dashboard = () => {
     const [isResending, setIsResending] = useState(false);
     const appValues = useSelector((state: any) => state.appValues)
     const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
+    const user = useSelector((state: any) => state.auth.user);
 
 
     const dispatch = useDispatch()
@@ -137,7 +138,7 @@ const Dashboard = () => {
                 <div className="green-txt invite d-block px-75 bold font-larger">
                     <span className='text-align-right d-block'>
                         <Link to={paths.REFERRALS}>
-                            Refer and earn £{referralSettings?.data?.referrerDiscountValue}
+                            Refer and earn {referralSettings?.data?.referrerDiscountValue} {getUserDefaultCurrency(user, appValues)}
                         </Link>
                     </span>                    
                 </div>

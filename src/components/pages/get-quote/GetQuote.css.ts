@@ -34,7 +34,7 @@ const style = styled.div`
             color: #A3A3A3;
         }
         .receive{
-                margin-top: 200px;
+                margin-top: 150px;
                 position: relative;
         }
         .x-error-message {
@@ -98,7 +98,7 @@ const style = styled.div`
             z-index: 0;
         }
         .timeline-box {
-            height: 320px;
+            height: fit-content;
             border-left: 1.5px solid #7FBCAD;
             position: absolute;
             top: -20px;

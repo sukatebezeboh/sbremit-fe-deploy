@@ -490,6 +490,9 @@ const TransactionDetail = (props: any) => {
        return data.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || data.meta.paymentCompleted
     }
 
+    const referralDiscountValue = data?.referralDiscountValue;
+
+
     return (
         (openTDModal && data) && (
         <Modal >
@@ -610,6 +613,10 @@ const TransactionDetail = (props: any) => {
                             {data?.meta?.promoCode && <div className="row">
                                 <div className="left">Promo used</div>
                                 <div className="right"> {data?.meta?.promoCode}</div>
+                            </div>}
+                            {Boolean(referralDiscountValue) && <div className="row ">
+                                <div className="left green-txt">Referral Discount</div>
+                                <div className="right uppercase green-txt"> {referralDiscountValue} {data.originCurrency} </div>
                             </div>}
                             <div className="row">
                                 <div className="left">They get <small className="sentence-case"> ({data?.transferMethod.replace("_", " ")} fee inclusive) </small> </div>

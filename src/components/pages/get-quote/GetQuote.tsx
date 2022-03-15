@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { AppService } from 'services/AppService';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -55,6 +55,8 @@ const GetQuote = () => {
         if (!transferMethod) {
             history.replace(paths.TRANSFER_METHOD)
         }
+
+        updateAppValues();
     }, [])
 
 
@@ -288,6 +290,18 @@ const GetQuote = () => {
         return texts[selectedMethod];
     }
 
+    const getXInputMarginAdjust = (newLinesValues: boolean[]) => {
+        let initialMargin = 150;
+
+        for( const newLine of newLinesValues ) {
+            if (newLine) {
+                initialMargin += 50
+            }
+        }
+
+        return initialMargin + "px";
+    }
+
     return (
         <Body>
             <NavBar />
@@ -308,14 +322,14 @@ const GetQuote = () => {
                             <div className="wrapper">
                                 <div className="timeline-box">
                                     <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && promoText ? "strikethrough" : ""}`} >1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} {toReceive.currency}</span></span></div>
-                                    <div className={`timeline timeline-2`}>
+                                    {Boolean(Number(serviceFee)) && <div className={`timeline timeline-2`}>
                                         <span><i><img src="./assets/icons/plus.svg" alt=""/></i> 
                                             <span className={`${allowOperatorFee ? "" : "strikethrough"} wide`}>
                                                 <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div>
                                                 <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{serviceFee} {toSend.currency}</span>
                                             </span>
                                         </span>
-                                    </div>
+                                    </div>}
                                     <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> </span></div>
                                     {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
                                     { Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span> Referral bonus { <span className="deep-green"> { userReferralDiscount?.value } {toSend?.currency} </span> }</span> </span></div>}
@@ -323,7 +337,7 @@ const GetQuote = () => {
                                     <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile"><p>Transfer arrives <b>Within 30 minutes</b></p></span> </span></div>
                                 </div>
                             </div>
-                            <div className="receive" style={(promo &&  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive))  ? {marginTop: "300px"} : (promo ||  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive)) ? {marginTop: "250px"} : {}}>
+                            <div className="receive" style={{marginTop: getXInputMarginAdjust([Boolean(promo),  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive), Boolean(Number(serviceFee))])}}>
                                 <ExchangeRateInput setChangedInput={() => setChangedInput('toReceive')} max={transferMethod === constants.MOBILE_MONEY ? max : undefined} data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
                             </div>
                             <div className="toggle">
@@ -339,6 +353,8 @@ const GetQuote = () => {
             </div>
         </Body>
     )
+
+
 }
 
 export default GetQuote;

@@ -2,10 +2,11 @@ import NavBar from 'components/modules/navbar/NavBar'
 import _env from 'env'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { getUserReferrals } from 'redux/actions/actions'
 import styled from 'styled-components'
 import { paths } from 'util/paths'
-import { asset, copyToClipBoard, getPercentage, getValueFromArray } from '../../../util/util'
+import { asset, copyToClipBoard, getPercentage, getUserDefaultCurrency, getValueFromArray } from '../../../util/util'
 
 
 const Div = styled.div`
@@ -22,6 +23,26 @@ const Div = styled.div`
 		color: dimgray;
 		line-height: 2;
 		text-shadow: 1px 1px 1px grey;
+		.info {
+			background: #5f899220;
+			color: #5f8992;
+			font-size: 14px;
+			font-weight: 500;
+			text-shadow: none;
+			a {
+				border-bottom: 1px dotted;
+			}
+			.info-icon {
+				background: #5f8992;
+				padding: 0px 7px;
+				line-height: 0px;
+				border-radius: 50%;
+				.fa-info {
+					color: white;
+					line-height: 0;
+				}
+			}
+		}
 	}
 }
 .coupon-container {
@@ -414,6 +435,13 @@ const Referrals = () => {
 	return filteredUsers?.length * referralSettings?.data?.referrerDiscountValue;
   }
 
+
+
+  function isNotAwaiting(user: any, referralSettings: any) {
+	return Number(getPercentage(user?.[`cummulative${getUserDefaultCurrency(user, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount )) >= 100
+  }
+  
+
   return (
     <Div>
         <NavBar />
@@ -467,8 +495,16 @@ const Referrals = () => {
 				</div>
 
 				<div className="invite-text">
+					<div className="info">
+						<span className="info-icon"><i className="fas fa-info"></i></span> Tap any icon above to send them your unique code: {user?.referral?.code}
+					</div>
 					Earn £{referralSettings?.data?.referrerDiscountValue} off your transaction for everyone you invite when they transfer over £{referralSettings?.data?.referralActivationAmount}. They also get a £{referralSettings?.data?.referredUserDiscountValue} reward off transactions for using your referral code.
+
+					<div className="info no-bg">
+						<span className="info-icon"><i className="fas fa-info"></i></span><Link to={paths.LEGAL + "/terms"}> Terms and conditions apply </Link>
+					</div>
 				</div>
+
 		  				
 			</div>
 
@@ -486,7 +522,7 @@ const Referrals = () => {
 					<div className="overview-line">
 						<div className="card">
 							<div className='key'> Accrued bonus</div>
-							<div className="value green-txt"> {getAccruedBonus(referralDetails?.referredUsers)} <small>GBP</small></div>
+							<div className="value green-txt"> {getAccruedBonus(referralDetails?.referredUsers)} <small>{getUserDefaultCurrency(user, appValues)}</small></div>
 						</div>
 					</div>
 					
@@ -494,29 +530,29 @@ const Referrals = () => {
 				</div>
 				
 				{
-					referralDetails?.referredUsers?.map((user: any) => {
-						let percentage = Number(getPercentage(user?.cummulativeGBPTransfer, referralSettings?.data?.referralActivationAmount ));
+					referralDetails?.referredUsers?.map((referredUser: any) => {
+						let percentage = Number(getPercentage(referredUser?.[`cummulative${getUserDefaultCurrency(referredUser, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount ));
 						percentage = percentage > 100 ? 100 : percentage;
 
 						return (
 						<div className="user-card">
 							<div className="left">
 								<div className="round-container">
-									<img src={asset('icons', isNotAwaiting(user, referralSettings) ? 'thin-green-tick.png' : 'waiting.png')} alt="check mark" />
+									<img src={asset('icons', isNotAwaiting(referredUser, referralSettings) ? 'thin-green-tick.png' : 'waiting.png')} alt="check mark" />
 								</div>
 							</div>
 							<div className="right">
 								<div className="user">
-									{user.firstName} {user.lastName}
+									{referredUser.firstName} {referredUser.lastName}
 								</div>
 		
 								<div className="value">
-									<div className="top">You earn{user?.useStatus === "Used" ? 'ed' : ''}</div>
-									<div className="bottom green-txt">{referralSettings?.data?.referrerDiscountValue} GBP</div>
+									<div className="top">You earn{referredUser?.useStatus === "Used" ? 'ed' : ''}</div>
+									<div className="bottom green-txt">{referralSettings?.data?.referrerDiscountValue} {getUserDefaultCurrency(user, appValues)}</div>
 								</div>
 								<div className="value italicize">
-									<div className="top">They earn{user?.useStatus === "Used" ? 'ed' : ''}</div>
-									<div className="bottom they-earn">£{referralSettings?.data?.referredUserDiscountValue} too</div>
+									<div className="top">They earn{referredUser?.useStatus === "Used" ? 'ed' : ''}</div>
+									<div className="bottom they-earn">{referralSettings?.data?.referredUserDiscountValue} {getUserDefaultCurrency(referredUser, appValues)} too</div>
 								</div>
 							</div>
 		
@@ -525,19 +561,19 @@ const Referrals = () => {
 		
 									<div className="label info sentence-case">
 										{
-											isNotAwaiting(user, referralSettings) ?
+											isNotAwaiting(referredUser, referralSettings) ?
 											'Reward activated' :
 											`${percentage}% spent till activation`
 										}
 									</div>
 
 									{
-								user?.useStatus === "Used" ?
+								referredUser?.useStatus === "Used" ?
 									 <div className="label danger">
 										Used
 									</div> :
 									
-									isNotAwaiting(user, referralSettings) ?
+									isNotAwaiting(referredUser, referralSettings) ?
 										<div className="label success">
 											Active
 										</div> :
@@ -573,7 +609,5 @@ const Referrals = () => {
 }
 
 export default Referrals
-function isNotAwaiting(user: any, referralSettings: any) {
-	return Number(getPercentage(user?.cummulativeGBPTransfer, referralSettings?.data?.referralActivationAmount )) >= 100
-}
+
 

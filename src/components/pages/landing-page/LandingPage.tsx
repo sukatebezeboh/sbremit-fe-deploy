@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMax, getMoneyValue } from '../../../util/util';
+import { asset, formatCurrency, getMax, getMoneyValue, useResizeObserver } from '../../../util/util';
 import { AppFooter } from '../../modules/app-footer/AppFooter';
 import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
 import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
@@ -18,8 +18,10 @@ import config from '../../../env';
 
 const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
 const Body = style(bg);
-const LandingPage = (props: any) => {
 
+
+const LandingPage = (props: any) => {
+    const [screenType] = useResizeObserver(constants.MOBILE)
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
     const appValues = useSelector((state: any) => state.appValues);
@@ -255,6 +257,18 @@ const LandingPage = (props: any) => {
         && Number(toSend.value) <= Number(promo.settings.maximumSpend);
     }
 
+    const getXInputMarginAdjust = (newLinesValues: boolean[]) => {
+        let initialMargin = screenType === constants.MOBILE ? 160 : -50;
+
+        for( const newLine of newLinesValues ) {
+            if (newLine) {
+                initialMargin += 50
+            }
+        }
+
+        return initialMargin + "px";
+    }
+
     return (
         <Body>
             <div>
@@ -302,7 +316,9 @@ const LandingPage = (props: any) => {
                         <div className="wrapper">
                             <div className="timeline-box">
                                 <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                <div className={`timeline timeline-2`}> <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> </span></div>
+                                {Boolean(Number(transfer.serviceFee)) && <div className={`timeline timeline-2`}> 
+                                    <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> </span>
+                                </div>}
                                 <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span>
                                 {/* <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 {toSend.currency}</span> for this transfer</i>  */}
                                 </span></div>
@@ -314,7 +330,7 @@ const LandingPage = (props: any) => {
                             </div>
                         </div>
                         <div className="offset"></div>
-                        <div className={`receive ${promo ? 'extend-margin-for-promo' : ''}`} >
+                        <div className="receive" style={{marginTop: getXInputMarginAdjust([Boolean(promo), Boolean(Number(transfer?.serviceFee))])}}>
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
                                 ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})

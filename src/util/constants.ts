@@ -44,6 +44,8 @@ export const constants = {
     VERIFICATION_TYPE_WATCHLIST: "WATCHLIST",
 
     VERIFICATION_STAGE_FINAL: "FINAL",
+    MOBILE: "MOBILE",
+    DESKTOP: "DESKTOP",
 
     SIGNUP_COUNTRIES: {
         "AT": "Austria",

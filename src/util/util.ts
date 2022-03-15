@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { toastAction } from "redux/actions/actions";
 import { constants } from "./constants";
 import { settings } from "./settings";
@@ -255,4 +256,33 @@ export const copyToClipBoard = (text: string) => {
 
 export const getPercentage = ( needle: number|string, haystack: number|string, rounding = 0) => {
     return ((Number(needle)/Number(haystack)) * 100).toFixed(rounding)
+}
+
+export const useResizeObserver = (initial: any) => {
+    const [screenType, setScreenType] = useState(initial)
+
+    useEffect(() => {
+        new ResizeObserver((entries: any) => {
+            for (const entry of entries) {
+                if ( entry.contentRect.width < 900) {
+                    setScreenType(constants.MOBILE)
+                } else {
+                    setScreenType(constants.DESKTOP)
+                }
+            }
+        }).observe(document.querySelector('html') as Element)
+    }, [])
+    
+    return [screenType]
+}
+
+export const getUserDefaultCurrency = (user: any, appValues: any) => {
+	const userCountry = user?.profile?.location_country;
+
+	const countries = getValueFromArray('Countries List', 'name', appValues?.values?.data || []);
+
+	const currencies = getValueFromArray('pay-in-currencies', 'name', appValues?.values?.data || []);
+
+	
+	return currencies?.data[countries?.data[userCountry]] ?? 'GBP';
 }

@@ -175,7 +175,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
             z-index: 1;
         }
         .timeline-box {
-            height: 318px;
+            height: fit-content;
             border-left: 1.5px solid #7FBCAD;
             position: absolute;
             top: 0px;
@@ -331,7 +331,7 @@ export const style = (bg = './assets/bg/ca-bg.png') => styled.div`
                 }
                 .timeline-box{
                     left: 20px;
-                    height: 300px;
+                    height: fit-content;
                     .timeline {
                         span{
                             font-size: 12px

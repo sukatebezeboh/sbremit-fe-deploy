@@ -529,7 +529,7 @@ export const confirmTransfer = (
     destinationAmount: Number(transfer.toReceive?.total),
     paymentMethod: {},
     promo: transfer.promo?.code,
-    referralDiscount: transfer?.referralDiscount,
+    referralDiscountValue: transfer?.referralDiscount?.value,
     meta: {
       serviceFee: transfer.serviceFee,
       exchangeBase: transfer.conversionRate?.base,
@@ -1366,4 +1366,9 @@ export const getUserReferrals = (setDetailsCallback: Function) => {
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
+}
+
+export const updateAppValues = () => {
+  localStorage.removeItem('VALUES')
+            appValuesAction()
 }
