@@ -134,8 +134,14 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
                 </div>
             `,
-            "bank_transfer": "Bank Pay Out Fee: ",
-            "cash_pickup": "Cash Pick-up Partner Fee: "
+            "bank_transfer": `Bank Pay Out Fee: <a href="#" class='light-green click-hover-tab fas fa-info'></a>
+            <div class="hover-tab">
+                <div class="tab-list"> A fee charged by local payout partner which is added to the amount you send or deducted from the amount the recipient gets </div>
+            </div> `,
+            "cash_pickup": `Cash Pick-up Partner Fee: <a href="#" class='light-green click-hover-tab fas fa-info'></a>
+            <div class="hover-tab">
+                <div class="tab-list"> A fee charged by local payout partner which is added to the amount you send or deducted from the amount the recipient gets </div>
+            </div>`
         }
 
         return texts[selectedMethod];

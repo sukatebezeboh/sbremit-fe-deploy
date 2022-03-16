@@ -16,13 +16,18 @@ const Div = styled.div`
 }
 
 .sidebar {
+	position: relative;
+	min-width: 350px;
+	@media only screen and (max-width: 900px) {
+		position: static;
+	}
 	.invite-text {
 		text-align: center;
 		margin: 20px auto;
 		font-size: large;
 		color: dimgray;
 		line-height: 2;
-		text-shadow: 1px 1px 1px grey;
+		/* text-shadow: 1px 1px 1px grey; */
 		.info {
 			background: #5f899220;
 			color: #5f8992;
@@ -52,8 +57,15 @@ const Div = styled.div`
 	min-height: fit-content;
 	max-width: fit-content;
 	padding: 10px;
-	background-color: #080710;
+	background-color: white;
 	color: lightgrey;
+	position: fixed;
+	z-index: -1;
+
+	@media only screen and (max-width: 900px) {
+		position: static;
+		margin: 0 auto;
+	}
 }
 .background {
 	width: 430px;
@@ -111,7 +123,7 @@ const Div = styled.div`
 	.name {
 		font-size: 23px;
 		font-weight: 500;
-		color: white;
+		color: grey;
 		margin: 10px 0 5px 0;
 	}
 	.code {
@@ -147,6 +159,9 @@ const Div = styled.div`
 	}
 }
 .social-icons {
+	.share-text {
+		color: grey;
+	}
 	a {
 		background-color: rgba(255,255,255,0.13);
 		border-radius: 10px;
@@ -196,6 +211,7 @@ const Div = styled.div`
 }
 .buttons {
 	button {
+		margin-top: 5px;
 		background-color: rgba(255,255,255,0.13);
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
@@ -207,6 +223,7 @@ const Div = styled.div`
 		outline: none;
 		padding: 12px 0;
 		color: #d0d1d6;
+		color: grey;
 		font-size: 17px;
 		font-weight: 400;
 		border-radius: 5px;
@@ -248,6 +265,7 @@ const Div = styled.div`
 
 	@media only screen and (max-width: 900px) {
 		grid-template-columns: 1fr;
+		grid-gap: 20px;
 	}
 	.referred-users {
 		.card {
@@ -267,6 +285,12 @@ const Div = styled.div`
 			box-sizing: border-box;
 			grid-gap: 5%;
 			padding: 15px;
+
+			@media only screen and (max-width: 900px) {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 700px;
+			}
 			.overview-line {
 				text-align: center;
 				max-width: 300px;
@@ -423,9 +447,7 @@ const Referrals = () => {
   })
 
   useEffect(() => {
-	
 	getUserReferrals(setReferralDetails)
-
   }, [])
   
 
@@ -466,7 +488,7 @@ const Referrals = () => {
 							</h1>
 							<div className="social-icons">
 
-								<div className="">
+								<div className="share-text">
 									Share this code on:	
 									<br />
 									<br />
@@ -475,7 +497,7 @@ const Referrals = () => {
 								<a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a>
 								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=Send%20money%20to%20Africa%20on%20SBRemit&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
 								<a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a> 
-								<a href="https://api.whatsapp.com/?text=SBRemit" target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
+								<a href="https://api.whatsapp.com/send?text=SBRemit" target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
 
 							</div>
 
@@ -490,20 +512,30 @@ const Referrals = () => {
 								<button onClick={() => copyToClipBoard(`${_env.APP_HOST}${paths.SIGN_UP}?referral=${user?.referral?.code}`)}>Copy</button>
 							</div>
 
+							<br />
+							<br />
+							<div className="invite-text">
+								<div className="info">
+									<span className="info-icon"><i className="fas fa-info"></i></span> Tap any icon above to send them your unique code: {user?.referral?.code}
+								</div>
+								<br />
+								<div>
+									- You receive {getUserDefaultCurrency(user, appValues, true)}{referralSettings?.data?.referrerDiscountValue} when they send over {getUserDefaultCurrency(user, appValues, true)} {referralSettings?.data?.referralActivationAmount}. 
+								</div>
+								{Boolean(Number(referralSettings?.data?.referredUserDiscountValue)) && <div>
+									- They also get a {getUserDefaultCurrency(user, appValues, true)}{referralSettings?.data?.referredUserDiscountValue} reward for using your referral code.
+								</div>}
+								<br />
+								<div className="info no-bg">
+									<span className="info-icon"><i className="fas fa-info"></i></span><Link to={paths.LEGAL + "/terms"}> Terms and conditions apply </Link>
+								</div>
+							</div>
 
 						</div>
+						
 				</div>
 
-				<div className="invite-text">
-					<div className="info">
-						<span className="info-icon"><i className="fas fa-info"></i></span> Tap any icon above to send them your unique code: {user?.referral?.code}
-					</div>
-					Earn £{referralSettings?.data?.referrerDiscountValue} off your transaction for everyone you invite when they transfer over £{referralSettings?.data?.referralActivationAmount}. They also get a £{referralSettings?.data?.referredUserDiscountValue} reward off transactions for using your referral code.
 
-					<div className="info no-bg">
-						<span className="info-icon"><i className="fas fa-info"></i></span><Link to={paths.LEGAL + "/terms"}> Terms and conditions apply </Link>
-					</div>
-				</div>
 
 		  				
 			</div>

@@ -19,6 +19,12 @@ export const maxTransfersUnverified: any = {
   EUR: Number.MAX_SAFE_INTEGER
 }
 
+export const currencySymbols: any = {
+  GBP: "£",
+  CAD: "CA$",
+  EUR: "€"
+}
+
 export const constants = {
     HOME: "home",
     ABOUT: "about",

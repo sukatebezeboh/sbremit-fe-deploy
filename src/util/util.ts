@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toastAction } from "redux/actions/actions";
-import { constants } from "./constants";
+import { constants, currencySymbols } from "./constants";
 import { settings } from "./settings";
 
 export const asset = (folder: string, name: string) => {
@@ -276,13 +276,14 @@ export const useResizeObserver = (initial: any) => {
     return [screenType]
 }
 
-export const getUserDefaultCurrency = (user: any, appValues: any) => {
+export const getUserDefaultCurrency = (user: any, appValues: any, getSymbol:boolean = false) => {
 	const userCountry = user?.profile?.location_country;
 
 	const countries = getValueFromArray('Countries List', 'name', appValues?.values?.data || []);
 
 	const currencies = getValueFromArray('pay-in-currencies', 'name', appValues?.values?.data || []);
 
+    const currency = currencies?.data[countries?.data[userCountry]] ?? 'GBP';
 	
-	return currencies?.data[countries?.data[userCountry]] ?? 'GBP';
+	return getSymbol ? currencySymbols[currency] : currency;
 }

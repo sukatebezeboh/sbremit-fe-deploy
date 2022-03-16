@@ -110,7 +110,8 @@ const GetQuote = () => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${value}`}, 
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate)},
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -136,7 +137,8 @@ const GetQuote = () => {
                 payload: {
                     ...transfer,
                     toSend: {...toSend, value: `${(value / rate).toFixed(2)}`}, 
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    toReceive: {...toReceive, value: `${value}`, total: Number(value)},
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -211,7 +213,8 @@ const GetQuote = () => {
             payload: {
                 ...transfer,
                 toSend: {...toSend, total: `${total}`},
-                toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))} 
+                // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))},
+                toReceive: {...toReceive, total: Number(toReceive.value)},
             }
         })
     }
