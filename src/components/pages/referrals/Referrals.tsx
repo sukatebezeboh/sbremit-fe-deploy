@@ -56,11 +56,12 @@ const Div = styled.div`
 	justify-content: center;
 	min-height: fit-content;
 	max-width: fit-content;
-	padding: 10px;
+	padding: 10px 10px;
 	background-color: white;
 	color: lightgrey;
-	position: fixed;
-	z-index: -1;
+	/* position: fixed; */
+	z-index: 1;
+	/* min-width: 100%;	 */
 
 	@media only screen and (max-width: 900px) {
 		position: static;
@@ -98,10 +99,10 @@ const Div = styled.div`
 	border-radius: 10px;
 	backdrop-filter: blur(10px);
 	border: 2px solid rgba(255,255,255,0.1);
-	box-shadow: 0 0 40px rgba(8,7,16,0.6);
+	/* box-shadow: 0 0 40px rgba(8,7,16,0.6); */
 	position: relative;
 	width: 350px;
-	padding: 30px;
+	/* padding: 30px; */
 	border-radius: 10px;
 	display: flex;
 	align-items: center;
@@ -112,7 +113,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 10px rgba(8,7,16,0.6);
 		height: 150px;
 		width: 150px;
 		border-radius: 50%;
@@ -167,7 +168,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 10px rgba(8,7,16,0.6);
 		position: relative;
 		height: 40px;
 		width: 40px;
@@ -216,7 +217,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 2px rgba(8,7,16,0.6);
 		position: relative;
 		width: 100%;
 		border: none;
@@ -230,8 +231,8 @@ const Div = styled.div`
 		cursor: pointer;
 		z-index: 4;
 		&:hover {
-			box-shadow: 1px 1px 2px 2px solid black;
-			background-color: rgba(255,255,255,0.03);
+			box-shadow: 2px 1px 6px 4px solid black;
+			background-color: whitesmoke;
 		}
 		&:first-child {
 			margin-right: 10px;
@@ -267,6 +268,16 @@ const Div = styled.div`
 		grid-template-columns: 1fr;
 		grid-gap: 20px;
 	}
+
+	.card {
+			width: 100%;
+			min-height: 140px;
+			box-shadow: 0px 10px 12px #CCCCCC80;
+			padding: 15px 30px 30px;
+			border-radius: 15px;
+			background: #fff;
+			margin-bottom: 10px;
+		}
 	.referred-users {
 		.card {
 			width: 100%;
@@ -472,7 +483,7 @@ const Referrals = () => {
 
 			<div className='sidebar'>
 
-				<div className="coupon-container">
+				<div className="coupon-container card">
 						<div className="wrapper">
 							<div className="img-area">
 							<div className="inner-area">
