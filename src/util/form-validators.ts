@@ -5,14 +5,38 @@ export const SignUpValidator = Yup.object().shape({
     lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     location_country: Yup.string().min(2, "Too short").max(2, "Too long").required("Required"),
     // username: Yup.string().required("Required").email("Enter valid email"),
-    username: Yup.string().required("Required"),
+    username: Yup.string().trim()
+      .test('test-username', 'Enter Valid Phone/Email', 
+        (value) => {
+          const emailRegex = /^([a-zA-Z0-9_\\.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+          const phoneRegex = /^\+?\d{7,}$/;
+          let isValidEmail = value ? emailRegex.test(value) : false;
+          let isValidPhone = value ? phoneRegex.test(value) : false;
+          if (!isValidEmail && !isValidPhone ){
+            return false;
+          }
+          return true;
+      }),
     password: Yup.string().min(8, "Minimum password length is 8 characters").max(20, "Max password length is 20 characters").required("Required"),
 });
 
 export const SignInValidator = Yup.object().shape({
     // username: Yup.string().required("Required").email("Enter valid email"),
-    username: Yup.string().required("Required"),
-    password: Yup.string().min(8, "Minimum password length is 8 characters").max(20, "Max password length is 20 characters").required("Required")
+    username: Yup.string().trim()
+      .test('test-username', 'Enter Valid Phone/Email', 
+        (value) => {
+          const emailRegex = /^([a-zA-Z0-9_\\.-])+@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+          const phoneRegex = /^\+?\d{7,}$/;
+          let isValidEmail = value ? emailRegex.test(value) : false;
+          let isValidPhone = value ? phoneRegex.test(value) : false;
+          if (!isValidEmail && !isValidPhone ){
+            return false;
+          }
+          return true;
+      }),
+    password: Yup.string().min(8, "Minimum password length is 8 characters").max(20, "Max password length is 20 characters").required("Required"),
 });
 
 export const ChangePasswordValidator = Yup.object().shape({
