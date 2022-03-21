@@ -158,8 +158,11 @@ const LandingPage = (props: any) => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${value}`},
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, selected, true))}
+                    // toSend: {...toSend, value: `${value}`},
+                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, selected, true))},
+                    toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, selected, false, false))), value: `${value}`}, 
+                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
+                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false))) },
                 }
             })
 
@@ -168,8 +171,10 @@ const LandingPage = (props: any) => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${(value / rate).toFixed(2)}`},
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))}
+                    // toSend: {...toSend, value: `${(value / rate).toFixed(2)}`},
+                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))},
+                    toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, false, false))), value: `${(value / rate).toFixed(2)}`}, 
+                    toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false)))},
                 }
             })
         }
@@ -246,8 +251,10 @@ const LandingPage = (props: any) => {
             type: TRANSFER,
             payload: {
                 ...transfer,
-                toSend: {...toSend, total: `${total}`},
-                toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, selected, true))}
+                // toSend: {...toSend, total: `${total}`},
+                // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, selected, true))},
+                toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, false, false))), total: `${total}`},
+                toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, true, false)))},
             }
         })
     }
