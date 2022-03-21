@@ -219,12 +219,12 @@ const SignUp = () => {
                     }
                   >
                     <div>
-                      Email<i>*</i>
+                    Email or Phone Number<i>*</i>
                     </div>
                     <Field
                       name="username"
                       type="text"
-                      placeholder="Your email address"
+                      placeholder="Your email address or phone number"
                     />
                     {touched.username && errors.username && (
                       <div className="form-error-message">
