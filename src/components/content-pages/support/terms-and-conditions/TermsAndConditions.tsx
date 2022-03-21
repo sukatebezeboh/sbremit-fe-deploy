@@ -631,6 +631,23 @@ const TermsAndConditions = (props: {setNavLink: Function}) => {
                     text:[`The sender can only participate in the promotion during the promotion period and only in the manner described in the Special Terms and Conditions of Promotions. If the Participant submits his entry late, early, in a way other than the prescribed manner, or otherwise incomplete, he shall be excluded from participation without further notice`]
                 }
             ]
+        },
+        {
+            title: "Referrals",
+            content: [
+                {
+                    text: [`For referrals, the person referring shall be known as the referrer and the person being referred shall be known as the referee.`]
+                },
+                {
+                    text:[`The referrer will get 10 GBP or 10 CAD off their transaction if their referee’s transaction amount adds up to 200 GBP or 200 CAD irrespective of the number of transactions.`]
+                },
+                {
+                    text:[`The referee will get 3 GBP or 3 CAD off their next transaction if they remit GBP 200 GBP or 200 CAD within 45 days of being referred.`]
+                },
+                {
+                    text:[`To benefit from the referral, the amount being sent would be greater than or equal to the promo amount.`]
+                }
+            ]
         }
     ]
 
