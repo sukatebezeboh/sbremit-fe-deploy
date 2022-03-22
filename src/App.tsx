@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-
+import {useIdleTimer} from 'react-idle-timer/dist/modern';
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
-import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast } from './redux/actions/actions';
+import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast, signOutAction } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
@@ -18,8 +18,8 @@ function App() {
   const showAppLoader = useSelector((state: any)=>state.loading);
   const confirmDialog = useSelector((state: any)=>state.confirmDialog);
 
-  const history = useHistory();
-
+  const history = useHistory()
+  
   useEffect(() => {
     checkAuth()
     appValuesAction()
