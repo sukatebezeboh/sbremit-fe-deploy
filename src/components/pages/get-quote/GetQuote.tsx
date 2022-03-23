@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { AppService } from 'services/AppService';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, stackNewToast, toastAction, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -109,9 +109,9 @@ const GetQuote = () => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${value}`}, 
+                    toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, false, false))), value: `${value}`}, 
                     // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate)},
+                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false))) },
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -136,9 +136,9 @@ const GetQuote = () => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, value: `${(value / rate).toFixed(2)}`}, 
-                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value)},
+                    toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, false, false))), value: `${(value / rate).toFixed(2)}`}, 
+                    toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false)))},
+                    // toReceive: {...toReceive, value: `${value}`, total: Number(value)},
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -208,15 +208,17 @@ const GetQuote = () => {
             mutateInputValueDirectly(conversionRate?.rate)
         }
 
+
         dispatch({
             type: TRANSFER, 
             payload: {
                 ...transfer,
-                toSend: {...toSend, total: `${total}`},
+                toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, false, false))), total: `${total}`},
                 // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))},
-                toReceive: {...toReceive, total: Number(toReceive.value)},
+                toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true, false)))},
             }
         })
+
     }
 
     const isAcceptablePromoValue = (promo: any) => {

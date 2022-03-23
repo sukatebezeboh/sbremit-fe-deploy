@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import styled from "styled-components";
-import { getTransactionDetails } from '../../../redux/actions/actions';
+import { getServiceRateValue, getTransactionDetails } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -106,13 +106,13 @@ const TransferDetailsBox = ( { transferId } :any ) => {
 
     const transfer = useSelector((state: any) => state.transfer);    
     const transaction = transfer?.transactionDetails;
+    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer?.serviceFee);
     const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transfer?.transferMethod?.replace('_', ' ');
-    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer?.toSend?.value);
+    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transfer?.toSend?.adjusted ?? transfer?.toSend?.value);
     const sendCurrency = transferId ? transaction?.originCurrency : transfer?.toSend?.currency;
     const xBase = transferId ? transaction?.meta?.exchangeBase : transfer?.conversionRate?.base;
     const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency( transfer?.promo?.settings?.rate || transfer?.conversionRate?.rate);
     const xTarget = transferId ? transaction?.meta?.exchangeTarget : transfer?.conversionRate?.target;
-    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transfer?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transfer?.serviceFee);
     const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transfer?.toReceive?.total);
     const receiveCurrency = transferId ? transaction?.destinationCurrency : transfer?.toReceive?.currency;
     const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transfer?.toSend?.total)}`);
@@ -180,7 +180,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>
-                        <div className="right uppercase">+{serviceFee} {sendCurrency}</div>
+                        <div className="right uppercase">  { transfer?.allowOperatorFee ? `+${serviceFee}` : `-${Number(getServiceRateValue(receiveAmount, transferMethod, false, false))}`} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>

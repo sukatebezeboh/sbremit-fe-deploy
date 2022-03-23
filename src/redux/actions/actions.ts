@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import ReactPixel from 'react-facebook-pixel';
 import {
     ADD_TO_STACKED_TOASTS,
   APP_VALUES,
@@ -524,7 +524,7 @@ export const confirmTransfer = (
     transferMethod: transfer.transferMethod,
     recipientId: recipient.id,
     originCurrency: transfer.toSend?.currency,
-    originAmount: Number(transfer.toSend?.value),
+    originAmount: Number(transfer.toSend?.adjusted ?? transfer.toSend?.value),
     destinationCurrency: transfer.toReceive?.currency,
     destinationAmount: Number(transfer.toReceive?.total),
     paymentMethod: {},
@@ -547,6 +547,7 @@ export const confirmTransfer = (
       if (res.data.status === '200') {
         callback(res.data.data.id)
         CookieService.put('transfer', JSON.stringify(res.data.data.id))
+        ReactPixel.track('Purchase', { value: payload.meta.totalToPay, currency: payload.originCurrency})
         getTransactionDetails(callback)
       } else {
         toastAction({
@@ -851,9 +852,10 @@ export const getServiceRateValue = (
   toReceiveValue: string | number,
   transferMethod: string,
   getRecipientsValue = false,
+  checkOperatorFee = true
 ) => {
   const transfer = store.getState().transfer
-  if (!transfer.allowOperatorFee) return 0
+  if (!transfer.allowOperatorFee && checkOperatorFee) return 0
 
   const transferMethodsIds: any = {
     mobile_money: '1',

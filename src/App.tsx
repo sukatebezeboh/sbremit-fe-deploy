@@ -1,6 +1,9 @@
 import React, {useEffect} from 'react';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, withRouter } from 'react-router-dom';
 import {useIdleTimer} from 'react-idle-timer/dist/modern';
+import ReactGA from 'react-ga';
+import ReactPixel from 'react-facebook-pixel';
+
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
@@ -18,8 +21,21 @@ function App() {
   const showAppLoader = useSelector((state: any)=>state.loading);
   const confirmDialog = useSelector((state: any)=>state.confirmDialog);
 
-  const history = useHistory()
-  
+  const history = useHistory();
+
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
+  ReactPixel.init('664533234865734');
+
+  const RouteChangeTracker = ({ history }: any) => {
+    history.listen((location: any, action: any) => {
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
+        ReactPixel.pageView(); 
+    });
+    return <div></div>;
+  };
+  const ReactPageTracker = withRouter(RouteChangeTracker);
+
   useEffect(() => {
     checkAuth()
     appValuesAction()
@@ -35,6 +51,7 @@ function App() {
       <AppLoader show={showAppLoader}/>
       {confirmDialog.open ? <ConfirmDialog /> : <></>}
       <FloatingWhatsAppWidget />
+      <ReactPageTracker />
       <Switch>
         {
             Routing.map((route: IRoute, i: number) => (
