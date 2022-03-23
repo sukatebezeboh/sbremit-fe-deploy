@@ -447,6 +447,7 @@ const Div = styled.div`
 }
 
 `
+
 const Referrals = () => {
 
   const user = useSelector((state: any) => state.auth.user);
@@ -474,6 +475,15 @@ const Referrals = () => {
 	return Number(getPercentage(user?.[`cummulative${getUserDefaultCurrency(user, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount )) >= 100
   }
   
+  const getShareReferralText = (extraText = '') => {
+	  return encodeURIComponent(
+		`SB REMIT is a cheap, fast and secure way of sending money to Africa. 
+		It even gets better - you can earn ${getUserDefaultCurrency(user, appValues, true)}${referralSettings?.data?.referredUserDiscountValue} when you sign-up with my referral link and make a successful transfer.
+
+		${extraText}
+		`
+	  )
+  }
 
   return (
     <Div>
@@ -505,10 +515,10 @@ const Referrals = () => {
 									<br />
 								</div>
 							
-								<a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a>
-								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=Send%20money%20to%20Africa%20on%20SBRemit&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
-								<a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a> 
-								<a href="https://api.whatsapp.com/send?text=SBRemit" target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
+								{/* <a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a> */}
+								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=${getShareReferralText()}&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
+								{/* <a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a>  */}
+								<a href={`https://api.whatsapp.com/send?text=${getShareReferralText('https://sbremit.com/signup?referral=' + user?.referral?.code)}`} target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
 
 							</div>
 
@@ -545,10 +555,6 @@ const Referrals = () => {
 						</div>
 						
 				</div>
-
-
-
-		  				
 			</div>
 
 		  <div className="referred-users">

@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import { Redirect, Route, Switch, useHistory, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
+import ReactPixel from 'react-facebook-pixel';
 
 import './App.css';
 import {Routing, IRoute} from './util/routes'
@@ -21,17 +22,18 @@ function App() {
 
   const history = useHistory();
 
-  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS);
+  ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
+  ReactPixel.init('664533234865734');
 
-  const RouteChangeTracker = ({ history }) => {
-    history.listen((location, action) => {
+  const RouteChangeTracker = ({ history }: any) => {
+    history.listen((location: any, action: any) => {
         ReactGA.set({ page: location.pathname });
         ReactGA.pageview(location.pathname);
+        ReactPixel.pageView(); 
     });
     return <div></div>;
   };
-  const ReactGAPageTracker = withRouter(RouteChangeTracker);
-
+  const ReactPageTracker = withRouter(RouteChangeTracker);
 
   useEffect(() => {
     checkAuth()
@@ -48,7 +50,7 @@ function App() {
       <AppLoader show={showAppLoader}/>
       {confirmDialog.open ? <ConfirmDialog /> : <></>}
       <FloatingWhatsAppWidget />
-      <ReactGAPageTracker />
+      <ReactPageTracker />
       <Switch>
         {
             Routing.map((route: IRoute, i: number) => (

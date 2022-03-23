@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import styled from "styled-components";
-import { getTransactionDetails } from '../../../redux/actions/actions';
+import { getServiceRateValue, getTransactionDetails } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -180,7 +180,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>
-                        <div className="right uppercase">+{serviceFee} {sendCurrency}</div>
+                        <div className="right uppercase">  { transfer?.allowOperatorFee ? `+${serviceFee}` : `-${Number(getServiceRateValue(receiveAmount, transferMethod, false, false))}`} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>

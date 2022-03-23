@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import ReactPixel from 'react-facebook-pixel';
 import {
     ADD_TO_STACKED_TOASTS,
   APP_VALUES,
@@ -547,6 +547,7 @@ export const confirmTransfer = (
       if (res.data.status === '200') {
         callback(res.data.data.id)
         CookieService.put('transfer', JSON.stringify(res.data.data.id))
+        ReactPixel.track('Purchase', { value: payload.meta.totalToPay, currency: payload.originCurrency})
         getTransactionDetails(callback)
       } else {
         toastAction({
