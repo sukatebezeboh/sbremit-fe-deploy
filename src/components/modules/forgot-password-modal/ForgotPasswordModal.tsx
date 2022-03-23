@@ -167,7 +167,7 @@ const ForgotPasswordModal = (props: any) => {
                             ({errors, touched, values}: any) => (
                                 <Form className={`form ${(touched.username && errors.username) ? 'form-error': ''}`}>
                                     <div>
-                                        <Field name="username" type="text" placeholder="Your email address" /> 
+                                        <Field name="username" type="text" placeholder="Your email address"/> 
                                         {(touched.username && errors.username) && <div className="form-error-message">{errors.username}</div>}
                                     </div>
                                     <span></span> 

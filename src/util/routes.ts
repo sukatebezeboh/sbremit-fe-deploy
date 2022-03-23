@@ -1,9 +1,15 @@
 import LandingPage from '../components/pages/landing-page/LandingPage'
 import SignUp from '../components/pages/sign-up/SignUp';
 import SignIn from '../components/pages/sign-in/SignIn';
+import ForgetPassword from '../components/pages/forget-password/ForgetPassword';
+import PasswordEmailReset from '../components/pages/password-email-reset/PasswordEmailReset';
+import EmailLinkSent from '../components/pages/email-link-sent/EmailLinkSent';
+import PasswordSMSReset from '../components/pages/password-sms-reset/PasswordSMSReset';
+import ResetSmsCode from '../components/pages/reset-sms-code/ResetSmsCode'
+import ResetPassword from '../components/pages/reset-password/ResetPassword';
+import PasswordResetComplete from '../components/pages/password-reset-complete/PasswordResetComplete';
 import AccountConfirmation from '../components/email-templates/account-confirmation/AccountConfirmation';
 import PasswordReset from '../components/email-templates/password-reset/PasswordReset';
-import ResetPassword from '../components/pages/reset-password/ResetPassword';
 import Dashboard from '../components/pages/dashboard/Dashboard';
 import UserProfile from '../components/pages/user-profile/UserProfile';
 import ChangePassword from '../components/pages/change-password/ChangePassword';
@@ -100,6 +106,41 @@ export const Routing: IRoute[] = [
         protected: false,
     },
     {
+        path: paths.FORGET_PASSWORD,
+        component: ForgetPassword,
+        protected: false,
+    },
+    {
+        path: paths.PASSWORD_EMAIL_RESET,
+        component: PasswordEmailReset,
+        protected: false,
+    },
+    {
+        path: paths.EMAIL_LINK_SENT,
+        component: EmailLinkSent,
+        protected: false,
+    },
+    {
+        path: paths.PASSWORD_SMS_RESET,
+        component: PasswordSMSReset,
+        protected: false,
+    },
+    {
+        path: paths.SMS_CODE_SENT,
+        component: ResetSmsCode,
+        protected: false,
+    },
+    {
+        path: paths.RESET_PASSWORD,
+        component: ResetPassword,
+        protected: false
+    },
+    {
+        path: paths.PASSWORD_RESET_COMPLETE,
+        component: PasswordResetComplete,
+        protected: false,
+    },
+    {
         path: paths.CONFIRM_ACCOUNT_EMAIL,
         component: AccountConfirmation,
         protected: false,
@@ -112,11 +153,6 @@ export const Routing: IRoute[] = [
     {
         path: paths.PASSWORD_RESET_EMAIL,
         component: PasswordReset,
-        protected: false
-    },
-    {
-        path: paths.RESET_PASSWORD,
-        component: ResetPassword,
         protected: false
     },
     {
