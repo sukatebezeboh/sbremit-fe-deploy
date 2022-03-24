@@ -344,13 +344,17 @@ const Contact = () => {
                         <p>Follow us on</p>
 
                         <div className="socials">
-                            <div className="social">
-                                <img src={asset('icons', 'instagram-green.svg')} alt="instagram" />
-                            </div>
+                            <a href="https://www.instagram.com/sb.remit" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'instagram-green.svg')} alt="instagram" />
+                                </div>
+                            </a>
 
-                            <div className="social">
-                                <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
-                            </div>
+                            {/* <a href="" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
+                                </div>
+                            </a> */}
 
                             <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer">
                                 <div className="social">
@@ -358,9 +362,11 @@ const Contact = () => {
                                 </div>
                             </a>
 
-                            <div className="social">
-                                <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
-                            </div>
+                            {/* <a href="" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
+                                </div>
+                            </a> */}
                         </div>
                     </div>
                 </div>
@@ -409,21 +415,29 @@ const Contact = () => {
                         <p>Follow us on</p>
 
                         <div className="socials">
-                            <div className="social">
-                                <img src={asset('icons', 'instagram-green.svg')} alt="instagram" />
-                            </div>
+                            <a href="https://www.instagram.com/sb.remit" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'instagram-green.svg')} alt="instagram" />
+                                </div>
+                            </a>
 
-                            <div className="social">
-                                <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
-                            </div>
+                            {/* <a href="" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'linkedin-green.svg')} alt="linkedin" />
+                                </div>
+                            </a> */}
+
                             <a href="https://facebook.com/SBremitt" target="_blank" rel="noreferrer">
                                 <div className="social">
                                     <img src={asset('icons', 'facebook-green.svg')} alt="facebook" />
                                 </div>
                             </a>
-                            <div className="social">
-                                <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
-                            </div>
+
+                            {/* <a href="" target="_blank" rel="noreferrer">
+                                <div className="social">
+                                    <img src={asset('icons', 'twitter-green.svg')} alt="twitter" />
+                                </div>
+                            </a> */}
                         </div>
                     </div>
                 </div>

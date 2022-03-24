@@ -56,11 +56,12 @@ const Div = styled.div`
 	justify-content: center;
 	min-height: fit-content;
 	max-width: fit-content;
-	padding: 10px;
+	padding: 10px 10px;
 	background-color: white;
 	color: lightgrey;
-	position: fixed;
-	z-index: -1;
+	/* position: fixed; */
+	z-index: 1;
+	/* min-width: 100%;	 */
 
 	@media only screen and (max-width: 900px) {
 		position: static;
@@ -98,10 +99,10 @@ const Div = styled.div`
 	border-radius: 10px;
 	backdrop-filter: blur(10px);
 	border: 2px solid rgba(255,255,255,0.1);
-	box-shadow: 0 0 40px rgba(8,7,16,0.6);
+	/* box-shadow: 0 0 40px rgba(8,7,16,0.6); */
 	position: relative;
 	width: 350px;
-	padding: 30px;
+	/* padding: 30px; */
 	border-radius: 10px;
 	display: flex;
 	align-items: center;
@@ -112,7 +113,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 10px rgba(8,7,16,0.6);
 		height: 150px;
 		width: 150px;
 		border-radius: 50%;
@@ -167,7 +168,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 10px rgba(8,7,16,0.6);
 		position: relative;
 		height: 40px;
 		width: 40px;
@@ -216,7 +217,7 @@ const Div = styled.div`
 		border-radius: 10px;
 		backdrop-filter: blur(10px);
 		border: 2px solid rgba(255,255,255,0.1);
-		box-shadow: 0 0 40px rgba(8,7,16,0.6);
+		box-shadow: 0 0 2px rgba(8,7,16,0.6);
 		position: relative;
 		width: 100%;
 		border: none;
@@ -230,8 +231,8 @@ const Div = styled.div`
 		cursor: pointer;
 		z-index: 4;
 		&:hover {
-			box-shadow: 1px 1px 2px 2px solid black;
-			background-color: rgba(255,255,255,0.03);
+			box-shadow: 2px 1px 6px 4px solid black;
+			background-color: whitesmoke;
 		}
 		&:first-child {
 			margin-right: 10px;
@@ -267,6 +268,16 @@ const Div = styled.div`
 		grid-template-columns: 1fr;
 		grid-gap: 20px;
 	}
+
+	.card {
+			width: 100%;
+			min-height: 140px;
+			box-shadow: 0px 10px 12px #CCCCCC80;
+			padding: 15px 30px 30px;
+			border-radius: 15px;
+			background: #fff;
+			margin-bottom: 10px;
+		}
 	.referred-users {
 		.card {
 			width: 100%;
@@ -436,6 +447,7 @@ const Div = styled.div`
 }
 
 `
+
 const Referrals = () => {
 
   const user = useSelector((state: any) => state.auth.user);
@@ -463,6 +475,15 @@ const Referrals = () => {
 	return Number(getPercentage(user?.[`cummulative${getUserDefaultCurrency(user, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount )) >= 100
   }
   
+  const getShareReferralText = (extraText = '') => {
+	  return encodeURIComponent(
+		`SB REMIT is a cheap, fast and secure way of sending money to Africa. 
+		It even gets better - you can earn ${getUserDefaultCurrency(user, appValues, true)}${referralSettings?.data?.referredUserDiscountValue} when you sign-up with my referral link and make a successful transfer.
+
+		${extraText}
+		`
+	  )
+  }
 
   return (
     <Div>
@@ -472,7 +493,7 @@ const Referrals = () => {
 
 			<div className='sidebar'>
 
-				<div className="coupon-container">
+				<div className="coupon-container card">
 						<div className="wrapper">
 							<div className="img-area">
 							<div className="inner-area">
@@ -494,10 +515,10 @@ const Referrals = () => {
 									<br />
 								</div>
 							
-								<a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a>
-								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=Send%20money%20to%20Africa%20on%20SBRemit&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
-								<a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a> 
-								<a href="https://api.whatsapp.com/send?text=SBRemit" target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
+								{/* <a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a> */}
+								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=${getShareReferralText()}&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
+								{/* <a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a>  */}
+								<a href={`https://api.whatsapp.com/send?text=${getShareReferralText('https://sbremit.com/signup?referral=' + user?.referral?.code)}`} target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
 
 							</div>
 
@@ -534,10 +555,6 @@ const Referrals = () => {
 						</div>
 						
 				</div>
-
-
-
-		  				
 			</div>
 
 		  <div className="referred-users">

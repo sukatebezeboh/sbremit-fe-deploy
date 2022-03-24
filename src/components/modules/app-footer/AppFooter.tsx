@@ -244,8 +244,22 @@ export const AppFooter = () => {
             <li>+44(0)3301334158</li>
             <li>contact@sbremit.com</li>
             <li className="socials">
-              <img src={asset('icons', 'instagram.svg')} alt="instagram" />
-              <img src={asset('icons', 'linkedin.svg')} alt="linkedin" />
+            <a
+                href="https://www.instagram.com/sb.remit"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                <img src={asset('icons', 'instagram.svg')} alt="instagram" />{' '}
+              </a>
+              {/* <a
+                href=""
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                <img src={asset('icons', 'linkedin.svg')} alt="linkedin" />{' '}
+              </a> */}
               <a
                 href="https://facebook.com/SBremitt"
                 target="_blank"
@@ -254,7 +268,14 @@ export const AppFooter = () => {
                 {' '}
                 <img src={asset('icons', 'facebook.svg')} alt="facebook" />{' '}
               </a>
-              <img src={asset('icons', 'twitter.svg')} alt="twitter" />
+              {/* <a
+                href=""
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                <img src={asset('icons', 'twitter.svg')} alt="twitter" />{' '}
+              </a> */}
             </li>
           </ul>
         </div>

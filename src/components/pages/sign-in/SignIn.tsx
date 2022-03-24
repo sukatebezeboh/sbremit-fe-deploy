@@ -73,11 +73,11 @@ const SignIn = () => {
                     (touched.username && errors.username ? 'form-error' : '')
                   }
                 >
-                  <div>Email</div>
+                  <div>Email or Phone Number</div>
                   <Field
                     name="username"
                     type="text"
-                    placeholder="Your email address"
+                    placeholder="Your email address or phone number"
                   />
                   {touched.username && errors.username && (
                     <div className="form-error-message">{errors.username}</div>

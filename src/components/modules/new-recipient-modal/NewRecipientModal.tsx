@@ -475,7 +475,7 @@ function NewRecipientModal(props: any) {
                                                 )}
                                                 {modeTransfer === "bankTransfer" && (
                                                 <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
-                                                    <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.accountNumber || errors.bankCode || errors.branchCode ||errors.key}</span> </div>
+                                                    <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.bankCode || errors.branchCode || errors.accountNumber || errors.key}</span> </div>
                                                     <Field as="select" name="countryCode">
                                                         <option value="CM12">CM21</option>
                                                     </Field>
@@ -488,12 +488,12 @@ function NewRecipientModal(props: any) {
                                                 {modeTransfer === "microfinanceTransfer" && (
                                                     <>
                                                         <div>
-                                                        <div>Account Number<i>*</i></div>
+                                                        <div>Account Number<i>*</i><span className="red-txt">{errors.recipientAccountNumber}</span></div>
                                                         <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
                                                         </div>
-                                                        <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                                        <div className={(touched.accountBranch && errors.accountBranch) ? 'form-error': ''}>
                                                             <div> Account Branch<i>*</i></div>
-                                                            <Field type="text" name="accountBranch" placeholder="" />
+                                                        <Field type="text" name="accountBranch" placeholder="" />
                                                         </div>
                                                     </>
                                                 )}
