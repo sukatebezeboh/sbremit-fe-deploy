@@ -367,26 +367,27 @@ export const changePasswordAction = (values: any) => {
       store.dispatch({ type: SUBMITTING, payload: '' })
     })
 }
-
-export const resetPasswordAction = (values: any, stage = 'email') => {
+export const resetPasswordAction = (values: any, stage = 'email', linkTo?: any) => {
   store.dispatch({ type: SUBMITTING, payload: paths.RESET_PASSWORD })
-
+  console.log('values', values)
   if (stage === 'email') {
     axios
       .post(
         config.API_HOST + endpoints.PASSWORD_REQUEST,
-        { username: values.username },
+        { username: values.username, type: values.type },
         { headers: { 'X-SERVICE-PROVIDER': config.X_SERVICE_PROVIDER } },
       )
       .then((res) => {
         if (res.status === 200) {
-          toastAction({
-            show: true,
-            type: 'info',
-            timeout: 60000,
-            title: `Now, check your mail`,
-            message: `The password reset link has been sent to you at ${values.username}`,
-          })
+          linkTo(values.username)
+          console.log('reset res', res.status, res.data)
+          // toastAction({
+          //   show: true,
+          //   type: 'info',
+          //   timeout: 60000,
+          //   title: `Now, check your mail`,
+          //   message: `The password reset link has been sent to you at ${values.username}`,
+          // })
           store.dispatch({ type: SUBMITTING, payload: '' })
         } else {
           toastAction({

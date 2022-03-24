@@ -92,7 +92,7 @@ const SignIn = () => {
                     Password{' '}
                     <span
                       className="f-pass"
-                      onClick={() => handleForgotPassword()}
+                      onClick={() => history.push('/forget-password')}
                     >
                       Forgot Password?
                     </span>
