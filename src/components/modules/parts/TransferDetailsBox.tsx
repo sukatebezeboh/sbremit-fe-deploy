@@ -6,7 +6,7 @@ import { getServiceRateValue, getTransactionDetails } from '../../../redux/actio
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getInclusiveText, getQueryParam, parseWithUnderscores } from '../../../util/util';
+import { formatCurrency, getInclusiveText, getMoneyValue, getQueryParam, parseWithUnderscores } from '../../../util/util';
 
 const Div = styled.div`
     .transfer-details {
@@ -119,7 +119,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const promoCode = transferId ? transaction?.meta?.promoCode : transfer?.promo?.code;
     const referralDiscountValue = transferId ? transaction?.meta?.referralDiscountValue : transfer?.referralDiscountValue;
 
-    console.log(transfer)
+    // console.log(receiveAmount, transferMethod, Number(getServiceRateValue(getMoneyValue(receiveAmount), transferMethod?.replace(' ', '_'), false, false)));
     useEffect(() => {
         if ( transferId ) {
             getTransactionDetails( undefined, transferId )
@@ -180,7 +180,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transfer?.transferMethod || transaction?.transferMethod)}} ></div>
-                        <div className="right uppercase">  { transfer?.allowOperatorFee ? `+${serviceFee}` : `-${Number(getServiceRateValue(receiveAmount, transferMethod, false, false))}`} {sendCurrency}</div>
+                        <div className="right uppercase">  { transfer?.allowOperatorFee ? `+${serviceFee}` : `-${Number(getServiceRateValue(getMoneyValue(receiveAmount), transferMethod?.replace(' ', '_'), false, false))}`} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>
