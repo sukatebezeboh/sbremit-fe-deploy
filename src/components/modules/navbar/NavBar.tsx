@@ -11,14 +11,11 @@ import { paths } from '../../../util/paths';
 
 
 const NavBar = () => {
-    // const notifs = [{name: 'foo', read: true}, {name: 'bar', read: false}, {name: 'doe', read: false}, {read: true}, {read: true}];
     const [showNotifDropdown, setShowNotifDropdown] = useState(false);
     const [showProfileDropdown, setShowProfileDropdown] = useState(false)
     const user = useSelector((state: any)=> state.auth.user)
     const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
     const notifs = useSelector((state: any) => state.notifications)
-
-    console.log('user - navbar', user)
 
     const handleDropdownClick = (type: string) => {
         if (type === 'notif') {

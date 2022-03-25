@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { createRecipient } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
-import { RecipientValidator } from "../../../util/form-validators";
+import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrofinanceTransferValidator, RecipientCashPickupValidator, RecipientMobileMoneyValidator, RecipientValidator } from "../../../util/form-validators";
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
@@ -221,7 +221,7 @@ const Div = styled.div`
         }
     }
 @media only screen and (max-width: 900px) {
-    padding:0px;
+    padding: 0px;
     .overlay {
         background: #fff;
     }
@@ -320,6 +320,15 @@ const Div = styled.div`
 
 `
 
+const getRecipientCreateValidationSchema = ( transferMethod: string ) => {
+    return {
+        "cash_pickup": RecipientCashPickupValidator,
+        "bank_transfer_bankTransfer": RecipientBankTransferBankTransferValidator,
+        "bank_transfer_microfinanceTransfer": RecipientBankTransferMicrofinanceTransferValidator,
+        "mobile_money": RecipientMobileMoneyValidator
+    }[transferMethod] ?? RecipientValidator;
+}
+
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient, recipientData} = props;
     const dispatch = useDispatch()
@@ -388,7 +397,7 @@ function NewRecipientModal(props: any) {
                 )}
                 <Formik
                         initialValues={{...initialValues}}
-                        validationSchema={RecipientValidator}
+                        validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}` )}
                         onSubmit={values => {
                             const newValue = {
                                 firstName: values.firstName,
@@ -408,6 +417,9 @@ function NewRecipientModal(props: any) {
                                 <Form>
                                     <div className="form grid-col-1-1 grid-gap-3">
                                             <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
+                                                {
+                                                    console.log(errors, "formik errors")
+                                                }
                                                 <div>First name<i>*</i></div>
                                                 <Field type="text" name="firstName" placeholder="John" />
                                             </div>
