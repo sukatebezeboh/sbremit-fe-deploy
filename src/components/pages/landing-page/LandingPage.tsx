@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMax, getMoneyValue, useResizeObserver } from '../../../util/util';
@@ -81,6 +81,7 @@ const LandingPage = (props: any) => {
     useEffect(() => {
         setTransferMethod(selected)
         getQuoteService(toSend.currency, toReceive.currency);
+        updateAppValues();
     }, [])
 
     useEffect(() => {

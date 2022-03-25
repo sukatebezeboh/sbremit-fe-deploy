@@ -1373,5 +1373,5 @@ export const getUserReferrals = (setDetailsCallback: Function) => {
 
 export const updateAppValues = () => {
   localStorage.removeItem('VALUES')
-            appValuesAction()
+  appValuesAction()
 }
