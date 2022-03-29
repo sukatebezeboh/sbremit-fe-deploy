@@ -96,7 +96,7 @@ const SignUp = () => {
             message1={
               createAccountSuccess !== null ? (
                 <p>
-                  Please check your email{' '}
+                  Please check your email/phone{' '}
                   <span className="highlight">
                     {createAccountSuccess.username}
                   </span>{' '}

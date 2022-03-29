@@ -516,9 +516,9 @@ const Referrals = () => {
 								</div>
 							
 								{/* <a href="https://facebook.com/" target="_blank" className="facebook" rel="noreferrer"><i className="fab fa-facebook"></i></a> */}
-								<a href={`https://twitter.com/intent/tweet?url=https://sbremit.com/signup?referral=${user?.referral?.code}&text=${getShareReferralText()}&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
+								<a href={`https://twitter.com/intent/tweet?url=${_env.APP_HOST}${paths.SIGN_UP}?referral=${user?.referral?.code}&text=${getShareReferralText()}&via=sbremit&hashtags=SBRemit`} target="_blank" className="twitter" rel="noreferrer"><i className="fab fa-twitter"></i></a> 
 								{/* <a href="https://instagram.com/" target="_blank" className="insta" rel="noreferrer"><i className="fab fa-instagram"></i></a>  */}
-								<a href={`https://api.whatsapp.com/send?text=${getShareReferralText('https://sbremit.com/signup?referral=' + user?.referral?.code)}`} target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
+								<a href={`https://api.whatsapp.com/send?text=${getShareReferralText(_env.APP_HOST+paths.SIGN_UP+'?referral=' + user?.referral?.code)}`} target="_blank" className="yt" rel="noreferrer"><i className="fab fa-whatsapp"></i></a>
 
 							</div>
 
