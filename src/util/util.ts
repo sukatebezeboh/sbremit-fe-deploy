@@ -255,7 +255,7 @@ export const copyToClipBoard = (text: string) => {
 }
 
 export const getPercentage = ( needle: number|string, haystack: number|string, rounding = 0) => {
-    return ((Number(needle)/Number(haystack)) * 100).toFixed(rounding)
+    return (((Number(needle) || 0)/Number(haystack)) * 100).toFixed(rounding)
 }
 
 export const useResizeObserver = (initial: any) => {
@@ -286,4 +286,8 @@ export const getUserDefaultCurrency = (user: any, appValues: any, getSymbol:bool
     const currency = currencies?.data[countries?.data[userCountry]] ?? 'GBP';
 	
 	return getSymbol ? currencySymbols[currency] : currency;
+}
+
+export const isPhoneNumber = ( value: string ) => {
+    return /^\+?\d{7,}$/.test(value);
 }

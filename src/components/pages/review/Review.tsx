@@ -9,7 +9,7 @@ import RecipientDetailsBox from '../../modules/parts/RecipientDetailsBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { confirmTransfer, toastAction } from '../../../redux/actions/actions';
-import { TRANSFER } from 'redux/actionTypes';
+import { RESET_TRANSFER, TRANSFER } from 'redux/actionTypes';
 
 const Body = styled.div`
     .page-content {
@@ -176,7 +176,7 @@ const Review = () => {
     const handleConfirmClick = () => {
         confirmTransfer(recipient, transfer, (id: string) => {
             dispatch({
-                type: TRANSFER,
+                type: RESET_TRANSFER,
                 payload: undefined
             })
             history.push(paths.PAYMENT_METHOD + '?t=' + id);

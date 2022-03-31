@@ -853,11 +853,11 @@ export const getServiceRateValue = (
   toReceiveValue: string | number,
   transferMethod: string,
   getRecipientsValue = false,
-  checkOperatorFee = true
+  checkOperatorFee = true,
+  exchangeRate = null
 ) => {
   const transfer = store.getState().transfer
   if (!transfer.allowOperatorFee && checkOperatorFee) return 0
-
   const transferMethodsIds: any = {
     mobile_money: '1',
     bank_transfer: '2',
@@ -894,7 +894,7 @@ export const getServiceRateValue = (
     transferMethod && transferMethod === 'mobile_money'
       ? (
           (Number(equiFee) + Number(mobileMoneyTax)) /
-          transfer.conversionRate?.rate
+          (exchangeRate || transfer.conversionRate?.rate)
         ).toFixed(2)
       : equiFee
   return Number(serviceFee) || 0
@@ -1163,9 +1163,11 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
 
     }
 }
-export const confirmAccountEmail = (callback: Function) => {
+export const confirmAccountEmail = (redirectTo: Function) => {
   store.dispatch({ type: LOADING, payload: true })
   const token = getQueryParam('token')
+  const phone = getQueryParam('phone');
+  const returnRoute = getQueryParam('ret')
   if (!token) {
     toastAction({
       show: true,
@@ -1177,12 +1179,16 @@ export const confirmAccountEmail = (callback: Function) => {
     // callback()
     return
   }
+  const payload: any = {
+    token
+  };
+  if (phone) {
+    payload.phone = phone
+  }
   axios
     .post(
       config.API_HOST + endpoints.CONFIRM_ACCOUNT,
-      {
-        token,
-      },
+      payload,
       {
         headers: { 'X-SERVICE-PROVIDER': serviceProvider },
       },
@@ -1196,7 +1202,7 @@ export const confirmAccountEmail = (callback: Function) => {
           message: `${res.data.data?.message}`,
         })
         store.dispatch({ type: LOADING, payload: false })
-        callback()
+        redirectTo(paths.SIGN_IN)
       } else {
         toastAction({
           show: true,
@@ -1204,6 +1210,11 @@ export const confirmAccountEmail = (callback: Function) => {
           timeout: 10000,
           message: `Invalid token`,
         })
+
+        if (returnRoute) {
+          console.log(phone)
+          redirectTo(returnRoute + '?phone=' + encodeURIComponent(phone))
+        }
         store.dispatch({ type: LOADING, payload: false })
       }
     })

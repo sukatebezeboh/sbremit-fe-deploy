@@ -137,9 +137,9 @@ const Dashboard = () => {
 
                 <div className="green-txt invite d-block px-75 bold font-larger">
                     <span className='text-align-right d-block'>
-                        {/* <Link to={paths.REFERRALS}>
+                        <Link to={paths.REFERRALS}>
                             Invite a friend and earn {getUserDefaultCurrency(user, appValues, true)}{referralSettings?.data?.referrerDiscountValue} in credit
-                        </Link> */}
+                        </Link>
                     </span>                    
                 </div>
                 <div className="transactions">

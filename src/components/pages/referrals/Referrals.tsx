@@ -472,7 +472,7 @@ const Referrals = () => {
 
 
   function isNotAwaiting(user: any, referralSettings: any) {
-	return Number(getPercentage(user?.[`cummulative${getUserDefaultCurrency(user, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount )) >= 100
+	return Number(getPercentage(user?.[`cummulativeTransfer`], referralSettings?.data?.referralActivationAmount )) >= 100
   }
   
   const getShareReferralText = (extraText = '') => {
@@ -574,13 +574,11 @@ const Referrals = () => {
 							<div className="value green-txt"> {getAccruedBonus(referralDetails?.referredUsers)} <small>{getUserDefaultCurrency(user, appValues)}</small></div>
 						</div>
 					</div>
-					
-
 				</div>
 				
 				{
 					referralDetails?.referredUsers?.map((referredUser: any) => {
-						let percentage = Number(getPercentage(referredUser?.[`cummulative${getUserDefaultCurrency(referredUser, appValues)}Transfer`], referralSettings?.data?.referralActivationAmount ));
+						let percentage = Number(getPercentage(referredUser?.[`cummulativeTransfer`], referralSettings?.data?.referralActivationAmount ));
 						percentage = percentage > 100 ? 100 : percentage;
 
 						return (

@@ -6,7 +6,7 @@ import { paths } from '../../../util/paths';
 const ConfirmAccount = () => {
     const history = useHistory();
     useEffect(() => {
-        confirmAccountEmail(() => history.push(paths.SIGN_IN))
+        confirmAccountEmail((route: string) => history.push(route))
     }, [])
 
     return (

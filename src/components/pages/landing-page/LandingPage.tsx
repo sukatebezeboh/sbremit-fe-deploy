@@ -161,9 +161,11 @@ const LandingPage = (props: any) => {
                     ...transfer,
                     // toSend: {...toSend, value: `${value}`},
                     // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, selected, true))},
-                    toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, selected, false, false))), value: `${value}`}, 
+                    // toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, selected, false, false))), value: `${value}`}, 
+                    toSend: {...toSend, adjusted: getAdjustedValue(value, value * rate, allowOperatorFee, selected, false), value: `${value}`}, 
                     // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false))) },
+                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false))) },
+                    toReceive: {...toReceive, value: `${value * rate}`, total: getAdjustedValue(value * rate, value * rate, allowOperatorFee, selected, true ) },
                 }
             })
 
@@ -174,8 +176,10 @@ const LandingPage = (props: any) => {
                     ...transfer,
                     // toSend: {...toSend, value: `${(value / rate).toFixed(2)}`},
                     // toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))},
-                    toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, false, false))), value: `${(value / rate).toFixed(2)}`}, 
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false)))},
+                    // toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, false, false))), value: `${(value / rate).toFixed(2)}`}, 
+                    toSend: {...toSend, adjusted: getAdjustedValue(value/rate, value, allowOperatorFee, selected, false), value: `${(value / rate).toFixed(2)}`}, 
+                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false)))},
+                    toReceive: {...toReceive, value: `${value}`, total: getAdjustedValue(value, value, allowOperatorFee, selected, true)},
                 }
             })
         }
@@ -254,10 +258,25 @@ const LandingPage = (props: any) => {
                 ...transfer,
                 // toSend: {...toSend, total: `${total}`},
                 // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, selected, true))},
-                toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, false, false))), total: `${total}`},
-                toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, true, false)))},
+                // toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, false, false))), total: `${total}`},
+                toSend: {...toSend, adjusted: getAdjustedValue(toSend.value, toReceive.value, allowOperatorFee, selected, false), total: `${total}`},
+                // toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, true, false)))},
+                toReceive: {...toReceive, total: getAdjustedValue(toReceive.value, toReceive.value, allowOperatorFee, selected, true )},
             }
         })
+    }
+
+    const getAdjustedValue = (value: any, toRecieveValue: any, allowOperatorFee:any, transferMethod: any, isRecipientsValue: boolean) => {
+        value = Number(value);
+        let adjustment = 0
+        if ((allowOperatorFee || transferMethod === "mobile_money") ) {
+            if (allowOperatorFee && transferMethod === "mobile_money" && isRecipientsValue) {
+                adjustment = Number(getServiceRateValue(toRecieveValue, transferMethod, isRecipientsValue, false))
+            }
+        } else {
+            adjustment = 0 - Number(getServiceRateValue(toRecieveValue, transferMethod, isRecipientsValue, false));
+        }
+        return Number(value) + adjustment
     }
 
     const isAcceptablePromoValue = (promo: any) => {

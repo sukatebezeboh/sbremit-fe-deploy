@@ -12,7 +12,7 @@ import { paths } from '../../../util/paths'
 import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
-import { getQueryParam } from '../../../util/util'
+import { getQueryParam, isPhoneNumber } from '../../../util/util'
 
 const Body = style('signup')
 
@@ -116,7 +116,7 @@ const SignUp = () => {
             buttonText={
               createAccountSuccess !== null ? 'Continue' : 'Try again'
             }
-            redirectLink={paths.SIGN_IN}
+            redirectLink={ isPhoneNumber(createAccountSuccess?.username) ? `${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(createAccountSuccess.username)}` : paths.SIGN_IN}
             redirect={redirect}
             setModalState={(value: boolean) => setOpenModal(value)}
             setRedirect={(value: boolean) => setRedirect(value)}

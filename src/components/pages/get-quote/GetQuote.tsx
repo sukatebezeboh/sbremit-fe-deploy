@@ -59,9 +59,6 @@ const GetQuote = () => {
         updateAppValues();
     }, [])
 
-
-
-
     const setAllowOperatorFee = (allow: boolean) => {
         dispatch({
             type: TRANSFER, 
@@ -71,6 +68,7 @@ const GetQuote = () => {
             }
         })
     }
+
     const handleXInputChange = (e: any, data: any) => {        
         try {
                 const caret = e.target.selectionStart
@@ -109,9 +107,11 @@ const GetQuote = () => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, false, false))), value: `${value}`}, 
+                    // toSend: {...toSend, adjusted: value - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, false, false))), value: `${value}`}, 
+                    toSend: {...toSend, adjusted: getAdjustedValue(value, value * rate, allowOperatorFee, transfer.transferMethod, false), value: `${value}`}, 
                     // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false))) },
+                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, true, false))) },
+                    toReceive: {...toReceive, value: `${value * rate}`, total: getAdjustedValue(value * rate, value * rate, allowOperatorFee, transfer.transferMethod, true) },
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -136,8 +136,10 @@ const GetQuote = () => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, false, false))), value: `${(value / rate).toFixed(2)}`}, 
-                    toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false)))},
+                    // toSend: {...toSend, adjusted: (value / rate) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, false, false))), value: `${(value / rate).toFixed(2)}`}, 
+                    toSend: {...toSend, adjusted: getAdjustedValue(value/rate, value, allowOperatorFee, transfer.transferMethod, false), value: `${(value / rate).toFixed(2)}`}, 
+                    toReceive: {...toReceive, value: `${value}`, total: getAdjustedValue(value, value, allowOperatorFee, transfer.transferMethod, true)},
+                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false)))},
                     // toReceive: {...toReceive, value: `${value}`, total: Number(value)},
                     referralDiscount: {
                         value: userReferralDiscount?.value,
@@ -213,12 +215,26 @@ const GetQuote = () => {
             type: TRANSFER, 
             payload: {
                 ...transfer,
-                toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, false, false))), total: `${total}`},
+                // toSend: {...toSend, adjusted: toSend.value - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, false, false))), total: `${total}`},
+                toSend: {...toSend, adjusted: getAdjustedValue(toSend.value, toReceive.value, allowOperatorFee, transfer.transferMethod, false), total: `${total}`},
                 // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))},
-                toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true, false)))},
+                toReceive: {...toReceive, total: getAdjustedValue(toReceive.value, toReceive.value, allowOperatorFee, transfer.transferMethod, true)},
             }
         })
 
+    }
+
+    const getAdjustedValue = (value: any, toRecieveValue: any, allowOperatorFee:any, transferMethod: any, isRecipientsValue: boolean) => {
+        value = Number(value);
+        let adjustment = 0
+        if ((allowOperatorFee || transferMethod === "mobile_money") ) {
+            if (allowOperatorFee && transferMethod === "mobile_money" && isRecipientsValue) {
+                adjustment = Number(getServiceRateValue(toRecieveValue, transferMethod, isRecipientsValue, false))
+            }
+        } else {
+            adjustment = 0 - Number(getServiceRateValue(toRecieveValue, transferMethod, isRecipientsValue, false));
+        }
+        return Number(value) + adjustment
     }
 
     const isAcceptablePromoValue = (promo: any) => {

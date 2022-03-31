@@ -1,5 +1,5 @@
 import { IAction } from ".";
-import { TRANSFER } from "../actionTypes";
+import { RESET_TRANSFER, TRANSFER } from "../actionTypes";
 
 const initialTransferState: {} = {
     conversionRate: {},
@@ -21,12 +21,22 @@ const initialTransferState: {} = {
 }
 
 export const transfer = (state: any = initialTransferState, {type, payload}: IAction) => {
+
     switch (type) {
         case TRANSFER: {
 
           return {
               ...payload
           }
+        }
+        case RESET_TRANSFER: {
+            return {
+                ...state,
+                toSend: {value: "", currency: 'GBP', image: "UK", total: "0", isSend: true},
+                toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
+                transferMethod: "",
+                serviceFee: 0,
+            }
         }
         default:
           return state;

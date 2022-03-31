@@ -34,6 +34,7 @@ import NotFound from '../components/pages/not-found/NotFound';
 import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
 import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
 import Referrals from 'components/pages/referrals/Referrals';
+import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
 
 
 export interface IRoute {
@@ -128,6 +129,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.SMS_CODE_SENT,
         component: ResetSmsCode,
+        protected: false,
+    },
+    {
+        path: paths.CONFIRM_ACCOUNT_SMS,
+        component: AccountConfirmationSMSCode,
         protected: false,
     },
     {

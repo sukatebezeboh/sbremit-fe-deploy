@@ -9,6 +9,7 @@ export const paths = {
     EMAIL_LINK_SENT: "/email-link-sent",
     PASSWORD_SMS_RESET: "/password-sms-reset",
     SMS_CODE_SENT: "/sms-code-sent",
+    CONFIRM_ACCOUNT_SMS: "/sms/confirm-account",
     PASSWORD_RESET_COMPLETE: "/password-reset-complete",
     CONFIRM_ACCOUNT_EMAIL: "/email/confirm-account",
     CONFIRM_ACCOUNT: "/confirm-account",
