@@ -17,7 +17,7 @@ const ResetSmsCode = () => {
   const handleSendLink = (phone: string) => history.push(`${paths.SMS_CODE_SENT}?phone=${phone}`)
   
   const toPasswordReset = () => {
-      if(OTP.length === 5) {
+      if(OTP.length === 6) {
         history.push(`${paths.RESET_PASSWORD}?token=${OTP}`)
       }
   }
@@ -37,7 +37,7 @@ const ResetSmsCode = () => {
       <OtpInput
         value={OTP}
         onChange={setOTP}
-        numInputs={5}
+        numInputs={6}
         inputStyle={{width: '70px', maxWidth: '12vw', margin: '0 5px', border: 'none', borderBottom: '2px solid #424242', fontSize: 18}}
         containerStyle={{width: '400px', maxWidth: '80vw', display:'flex', justifyContent: 'center'}}
         focusStyle={{border: 'none'}}
