@@ -291,3 +291,16 @@ export const getUserDefaultCurrency = (user: any, appValues: any, getSymbol:bool
 export const isPhoneNumber = ( value: string ) => {
     return /^\+?\d{7,}$/.test(value);
 }
+
+export const generateRandomString = () => {
+    let generatedString = "";
+    const characters =
+      "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*?";
+  
+    for (let i = 0; i < 10; i++) {
+      generatedString += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return generatedString;
+}

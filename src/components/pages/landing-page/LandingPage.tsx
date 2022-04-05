@@ -1,26 +1,23 @@
+import FancyToggle from 'components/modules/parts/FancyToggle'
+import Body from './LandingPage.css'
+import Table from 'components/modules/table/Table'
+import { exchangeRateTableData, featureCompareTableData, supportedCountriesListing } from './LandingPage.helper'
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMax, getMoneyValue, useResizeObserver } from '../../../util/util';
-import { AppFooter } from '../../modules/app-footer/AppFooter';
-import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
-import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
-import { style } from "./LandingPage.css";
-import NavHeader from '../../content-pages/nav-header/NavHeader';
+import { asset, formatCurrency, getMax, useResizeObserver } from '../../../util/util';
 import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
-import FancyToggle from '../../modules/parts/FancyToggle';
 import { constants } from '../../../util/constants';
 import config from '../../../env';
+import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 
-const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
-const Body = style(bg);
+const LandingPage = () => {
 
-
-const LandingPage = (props: any) => {
     const [screenType] = useResizeObserver(constants.MOBILE)
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
@@ -86,8 +83,13 @@ const LandingPage = (props: any) => {
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll )
+        const documentStyle: any = document.body.style;
+        const initialPageZoom = documentStyle.zoom;
+
+        documentStyle.zoom = 1;
         return () => {
             window.removeEventListener( "scroll", handleScroll )
+            documentStyle.zoom = initialPageZoom
           }
     }, [])
 
@@ -296,89 +298,565 @@ const LandingPage = (props: any) => {
         return initialMargin + "px";
     }
 
-    return (
-        <Body>
-            <div>
-                <div className="nav">
-                    <NavHeader page="home"/>
-                </div>
-            </div>
-            <div className="header-links">
-                <button className="start-sending-header-link" onClick={()=>{
-                    setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-                }}>
-                    Start sending money
-                </button>
-                <div className="authentication-buttons">
-                    <Link className="signup-link" to={paths.SIGN_UP}>Sign Up</Link>
-                    <Link className="login-link" to={paths.SIGN_IN}>Login</Link>
-                </div>
-            </div>
-            <div className="f-growing">
-                <span>Send Money, No Palaver</span>
-            </div>
-            <div className="hero-grid">
-                <div className="hero-texts">
-                    <div>
-                        Send Money, No Palaver
-                    </div>
-                    <div>
-                        A low cost means of sending money which is fast, secure and reliable with multiple delivery options
-                </div>
-                </div>
-                <div className="hero-rect">
-                    <div className="md-txt">Choose how receiver gets the money</div>
-                    <div>
-                        <button className={selected === "mobile_money" ? "selectedTM" : ""} onClick={() => setTransferMethod('mobile_money')} >Mobile Money</button>
-                        <button className={selected === "bank_transfer" ? "selectedTM" : ""}  onClick={() => setTransferMethod('bank_transfer')} >Bank Transfer</button>
-                        <button className={selected === "cash_pickup" ? "selectedTM" : ""}  onClick={() => setTransferMethod('cash_pickup')}>Cash Pickup</button></div>
-                    <div className="md-txt amt-txt">Enter an amount to send</div>
-                    <form>
-                        <div>
-                            {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
-                            {
-                                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
-                            }
+
+  return (
+    <Body>
+        <main id="hero">
+            <div className="main-inner">
+                <nav className="nav">
+                    <div className="logo-container">
+                        <div className="img-wrapper">
+                            <img src={asset('', 'main-logo-white.svg')} alt="logo" className="logo" />
                         </div>
-                        <div className="wrapper">
-                            <div className="timeline-box">
-                                <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt="" /></i> <span className={`deep-green ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span></span></div>
-                                {Boolean(Number(transfer.serviceFee)) && <div className={`timeline timeline-2`}> 
-                                    <span><i><img src="./assets/icons/plus.svg" alt=""/></i> <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> </span>
-                                </div>}
-                                <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span>
-                                {/* <i className="mobile sa">SBremit charges you<span className="deep-green">0.00 {toSend.currency}</span> for this transfer</i>  */}
-                                </span></div>
-                                {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
-                                <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt="" /></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
-                                <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i>
-                                {/* <span className="not-mobile">Transfer arrives <b>Within 2 hours</b></span> */}
-                                 <span className="mobile we-conv">We’ll convert {formatCurrency(toSend.value)} {toSend.currency}</span> </span></div>
+                    </div>
+                    <div className="content-links">
+                        <div className="content-links-wrapper">
+                            <span className="link">
+                                <Link to={paths.ABOUT}>About</Link> 
+                            </span>
+
+                            <span className="link">
+                                <Link to={paths.CONTACT}>Contact</Link> 
+                            </span>
+
+                            <span className="link">
+                                <Link to={paths.SUPPORT}>Support</Link>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="auth-links">
+                        <div className="auth-links-inner">
+                            <button className="sign-in is-link link" onClick={() => history.push(paths.SIGN_IN)} >
+                                Sign in
+                            </button>
+
+                            <button className="sign-up is-link" onClick={() => history.push(paths.SIGN_UP)} >
+                                Sign up
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+
+                <div className="hero">
+                    <div className="hero-inner">
+                        <div className="left">
+                            <h2 className="hero-heading">
+                                Send Money, No Palaver
+                            </h2>
+                            <p className="hero-text">
+                                A low cost means of sending money which is fast, secure and reliable with multiple delivery options
+                            </p>
+
+                            <div className="hero-fca-container">
+                                <button className="hero-fca">
+                                    We are FCA Regulated, learn what this means <img src={asset('icons', 'round-yellow-arrow-right.svg')} alt="" />
+                                </button>                                
+                            </div>
+
+                        </div>
+                        <div className="right">
+                            <div className="right-inner">
+                                <div className="exchange-rate-calculator">
+                                    <div className="calculator-inner">
+                                        <div className="title">
+                                            Choose how recipient gets the money
+                                        </div>
+
+                                        <div className="calculator-nav">
+                                            <div className="options">
+                                                <div onClick={() => setTransferMethod('mobile_money')} className={`option ${selected === "mobile_money" ? "selectedTM active" : ""}`}>
+                                                    Mobile Money
+                                                </div>
+
+                                                <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${selected === "bank_transfer" ? "selectedTM active" : ""}`}>
+                                                    Bank Transfer
+                                                </div>
+
+                                                <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${selected === "cash_pickup" ? "selectedTM active" : ""}`}>
+                                                    Cash Pickup
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="simple-prompt">
+                                            Enter an amount to send
+                                        </div>
+                                        {
+                                            LandingPageExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
+                                        }
+                                        <div className="timeline">
+                                            <div className="timeline-inner">
+                                                <div className="bullet-points-container">
+                                                    <div className="dot top-dot"></div>
+
+
+                                                    <div className="transactional-points">
+                                                        <div className="point-icon">
+                                                            &times;
+                                                        </div>
+
+                                                        <div className="point-text">
+                                                            <span className={`deep-green green-txt ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    {
+                                                        Boolean(Number(transfer.serviceFee)) && <div className="transactional-points">
+                                                            <div className="point-icon">
+                                                                +
+                                                            </div>
+
+                                                            <div className="point-text">
+                                                                <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> 
+
+                                                                {/* Mobile Operator <span className="green-txt">Cash Out Fee</span> from: <span className="green-txt"> 0 GBP</span> */}
+                                                            </div>
+                                                        </div>
+                                                    }
+
+
+                                                    <div className="transactional-points">
+                                                        <div className="point-icon">
+                                                            -
+                                                        </div>
+
+                                                        <div className="point-text">
+                                                            SB Remit charges you <span className="green-txt"> 0.00 {toSend.currency} </span> for this transfer
+                                                        </div>
+                                                    </div>
+
+                                                    {
+                                                        promo && <div className="transactional-points">
+                                                            <div className="point-icon">
+                                                                -
+                                                            </div>
+
+                                                            <div className="point-text">
+                                                                Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }
+                                                            </div>
+                                                        </div>
+                                                    }
+
+                                                    <div className="transactional-points">
+                                                        <div className="point-icon red">
+                                                            =
+                                                        </div>
+
+                                                        <div className="point-text">
+                                                            Total to pay <span className="green-txt"> {formatCurrency(`${toSend.total}`)} {toSend.currency} </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="dot bottom-dot"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {
+                                            LandingPageExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
+                                        }
+
+                                        <div className="extras">
+                                            <div className="extras-inner">
+                                                <div className="promo-side">
+                                                    {/* <input type="text" placeholder='Apply promo code' className="promo-code" /> */}
+                                                    <PromoCodeField className="new-landing-page-promo-code-field" transfer={transfer} />
+
+                                                </div>
+                                                <div className="toggle-side">
+                                                    <div className="toggle">
+                                                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button className="send-btn" onClick={()=>{
+                                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
+                                            }} >Start sending money</button>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="offset"></div>
-                        <div className="receive" style={{marginTop: getXInputMarginAdjust([Boolean(promo), Boolean(Number(transfer?.serviceFee))])}}>
-                            {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
-                            {
-                                ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
-                            }
-                        </div>
-
-                    </form>
-                    <div className="toggle">
-                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
                     </div>
-                        <PromoCodeField transfer={transfer} />
-                        <button onClick={()=>{
-                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-                            }}>
-                            Start sending money
-                        </button>
                 </div>
             </div>
-        </Body>
 
-    )
+            <div className="background-circle bg-circle-up"></div>
+            <div className="bg-circle-container">
+                <div className="background-circle bg-circle-down"></div>
+            </div>
+        </main>
+
+        <section className="countries-remit" id="countries">
+            <div className="section-inner">
+                <h2 className='heading'>Countries we remit to</h2>
+                <div className="subheading">We transfer from UK, Canada, and Europe to:</div>
+
+                <div className="listings">
+                    {
+                        supportedCountriesListing.map((listing: any) => (
+                            <div className="listing">
+                                <div className="listing-inner">
+                                    <img src={asset('flags', listing.flag)} alt="Cameroon" />
+                                    <div className="text">{listing.name}</div>
+                                </div>
+                                <div className={`checkmark ${listing.active ? 'active' : 'inactive'}`}>
+                                    { listing.active ? <img src={asset('icons', 'green-checkmark.svg')} alt="" /> : 'Coming soon'}
+                                </div>
+                            </div>
+                        ))
+                    }
+ 
+                </div>
+            </div>
+            <div className="big-image">
+                <img src={asset('images', 'dotted-globe.svg')} alt="countries-map" />
+            </div>
+            <div className="register-interest">
+                We are constantly adding more countries to the list. <span className="register-interest-link green-txt"><Link to={paths.REGISTER_COUNTRY}>Register your interest</Link></span>
+            </div>
+        </section>
+
+        <section className="we-are-different" id="we-are-different">
+            <div className="section-inner">
+                <h2 className="heading">Why are we different and better?</h2>
+
+                <div className="points-list">
+                    <div className="point-container">
+                        <div className="point">
+                            <div className="icon-side">
+                                <div className="icon-wrapper">
+                                    <img src={asset('icons', 'no-fee.svg')} alt="no-fee" className="icon" />
+                                </div>
+                            </div>
+                            <div className="text-side">
+                                <div className="title">No fee</div>
+                                <div className="text">
+                                    Zero transaction fees for all your transfers - meaning more money gets to your recipient.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="point-container">
+                        <div className="point">
+                            <div className="icon-side">
+                                <div className="icon-wrapper">
+                                    <img src={asset('icons', 'transfer-point.svg')} alt="no-fee" className="icon" />
+                                </div>
+                            </div>
+                            <div className="text-side">
+                                <div className="title">Excellent exchange rate</div>
+                                <div className="text">
+                                    Our exchange rates are the best in the market. <span className="green-link">Click here</span> to see how we are better than our competitors.                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="point-container">
+                        <div className="point">
+                            <div className="icon-side">
+                                <div className="icon-wrapper">
+                                    <img src={asset('icons', 'cash-point.svg')} alt="no-fee" className="icon" />
+                                </div>
+                            </div>
+                            <div className="text-side">
+                                <div className="title">Multiple delivery options</div>
+                                <div className="text">
+                                    Mobile money, bank transfer, and cash pickup.  <span className="green-link">Click here</span> to see how we compare with our competitors                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className="point-container">
+                        <div className="point">
+                            <div className="icon-side">
+                                <div className="icon-wrapper">
+                                    <img src={asset('icons', 'money.svg')} alt="no-fee" className="icon" />
+                                </div>
+                            </div>
+                            <div className="text-side">
+                                <div className="title">No hidden cost</div>
+                                <div className="text">
+                                    We take pride in being the most transparent money remittance company with no hidden surprise costs.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="point-container">
+                        <div className="point">
+                            <div className="icon-side">
+                                <div className="icon-wrapper">
+                                    <img src={asset('icons', 'friendly.svg')} alt="no-fee" className="icon" />
+                                </div>
+                            </div>
+                            <div className="text-side">
+                                <div className="title">Customer friendly</div>
+                                <div className="text">
+                                    Customer friendly experience that is completely transparent at all transfer steps.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section className="transfer-methods" id="transfer-methods">
+            <div className="section-inner">
+                <h2 className="heading">
+                    How we make a transfer
+                </h2>
+                <div className="subheading">
+                    Make a transfer in a few simple steps once you sign up
+                </div>
+
+                <div className="methods">
+                    <div className="method-step">
+                        <div className="image-up">
+                            <img src={asset('images', 'transfer-methods-step-1.png')} alt="step-1" />
+                        </div>
+                        <div className="text-down">
+                            <div className="step-title">Signup or sign in</div>
+                            <div className="steps">
+                                <div className="step">
+                                    <div className="numbering">1.</div>
+                                    <div className="instruction">Excellent exchange rate</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">2.</div>
+                                    <div className="instruction">No fee</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">3.</div>
+                                    <div className="instruction">Amount recipients receives</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="method-step">
+                        <div className="image-up">
+                            <img src={asset('images', 'transfer-methods-step-2.png')} alt="step-2" />
+                        </div>
+                        <div className="text-down">
+                            <div className="step-title">Add a recipient</div>
+                            <div className="steps">
+                                <div className="step">
+                                    <div className="numbering">1.</div>
+                                    <div className="instruction">Add recipient</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="method-step">
+                        <div className="image-up">
+                            <img src={asset('images', 'transfer-methods-step-3.png')} alt="step-3" />
+                        </div>
+                        <div className="text-down">
+                            <div className="step-title">Review Transaction</div>
+                            <div className="steps">
+                                <div className="step">
+                                    <div className="numbering">1.</div>
+                                    <div className="instruction">Excellent exchange rate</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">2.</div>
+                                    <div className="instruction">No fee</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">3.</div>
+                                    <div className="instruction">Amount recipients receives</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="method-step">
+                        <div className="image-up">
+                            <img src={asset('images', 'transfer-methods-step-4.png')} alt="step-4" />
+                        </div>
+                        <div className="text-down">
+                            <div className="step-title">Transfer successful</div>
+                            <div className="steps">
+                                <div className="step">
+                                    <div className="numbering">1.</div>
+                                    <div className="instruction">Excellent exchange rate</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">2.</div>
+                                    <div className="instruction">No fee</div>
+                                </div>
+                                <div className="step">
+                                    <div className="numbering">3.</div>
+                                    <div className="instruction">Amount recipients receives</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section className="compare" id="compare">
+            <div className="section-inner">
+                <h2 className="heading">
+                    Compare exchange rates
+                </h2>
+
+                <div className="table">
+                    <Table
+                        rows = {exchangeRateTableData.rows}
+                        headings={exchangeRateTableData.heading}
+                        config={{
+                            customClassName: 'landing-page-table landing-page-compare-exchange-rates-table',
+                            cellSpacing: 0,
+                            cellPadding: 0
+                        }}
+                    />
+                </div>
+
+                <h2 className="heading">
+                    How we compare with others
+                </h2>
+
+                <div className="btn-div">
+                    <button className="compare-btn">
+                        Sending 200 GBP with....
+                    </button>
+                </div>
+
+                <div className="table">
+                    <Table
+                        rows = {featureCompareTableData.rows}
+                        headings={featureCompareTableData.heading}
+                        config={{
+                            customClassName: 'landing-page-table landing-page-compare-features-table',
+                            cellSpacing: 0,
+                            cellPadding: 0
+                        }}
+                    />
+                </div>
+            </div>
+        </section>
+
+        <section className="partners" id="partners">
+            <div className="section-inner">
+                <div className="small-heading">
+                    OUR PARTNERS
+                </div>
+
+                <div className="partner-listing">
+                    <img src={asset('logos', 'trust-payment.png')} alt="trust-payment" />
+                    <img src={asset('logos', 'twilio.png')} alt="twilio" />
+                    <img src={asset('logos', 'trulioo.png')} alt="trulioo" />
+                    <img src={asset('logos', 'ifx.png')} alt="ifx" />
+                    <img src={asset('logos', 'gimac.png')} alt="gimac" />
+                    <img src={asset('logos', 'fixer.png')} alt="fixer" />
+                </div>
+            </div>
+        </section>
+
+        <section className="happy-customers" id="happy-customers">
+            <div className="section-inner">
+                <h2 className="heading">
+                    What our customers are saying
+                </h2>
+
+                <div className="image-container">
+                    <img src={asset('images', 'happy-customer-1.png')} className="happy-customer" alt="happy-customer" />
+                    <img src={asset('icons', 'white-round-arrow-right.svg')} alt="arrow" className='next-icon' />
+                </div>
+
+                <div className="testimonials">
+                    <div className="arrow left-arrow">
+                        <img src={asset('icons', 'black-round-arrow-left.svg')} alt="arrow" />
+                    </div>
+
+                    <div className="testimonial-cards">
+                        <div className="testimonial-card">
+                            <img src={asset('icons', 'big-quote.svg')} alt="big-quote" className='big-quote' />
+
+                            <p className="text">
+                                They are very efficient and always helpful.
+                                The Set up process for their app was very easy and rapid. They are easy and straight forward to contact directly, and also responsive.
+                                I will recommend them for their excellent customer service and professionalism.
+                                For the past two years, I have been able to send money to family and my business in Cameroon at the touch of a button with assurance and security. I have never had any issue with any of my transactions.
+                            </p>
+
+                            <div className="customer">
+                                <div className="name">
+                                    Charles Mambo
+                                </div>
+                                <div className="from">
+                                    (London)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="testimonial-card">
+                            <img src={asset('icons', 'big-quote.svg')} alt="big-quote" className='big-quote' />
+
+                            <p className="text">
+                                Excellent customer service! Prompt and efficient communication and a really easy way to transfer funds. SB Remit offers great rates and the staff is always helpful, courteous and pleasant to work with. SB Remit makes money transfer a walk in the park!
+                            </p>
+
+                            <div className="customer">
+                                <div className="name">
+                                    Cynthia
+                                </div>
+                                <div className="from">
+                                    (London)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="testimonial-card">
+                            <img src={asset('icons', 'big-quote.svg')} alt="big-quote" className='big-quote' />
+
+                            <p className="text">
+                                I have been using SB remit to send money back home since May 2021. The service is great every time, and now even better with the launch of their website. The registration process is easy and straightforward. I am most impressed by how quickly my loved ones receive their money. Literally a few minutes after sending.
+                            </p>
+
+                            <div className="customer">
+                                <div className="name">
+                                    Charles Mambo
+                                </div>
+                                <div className="from">
+                                    (London)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div className="arrow right-arrow">
+                        <img src={asset('icons', 'black-round-arrow-right.svg')} alt="arrow" />
+                    </div>
+                </div>
+
+                <div className="scroll-dots">
+                    <div className="dot active"></div>
+                    <div className="dot"></div>
+                </div>
+            </div>
+            <div className="section-behind-overlap">
+
+            </div>
+        </section>
+
+    </Body>
+  )
 }
 
-export default LandingPage;
+export default LandingPage

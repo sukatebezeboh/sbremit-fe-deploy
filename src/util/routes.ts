@@ -1,4 +1,3 @@
-import LandingPage from '../components/pages/landing-page/LandingPage'
 import SignUp from '../components/pages/sign-up/SignUp';
 import SignIn from '../components/pages/sign-in/SignIn';
 import ForgetPassword from '../components/pages/forget-password/ForgetPassword';
@@ -35,6 +34,8 @@ import TruelayerProviders from '../components/pages/truelayer-providers/Truelaye
 import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
 import Referrals from 'components/pages/referrals/Referrals';
 import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
+import LandingPage from 'components/pages/landing-page/LandingPage';
+import RegisterCountry from 'components/pages/register-country/RegisterCountry';
 
 
 export interface IRoute {
@@ -50,8 +51,7 @@ export const Routing: IRoute[] = [
         path: paths.EN_LANDING,
         component: LandingPage,
         protected: false,
-        props: {location: 'london'},
-        exact: false
+        // footerless: true
     },
     {
         path: paths.CA_LANDING,
@@ -65,6 +65,12 @@ export const Routing: IRoute[] = [
         component: LandingPage,
         protected: false,
         props: {location: 'london'}
+    },
+    {
+        path: paths.REGISTER_COUNTRY,
+        component: RegisterCountry,
+        protected: false,
+        footerless: true
     },
     {
         path: paths.NOT_FOUND,
@@ -245,6 +251,7 @@ export const Routing: IRoute[] = [
         path: paths.TRUELAYER_PROVIDERS,
         component: TruelayerProviders,
         protected: true
-    }
+    },
+
 
 ]

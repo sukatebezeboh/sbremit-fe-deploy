@@ -32,6 +32,7 @@ export const paths = {
     TRANSFER_COMPLETE: "/transfer-complete",
     TRUELAYER_PROVIDERS: "/truelayer-providers",
     REFERRALS: "/referrals",
+    REGISTER_COUNTRY: "/country/register",
 
     LEGAL: "/support/legal",
     SUPPORT: "/support",

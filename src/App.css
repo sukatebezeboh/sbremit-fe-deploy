@@ -51,6 +51,11 @@ body::-webkit-scrollbar {
     color: #ffffff!important;
 }
 
+.deep-green{
+    font-weight: 600;
+    color: #007B5D;
+}
+
 .green-bg {
     background: #007B5D!important;
 }
@@ -254,19 +259,20 @@ button:disabled{
 }
 
 .text-align-right {
-    text-align: right;
+    text-align: right!important;
+    justify-content: right;
 }
 
 .text-align-center {
-    text-align: center;
+    text-align: center!important;
 }
-
+.text-align-left {
+    text-align: left!important;
+}
 .cursor-pointer {
     cursor: pointer;
 }
-.text-align-left {
-    text-align: left;
-}
+
 .no-wrap {
     white-space: nowrap;
 }
@@ -378,4 +384,8 @@ button:disabled{
 
 .no-bg {
     background: none!important;
+}
+
+.is-link {
+    cursor: pointer;
 }

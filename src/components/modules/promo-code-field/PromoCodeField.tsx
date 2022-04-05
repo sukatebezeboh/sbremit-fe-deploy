@@ -7,6 +7,26 @@ import styled from 'styled-components';
 
 const Field = styled.div`
     margin-top: 120px;
+    &.new-landing-page-promo-code-field {
+        margin-top: 0;
+        .coupon {
+            margin-top: 0;
+            input.promo-code {
+                width: 80%;
+                height: 31px;
+                border: 0.8px solid rgba(10, 14, 13, 0.16);
+                box-sizing: border-box;
+                border-radius: 6px;
+                padding: 7px 12px;
+                background: none;
+                outline: none;
+            }
+            .message-block {
+                font-size: 12px;
+                padding: 2px;
+            }
+        }
+    }
     .coupon {
         margin-top: 60px;
         /* margin-bottom: 10px; */
@@ -28,7 +48,7 @@ const Field = styled.div`
     }
 `
 
-const PromoCodeField = ({transfer}: any) => {
+const PromoCodeField = ({transfer, className}: any) => {
     const textInput: any = useRef(null);
 
     const [img, setImg] = useState<null | 'check-mark' | 'crossed' | 'rolling-loader-black'>(null)
@@ -84,10 +104,13 @@ const PromoCodeField = ({transfer}: any) => {
     }
 
     return (
-        <Field>
+        <Field className={className}>
             <div className="coupon">
                 <input ref={textInput} id="promo-field" type="text" className="promo-code" name="promo-code" placeholder={promo ? promo.code : "Got a promo code? Get a discount"} onChange={(e) => handleCouponChange(e.target.value)} />
-                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />} { promo &&  <span className='green-txt'> Value <b className="green-txt">: {getPromoValue(promo)} </b>  - (Valid for {promo?.settings?.currenciesValid } currencies) </span>}
+                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />} 
+                <div className="message-block">
+                    { promo &&  <span className='green-txt'> Value <b className="green-txt">: {getPromoValue(promo)} </b>  - (Valid for {promo?.settings?.currenciesValid ?? "all" } currencies) </span>}
+                </div>
             </div>
         </Field>
     )
