@@ -22,6 +22,7 @@
     "baseUrl": "src"
   },
   "include": [
-    "src", "decs.d.ts"
+    "src",
+    "decs.d.ts"
   ]
 }

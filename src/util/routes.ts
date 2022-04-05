@@ -35,6 +35,7 @@ import TruelayerProviders from '../components/pages/truelayer-providers/Truelaye
 import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
 import Referrals from 'components/pages/referrals/Referrals';
 import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
+import TempLanding from 'components/pages/temp-landing/TempLanding';
 
 
 export interface IRoute {
@@ -52,6 +53,12 @@ export const Routing: IRoute[] = [
         protected: false,
         props: {location: 'london'},
         exact: false
+    },
+    {
+        path: paths.TEMP_LANDING,
+        component: TempLanding,
+        protected: false,
+        // footerless: true
     },
     {
         path: paths.CA_LANDING,
@@ -245,6 +252,7 @@ export const Routing: IRoute[] = [
         path: paths.TRUELAYER_PROVIDERS,
         component: TruelayerProviders,
         protected: true
-    }
+    },
+
 
 ]

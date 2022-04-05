@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Toggle = styled.div`
     .filter__item {
         padding: 5px 15px;
-        width: 100%;
+        width: fit-content;
         box-sizing: border-box;
         display: flex;
         align-items: center;
@@ -14,6 +14,7 @@ const Toggle = styled.div`
         margin-right: 10px;
         transition: background 0.2s ease-in-out;
         border: 1px solid lightgray;
+        border-radius: 15px;
     }
     .filter__item_is-active {
         background: #047b5d2b;
@@ -30,7 +31,7 @@ const Toggle = styled.div`
     cursor: pointer;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.5);
-    margin-right: 30px;
+    margin-right: 10px;
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
@@ -39,7 +40,7 @@ const Toggle = styled.div`
     }
     .filter__label::before {
     content: "";
-    display: block;
+    display: none;
     flex-shrink: 0;
     background-repeat: no-repeat;
     background-size: cover;
@@ -136,6 +137,12 @@ const FancyToggle = ({ label, isActive, setIsActive }: any) => {
     return (
         <Toggle>
             <div className={`filter__item ${isActive && 'filter__item_is-active'}`} onClick={setIsActive}>
+                <label
+                className="filter__label filter__label_internet"
+                htmlFor={label}
+                >
+                    {label}
+                </label>                
                 <div className="filter__input input input_toggle input_theme_light">
                     <input
                         className="input__source"
@@ -145,12 +152,7 @@ const FancyToggle = ({ label, isActive, setIsActive }: any) => {
                     />
                     <label className="input__label" />
                 </div>
-                <label
-                className="filter__label filter__label_internet"
-                htmlFor={label}
-                >
-                    {label}
-                </label>
+
             </div>
         </Toggle>
 
