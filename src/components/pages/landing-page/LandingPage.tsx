@@ -15,6 +15,7 @@ import { CookieService } from '../../../services/CookieService';
 import { constants } from '../../../util/constants';
 import config from '../../../env';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
+import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
 
 const LandingPage = () => {
 
@@ -721,7 +722,8 @@ const LandingPage = () => {
                         config={{
                             customClassName: 'landing-page-table landing-page-compare-exchange-rates-table',
                             cellSpacing: 0,
-                            cellPadding: 0
+                            cellPadding: 0,
+                            responsiveType: RESPONSIVE_TYPE_COLLAPSE_ALL
                         }}
                     />
                 </div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { generateRandomString } from '../../../util/util'
-import { ITable } from './ITable'
+import { ITable, RESPONSIVE_TYPE_COLLAPSE_ALL } from './ITable'
 import styled from 'styled-components'
 
 const StyledTable = styled.table`
@@ -10,11 +10,44 @@ const StyledTable = styled.table`
         /* border: 5px double grey; */
         /* padding: 5px; */
     }
+
+    &.RESPONSIVE_TYPE_COLLAPSE_ALL {
+        @media only screen and (max-width: 900px) {
+            th {
+                display: none;
+            }
+
+            td {
+                display: flex;
+                justify-content: space-between;
+
+                :first-child {
+                    .inline-heading {
+                        display: none;
+                    }
+                }
+                .inline-heading {
+                    white-space: nowrap;
+                }
+                
+                .content-wrapper {
+                    text-align: right;
+                    width: fit-content;
+                    height: fit-content;
+                    justify-content: right;
+                    * {
+                        text-align: right;
+                        justify-content: right;
+                    }
+                }
+            }
+        }
+    }
 `
 const Table = ({headings, rows, name = generateRandomString(), config = {} }: ITable) => {
 
     return (
-        <StyledTable className={config.customClassName} cellPadding={config.cellPadding} cellSpacing={config.cellSpacing}>
+        <StyledTable className={`${config.responsiveType === RESPONSIVE_TYPE_COLLAPSE_ALL ? RESPONSIVE_TYPE_COLLAPSE_ALL : ""} ${config.customClassName}`} cellPadding={config.cellPadding} cellSpacing={config.cellSpacing}>
             {
                 headings?.map((heading, i )=> (
                     <tr key={`table-${name}-hd-tr-${i}`}>
@@ -38,9 +71,15 @@ const Table = ({headings, rows, name = generateRandomString(), config = {} }: IT
                         {
                             row.map((cell, j) => (
                                 <td className={cell.className} key={`table-${name}-cell-td-${j}`} rowSpan={cell.rowSpan || 1} colSpan={cell.colSpan || 1}>
-                                    {
-                                        cell.content
-                                    }
+                                    <div className="inline-heading">
+                                        {headings[config.targetHeadingLineForMobileResponsiveness]}
+                                    </div>
+                                    <div className="content-wrapper">
+                                        {
+                                            cell.content
+                                        }                             
+                                    </div>
+
                                 </td>
                             ))
                         }

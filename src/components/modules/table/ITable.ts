@@ -1,3 +1,7 @@
+
+export const RESPONSIVE_TYPE_COLLAPSE_ALL = "RESPONSIVE_TYPE_COLLAPSE_ALL"
+
+
 export type TableCell = {
     rowSpan?: number,
     colSpan?: number,
@@ -13,6 +17,7 @@ export interface ITable {
     config?: {
         customClassName?: string,
         cellPadding?: number,
-        cellSpacing?: number
+        cellSpacing?: number,
+        responsiveType?: "RESPONSIVE_TYPE_COLLAPSE_ALL"
     }
 }
