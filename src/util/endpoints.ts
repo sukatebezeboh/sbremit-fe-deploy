@@ -29,7 +29,8 @@ const endpoints = {
     SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents',
     TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment',
     TOAST_NOTIF: '/user/toast',
-    USER_REFERRALS: '/user/referrals'
+    USER_REFERRALS: '/user/referrals',
+    REGISTER_COUNTRY: '/country/register'
 }
 
 export default endpoints;

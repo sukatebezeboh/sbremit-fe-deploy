@@ -745,7 +745,9 @@ const LandingPage = () => {
                         config={{
                             customClassName: 'landing-page-table landing-page-compare-features-table',
                             cellSpacing: 0,
-                            cellPadding: 0
+                            cellPadding: 0,
+                            responsiveType: RESPONSIVE_TYPE_COLLAPSE_ALL,
+                            targetHeadingLineForMobileResponsiveness: 1
                         }}
                     />
                 </div>

@@ -304,13 +304,13 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: 'Provider'
             },
             {
-                content: XComparisonTextStack({content1: 'Exchange rate', content2: <div> (1 GBP <img src={asset('icons', 'white-arrow.svg')} alt="->" /> EUR) </div> })
+                content: XComparisonTextStack({content1: 'Exchange rate', content2: <div> (1 GBP <img src={asset('icons', 'white-arrow.svg')} alt="->" className="mobile-hide" /> <img src={asset('icons', 'green-round-arrow.svg')} alt="->" className="desktop-hide" /> EUR) </div> })
             },
             {
                 content: XComparisonTextStack({content1: 'Transfer fee'})
             },
             {
-                content: XComparisonTextStack({ content1: 'Recipient gets', content2: 'Sending 200 GBP', className: 'text-align-right' })
+                content: XComparisonTextStack({ content1: 'Recipient gets', content2: <div className="mobile-hide">Sending 200 GBP</div>, className: 'text-align-right' })
             }
         ]
     ],

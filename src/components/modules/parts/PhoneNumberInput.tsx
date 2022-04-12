@@ -1,5 +1,5 @@
 import { InputAdornment, TextField } from '@mui/material'
-import React from 'react'
+import React, { FC, FormEvent, useState } from 'react'
 import PhoneCodeSelect from './PhoneCodeSelect'
 import styled from 'styled-components'
 
@@ -54,7 +54,24 @@ const StyleWrapper = styled.div`
     }
 
 `
-const PhoneNumberInput = ({placeholder}: any) => {
+interface IPhoneNumberInput {
+    placeholder: string,
+    value: {
+        code: string,
+        number: string|number
+    },
+    onChange: Function
+}
+
+const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange }: any) => {
+
+    const handleChange = (type: "code" | "number", val: any) => {
+        const newValue = {
+            ...value,
+        }
+        newValue[type] = val;
+        onChange(newValue)
+    }
   return (
     <StyleWrapper>
         <TextField
@@ -62,10 +79,15 @@ const PhoneNumberInput = ({placeholder}: any) => {
             className='phone-number-input'
             placeholder={placeholder}
             type="number"
+            value={value?.number}
+            onChange={(event) => handleChange('number', event.target.value)}
             InputProps={{
             startAdornment: (
                 <InputAdornment position="start">
-                    <PhoneCodeSelect />
+                    <PhoneCodeSelect
+                        value={value?.code}
+                        onChange={(event: any) => handleChange('code', event.target.textContent)}
+                    />
                 </InputAdornment>
             ),
             }}

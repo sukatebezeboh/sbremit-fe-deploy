@@ -5,7 +5,7 @@ export default styled.div`
     main { 
         background: #086A6A;
         position: relative;
-        /* overflow: hidden; */
+        overflow: hidden;
         .main-inner { 
             width: 80%;
             margin: auto;
@@ -428,7 +428,7 @@ export default styled.div`
             color: #0A0E0D;
             width: fit-content;
             margin: 16px auto;
-
+            text-align: center;
             @media only screen and (max-width: 900px) {
                 font-size: 28px;
                 margin: 8px auto;
@@ -799,11 +799,18 @@ export default styled.div`
                 .table { 
                     width: 60%;
                     margin: 32px auto;
+                    min-width: 850px;
+                    @media only screen and (max-width: 900px) {
+                        width: 90%;
+                        min-width: unset;
+                    }
 
                     .landing-page-table {
                         border-collapse: collapse;
                         width: 100%;
-
+                        @media only screen and (max-width: 900px) {
+                            border: none!important;;
+                        }
                         td {
                             text-align: center;
                             padding: 13px 0;
@@ -823,10 +830,57 @@ export default styled.div`
                             border-collapse: collapse;
                         }
 
+                        @media only screen and (max-width: 900px) {
+
+
+                            td, th, tr {
+                                font-weight: 400;
+                                font-size: 14px;
+                                line-height: 21px;
+                                color: #000000;
+                                border: none;
+
+
+                                .inline-heading {
+                                    .line {
+                                        font-weight: 500;
+                                        text-align: left!important;
+                                    }
+                                }
+
+                                .content-wrapper {
+                                    .line {
+                                        &.line-1 {
+                                            display: grid;
+                                            grid-template-areas: 'b a';
+
+                                            span {
+                                                grid-area: b;
+                                                margin-top: 10px;
+                                                margin-right: 10px;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            td {
+                                &:last-child {
+                                    margin-bottom: 30px;
+                                    border-bottom: 1px solid #00000010;
+                                }
+                            }
+
+
+                        }
                         &.landing-page-compare-features-table {
                             td.sbremit {
                                 padding: 24px;
                                 background: #F3F5F5;
+                                @media only screen and (max-width: 900px) {
+                                    padding: 13px 0px;
+                                    background: none;
+                                }
                             }
                         }
 
@@ -848,6 +902,18 @@ export default styled.div`
                                 color: #424242;
                             }
 
+                            @media only screen and (max-width: 900px) {
+                                td {
+                                    border: none;
+                                    padding-bottom: 21px;
+                                    &:last-child {
+                                        margin-bottom: 10px;
+                                        border-bottom: 1px solid #00000010;
+                                        padding-bottom: 76px;
+                                    }
+                                }
+                            }
+
                             .table-send-btn {
                                 padding: 8px 16px;
                                 font-weight: 500;
@@ -859,6 +925,9 @@ export default styled.div`
                                 border-radius: 6px;
                                 border: none;
                                 color: #000000;
+
+
+                                
                             }
                         }
                     }

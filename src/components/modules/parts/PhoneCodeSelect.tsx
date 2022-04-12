@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function PhoneCodeSelect() {
+export default function PhoneCodeSelect({value, onChange}: any) {
   return (
     <Autocomplete
       id="country-select-demo"
@@ -11,6 +11,8 @@ export default function PhoneCodeSelect() {
       options={countries}
       autoHighlight
       className='phone-code-field'
+      value={value}
+      onChange={onChange}
       getOptionLabel={(option) => option.code}
       renderOption={(props, option) => (
         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>

@@ -127,9 +127,10 @@ const Footer = styled.footer`
 
                     .search-box { 
                         display: grid;
-                        grid-template-columns: 1fr 0fr;
+                        /* grid-template-columns: 1fr 0fr; */
                         grid-gap: 16px;
-                        max-width: 570px;
+                        /* max-width: 570px; */
+                        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                         input.search-input { 
                             width: 100%;
                             background: #FBFCFB;

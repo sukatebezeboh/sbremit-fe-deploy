@@ -18,6 +18,7 @@ export interface ITable {
         customClassName?: string,
         cellPadding?: number,
         cellSpacing?: number,
-        responsiveType?: "RESPONSIVE_TYPE_COLLAPSE_ALL"
+        responsiveType?: "RESPONSIVE_TYPE_COLLAPSE_ALL",
+        targetHeadingLineForMobileResponsiveness?: number
     }
 }

@@ -1370,13 +1370,13 @@ export const initiateTruelayerPayment = (
 
 
 export const getUserReferrals = (setDetailsCallback: Function) => {
-  store.dispatch({ type: LOADING, payload: false })
+  store.dispatch({ type: LOADING, payload: true })
 
     http.get(endpoints.USER_REFERRALS)
     .then(res => {
       setDetailsCallback(res.data.data)
     })
-    .catch()
+    .catch(() => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
@@ -1385,4 +1385,43 @@ export const getUserReferrals = (setDetailsCallback: Function) => {
 export const updateAppValues = () => {
   localStorage.removeItem('VALUES')
   appValuesAction()
+}
+
+export const registerCountry = (values: any) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+    axios.post( config.API_HOST + endpoints.REGISTER_COUNTRY, {
+      ...values,
+      phone: values?.phone?.code + '' + values?.phone?.number
+    })
+    .then(res => {
+      if (res.data.status === '200') {
+        stackNewToast({
+          name: "register-country-form-success",
+          show: true,
+          type: 'success',
+          timeout: 5000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: "Thanks for helping us grow.",
+          message: "<div style='color: grey;'>Your response has been saved</div>",
+        })
+      } else {
+        stackNewToast({
+          name: "register-country-form-error",
+          show: true,
+          type: 'error',
+          timeout: 5000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: "Error processing your request",
+          message: "<div style='color: grey;'>Check your form to see all required fields are filled</div>",
+      })
+      }
+
+    })
+    .catch(() => {
+
+    })
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
 }

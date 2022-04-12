@@ -12,6 +12,9 @@ const StyledTable = styled.table`
     }
 
     &.RESPONSIVE_TYPE_COLLAPSE_ALL {
+        .inline-heading {
+            display: none;
+        }
         @media only screen and (max-width: 900px) {
             th {
                 display: none;
@@ -28,6 +31,8 @@ const StyledTable = styled.table`
                 }
                 .inline-heading {
                     white-space: nowrap;
+                    font-weight: 600;
+                    display: block;
                 }
                 
                 .content-wrapper {
@@ -71,9 +76,9 @@ const Table = ({headings, rows, name = generateRandomString(), config = {} }: IT
                         {
                             row.map((cell, j) => (
                                 <td className={cell.className} key={`table-${name}-cell-td-${j}`} rowSpan={cell.rowSpan || 1} colSpan={cell.colSpan || 1}>
-                                    <div className="inline-heading">
-                                        {headings[config.targetHeadingLineForMobileResponsiveness]}
-                                    </div>
+                                    {config.responsiveType === RESPONSIVE_TYPE_COLLAPSE_ALL && <div className="inline-heading">
+                                        { headings?.[config.targetHeadingLineForMobileResponsiveness ?? 0]?.[j]?.content }
+                                    </div>}
                                     <div className="content-wrapper">
                                         {
                                             cell.content
