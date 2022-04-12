@@ -304,3 +304,18 @@ export const generateRandomString = () => {
     }
     return generatedString;
 }
+
+export const validatePromo = (promo: any, user: any, transfer: any) => {
+    const today = new Date()
+    const todayInString = (today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear()
+    const expired = compareDatesXLessThanY( promo?.endDate, todayInString );
+    const notDue = compareDatesXLessThanY( todayInString, promo?.startDate );
+    const exceededUsageLimit = !user ? false : Number(user.promos[promo?.code] || 0) >= Number(promo?.settings?.usageLimit);
+    const incompatibleCurrency = promo?.settings?.currenciesValid !== "ALL" && promo?.settings?.currenciesValid?.indexOf(transfer.toSend.currency) === -1;
+
+    if ( !expired && !notDue && !exceededUsageLimit && !incompatibleCurrency) {
+        return promo
+    } else {
+        return undefined;
+    }
+}

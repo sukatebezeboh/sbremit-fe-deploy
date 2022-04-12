@@ -13,6 +13,7 @@ import {
   RECIPIENTS,
   REDIRECT,
   REMOVE_FROM_STACKED_TOASTS,
+  RESET_TRANSFER,
   SIGN_IN,
   SIGN_UP,
   SUBMITTING,
@@ -32,6 +33,7 @@ import {
   getQueryParam,
   parseEndpointParameters,
   sortObjectByProperties,
+  validatePromo,
 } from '../../util/util'
 import http from '../../util/http'
 import { themeNames } from '../../components/modules/toast-factory/themes'
@@ -728,11 +730,27 @@ export const setNewQuote = (base: string, target: string) => {
 }
 
 export const checkSkip = (callback: Function) => {
+  revalidateTransfer()
   const skip = CookieService.get('SKIP_QUOTE')
   if (skip) {
     callback()
     CookieService.remove('SKIP_QUOTE')
   }
+}
+
+export const revalidateTransfer = () => {
+  const transfer = store.getState().transfer
+   if (transfer?.promo) {
+    const user = store.getState().auth.user;
+     const isValidPromo = validatePromo(transfer?.promo, user, transfer)
+
+     if (!isValidPromo) {
+        store.dispatch({
+            type: RESET_TRANSFER,
+            payload: undefined
+        })
+     }
+   }
 }
 
 export const getQuoteService = ($_1: string, $_2: string) => {
