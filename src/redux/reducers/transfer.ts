@@ -36,6 +36,7 @@ export const transfer = (state: any = initialTransferState, {type, payload}: IAc
                 toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
                 transferMethod: "",
                 serviceFee: 0,
+                promo: undefined
             }
         }
         default:
