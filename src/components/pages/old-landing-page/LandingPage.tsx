@@ -6,7 +6,7 @@ import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMax, getMoneyValue, useResizeObserver } from '../../../util/util';
 import { AppFooter } from '../../modules/app-footer/AppFooter';
-import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
 import { style } from "./LandingPage.css";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
@@ -337,7 +337,7 @@ const LandingPage = (props: any) => {
                         <div>
                             {/* <ExchangeRateInput key={'landingPageToSend'} data={toSend} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
+                                QuoteExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
                             }
                         </div>
                         <div className="wrapper">
@@ -367,7 +367,7 @@ const LandingPage = (props: any) => {
                         <div className="receive" style={{marginTop: getXInputMarginAdjust([Boolean(promo), Boolean(Number(transfer?.serviceFee))])}}>
                             {/* <ExchangeRateInput key={'landingPageToRecieve'} data={toReceive} handleXInputChange={handleXInputChange} /> */}
                             {
-                                ExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
+                                QuoteExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
                             }
                         </div>
 

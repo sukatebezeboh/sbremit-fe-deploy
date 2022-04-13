@@ -272,27 +272,27 @@ export const supportedCountriesListing = [
     },
     {
         name: "Chad",
-        flag: 'CM.png',
+        flag: 'TD.png',
         active: false
     },
     {
         name: "Cent. Africa Republic",
-        flag: 'CM.png',
+        flag: 'CF.png',
         active: false
     },
     {
         name: "Republic of Congo",
-        flag: 'CM.png',
+        flag: 'CG.png',
         active: false
     },
     {
         name: "Gabon",
-        flag: 'CM.png',
+        flag: 'GA.png',
         active: false
     },
     {
         name: "Equitorial Guinea",
-        flag: 'CM.png',
+        flag: 'GQ.png',
         active: false
     },
 ]

@@ -6,7 +6,7 @@ import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMoneyValue } from '../../../util/util';
 import { AppFooter } from '../../modules/app-footer/AppFooter';
-import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
 import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';

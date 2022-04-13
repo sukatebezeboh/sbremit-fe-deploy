@@ -12,7 +12,7 @@ import { paths } from '../../../util/paths'
 import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
-import { getQueryParam, isPhoneNumber } from '../../../util/util'
+import { asset, getQueryParam, isPhoneNumber } from '../../../util/util'
 
 const Body = style('signup')
 
@@ -204,7 +204,7 @@ const SignUp = () => {
                       ))}
                     </Field>
                     <img
-                      src={`./assets/flags/${values.location_country}.png`}
+                      src={asset('flags', `${values.location_country}.png`)}
                       alt={values.location_country}
                     />
                     {touched.location_country && errors.location_country && (

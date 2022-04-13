@@ -213,13 +213,13 @@ export const AppFooter = () => {
                   >
                       <img src={asset('icons', 'instagram.svg')} alt="instagram" />{' '}
                   </a>
-                  <a
+                  {/* <a
                       href="https://linkedin.com/SBremitt"
                       target="_blank"
                       rel="noreferrer"
                   >
                       <img src={asset('icons', 'linkedin.svg')} alt="linkedin" />{' '}
-                  </a>
+                  </a> */}
                   <a
                       href="https://facebook.com/SBremitt"
                       target="_blank"
@@ -227,13 +227,13 @@ export const AppFooter = () => {
                   >
                       <img src={asset('icons', 'facebook.svg')} alt="facebook" />{' '}
                   </a>
-                  <a
+                  {/* <a
                       href="https://twitter.com/SBremitt"
                       target="_blank"
                       rel="noreferrer"
                   >
                       <img src={asset('icons', 'twitter.svg')} alt="twitter" />{' '}
-                  </a>
+                  </a> */}
               </div>
           </div>
 
@@ -280,7 +280,7 @@ export const AppFooter = () => {
                               <Link to="/">+44(0)3301334158</Link>
                           </li>
                           <li>
-                              <Link to="/">contactsbremit.com</Link>
+                              <Link to="/">contact@sbremit.com</Link>
                           </li>
                       </ul>
                   </div>

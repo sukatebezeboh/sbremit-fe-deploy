@@ -1,3 +1,4 @@
+import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
@@ -8,7 +9,7 @@ import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { formatCurrency, getMax, getUserReferralDiscount, getValueFromArray } from '../../../util/util';
 // import { asset } from '../../../util/util';
-import ExchangeRateInput from '../../modules/exchange-rate-input/ExchangeRateInput';
+import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import FancyToggle from '../../modules/parts/FancyToggle';
@@ -311,16 +312,34 @@ const GetQuote = () => {
         return texts[selectedMethod];
     }
 
-    const getXInputMarginAdjust = (newLinesValues: boolean[]) => {
-        let initialMargin = 150;
 
-        for( const newLine of newLinesValues ) {
-            if (newLine) {
-                initialMargin += 50
-            }
-        }
+    const setTransferMethod = (method: string) => {
+        dispatch({type: TRANSFER, payload: {...transfer, transferMethod: method}})
+    }
 
-        return initialMargin + "px";
+    const calculatorProps = {
+        page: 'quote',
+        setTransferMethod,
+        selectedTransferMethod: transferMethod,
+        toSend,
+        changedInput,
+        setChangedInput,
+        handleXInputChange,
+        max,
+        payInCountries,
+        promo,
+        isAcceptablePromoValue,
+        conversionRate,
+        transfer,
+        allowOperatorFee,
+        promoText,
+        toReceive,
+        getTransferFeeText,
+        setAllowOperatorFee,
+        payOutCountries,
+        user,
+        userReferralDiscount,
+        ExchangeRateInput: QuoteExchangeRateInput
     }
 
     return (
@@ -330,45 +349,7 @@ const GetQuote = () => {
             <div className="page-content">
                 <PageHeading heading="Get quote" subheading="How much would you like to send to your recipient?" back="/transfer-method" />
                 <div className="box">
-                    <div className="head">
-                        <span className="capitalize">{transferMethod?.replace("_", " ")}</span>
-                        <span><Link to="/transfer-method">Change transfer method</Link></span>
-                    </div>
-
-                    <div className="calc">
-                        <div className="hero-rect">
-                            <div>
-                                <ExchangeRateInput setChangedInput={() => setChangedInput('toSend')} max={transferMethod !== constants.MOBILE_MONEY ? max : undefined} data={toSend} handleXInputChange={handleXInputChange} countries={payInCountries}/>
-                            </div>
-                            <div className="wrapper">
-                                <div className="timeline-box">
-                                    <div className="timeline timeline-1"> <span><i><img src="./assets/icons/times.svg" alt=""/></i> <span className={`deep-green no-wrap ${promo?.type === "FIXED_RATE" && promoText ? "strikethrough" : ""}`} >1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} {toReceive.currency}</span></span></div>
-                                    {Boolean(Number(serviceFee)) && <div className={`timeline timeline-2`}>
-                                        <span><i><img src="./assets/icons/plus.svg" alt=""/></i> 
-                                            <span className={`${allowOperatorFee ? "" : "strikethrough"} wide`}>
-                                                <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(transferMethod)}}></div>
-                                                <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{serviceFee} {toSend.currency}</span>
-                                            </span>
-                                        </span>
-                                    </div>}
-                                    <div className="timeline timeline-3"> <span><i><img src="./assets/icons/minus.svg" alt=""/></i>  <span className="sb-charges">SB Remit charges you <span className="deep-green">0.00 {toSend.currency}</span> for this transfer </span> </span></div>
-                                    {promo && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/plus.svg" alt="" /></i>  <span>Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }</span> </span></div>}
-                                    { Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) && <div className="timeline timeline-2"> <span><i><img src="./assets/icons/minus.svg" alt="" /></i>  <span> Referral bonus { <span className="deep-green"> { userReferralDiscount?.value } {toSend?.currency} </span> }</span> </span></div>}
-                                    <div className="timeline timeline-4"> <span><i><img src="./assets/icons/equal.svg" alt=""/></i>  <span>Total to pay <span className="deep-green">{formatCurrency(`${toSend.total}`)} {toSend.currency}</span></span></span></div>
-                                    <div className="timeline timeline-5"> <span><i className="fas fa-circle"></i> <span className="not-mobile"><p>Transfer arrives <b>Within 30 minutes</b></p></span> </span></div>
-                                </div>
-                            </div>
-                            <div className="receive" style={{marginTop: getXInputMarginAdjust([Boolean(promo),  Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive), Boolean(Number(serviceFee))])}}>
-                                <ExchangeRateInput setChangedInput={() => setChangedInput('toReceive')} max={transferMethod === constants.MOBILE_MONEY ? max : undefined} data={toReceive} handleXInputChange={handleXInputChange} countries={payOutCountries} />
-                            </div>
-                            <div className="toggle">
-                                <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
-                            </div>
-                            {/* <div className="footnote desktop-hide">SBremit charges you <b className="green-txt">0.00 {toSend.currency}</b> for this transfer</div> */}
-
-                            <PromoCodeField transfer={transfer} />
-                        </div>
-                    </div>
+                    <ExchangeRateCalculator {...calculatorProps} />
                 </div>
                 <div className="btns"><span>Cancel</span> <button onClick={()=>handleContinue()}>Continue</button> </div>
             </div>

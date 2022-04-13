@@ -16,6 +16,7 @@ import { constants } from '../../../util/constants';
 import config from '../../../env';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
+import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 
 const LandingPage = () => {
 
@@ -52,6 +53,7 @@ const LandingPage = () => {
     const allowOperatorFee = transfer.allowOperatorFee;
     const max  = getMax(selected);
 
+    const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
     const setAllowOperatorFee = (allow: boolean) => {
         dispatch({
@@ -83,15 +85,15 @@ const LandingPage = () => {
     }, [])
 
     useEffect(() => {
-        window.addEventListener("scroll", handleScroll )
-        const documentStyle: any = document.body.style;
-        const initialPageZoom = documentStyle.zoom;
+        // window.addEventListener("scroll", handleScroll )
+        // const documentStyle: any = document.body.style;
+        // const initialPageZoom = documentStyle.zoom;
 
-        documentStyle.zoom = 1;
-        return () => {
-            window.removeEventListener( "scroll", handleScroll )
-            documentStyle.zoom = initialPageZoom
-          }
+        // documentStyle.zoom = 1;
+        // return () => {
+        //     window.removeEventListener( "scroll", handleScroll )
+        //     documentStyle.zoom = initialPageZoom
+        //   }
     }, [])
 
     const handleScroll = () => {
@@ -299,12 +301,34 @@ const LandingPage = () => {
         return initialMargin + "px";
     }
 
+    const calculatorProps = {
+        page: 'landing',
+        setTransferMethod,
+        selectedTransferMethod: selected,
+        toSend,
+        changedInput,
+        setChangedInput,
+        handleXInputChange,
+        max,
+        payInCountries,
+        promo,
+        isAcceptablePromoValue,
+        conversionRate,
+        transfer,
+        allowOperatorFee,
+        promoText,
+        toReceive,
+        getTransferFeeText,
+        setAllowOperatorFee,
+        payOutCountries,
+        ExchangeRateInput: LandingPageExchangeRateInput
+    }
 
   return (
     <Body>
-        <main id="hero">
+        <main id="hero" className={`${mobileNavOpen && "mobile-nav-open"} `}>
             <div className="main-inner">
-                <nav className="nav">
+                <nav className={`nav ${mobileNavOpen && "mobile-nav-open"} `}>
                     <div className="logo-container">
                         <div className="img-wrapper">
                             <img src={asset('', 'main-logo-white.svg')} alt="logo" className="logo" />
@@ -332,12 +356,71 @@ const LandingPage = () => {
                                 Sign in
                             </button>
 
-                            <button className="sign-up is-link" onClick={() => history.push(paths.SIGN_UP)} >
+                            <button className="sign-up is-link mobile-hide" onClick={() => history.push(paths.SIGN_UP)} >
                                 Sign up
                             </button>
+
+                            {
+                            !mobileNavOpen ?
+                                <span className="desktop-hide" onClick={() => setMobileNavOpen(true)} >
+                                    <img src={asset('icons', 'white-hamburger-menu.svg')} alt="menu" />
+                                </span>
+                                :
+                                <span className="desktop-hide mobile-nav-close-x" onClick={() => setMobileNavOpen(false)} >
+                                    &times;
+                                </span>
+                            }
+
+
                         </div>
                     </div>
                 </nav>
+
+                { 
+                    mobileNavOpen &&
+                    <div className="mobile-nav">
+                       <div className="mobile-nav-inner">
+                           <ul className='links-container'>
+                               <li className="nav-link" onClick={() => history.push(paths.ABOUT)}>
+                                   <span className="text">
+                                        About
+                                   </span>
+                                   <span className="icon">
+                                       <img src={asset('icons', 'black-caret-right.svg')} alt="caret" />
+                                   </span>
+                               </li>
+
+                               <li className="nav-link" onClick={() => history.push(paths.CONTACT)}>
+                                   <span className="text">
+                                        Contact
+                                   </span>
+                                   <span className="icon">
+                                       <img src={asset('icons', 'black-caret-right.svg')} alt="caret" />
+                                   </span>
+                               </li>
+
+                               <li className="nav-link" onClick={() => history.push(paths.SUPPORT)}>
+                                   <span className="text">
+                                        Support
+                                   </span>
+                                   <span className="icon">
+                                       <img src={asset('icons', 'black-caret-right.svg')} alt="caret" />
+                                   </span>
+                               </li>
+                           </ul>
+
+                           <div className="nav-foot">
+                               <div className="foot-text">
+                                    Don’t have an account?
+                               </div>
+
+                               <div className="foot-btn">
+                                   <button onClick={() => history.push(paths.SIGN_UP)}>Sign up</button>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                }
 
                 <div className="hero">
                     <div className="hero-inner">
@@ -350,136 +433,15 @@ const LandingPage = () => {
                             </p>
 
                             <div className="hero-fca-container">
-                                <button className="hero-fca">
+                                {/* <button className="hero-fca">
                                     We are FCA Regulated, learn what this means <img src={asset('icons', 'round-yellow-arrow-right.svg')} alt="" />
-                                </button>                                
+                                </button>                                 */}
                             </div>
 
                         </div>
                         <div className="right">
                             <div className="right-inner">
-                                <div className="exchange-rate-calculator">
-                                    <div className="calculator-inner">
-                                        <div className="title">
-                                            Choose how recipient gets the money
-                                        </div>
-
-                                        <div className="calculator-nav">
-                                            <div className="options">
-                                                <div onClick={() => setTransferMethod('mobile_money')} className={`option ${selected === "mobile_money" ? "selectedTM active" : ""}`}>
-                                                    Mobile Money
-                                                </div>
-
-                                                <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${selected === "bank_transfer" ? "selectedTM active" : ""}`}>
-                                                    Bank Transfer
-                                                </div>
-
-                                                <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${selected === "cash_pickup" ? "selectedTM active" : ""}`}>
-                                                    Cash Pickup
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="simple-prompt">
-                                            Enter an amount to send
-                                        </div>
-                                        {
-                                            LandingPageExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selected !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
-                                        }
-                                        <div className="timeline">
-                                            <div className="timeline-inner">
-                                                <div className="bullet-points-container">
-                                                    <div className="dot top-dot"></div>
-
-
-                                                    <div className="transactional-points">
-                                                        <div className="point-icon">
-                                                            &times;
-                                                        </div>
-
-                                                        <div className="point-text">
-                                                            <span className={`deep-green green-txt ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span>
-                                                        </div>
-                                                    </div>
-
-
-                                                    {
-                                                        Boolean(Number(transfer.serviceFee)) && <div className="transactional-points">
-                                                            <div className="point-icon">
-                                                                +
-                                                            </div>
-
-                                                            <div className="point-text">
-                                                                <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> 
-
-                                                                {/* Mobile Operator <span className="green-txt">Cash Out Fee</span> from: <span className="green-txt"> 0 GBP</span> */}
-                                                            </div>
-                                                        </div>
-                                                    }
-
-
-                                                    <div className="transactional-points">
-                                                        <div className="point-icon">
-                                                            -
-                                                        </div>
-
-                                                        <div className="point-text">
-                                                            SB Remit charges you <span className="green-txt"> 0.00 {toSend.currency} </span> for this transfer
-                                                        </div>
-                                                    </div>
-
-                                                    {
-                                                        promo && <div className="transactional-points">
-                                                            <div className="point-icon">
-                                                                -
-                                                            </div>
-
-                                                            <div className="point-text">
-                                                                Promo code { promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span> }
-                                                            </div>
-                                                        </div>
-                                                    }
-
-                                                    <div className="transactional-points">
-                                                        <div className="point-icon red">
-                                                            =
-                                                        </div>
-
-                                                        <div className="point-text">
-                                                            Total to pay <span className="green-txt"> {formatCurrency(`${toSend.total}`)} {toSend.currency} </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="dot bottom-dot"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {
-                                            LandingPageExchangeRateInput({data: toReceive, changedInput, setChangedInput: () => setChangedInput('toReceive'), handleXInputChange, max: selected === constants.MOBILE_MONEY ? max : undefined, key: 'landingPageToRecieve', countries: payOutCountries})
-                                        }
-
-                                        <div className="extras">
-                                            <div className="extras-inner">
-                                                <div className="promo-side">
-                                                    {/* <input type="text" placeholder='Apply promo code' className="promo-code" /> */}
-                                                    <PromoCodeField className="new-landing-page-promo-code-field" transfer={transfer} />
-
-                                                </div>
-                                                <div className="toggle-side">
-                                                    <div className="toggle">
-                                                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button className="send-btn" onClick={()=>{
-                                            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === config.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-                                            }} >Start sending money</button>
-
-                                    </div>
-                                </div>
+                                <ExchangeRateCalculator {...calculatorProps} />
                             </div>
                         </div>
                     </div>
@@ -502,7 +464,11 @@ const LandingPage = () => {
                         supportedCountriesListing.map((listing: any) => (
                             <div className="listing">
                                 <div className="listing-inner">
-                                    <img src={asset('flags', listing.flag)} alt="Cameroon" />
+                                    <img 
+                                        src={asset('flags', listing.flag)} 
+                                        srcSet={`${asset('flags', listing.flag)} 2x`} 
+                                        alt={listing.name} 
+                                        loading="lazy" />
                                     <div className="text">{listing.name}</div>
                                 </div>
                                 <div className={`checkmark ${listing.active ? 'active' : 'inactive'}`}>
@@ -569,7 +535,7 @@ const LandingPage = () => {
                             <div className="text-side">
                                 <div className="title">Multiple delivery options</div>
                                 <div className="text">
-                                    Mobile money, bank transfer, and cash pickup.  <span className="green-link">Click here</span> to see how we compare with our competitors                                
+                                    Mobile money, bank transfer, and cash pickup.  <span className="green-link"> <Link to="">Click here</Link></span> to see how we compare with our competitors                                
                                 </div>
                             </div>
                         </div>

@@ -5,7 +5,7 @@ const initialTransferState: {} = {
     conversionRate: {},
     serviceFee: 0,
     service: {},
-    toSend: {value: "", currency: 'GBP', image: "UK", total: "0", isSend: true},
+    toSend: {value: "", currency: 'GBP', image: "GB", total: "0", isSend: true},
     toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
     paymentMethod: "",
     transactionDetails: undefined,

@@ -5,15 +5,16 @@ import { getNewQuote } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { formatCurrencyWithoutFloats } from '../../../util/util';
 import ExchangeRateInputWrapper from './ExchangeRateInputWrapper';
+import LandingPageLayout from './layouts/LandingPageLayout';
 import QuotesLayout from './layouts/QuotesLayout';
 
 
 
-const ExchangeRateInput = (props: any) =>{
+const QuoteExchangeRateInput = (props: any) =>{
 
        return (
-            <ExchangeRateInputWrapper {...props} LayoutComponent={QuotesLayout} />
+            <ExchangeRateInputWrapper {...props} LayoutComponent={LandingPageLayout} />
         )
 }
 
-export default ExchangeRateInput;
+export default QuoteExchangeRateInput;
