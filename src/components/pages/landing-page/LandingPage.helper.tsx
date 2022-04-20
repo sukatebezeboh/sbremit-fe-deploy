@@ -309,23 +309,29 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: XComparisonTextStack({content1: 'Transfer fee'})
             },
             {
-                content: XComparisonTextStack({ content1: 'Recipient gets', content2: <div className="mobile-hide">Sending 200 GBP</div>, className: 'text-align-right' })
+                content: XComparisonTextStack({ content1: 'Recipient gets', content2: <div className="mobile-hide">Sending 100 GBP</div>, className: 'text-align-right' })
             }
         ]
     ],
     rows: [
         [
             {
-                content: 'SB Remit'
+                content: 'SB Remit',
+                className: 'sbremit'
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' }),
+                className: 'sbremit'
+
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' }),
+                className: 'sbremit'
+
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182 EUR', content2: <button onClick={() => scrollTo('#hero')} className="table-send-btn is-link">Start sending money</button> , status: 'neutral', format: 'none', className: 'text-align-right' })
+                content: XComparisonTextStack({ content1: '1.19182 EUR', content2: <button onClick={() => scrollTo('#hero')} className="table-send-btn is-link">Start sending money</button> , status: 'neutral', format: 'none', className: 'text-align-right' }),
+                className: 'sbremit'
             }
         ],
         [

@@ -792,6 +792,13 @@ export default styled.div`
                                 color: #424242;
                             }
 
+                            td.sbremit {
+                                background: #F3F5F5;
+                                @media only screen and (max-width: 900px) {
+                                    background: none;
+                                }
+                            }
+
                             @media only screen and (max-width: 900px) {
                                 td {
                                     border: none;

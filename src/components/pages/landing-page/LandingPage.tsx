@@ -677,6 +677,12 @@ const LandingPage = () => {
                     Compare exchange rates
                 </h2>
 
+                <div className="btn-div">
+                    <button className="compare-btn">
+                        Sending 100 GBP with....
+                    </button>
+                </div>
+
                 <div className="table">
                     <Table
                         rows = {exchangeRateTableData.rows}
@@ -693,12 +699,6 @@ const LandingPage = () => {
                 <h2 className="heading">
                     How we compare with others
                 </h2>
-
-                <div className="btn-div">
-                    <button className="compare-btn">
-                        Sending 200 GBP with....
-                    </button>
-                </div>
 
                 <div className="table">
                     <Table
