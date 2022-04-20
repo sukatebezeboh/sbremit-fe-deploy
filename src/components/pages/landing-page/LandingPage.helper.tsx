@@ -1,9 +1,8 @@
 import { TableCell } from "components/modules/table/ITable"
 import ComparisonCheckmark from "./parts/ComparisonCheckmark"
 import React, { createElement } from "react"
-import { asset } from "../../../util/util"
+import { asset, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
-import { Link } from "react-router-dom"
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
     heading: [
@@ -326,7 +325,7 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' })
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182 EUR', content2: <Link to='#hero' className="table-send-btn">Start sending money</Link> , status: 'neutral', format: 'none', className: 'text-align-right' })
+                content: XComparisonTextStack({ content1: '1.19182 EUR', content2: <button onClick={() => scrollTo('#hero')} className="table-send-btn is-link">Start sending money</button> , status: 'neutral', format: 'none', className: 'text-align-right' })
             }
         ],
         [

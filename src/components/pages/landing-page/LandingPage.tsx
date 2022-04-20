@@ -1,22 +1,18 @@
-import FancyToggle from 'components/modules/parts/FancyToggle'
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
 import { exchangeRateTableData, featureCompareTableData, supportedCountriesListing } from './LandingPage.helper'
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMax, useResizeObserver } from '../../../util/util';
-import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
-import { CookieService } from '../../../services/CookieService';
+import { asset, formatCurrency, getMax, scrollTo, useResizeObserver } from '../../../util/util';
 import { constants } from '../../../util/constants';
-import config from '../../../env';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
+import Scrollspy from 'react-scrollspy'
 
 const LandingPage = () => {
 
@@ -519,7 +515,7 @@ const LandingPage = () => {
                             <div className="text-side">
                                 <div className="title">Excellent exchange rate</div>
                                 <div className="text">
-                                    Our exchange rates are the best in the market. <span className="green-link">Click here</span> to see how we are better than our competitors.                                
+                                    Our exchange rates are the best in the market. <span className="green-txt bold is-link" onClick={() => scrollTo('.landing-page-compare-exchange-rates-table')}>Click here</span> to see how we are better than our competitors.                                
                                 </div>
                             </div>
                         </div>
@@ -535,7 +531,7 @@ const LandingPage = () => {
                             <div className="text-side">
                                 <div className="title">Multiple delivery options</div>
                                 <div className="text">
-                                    Mobile money, bank transfer, and cash pickup.  <span className="green-link"> <Link to="">Click here</Link></span> to see how we compare with our competitors                                
+                                    Mobile money, bank transfer, and cash pickup.  <span className="green-txt bold is-link" onClick={() => scrollTo('.landing-page-compare-features-table')} >Click here</span> to see how we compare with our competitors                                
                                 </div>
                             </div>
                         </div>
