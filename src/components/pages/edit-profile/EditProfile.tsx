@@ -242,8 +242,8 @@ const EditProfile = () => {
                             {constants.COUNTRIES_PHONE_CODES.map(
                               (country) => (
                                 <option
-                                  value={country.code}>
-                                  {country.code} -{" "}
+                                  value={country.phoneCode}>
+                                  {country.phoneCode} - 
                                   {country.name}
                                 </option>
                               ),

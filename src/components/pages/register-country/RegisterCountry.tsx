@@ -1,6 +1,5 @@
 import { Checkbox, FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material'
 import CountrySelect from 'components/modules/parts/CountrySelect'
-import PhoneCodeSelect from 'components/modules/parts/PhoneCodeSelect'
 import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput'
 import { themeNames } from 'components/modules/toast-factory/themes'
 // import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -89,6 +88,7 @@ const Page = styled.div`
                 padding: 10px 16px;
                 width: 100%;
                 height: 50px;
+                background: transparent;
             }
 
             &.country-select {
@@ -266,6 +266,8 @@ const RegisterCountry = () => {
                 
                 <div className=" span-2-col">
                     <div className="input-wrapper">
+
+
                         <PhoneNumberInput 
                             placeholder="Your phone number without the leading zero or country code"
                             value={values.phone} 
