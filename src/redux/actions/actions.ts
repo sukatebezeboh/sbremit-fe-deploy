@@ -31,6 +31,7 @@ import {
   formatCurrency,
   genPaginationHashTable,
   getQueryParam,
+  isPhoneNumber,
   parseEndpointParameters,
   sortObjectByProperties,
   validatePromo,
@@ -99,7 +100,7 @@ export const signUpAction = (data: any) => {
     })
 }
 
-export const signInAction = (data: any) => {
+export const signInAction = (data: any, history: any) => {
   store.dispatch({ type: SUBMITTING, payload: SIGN_IN })
   axios
     .post(
@@ -138,18 +139,68 @@ export const signInAction = (data: any) => {
             })
           })
       } else {
-        toastAction({
-          show: true,
-          type: 'error',
-          timeout: 10000,
-          message: `${res.data.error.message}`,
-        })
+        const errorMessage = res.data.error.message;
+        if ( errorMessage.indexOf('not confirm') !== -1 ) {
+            toastAction({
+              show: true,
+              type: 'error',
+              timeout: 20000,
+              defaultThemeName: themeNames.CLEAR_MAMBA,
+              title: errorMessage,
+              message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
+              extraBtnText: isPhoneNumber(data.username) ? "Activate my account" : "Resend activation mail",
+              extraBtnHandler: () => isPhoneNumber(data.username) ? history.push(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
+              extraBtnClass: 'verif-toast-failed-extra-btn-class'
+            })
+        } else {
+          toastAction({
+            show: true,
+            type: 'error',
+            timeout: 10000,
+            message: `${errorMessage}`,
+          })          
+        }
+
       }
     })
     .catch((err) => {})
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: '' })
     })
+}
+
+export const resendActivation = (username: string) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+  axios
+  .put(
+    config.API_HOST + endpoints.ACCOUNT_ACTIVATION,
+    { username },
+    {
+      headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+    },
+  )
+  .then((res: any) => {
+    if (res.data.status === '200') {
+      toastAction({
+        show: true,
+        type: 'success',
+        timeout: 10000,
+        message: isPhoneNumber(username) ? `An activation code has been sent to your phone.` : 'An activation link has been sent to your email.',
+      })
+    } else {
+      toastAction({
+        show: true,
+        type: 'error',
+        timeout: 10000,
+        message: `${res.data.error.message}`,
+      })
+    }
+  })
+  .catch((err) => {})
+  .then(() => {
+    store.dispatch({ type: LOADING, payload: false })
+  })
 }
 
 export const confirmUserPassword = (password: string, callback: Function) => {

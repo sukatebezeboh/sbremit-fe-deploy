@@ -612,7 +612,6 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'remitly', 'receiveAmount'), content2: '-0.14 EUR', status: 'neutral', format: 'received' })
                 }
             ],
-    
         ]
     }
 }

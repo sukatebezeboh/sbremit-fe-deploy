@@ -53,7 +53,7 @@ const SignIn = () => {
           initialValues={{ ...initialValues }}
           validationSchema={SignInValidator}
           onSubmit={(values) => {
-            dispatch(signInAction(values))
+            dispatch(signInAction(values, history))
           }}
         >
           {({ errors, touched, values }: any) => (

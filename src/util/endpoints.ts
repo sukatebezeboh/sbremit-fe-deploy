@@ -31,8 +31,8 @@ const endpoints = {
     TOAST_NOTIF: '/user/toast',
     USER_REFERRALS: '/user/referrals',
     REGISTER_COUNTRY: '/country/register',
-    COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3'
-
+    COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3',
+    ACCOUNT_ACTIVATION: '/user/activation'
 }
 
 export default endpoints;

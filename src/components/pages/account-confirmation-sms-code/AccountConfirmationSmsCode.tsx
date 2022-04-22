@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import OtpInput from 'react-otp-input';
 import { getQueryParam } from '../../../util/util'
 import { paths } from 'util/paths';
-import { resetPasswordAction } from '../../../redux/actions/actions';
+import { resendActivation, resetPasswordAction } from '../../../redux/actions/actions';
 import {NewAuthLayout, RememberPassword, AuthButton} from '../../modules/new-auth-layout/NewAuthLayout'
 
 const AccountConfirmationSMSCode = () => {
@@ -43,7 +43,7 @@ const AccountConfirmationSMSCode = () => {
         focusStyle={{border: 'none'}}
       />
       <AuthButton text='Submit code' marginBottomOff isSubmitting={isSubmitting} onClick={toConfirmAccount} />
-      {/* <StyledText>Didn't get the code? <i onClick={resendCode}>Get it again by SMS</i></StyledText> */}
+      <StyledText>Didn't get the code? <i className='is-link' onClick={() => resendActivation(phone)}>Get it again by SMS</i></StyledText>
       <RememberPassword />
     </NewAuthLayout>
   )
