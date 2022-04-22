@@ -5,7 +5,7 @@ import { settings } from "./settings";
 
 export const asset = (folder: string, name: string) => {
     if (folder === 'flags') {
-        return `https://flagcdn.com/${name?.toLowerCase()?.replace(/\.([a-z]{3,4})$/, '')}.svg`
+        return `https://flagcdn.com/h240/${name?.toLowerCase()?.replace(/\.([a-z]{3,4})$/, '')}.png`
     }
     return `/assets/${folder}/${name}`;
 }

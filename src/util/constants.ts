@@ -478,6 +478,10 @@ export const constants = {
     MOBILE: "MOBILE",
     DESKTOP: "DESKTOP",
 
+    COMPETITOR_RATES_BASE_CURRENCY: "GBP",
+    COMPETITOR_RATES_TARGET_CURRENCY: "XAF",
+    COMPETITOR_RATES_COMPARE_AMOUNT: 100,
+
     SIGNUP_COUNTRIES: {
         "AT": "Austria",
         "BE": "Belgium",

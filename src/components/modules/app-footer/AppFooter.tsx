@@ -6,7 +6,8 @@ import { paths } from '../../../util/paths'
 import { asset } from '../../../util/util'
 
 const Footer = styled.footer`
-        background: #03211D;
+        /* background: #03211D; */
+        background: #007B5D;
         .footer-inner { 
             width: 80%;
             margin: auto;
@@ -202,7 +203,7 @@ export const AppFooter = () => {
       <div className="footer-inner">
           <div className="logo-line">
               <div className="sb-logo">
-                  <img src={asset('', 'main-logo.svg')} alt="SBRemit" />
+                  <img src={asset('', 'main-logo-white.svg')} alt="SBRemit" />
               </div>
 
               <div className="social-links">

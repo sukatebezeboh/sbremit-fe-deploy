@@ -3,7 +3,7 @@ import styled from "styled-components";
 export default styled.div`
     background: white;
     main { 
-        background: #086A6A;
+        background: #007B5D;
         position: relative;
         overflow-x: clip;
 
@@ -93,7 +93,7 @@ export default styled.div`
                             font-size: 16px;
                             line-height: 20px;
                             color: #000000;
-                            padding: 7px 24px;
+                            padding: 14px 35px;
                             background: #FDDB3A;
                             border-radius: 6px;
                             border: none;
@@ -217,8 +217,8 @@ export default styled.div`
 
                         .hero-text { 
                             font-weight: 400;
-                            font-size: 16px;
-                            line-height: 28px;
+                            font-size: 24px;
+                            line-height: 40px;
                             letter-spacing: -0.01em;
                             color: #FFFFFF;
                             width: 70%;
@@ -381,11 +381,21 @@ export default styled.div`
                             display: grid;
                             grid-template-columns: 0fr 1fr;
                             grid-gap: 16px;
-                            img { 
+
+                            .img-container {
                                 width: 42px;
                                 height: 42px;
                                 border-radius: 50%;
+                                position: relative;
+                                img {   
+                                    /* width: 20px; */
+                                    aspect-ratio: 1/1;
+                                    height: 100%;
+                                    border-radius: 50%;
+                                    position: absolute;
+                                }
                             }
+
 
                             .text { 
                                 /* font-family: 'Faro'; */

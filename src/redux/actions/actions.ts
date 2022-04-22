@@ -1443,3 +1443,27 @@ export const registerCountry = (values: any) => {
       store.dispatch({ type: LOADING, payload: false })
     })
 }
+
+interface IArgsGetCompetitorRatesConfig {
+    baseCurrency: string,
+    targetCurrency: string,
+    sendAmount: number
+}
+
+export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : IArgsGetCompetitorRatesConfig, setStateCallback: Function) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+    axios.get(config.API_HOST + parseEndpointParameters(endpoints.COMPETITOR_RATES, baseCurrency, targetCurrency, `${sendAmount}`))
+    .then(res => {
+      if (res.data.status === '200') {
+        console.log(res.data.data);
+        setStateCallback(res.data.data)
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}

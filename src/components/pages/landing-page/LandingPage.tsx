@@ -1,10 +1,10 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
-import { exchangeRateTableData, featureCompareTableData, supportedCountriesListing } from './LandingPage.helper'
+import { exchangeRateTableData, featureCompareTableData, getExchangeRateTableData, supportedCountriesListing } from './LandingPage.helper'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
+import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
 import { asset, formatCurrency, getMax, scrollTo, useResizeObserver } from '../../../util/util';
@@ -26,8 +26,11 @@ const LandingPage = () => {
     const conversionRate = transfer.conversionRate;
     const toSend = transfer.toSend;
     const toReceive = transfer.toReceive;
-    const [changedInput, setChangedInput] :any = useState(null);
+    const [changedInput, setChangedInput]: any = useState(null);
 
+    const [competitorRates, setCompetitorRates]: any = useState([]);
+        console.log('competitorRates', competitorRates);
+        
     let rate= conversionRate?.rate;
     if (
         promo?.type === "FIXED_RATE"
@@ -78,31 +81,14 @@ const LandingPage = () => {
         setTransferMethod(selected)
         getQuoteService(toSend.currency, toReceive.currency);
         updateAppValues();
+        getCompetitorRates({ 
+                baseCurrency: constants.COMPETITOR_RATES_BASE_CURRENCY, 
+                targetCurrency: constants.COMPETITOR_RATES_TARGET_CURRENCY, 
+                sendAmount: constants.COMPETITOR_RATES_COMPARE_AMOUNT 
+            },
+            setCompetitorRates
+        )
     }, [])
-
-    useEffect(() => {
-        // window.addEventListener("scroll", handleScroll )
-        // const documentStyle: any = document.body.style;
-        // const initialPageZoom = documentStyle.zoom;
-
-        // documentStyle.zoom = 1;
-        // return () => {
-        //     window.removeEventListener( "scroll", handleScroll )
-        //     documentStyle.zoom = initialPageZoom
-        //   }
-    }, [])
-
-    const handleScroll = () => {
-        try {
-            if (window.scrollY > 20) {
-                const navContainer: any = document.querySelector("#nav-container");
-                navContainer.className = "white-bg-shadow";
-            } else {
-                const navContainer: any = document.querySelector("#nav-container");
-                navContainer.className = "no-white-bg-shadow";
-            }
-        } catch(e) {}
-    }
 
     const handleXInputChange = (e: any, data: any) => {
         const caret = e.target.selectionStart
@@ -349,7 +335,7 @@ const LandingPage = () => {
                     <div className="auth-links">
                         <div className="auth-links-inner">
                             <button className="sign-in is-link link" onClick={() => history.push(paths.SIGN_IN)} >
-                                Sign in
+                                Log in
                             </button>
 
                             <button className="sign-up is-link mobile-hide" onClick={() => history.push(paths.SIGN_UP)} >
@@ -460,11 +446,14 @@ const LandingPage = () => {
                         supportedCountriesListing.map((listing: any) => (
                             <div className="listing">
                                 <div className="listing-inner">
-                                    <img 
-                                        src={asset('flags', listing.flag)} 
-                                        srcSet={`${asset('flags', listing.flag)} 2x`} 
-                                        alt={listing.name} 
-                                        loading="lazy" />
+                                    <div className="img-container">
+                                        <img 
+                                            src={asset('flags', listing.flag)} 
+                                            srcSet={`${asset('flags', listing.flag)} 2x`} 
+                                            alt={listing.name} 
+                                            loading="lazy" />                                        
+                                    </div>
+
                                     <div className="text">{listing.name}</div>
                                 </div>
                                 <div className={`checkmark ${listing.active ? 'active' : 'inactive'}`}>
@@ -685,8 +674,8 @@ const LandingPage = () => {
 
                 <div className="table">
                     <Table
-                        rows = {exchangeRateTableData.rows}
-                        headings={exchangeRateTableData.heading}
+                        rows = {getExchangeRateTableData(competitorRates).rows}
+                        headings={getExchangeRateTableData(competitorRates).heading}
                         config={{
                             customClassName: 'landing-page-table landing-page-compare-exchange-rates-table',
                             cellSpacing: 0,

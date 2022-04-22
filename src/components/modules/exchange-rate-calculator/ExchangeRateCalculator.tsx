@@ -61,7 +61,9 @@ const Container = styled.div`
                             line-height: 15px;
                         }
                         &.active {
-                            border-bottom: 1.5px solid #007B5D;
+                            border-bottom: 5px solid #007B5D;
+                            color: #007B5D;
+                            font-weight: 600;
                         }
                     }
                 }

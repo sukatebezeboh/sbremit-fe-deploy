@@ -30,7 +30,9 @@ const endpoints = {
     TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment',
     TOAST_NOTIF: '/user/toast',
     USER_REFERRALS: '/user/referrals',
-    REGISTER_COUNTRY: '/country/register'
+    REGISTER_COUNTRY: '/country/register',
+    COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3'
+
 }
 
 export default endpoints;
