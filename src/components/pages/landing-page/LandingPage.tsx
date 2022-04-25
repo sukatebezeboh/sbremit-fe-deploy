@@ -441,7 +441,7 @@ const LandingPage = () => {
         <section className="countries-remit" id="countries">
             <div className="section-inner">
                 <h2 className='heading'>Countries we remit to</h2>
-                <div className="subheading">We transfer from UK, Canada, and Europe to:</div>
+                <div className="subheading">We transfer from UK and Canada to:</div>
 
                 <div className="listings">
                     {
