@@ -641,5 +641,22 @@ export const termAndConditionsData = [
                 text:[`To benefit from the referral, the amount being sent would be greater than or equal to the promo amount.`]
             }
         ]
-    }
+    },
+    {
+        title: "Comparison disclaimer",
+        content: [
+            {
+                text: [`We base our price comparisons on data we’ve taken from other providers’websites, on specific times of the day. This is not done on a daily basis.Some providers don’t make their fee and exchange rates publicly available. Inthose cases, we use their service for money transfer - just as if we werecustomers - right until the point of paying. We do this multiple times, and weenter different amounts of money.The comparison table shows how much it costs a customer to send moneyinternationally, in different currencies using each of the providers we’ve listed.The tables also show how we compared to other providers in terms of NoTransfer fee, provide mobile money option, bank transfer, cash pickup, cardlesswithdrawal and mobile top-up.`]
+            },
+            {
+                text: {
+                    "The transfer Fees": "The ‘transfer fee’ is simply how much the provider says it costs to use theirservice online. We only compare costs for online transfers remitting money fromone set country to another.",
+                    "The exchange rates:": "The   ‘exchange   rate’   represents   the   exchange   rate   for   each   provider.   This exchange rate is taken from the providers website once a day. Hence, forproviders whose exchange rate fluctuates, once we have taken a record of theexchange rate, the rates after then might be different from what is shown on ourcomparison table. <br/> ",
+                    "What all this means for you:":`This means that the ‘transfer fee’ and ‘rate’ you seein the comparison table might be slightly different to the ones each providercurrently has on their website.`,
+                    "Seek advice:": `Our rate comparison table is for your information only and is primarily used as abenchmark. You should consider looking at the most current exchange rate andfees from different providers and compare to ours for more accuracy`,
+                },
+                type: "list"
+            }
+        ]
+    },
 ]

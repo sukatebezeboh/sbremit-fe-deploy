@@ -160,7 +160,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, serviceFee, promo?.code, rate, userReferralDiscount?.value])
+    }, [promo, toSend.value, toReceive.value, transferMethod, serviceFee, promo?.code, rate, userReferralDiscount?.value])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {

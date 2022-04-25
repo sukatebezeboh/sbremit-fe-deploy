@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getQueryParam, scrollTo } from '../../../../util/util';
 import LegalPageHeading from '../page-heading/LegalPageHeading';
 import {termAndConditionsData} from './termAndConditionsData';
 
@@ -8,7 +9,10 @@ const TermsAndConditions = (props: {setNavLink: Function}) => {
     useEffect(() => {
         const list = termAndConditionsData.map(d=> d.title);
         setNavLink(list)
-
+        const goToSection = getQueryParam('gotosection');
+        if (goToSection) {
+            scrollTo('#'+goToSection)
+        }
     }, [])
 
     const generateContent = (content: any, numbering: string|number) => {

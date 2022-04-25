@@ -586,6 +586,7 @@ export const confirmTransfer = (
     referralDiscountValue: transfer?.referralDiscount?.value,
     meta: {
       serviceFee: transfer.serviceFee,
+      equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
       exchangeBase: transfer.conversionRate?.base,
       exchangeRate: formatCurrency(transfer.conversionRate?.rate),
       exchangeTarget: transfer.conversionRate?.target,

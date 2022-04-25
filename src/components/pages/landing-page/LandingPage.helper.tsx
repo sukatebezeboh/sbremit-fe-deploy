@@ -3,6 +3,7 @@ import ComparisonCheckmark from "./parts/ComparisonCheckmark"
 import React, { createElement, useState } from "react"
 import { asset, getValueFromArray, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
+import { constants } from "util/constants"
 
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
@@ -470,13 +471,13 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: 'Provider'
                 },
                 {
-                    content: XComparisonTextStack({content1: 'Exchange rate', content2: <div> (1 GBP <img src={asset('icons', 'white-arrow.svg')} alt="->" className="mobile-hide" /> <img src={asset('icons', 'green-round-arrow.svg')} alt="->" className="desktop-hide" /> EUR) </div> })
+                    content: XComparisonTextStack({content1: 'Exchange rate', content2: <div> (1 {constants.COMPETITOR_RATES_BASE_CURRENCY} <img src={asset('icons', 'white-arrow.svg')} alt="->" className="mobile-hide" /> <img src={asset('icons', 'green-round-arrow.svg')} alt="->" className="desktop-hide" /> {constants.COMPETITOR_RATES_TARGET_CURRENCY}  ) </div> })
                 },
                 {
                     content: XComparisonTextStack({content1: 'Transfer fee'})
                 },
                 {
-                    content: XComparisonTextStack({ content1: 'Recipient gets', content2: <div className="mobile-hide">Sending 100 GBP</div>, className: 'text-align-right' })
+                    content: XComparisonTextStack({ content1: 'Recipient gets', content2: <div className="mobile-hide">Sending {constants.COMPETITOR_RATES_COMPARE_AMOUNT} {constants.COMPETITOR_RATES_BASE_CURRENCY} </div>, className: 'text-align-right' })
                 }
             ]
         ],
@@ -618,3 +619,27 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
 
 
     
+
+export const slideContents = [
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+    {
+        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+    },
+]

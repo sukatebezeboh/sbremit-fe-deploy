@@ -621,7 +621,7 @@ export default styled.div`
                         .image-up { 
 
                             img { 
-
+                                width: 340px;
                             }
                         }
 

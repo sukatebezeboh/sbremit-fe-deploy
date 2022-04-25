@@ -1,6 +1,6 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
-import { exchangeRateTableData, featureCompareTableData, getExchangeRateTableData, supportedCountriesListing } from './LandingPage.helper'
+import { exchangeRateTableData, featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
@@ -13,6 +13,8 @@ import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 import Scrollspy from 'react-scrollspy'
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
 
 const LandingPage = () => {
 
@@ -578,6 +580,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-1.png')} alt="step-1" />
                         </div>
                         <div className="text-down">
+                            <div className="step-title">Step 1</div>
                             <div className="step-title">Signup or sign in</div>
                             <div className="steps">
                                 <div className="step">
@@ -601,6 +604,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-2.png')} alt="step-2" />
                         </div>
                         <div className="text-down">
+                            <div className="step-title">Step 2</div>
                             <div className="step-title">Add a recipient</div>
                             <div className="steps">
                                 <div className="step">
@@ -616,6 +620,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-3.png')} alt="step-3" />
                         </div>
                         <div className="text-down">
+                            <div className="step-title text-center">Step 3</div>
                             <div className="step-title">Review Transaction</div>
                             <div className="steps">
                                 <div className="step">
@@ -639,6 +644,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-4.png')} alt="step-4" />
                         </div>
                         <div className="text-down">
+                            <div className="step-title text-center">Step 4</div>
                             <div className="step-title">Transfer successful</div>
                             <div className="steps">
                                 <div className="step">
@@ -668,7 +674,7 @@ const LandingPage = () => {
 
                 <div className="btn-div">
                     <button className="compare-btn">
-                        Sending 100 GBP with....
+                        Sending {constants.COMPETITOR_RATES_COMPARE_AMOUNT} GBP with....
                     </button>
                 </div>
 
@@ -683,6 +689,8 @@ const LandingPage = () => {
                             responsiveType: RESPONSIVE_TYPE_COLLAPSE_ALL
                         }}
                     />
+
+                    <div className="align-center is-link green-txt light-green-bg br-10 mt-10 mx-auto fit-content p-5 px-10" onClick={() => history.push(paths.LEGAL + '/terms?gotosection=section_17')} >To see how we collected this data, please click here</div>
                 </div>
 
                 <h2 className="heading">
@@ -785,7 +793,7 @@ const LandingPage = () => {
 
                             <div className="customer">
                                 <div className="name">
-                                    Charles Mambo
+                                    Tina Ntube
                                 </div>
                                 <div className="from">
                                     (London)
