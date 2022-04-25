@@ -322,12 +322,12 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 className: 'sbremit'
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' }),
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'success', format: 'rate' }),
                 className: 'sbremit'
 
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' }),
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'neutral', format: 'rate' }),
                 className: 'sbremit'
 
             },
@@ -341,10 +341,10 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: <img src={asset('logos', 'western-union.png')} alt="western-union" />
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'success', format: 'rate' })
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'neutral', format: 'rate' })
             },
             {
                 content: XComparisonTextStack({ content1: '1.19182 EUR', content2: '-0.14 EUR', status: 'neutral', format: 'received' })
@@ -355,10 +355,10 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: <img src={asset('logos', 'money-gram.png')} alt="money-gram" />
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'success', format: 'rate' })
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'neutral', format: 'rate' })
             },
             {
                 content: XComparisonTextStack({ content1: '1.19182 EUR', content2: '-0.14 EUR', status: 'neutral', format: 'received' })
@@ -369,10 +369,10 @@ export const exchangeRateTableData: {heading: TableCell[][], rows: TableCell[][]
                 content: <img src={asset('logos', 'world-remit.png')} alt="world-remit" />
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'success', format: 'rate' })
             },
             {
-                content: XComparisonTextStack({ content1: '1.19182', content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                content: XComparisonTextStack({ content1: '1.19182', content2: '', status: 'neutral', format: 'rate' })
             },
             {
                 content: XComparisonTextStack({ content1: '1.19182 EUR', content2: '-0.14 EUR', status: 'neutral', format: 'received' })
@@ -488,11 +488,11 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     className: 'sbremit'
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'sbremit', 'rate'), content2: 'Mid-market rate', status: 'success', format: 'rate' }),
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'sbremit', 'rate'), content2: '', status: 'success', format: 'rate' }),
                     className: 'sbremit'
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'sbremit', 'transferFee'), content2: 'Transparent fee', status: 'neutral', format: 'rate' }),
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'sbremit', 'transferFee'), content2: '', status: 'neutral', format: 'rate' }),
                     className: 'sbremit'
     
                 },
@@ -506,10 +506,10 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: <img src={asset('logos', 'western-union.png')} alt="western-union" />
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'westernunion', 'rate'), content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'westernunion', 'rate'), content2: '', status: 'success', format: 'rate' })
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'westernunion', 'transferFee'), content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'westernunion', 'transferFee'), content2: '', status: 'neutral', format: 'rate' })
                 },
                 {
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'westernunion', 'receiveAmount'), content2: '-0.14 EUR', status: 'neutral', format: 'received' })
@@ -520,10 +520,10 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: <img src={asset('logos', 'money-gram.png')} alt="money-gram" />
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'moneygram', 'rate'), content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'moneygram', 'rate'), content2: '', status: 'success', format: 'rate' })
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'moneygram', 'transferFee'), content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'moneygram', 'transferFee'), content2: '', status: 'neutral', format: 'rate' })
                 },
                 {
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'moneygram', 'receiveAmount'), content2: '-0.14 EUR', status: 'neutral', format: 'received' })
@@ -534,10 +534,10 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: <img src={asset('logos', 'world-remit.png')} alt="world-remit" />
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'worldremit', 'rate'), content2: 'Mid-market rate', status: 'success', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'worldremit', 'rate'), content2: '', status: 'success', format: 'rate' })
                 },
                 {
-                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'worldremit', 'transferFee'), content2: 'Transparent fee', status: 'neutral', format: 'rate' })
+                    content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'worldremit', 'transferFee'), content2: '', status: 'neutral', format: 'rate' })
                 },
                 {
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'worldremit', 'receiveAmount'), content2: '-0.14 EUR', status: 'neutral', format: 'received' })
