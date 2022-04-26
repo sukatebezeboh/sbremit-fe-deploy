@@ -410,3 +410,16 @@ button:disabled{
 .is-link {
     cursor: pointer;
 }
+
+.w-60 {
+    width: 60%;
+}
+
+.w-fit {
+    width: fit-content;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}

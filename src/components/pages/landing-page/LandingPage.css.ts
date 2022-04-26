@@ -104,6 +104,42 @@ export default styled.div`
                         }
                     }
                 }
+
+                .auth-btns {
+                    width: 100%;
+                    background: white;
+                    position: absolute;
+                    left: 0;
+                    top: 60px;
+                    padding: 10px;
+                    .inner {
+                        display: flex;
+                        width: 95%;
+                        margin: auto;
+                        justify-content: space-between;
+                        .btns {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            grid-gap: 5%;
+                            button {
+                                text-align: center;
+                                padding: 5px 10px;
+                                white-space: nowrap;
+                                &.login-btn {
+                                    background: #FDDB3A;
+                                    color: #000000;
+                                    border: none;
+
+                                }
+                                &.signup-btn {
+                                    background: none;
+                                    border: none
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             .mobile-nav { 
@@ -715,6 +751,11 @@ export default styled.div`
                             text-align: center;
                             padding: 13px 0;
                             max-height: 73px;
+                            &.sbremit {
+                                img.sbremit-logo {
+                                    max-width: 100px;
+                                }
+                            }
                         }
 
                         th {
@@ -770,8 +811,6 @@ export default styled.div`
                                     border-bottom: 1px solid #00000010;
                                 }
                             }
-
-
                         }
                         &.landing-page-compare-features-table {
                             td.sbremit {
@@ -789,6 +828,9 @@ export default styled.div`
                             th, td {
                                 border: none;
                                 border-bottom: 1px solid #0A0E0D77;
+                                &:first-child {
+                                    border-right: 1px solid #0A0E0D33;
+                                }
                             }
 
                             th {

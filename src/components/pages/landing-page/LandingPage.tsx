@@ -1,6 +1,6 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
-import { exchangeRateTableData, featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
+import { featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
@@ -336,7 +336,7 @@ const LandingPage = () => {
 
                     <div className="auth-links">
                         <div className="auth-links-inner">
-                            <button className="sign-in is-link link" onClick={() => history.push(paths.SIGN_IN)} >
+                            <button className="sign-in is-link link mobile-hide" onClick={() => history.push(paths.SIGN_IN)} >
                                 Log in
                             </button>
 
@@ -355,7 +355,17 @@ const LandingPage = () => {
                                 </span>
                             }
 
+                        </div>
+                    </div>
 
+                    <div className="auth-btns desktop-hide">
+                        <div className="inner">
+                            <div>Start sending money</div>
+
+                            <div className="btns">
+                                <button className="login-btn" onClick={() => history.push(paths.SIGN_IN)} >Login</button>
+                                <button className="signup-btn" onClick={() => history.push(paths.SIGN_UP)} >Sign up</button>
+                            </div>
                         </div>
                     </div>
                 </nav>
@@ -668,9 +678,9 @@ const LandingPage = () => {
 
         <section className="compare" id="compare">
             <div className="section-inner">
-                {/* <h2 className="heading">
+                <h2 className="heading">
                     Compare exchange rates
-                </h2> */}
+                </h2>
 
                 {/* <div className="btn-div">
                     <button className="compare-btn">
@@ -678,7 +688,7 @@ const LandingPage = () => {
                     </button>
                 </div> */}
 
-                {/* <div className="table">
+                <div className="table">
                     <Table
                         rows = {getExchangeRateTableData(competitorRates).rows}
                         headings={getExchangeRateTableData(competitorRates).heading}
@@ -691,7 +701,7 @@ const LandingPage = () => {
                     />
 
                     <div className="align-center is-link green-txt light-green-bg br-10 mt-10 mx-auto fit-content p-5 px-10" onClick={() => history.push(paths.LEGAL + '/terms?gotosection=section_17')} >To see how we collected this data, please click here</div>
-                </div> */}
+                </div>
 
                 <h2 className="heading">
                     How we compare with others

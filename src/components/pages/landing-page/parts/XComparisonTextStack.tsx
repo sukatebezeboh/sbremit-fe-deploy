@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { asset } from '../../../../util/util'
 
 const Container = styled.div`
-    font-weight: 400;
     font-size: 16px;
     line-height: 30px;
     text-align: left;
@@ -61,13 +60,12 @@ interface ITextStack {
 }
 const XComparisonTextStack: FC<ITextStack> = ({content1, status = 'neutral', content2 = '', format = 'none', className }) => {
   return (
-    <Container className={` ${className} ${format === 'received' && 'text-align-right'}`}>
-        <div className='line line-1'>{content1} <span className={`dot dot-${status}`}></span> </div>
+    <Container className={` text-align-center ${className}`}>
+        <div className='line line-1'> {content1} </div>
         {content2 && 
             <div className='line line-2'>
-              {format === 'received' && <img src={asset('icons', 'red-arrow-down.svg')} alt="" />} 
+              {format === 'received' && <img src={asset('icons', `${ status === 'success' ? 'green-arrow-up.svg' : 'red-arrow-down.svg'}`)} alt="" />} 
               {content2} 
-              {format === 'rate' && <img src={asset('icons', 'info-circle.svg')} alt="" />} 
             </div>
         }
     </Container>
