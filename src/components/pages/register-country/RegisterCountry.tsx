@@ -181,7 +181,7 @@ const RegisterCountry = () => {
     const requiredValues: any = {
         aim: "Tell us what you would like to do",
         residence: "Telling us where you are helps us make decisions",
-        suggestedCountry: "Suggest a country",
+        suggestedCountry: "Add a country",
         name: "Name field is required",
         email: "Email field is required"
     }
@@ -205,9 +205,9 @@ const RegisterCountry = () => {
         setValues(newValues);
     };
     
-      const handleSubmit = (event: any) => {
+    const handleSubmit = (event: any) => {
         event.preventDefault();
-        
+    
         const newErrors: any = {};
         for (const key in requiredValues) {
             if (!values[key]) {
@@ -215,8 +215,8 @@ const RegisterCountry = () => {
             }
         }
         setErrors(newErrors)
-
-        if (!(Object.keys(errors)).length) {
+        console.log(errors, values)
+        if (!(Object.keys(newErrors)).length) {
             registerCountry(values)
         } else {
             stackNewToast({
@@ -229,7 +229,7 @@ const RegisterCountry = () => {
                 message: "<div style='color: grey;'>Please fill all required fields to proceed</div>",
             })
         }
-      };
+    };
   
   return (
     <Page>
@@ -258,7 +258,7 @@ const RegisterCountry = () => {
                 </div>
 
                 <div className="input-wrapper">
-                    <input type="email" value={values.email} onChange={(event) => handleChange('email', event.target.value)} className='input' placeholder='Email' />
+                    <input name="email" type="email" value={values.email} onChange={(event) => handleChange('email', event.target.value)} className='input' placeholder='Email' />
                     <div className="bottom-message-block red-txt">
                             {errors.email}
                     </div>
@@ -297,7 +297,7 @@ const RegisterCountry = () => {
                 <div className="span-2-col">
                     <div className="input-wrapper country-select red-txt">
                         <CountrySelect
-                            placeholder="Add a country"
+                            placeholder="Suggest a country"
                             value={values.suggestedCountry}
                             onChange={(event: any) => handleChange('suggestedCountry', event.target.textContent)}
                         />

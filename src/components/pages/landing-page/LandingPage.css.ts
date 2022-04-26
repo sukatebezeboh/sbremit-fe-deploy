@@ -673,6 +673,12 @@ export default styled.div`
                                 line-height: 32px;
                                 color: #5C7E75;
 
+                                &.step-number {
+                                    color: #000;
+                                    font-size: 18px;
+                                    text-transform: uppercase;
+                                }
+
                                 @media only screen and (max-width: 900px) {
 
                                 }
@@ -711,7 +717,7 @@ export default styled.div`
                 padding: 50px 1px;
 
                 .heading { 
-                    margin-bottom: 50px;
+                    margin-bottom: 35px;
                 }
 
                 .btn-div { 
@@ -734,7 +740,7 @@ export default styled.div`
 
                 .table { 
                     width: 60%;
-                    margin: 32px auto;
+                    margin: 32px auto 50px;
                     min-width: 850px;
                     @media only screen and (max-width: 900px) {
                         width: 90%;

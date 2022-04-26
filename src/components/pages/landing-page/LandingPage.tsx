@@ -590,7 +590,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-1.png')} alt="step-1" />
                         </div>
                         <div className="text-down">
-                            <div className="step-title">Step 1</div>
+                            <div className="step-title step-number">Step 1</div>
                             <div className="step-title">Signup or sign in</div>
                             <div className="steps">
                                 <div className="step">
@@ -614,7 +614,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-2.png')} alt="step-2" />
                         </div>
                         <div className="text-down">
-                            <div className="step-title">Step 2</div>
+                            <div className="step-title step-number">Step 2</div>
                             <div className="step-title">Add a recipient</div>
                             <div className="steps">
                                 <div className="step">
@@ -630,7 +630,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-3.png')} alt="step-3" />
                         </div>
                         <div className="text-down">
-                            <div className="step-title text-center">Step 3</div>
+                            <div className="step-title step-number">Step 3</div>
                             <div className="step-title">Review Transaction</div>
                             <div className="steps">
                                 <div className="step">
@@ -654,7 +654,7 @@ const LandingPage = () => {
                             <img src={asset('images', 'transfer-methods-step-4.png')} alt="step-4" />
                         </div>
                         <div className="text-down">
-                            <div className="step-title text-center">Step 4</div>
+                            <div className="step-title step-number">Step 4</div>
                             <div className="step-title">Transfer successful</div>
                             <div className="steps">
                                 <div className="step">
@@ -700,7 +700,7 @@ const LandingPage = () => {
                         }}
                     />
 
-                    <div className="align-center is-link green-txt light-green-bg br-10 mt-10 mx-auto fit-content p-5 px-10" onClick={() => history.push(paths.LEGAL + '/terms?gotosection=section_17')} >To see how we collected this data, please click here</div>
+                    <div className="align-center is-link green-txt light-green-bg br-10 mt-20 mx-auto fit-content p-5 px-10" onClick={() => history.push(paths.LEGAL + '/terms?gotosection=section_17')} >To see how we collected this data, please click here</div>
                 </div>
 
                 <h2 className="heading">
