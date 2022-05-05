@@ -249,10 +249,10 @@ export const AppFooter = () => {
 
                       <ul className="links">
                           <li>
-                              <Link to="/">About</Link>
+                              <Link to={paths.ABOUT}>About</Link>
                           </li>
                           <li>
-                              <Link to="/">FAQs</Link>
+                              <Link to={paths.SUPPORT}>FAQs</Link>
                           </li>
                           <li>
                               <Link to="/">Blog</Link>
@@ -265,10 +265,10 @@ export const AppFooter = () => {
 
                       <ul className="links">
                           <li>
-                              <Link to="/">Privacy Policy</Link>
+                              <Link to={paths.PRIVACY_POLICY}>Privacy Policy</Link>
                           </li>
                           <li>
-                              <Link to="/">Terms & Conditions</Link>
+                              <Link to={paths.TERMS}>Terms & Conditions</Link>
                           </li>
                       </ul>
                   </div>

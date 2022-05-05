@@ -35,6 +35,8 @@ export const paths = {
     REGISTER_COUNTRY: "/country/register",
 
     LEGAL: "/support/legal",
+    PRIVACY_POLICY: "/support/legal/privacy",
+    TERMS: "/support/legal/terms",
     SUPPORT: "/support",
     ABOUT: "/content/about",
     CONTACT: "/content/contact",
