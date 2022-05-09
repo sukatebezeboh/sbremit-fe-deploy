@@ -32,7 +32,8 @@ const endpoints = {
     USER_REFERRALS: '/user/referrals',
     REGISTER_COUNTRY: '/country/register',
     COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3',
-    ACCOUNT_ACTIVATION: '/user/activation'
+    ACCOUNT_ACTIVATION: '/user/activation',
+    TRANSFER_QUOTE: '/transfer/quote'
 }
 
 export default endpoints;

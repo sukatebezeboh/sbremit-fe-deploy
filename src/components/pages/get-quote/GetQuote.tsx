@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { AppService } from 'services/AppService';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewTransferQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -256,16 +256,6 @@ const GetQuote = () => {
             return
         }
 
-        // if (Number(toSend.value) < 1 && toSend?.currency?.toLowerCase() === 'gbp' ) {
-        //     toastAction({
-        //         show: true,
-        //         type: "warning",
-        //         timeout: 10000,
-        //         message: "You can't send less than 1 GBP"
-        //     })
-        //     return
-        // }
-
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > max) {
             toastAction({
                 show: true,
@@ -293,6 +283,7 @@ const GetQuote = () => {
             return;
         }
         setNewQuote(toSend.currency, toReceive.currency);
+        setNewTransferQuote(transfer);
         history.push(paths.RECIPIENT)
     }
 

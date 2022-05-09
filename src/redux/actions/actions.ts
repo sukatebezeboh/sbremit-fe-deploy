@@ -1519,3 +1519,25 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
       store.dispatch({ type: LOADING, payload: false })
     })
 }
+
+export const setNewTransferQuote = (transfer: any) => {
+    console.log("Transfer::: ", transfer);
+    store.dispatch({ type: LOADING, payload: true })
+
+    http.post(endpoints.TRANSFER_QUOTE, {
+      transferMethod: transfer.transferMethod,
+      originCurrency: transfer.toSend.currency,
+      originAmount: transfer.toSend.value,
+      destinationCurrency: transfer.toReceive.currency,
+      includeOperatorFee: transfer.allowOperatorFee,
+      exchangeRateQuoteId: CookieService.get('QUOTE'),
+      promoCode: transfer.promo?.code
+    })
+    .then(res => {
+      console.log(res)
+    })
+    .catch(() => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
