@@ -148,6 +148,7 @@ const Recipient = () => {
             message: `Select / Add Recipient`
         })
     }
+    console.log(transfer)
 
     const handleContinueEditMode = () => {
         if (!selectedRecipient) {

@@ -15,5 +15,6 @@ export const NEW_RECIPIENT = "NEW_RECIPIENT";
 export const LOADING = "LOADING";
 export const TRANSFER = "TRANSFER";
 export const RESET_TRANSFER = "RESET_TRANSFER";
+export const TRANSFER_QUOTE = "TRANSFER_QUOTE";
 export const NOTIFICATIONS = "NOTIFICATIONS"
 export const CONFIRM = "CONFIRM";

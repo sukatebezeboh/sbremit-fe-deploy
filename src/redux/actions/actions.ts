@@ -19,6 +19,7 @@ import {
   SUBMITTING,
   TOAST,
   TRANSFER,
+  TRANSFER_QUOTE,
 } from '../actionTypes'
 import config from '../../env'
 import endpoints from '../../util/endpoints'
@@ -574,16 +575,32 @@ export const confirmTransfer = (
   callback: Function,
 ) => {
   store.dispatch({ type: LOADING, payload: true })
+  // const payload = {
+  //   transferMethod: transfer.transferMethod,
+  //   recipientId: recipient.id,
+  //   originCurrency: transfer.toSend?.currency,
+  //   originAmount: Number(transfer.toSend?.adjusted ?? transfer.toSend?.value),
+  //   destinationCurrency: transfer.toReceive?.currency,
+  //   destinationAmount: Number(transfer.toReceive?.total),
+  //   paymentMethod: {},
+  //   promo: transfer.promo?.code,
+  //   referralDiscountValue: transfer?.referralDiscount?.value,
+  //   meta: {
+  //     serviceFee: transfer.serviceFee,
+  //     equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
+  //     exchangeBase: transfer.conversionRate?.base,
+  //     exchangeRate: formatCurrency(transfer.conversionRate?.rate),
+  //     exchangeTarget: transfer.conversionRate?.target,
+  //     totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`),
+  //   },
+  // }
+
+  console.log(transfer.currentTransferQuote?.id);
+
   const payload = {
-    transferMethod: transfer.transferMethod,
     recipientId: recipient.id,
-    originCurrency: transfer.toSend?.currency,
-    originAmount: Number(transfer.toSend?.adjusted ?? transfer.toSend?.value),
-    destinationCurrency: transfer.toReceive?.currency,
-    destinationAmount: Number(transfer.toReceive?.total),
-    paymentMethod: {},
-    promo: transfer.promo?.code,
-    referralDiscountValue: transfer?.referralDiscount?.value,
+    transferQuoteId: transfer.currentTransferQuote?.id,
+    originCurrency: transfer.toSend?.currency,  
     meta: {
       serviceFee: transfer.serviceFee,
       equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
@@ -757,7 +774,7 @@ export const setNewQuoteWithoutAuth = (
     })
 }
 
-export const setNewQuote = (base: string, target: string) => {
+export const setNewQuote = (base: string, target: string, finalCallback?: Function) => {
   const payload: { base: string; target: string; meta?: any } = {
     base,
     target,
@@ -769,6 +786,7 @@ export const setNewQuote = (base: string, target: string) => {
     .then((res) => {
       if (res.data.status === '200') {
         CookieService.put('QUOTE', res.data.data.id)
+        setNewTransferQuote(res?.data?.data?.id, () => finalCallback?.())
       } else {
         toastAction({
           show: true,
@@ -785,7 +803,7 @@ export const checkSkip = (callback: Function) => {
   revalidateTransfer()
   const skip = CookieService.get('SKIP_QUOTE')
   if (skip) {
-    callback()
+    setNewTransferQuote(CookieService.get('QUOTE'), () => callback());
     CookieService.remove('SKIP_QUOTE')
   }
 }
@@ -1520,24 +1538,48 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
     })
 }
 
-export const setNewTransferQuote = (transfer: any) => {
+export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Function) => {
+    const transfer = store.getState().transfer;
     console.log("Transfer::: ", transfer);
-    store.dispatch({ type: LOADING, payload: true })
+    store.dispatch({ type: LOADING, payload: true });
+    const transferMethodIdMap: any = {
+      mobile_money: 1,
+      bank_transfer: 2,
+      cash_pickup: 3
+    };
+    const idTransferMethodMap: any = {
+      1: 'mobile_money',
+      2: 'bank_transfer',
+      3: 'cash_pickup'
+    };
 
     http.post(endpoints.TRANSFER_QUOTE, {
-      transferMethod: transfer.transferMethod,
+      transferMethodId: transferMethodIdMap[transfer.transferMethod],
       originCurrency: transfer.toSend.currency,
       originAmount: transfer.toSend.value,
       destinationCurrency: transfer.toReceive.currency,
       includeOperatorFee: transfer.allowOperatorFee,
-      exchangeRateQuoteId: CookieService.get('QUOTE'),
-      promoCode: transfer.promo?.code
+      exchangeRateQuoteId: exchangeRateQuoteId,
+      promoCode: transfer.promo?.code,
     })
     .then(res => {
       console.log(res)
+      if (res?.data?.status == '200') {
+        store.dispatch({
+          type: TRANSFER,
+          payload: {
+            ...transfer,
+            currentTransferQuote: {
+              ...res?.data?.data,
+              transferMethod: idTransferMethodMap[res?.data?.data?.transferMethod]
+            }
+          },
+        })
+      }
     })
     .catch(() => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
+      finalCallback?.()
     })
 }

@@ -1,5 +1,5 @@
 import { IAction } from ".";
-import { RESET_TRANSFER, TRANSFER } from "../actionTypes";
+import { RESET_TRANSFER, TRANSFER, TRANSFER_QUOTE } from "../actionTypes";
 
 const initialTransferState: {} = {
     conversionRate: {},
@@ -9,7 +9,7 @@ const initialTransferState: {} = {
     toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
     paymentMethod: "",
     transactionDetails: undefined,
-    transferMethod: "",
+    transferMethod: "mobile_money",
     transactions: [],
     paginatedTransactions: {},
     paginatedCompletedTransactions: {},
@@ -35,9 +35,18 @@ export const transfer = (state: any = initialTransferState, {type, payload}: IAc
                 ...state,
                 toSend: {value: "", currency: 'GBP', image: "UK", total: "0", isSend: true},
                 toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
-                transferMethod: "",
+                transferMethod: "mobile_money",
                 serviceFee: 0,
-                promo: undefined
+                promo: undefined,
+                currentTransferQuote: {}
+            }
+        }
+        case TRANSFER_QUOTE: {
+            return {
+                ...state,
+                currentTransferQuote: {
+                    ...payload
+                }
             }
         }
         default:

@@ -156,7 +156,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         getQuoteService(toSend.currency, toReceive.currency);
-    }, [])
+    }, [toSend.currency, toReceive.currency])
 
     useEffect(() => {
         setTotalValue()
@@ -282,10 +282,9 @@ const GetQuote = () => {
             })
             return;
         }
-        setNewQuote(toSend.currency, toReceive.currency);
-        setNewTransferQuote(transfer);
-        history.push(paths.RECIPIENT)
+        setNewQuote(toSend.currency, toReceive.currency, () => history.push(paths.RECIPIENT) );
     }
+
 
 
     const getTransferFeeText = (selectedMethod: string) => {
