@@ -33,6 +33,7 @@ export const paths = {
     TRUELAYER_PROVIDERS: "/truelayer-providers",
     REFERRALS: "/referrals",
     REGISTER_COUNTRY: "/country/register",
+    NOTIFICATIONS: "/notifications",
 
     LEGAL: "/support/legal",
     PRIVACY_POLICY: "/support/legal/privacy",

@@ -50,6 +50,7 @@ export const getMoneyValue = (formattedAmount: string): number => {
 }
 
 export const convertDateString = (value: any) => {
+    if (!value) return ''
     value  = parseInt(value) * 1000
     const d = new Date(value)
     return d.toDateString()

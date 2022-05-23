@@ -195,6 +195,7 @@ const Recipient = () => {
                                             <div>
                                                 <div>{recipient.firstName + ' ' + recipient.lastName}</div>
                                                 {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({replaceUnderscores(recipient.profile.transferMethod)})</small>}
+                                                {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
                                             </div>
                                         </div>
 

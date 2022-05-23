@@ -93,7 +93,7 @@ export default styled.div`
                             font-size: 16px;
                             line-height: 20px;
                             color: #000000;
-                            padding: 14px 35px;
+                            padding: 16px 35px;
                             background: #FDDB3A;
                             border-radius: 6px;
                             border: none;
@@ -205,7 +205,7 @@ export default styled.div`
                                 background: #FDDB3A;
                                 border-radius: 6px;
                                 font-weight: 500;
-                                font-size: 14px;
+                                font-size: 16px;
                                 line-height: 28px;
                                 padding: 7px;
 
@@ -260,7 +260,7 @@ export default styled.div`
                             width: 70%;
                             @media only screen and (max-width: 900px) {
                                 margin: auto;
-                                font-size: 14px;
+                                font-size: 16px;
                             }
                         }
 
@@ -288,7 +288,7 @@ export default styled.div`
                                 margin-bottom: 30px;
                                 @media only screen and (max-width: 900px) {
                                     margin: 30px auto;
-                                    font-size: 14px;
+                                    font-size: 16px;
                                 }
                                 img { 
                                     margin: auto 18px;
@@ -370,7 +370,7 @@ export default styled.div`
             width: fit-content;
             margin: auto;
             @media only screen and (max-width: 900px) {
-                font-size: 14px;
+                font-size: 16px;
             }
         }
         &.countries-remit { 
@@ -521,7 +521,7 @@ export default styled.div`
 
                 @media only screen and (max-width: 900px) {
                     margin-top: 0px;
-                    font-size: 14px;
+                    font-size: 16px;
                 }
                 .register-interest-link { 
                     text-decoration: underline;
@@ -624,7 +624,7 @@ export default styled.div`
                                     color: #334641;
 
                                     @media only screen and (max-width: 900px) {
-                                        font-size: 14px;
+                                        font-size: 16px;
                                     }
                                 }
                             }
@@ -699,7 +699,7 @@ export default styled.div`
                                         /* font-family: 'Fuzzy Bubbles', 'cursive'; */
                                         font-style: normal;
                                         font-weight: 400;
-                                        font-size: 14px;
+                                        font-size: 16px;
                                         line-height: 21px;
                                         color: #0A0E0D;
                                     }
@@ -728,7 +728,7 @@ export default styled.div`
                         text-align: center;
                         border: none;
                         color: white;
-                        padding: 14px;
+                        padding: 16px;
                         margin: auto;
                         display: block;
 
@@ -782,7 +782,7 @@ export default styled.div`
 
                             td, th, tr {
                                 font-weight: 400;
-                                font-size: 14px;
+                                font-size: 16px;
                                 line-height: 21px;
                                 color: #000000;
                                 border: none;
@@ -872,7 +872,7 @@ export default styled.div`
                             .table-send-btn {
                                 padding: 8px 16px;
                                 font-weight: 500;
-                                font-size: 14px;
+                                font-size: 16px;
                                 line-height: 21px;
                                 text-align: center;
                                 letter-spacing: -0.01em;

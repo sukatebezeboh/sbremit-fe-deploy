@@ -41,7 +41,7 @@ const NavBar = () => {
     }
 
     useEffect(() => {
-        fetchUserNotifications();
+        fetchUserNotifications(10);
     }, [])
 
     useIdleTimer({
@@ -81,7 +81,7 @@ const NavBar = () => {
                             {notifList(notifs)}
                          </div>
                          <hr/>
-                         <div className="notif-more">View all notifications </div>
+                         <Link to="/notifications" className="notif-more">View all notifications </Link>
                     </div> }
                 </span>
                 <span className="pic">

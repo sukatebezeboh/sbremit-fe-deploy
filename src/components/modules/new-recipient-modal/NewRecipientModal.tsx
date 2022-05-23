@@ -8,7 +8,7 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { REASONS } from '../../../util/constants';
+import { REASONS, transferMethodsInWords } from '../../../util/constants';
 import { isObjectNotEmpty } from '../../../util/util';
 
 const Div = styled.div`
@@ -353,7 +353,8 @@ function NewRecipientModal(props: any) {
         key: "",
         countryCode: "CM21",
         accountBranch: "",
-        recipientAccountNumber: ""
+        recipientAccountNumber: "",
+        mobileMoneyProvider: recipientData?.profile?.mobileMoneyProvider || ""
     }
 
     const handleReasonsChange = (e: any) => {
@@ -374,7 +375,7 @@ function NewRecipientModal(props: any) {
             </div>
             <div className="modal">
                 <div className="head mobile-hide">
-                    <div className="t-id">Add a new recipient</div>
+                    <div className="t-id">Add a new recipient <span className="no-wrap"> ( {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 {transfer.transferMethod === "bank_transfer" && (
@@ -409,6 +410,7 @@ function NewRecipientModal(props: any) {
                                 reason: values.reason,
                                 bankName: values.bankName,
                                 accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
+                                mobileMoneyProvider: values.mobileMoneyProvider
                             }
                             dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                         }}>
@@ -441,6 +443,19 @@ function NewRecipientModal(props: any) {
                                                 </div>
                                                 <div className="margin-adjust"></div>
                                                 <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
+                                            </div>
+                                            <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                                <div>Mobile money provider</div>
+                                                <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
+                                                    <option value="">Select</option>
+                                                    {
+                                                        ['MTN', 'Airtel', 'MPESA'].map((provider: string) => (
+                                                            <option value={provider}>{provider}</option>
+                                                            )
+                                                        )
+                                                    }
+
+                                                </Field>
                                             </div>
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Email</div>

@@ -148,6 +148,7 @@ export const RecipientMobileMoneyValidator = Yup.object().shape({
     return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
   }),
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
+  mobileMoneyProvider: Yup.string().required("Required"),
   email: Yup.string().email("Enter valid email"),
   state: Yup.string().min(3, "Too short").max(25, "Too long"),
   reason: Yup.string()

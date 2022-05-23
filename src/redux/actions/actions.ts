@@ -600,15 +600,15 @@ export const confirmTransfer = (
   const payload = {
     recipientId: recipient.id,
     transferQuoteId: transfer.currentTransferQuote?.id,
-    originCurrency: transfer.toSend?.currency,  
-    meta: {
-      serviceFee: transfer.serviceFee,
-      equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
-      exchangeBase: transfer.conversionRate?.base,
-      exchangeRate: formatCurrency(transfer.conversionRate?.rate),
-      exchangeTarget: transfer.conversionRate?.target,
-      totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`),
-    },
+    // originCurrency: transfer.toSend?.currency,  
+    // meta: {
+    //   serviceFee: transfer.serviceFee,
+    //   equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
+    //   exchangeBase: transfer.conversionRate?.base,
+    //   exchangeRate: formatCurrency(transfer.conversionRate?.rate),
+    //   exchangeTarget: transfer.conversionRate?.target,
+    //   totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`),
+    // },
   }
   const user = store.getState().auth.user
   http
@@ -619,7 +619,7 @@ export const confirmTransfer = (
       if (res.data.status === '200') {
         callback(res.data.data.id)
         CookieService.put('transfer', JSON.stringify(res.data.data.id))
-        ReactPixel.track('Purchase', { value: payload.meta.totalToPay, currency: payload.originCurrency})
+        ReactPixel.track('Purchase', { value: formatCurrency(`${Number(transfer.toSend.total)}`), currency: transfer.toSend?.currency})
         getTransactionDetails(callback)
       } else {
         toastAction({
@@ -1333,11 +1333,11 @@ export const subscribe = (data: { email: string }) => {
     })
 }
 
-export const fetchUserNotifications = () => {
+export const fetchUserNotifications = (limit?: number) => {
   const userId = store.getState().auth.user?.id
 
   http
-    .get(parseEndpointParameters(endpoints.NOTIFICATIONS, userId))
+    .get(parseEndpointParameters(endpoints.NOTIFICATIONS + `${limit ? '?limit=' + limit : ''}`, userId))
     .then((res) => {
       if (res.data.status === '200') {
         store.dispatch({ type: NOTIFICATIONS, payload: [...res.data.data] })
@@ -1561,9 +1561,10 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
       includeOperatorFee: transfer.allowOperatorFee,
       exchangeRateQuoteId: exchangeRateQuoteId,
       promoCode: transfer.promo?.code,
+      destinationCountryCode: transfer.toReceive.countryCode,
+      originCountryCode:  transfer.toSend.countryCode
     })
     .then(res => {
-      console.log(res)
       if (res?.data?.status == '200') {
         store.dispatch({
           type: TRANSFER,

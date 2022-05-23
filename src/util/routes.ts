@@ -36,6 +36,7 @@ import Referrals from 'components/pages/referrals/Referrals';
 import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
 import LandingPage from 'components/pages/landing-page/LandingPage';
 import RegisterCountry from 'components/pages/register-country/RegisterCountry';
+import Notifications from 'components/pages/notifications/Notifications';
 
 
 export interface IRoute {
@@ -170,6 +171,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.DASHBOARD,
         component: Dashboard,
+        protected: true
+    },
+    {
+        path: paths.NOTIFICATIONS,
+        component: Notifications,
         protected: true
     },
     {

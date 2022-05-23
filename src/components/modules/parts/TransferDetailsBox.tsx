@@ -4,7 +4,7 @@ import { Link, Redirect, useHistory } from 'react-router-dom';
 import styled from "styled-components";
 import { getServiceRateValue, getTransactionDetails } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { constants } from '../../../util/constants';
+import { constants, transferMethodsInWords } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { formatCurrency, getInclusiveText, getMoneyValue, getQueryParam, parseWithUnderscores } from '../../../util/util';
 
@@ -110,7 +110,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const transaction = transfer?.transactionDetails;
     const transferQuote = transfer.currentTransferQuote
     const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transferQuote?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transferQuote?.meta?.serviceFee);
-    const transferMethod = transferId ? transaction?.transferMethod?.replace('_', ' ') : transferQuote?.transferMethod?.replace('_', ' ');
+    const transferMethod = transferId ? transferMethodsInWords[transaction?.transferMethod] : transferMethodsInWords[transferQuote?.transferMethod];
     const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transferQuote?.originAmount);
     const sendCurrency = transferId ? transaction?.originCurrency : transferQuote?.originCurrency;
     const xBase = transferId ? transaction?.meta?.exchangeBase : transferQuote?.meta?.exchangeBase;

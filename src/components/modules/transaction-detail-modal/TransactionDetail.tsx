@@ -9,7 +9,7 @@ import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArra
 import PageHeading from '../page-heading/PageHeading';
 import Pdf from "react-to-pdf";
 import Receipt from '../receipt/Receipt';
-import { constants } from '../../../util/constants';
+import { constants, transferMethodsInWords } from '../../../util/constants';
 import ProgressBar from '../progress-bar/ProgressBar';
 
 
@@ -596,7 +596,7 @@ const TransactionDetail = (props: any) => {
                             <hr/>
                             <div className="row">
                                 <div className="left">Transfer method</div>
-                                <div className="right sentence-case">{data.transferMethod?.replace('_', ' ')}</div>
+                                <div className="right sentence-case">{transferMethodsInWords[data.transferMethod]}</div>
                             </div>
                             <div className="row">
                                 <div className="left">You send</div>
@@ -686,10 +686,11 @@ const TransactionDetail = (props: any) => {
                             <div className="point point-4"></div>
                         </div>
                         <div className="point-labels">
-                            <div className="label-1"> <div>Transfer created</div> <div>20 Nov 2020</div> </div>
-                            <div className="label-2"> <div>Received {data.originCurrency} payment</div> <div>20 Nov 2020</div> </div>
-                            <div className="label-3"> <div>Vendor processing transfer</div> <div>20 Nov 2020</div> </div>
-                            <div className="label-4"> <div>Recipient receives {data.destinationCurrency}</div> <div>20 Nov 2020</div> </div>
+                            <div className="label-1"> <div>Transfer created</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                            <div className="label-2"> <div>Received {data.originCurrency} payment</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                            <div className="label-3"> <div>Vendor processing transfer</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+                            <div className="label-4"> <div>Recipient receives {data.destinationCurrency}</div> <div>{convertDateString(data.dateCreated)}</div> </div>
+
                         </div>
                     </div>
                 </div>

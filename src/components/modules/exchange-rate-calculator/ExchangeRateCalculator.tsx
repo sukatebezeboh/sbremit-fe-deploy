@@ -53,7 +53,7 @@ const Container = styled.div`
                         padding: 8px;
                         cursor: pointer;
                         font-weight: 400;
-                        font-size: 14px;
+                        font-size: 16px;
                         line-height: 17px;
                         color: #0A0E0D;
                         @media only screen and (max-width: 900px) {
@@ -76,7 +76,7 @@ const Container = styled.div`
                 color: #0A0E0D;
                 margin: 24px 16px 16px;
                 @media only screen and (max-width: 900px) {
-                    font-size: 14px;
+                    font-size: 16px;
                 }
             }
 
@@ -219,7 +219,7 @@ const Container = styled.div`
                 cursor: pointer;
 
                 @media only screen and (max-width: 900px) {
-                    font-size: 14px;
+                    font-size: 16px;
                 }
             }
         }
@@ -295,7 +295,7 @@ const ExchangeRateCalculator = ({
                             </div>
 
                             <div className="point-text">
-                                <span className={`deep-green green-txt ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {toSend.currency} = {formatCurrency(conversionRate?.rate)} XAF</span>
+                                <span className={`deep-green green-txt ${promo?.type === "FIXED_RATE" && isAcceptablePromoValue(promo) ? "strikethrough" : ""}`}>1 {conversionRate.base} = {formatCurrency(conversionRate?.rate)} {conversionRate.target}</span>
                             </div>
                         </div>
 
