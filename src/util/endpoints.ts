@@ -33,7 +33,8 @@ const endpoints = {
     REGISTER_COUNTRY: '/country/register',
     COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3',
     ACCOUNT_ACTIVATION: '/user/activation',
-    TRANSFER_QUOTE: '/transfer/quote'
+    TRANSFER_QUOTE: '/transfer/quote',
+    VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate'
 }
 
 export default endpoints;

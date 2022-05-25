@@ -63,6 +63,7 @@
   "proxy": "http://localhost:80/",
   "devDependencies": {
     "@types/react": "^17.0.0",
+    "@types/react-dom": "^18.0.5",
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-scrollspy": "^3.3.3",

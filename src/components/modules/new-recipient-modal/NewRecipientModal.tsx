@@ -1,15 +1,17 @@
-import { Field, Form, Formik, useFormikContext } from 'formik';
+import { Field, Form, Formik, useFormik } from 'formik';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
-import { createRecipient } from '../../../redux/actions/actions';
+import { createRecipient, stackNewToast, verifyPivotRecipientReference } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrofinanceTransferValidator, RecipientCashPickupValidator, RecipientMobileMoneyValidator, RecipientValidator } from "../../../util/form-validators";
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { REASONS, transferMethodsInWords } from '../../../util/constants';
-import { isObjectNotEmpty } from '../../../util/util';
+import { countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { asset, isObjectNotEmpty } from '../../../util/util';
+import { themeNames } from '../toast-factory/themes';
+import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
 
 const Div = styled.div`
     .overlay {
@@ -176,6 +178,7 @@ const Div = styled.div`
                 align-items: center;
                 width: fit-content;
                 height: 25px;
+                pointer-events: none;
                 img{
                     width: 25px;
                     height: 19px;
@@ -204,7 +207,7 @@ const Div = styled.div`
                 display: inline-block;
                 margin-right: 50px;
                 font: normal normal normal 16px/19px Montserrat;
-                color: #424242;
+                /* color: #424242; */
                 cursor: default;
             }
             button {
@@ -265,35 +268,35 @@ const Div = styled.div`
                     margin-bottom: -25px;
                 }
                 input.phone-no {
-                        top: 32px;
-                        height: 25px!important;
-                        margin-left: 15%;
-                        width: calc(100% - 80px);
-                        padding-left: 5px;
-                        border: 1px solid transparent;
-                        padding: 0px 5px;
-                    }
-                    select {
-                        background-position-y: 3px;
-                    }
-                    select.phone{
-                        padding: 10px 50%;
-                        background-position-y: 3px;
-                        background-position-x: 55px;
-                    }
-                    .mobile-head {
-                        margin-bottom: -31px;
-                    }
-                    /* select+img{
-                        top: -29px;
-                        left: 10px;
-                    } */
-                    div.country-code{
-                        top: -32px;
-                    }
-                    div.phone-no-error-box{
-                        margin-top: 0;
-                    }
+                    top: 32px;
+                    height: 25px!important;
+                    margin-left: 15%;
+                    width: calc(100% - 80px);
+                    padding-left: 5px;
+                    border: 1px solid transparent;
+                    padding: 0px 5px;
+                }
+                select {
+                    background-position-y: 3px;
+                }
+                select.phone{
+                    padding: 10px 50%;
+                    background-position-y: 3px;
+                    background-position-x: 55px;
+                }
+                .mobile-head {
+                    margin-bottom: -31px;
+                }
+                /* select+img{
+                    top: -29px;
+                    left: 10px;
+                } */
+                div.country-code{
+                    top: -32px;
+                }
+                div.phone-no-error-box{
+                    margin-top: 0;
+                }
             }
         }
         .modal-btns {
@@ -320,7 +323,8 @@ const Div = styled.div`
 
 `
 
-const getRecipientCreateValidationSchema = ( transferMethod: string ) => {
+const getRecipientCreateValidationSchema = ( transferMethod: string, onChangeCallback?:Function ) => {
+    onChangeCallback?.();
     return {
         "cash_pickup": RecipientCashPickupValidator,
         "bank_transfer_bankTransfer": RecipientBankTransferBankTransferValidator,
@@ -335,6 +339,7 @@ function NewRecipientModal(props: any) {
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
+    const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
 
     const initialValues = {
@@ -369,6 +374,24 @@ function NewRecipientModal(props: any) {
         }
     }
 
+    useEffect(() => {
+        if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
+            setShowVerifyStep(true)
+        }
+    }, [])
+
+    const verifyRecipient = (event: any, payload: any) => {
+        event.preventDefault()
+        console.log(payload)
+        verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
+    }
+
+    const updateVerifyStep = (values: any) => {
+        if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
+            setShowVerifyStep(true)
+        }
+    }
+
     return (
         modalOpen && <Div>
             <div className="overlay">
@@ -398,7 +421,7 @@ function NewRecipientModal(props: any) {
                 )}
                 <Formik
                         initialValues={{...initialValues}}
-                        validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}` )}
+                        validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, () => {} )}
                         onSubmit={values => {
                             const newValue = {
                                 firstName: values.firstName,
@@ -415,13 +438,14 @@ function NewRecipientModal(props: any) {
                             dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                         }}>
                         {
-                            ({errors, touched, values}: any) => (
+                            ({errors, touched, values}: any) => {
+                                return(
                                 <Form>
+                                    <FormikFormObserver callback={(newValues: any) => {
+                                        updateVerifyStep(newValues)
+                                    }} />
                                     <div className="form grid-col-1-1 grid-gap-3">
                                             <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
-                                                {
-                                                    console.log(errors, "formik errors")
-                                                }
                                                 <div>First name<i>*</i></div>
                                                 <Field type="text" name="firstName" placeholder="John" />
                                             </div>
@@ -434,17 +458,19 @@ function NewRecipientModal(props: any) {
                                                 <div className="mobile-head">Mobile<i>*</i></div>
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
-                                                    <option value="+01">United Kingdom</option>
+                                                    {/* <option value="+01">United Kingdom</option> */}
                                                     <option value="+237">Cameroon</option>
+                                                    <option value="+256">Uganda</option>
+                                                    <option value="+254">Kenya</option>
                                                 </Field>
                                                 <div className="country-code">
-                                                    <img src={`./assets/flags/${values.phoneCode == "+237" ? "CM" : "UK"}.png`} alt="country"/>
+                                                    <img src={asset( 'flags', `${countriesAndCodes.find((c) => '+'+c.phoneCode === values.phoneCode)?.countryCode}.png`)} alt="country"/>
                                                     <p>{values.phoneCode}</p>
                                                 </div>
                                                 <div className="margin-adjust"></div>
                                                 <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                             </div>
-                                            <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                            {transfer.transferMethod === "mobile_money" && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Mobile money provider</div>
                                                 <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
                                                     <option value="">Select</option>
@@ -456,7 +482,7 @@ function NewRecipientModal(props: any) {
                                                     }
 
                                                 </Field>
-                                            </div>
+                                            </div>}
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Email</div>
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
@@ -538,9 +564,9 @@ function NewRecipientModal(props: any) {
 
 
                                     </div>
-                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> <FormButton label={isObjectNotEmpty(recipientData) ? "Save" : "Add"} formName={paths.RECIPIENT} /> </div>
+                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> { showVerifyStep ? <button onClick={(e) => verifyRecipient(e, values)}>Verify</button> : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} /> } </div>
                                 </Form>
-                            )
+                            )}
                         }
                     </Formik>
             </div>

@@ -297,6 +297,52 @@ export const supportedCountriesListing = [
         flag: 'GQ.png',
         active: false
     },
+    {
+        name: "Uganda",
+        flag: 'UG.png',
+        active: false
+    },
+    {
+        name: "Tanzania",
+        flag: 'TZ.png',
+        active: false
+    },
+    {
+        name: "Kenya",
+        flag: 'KE.png',
+        active: false
+    },
+    {
+        name: "Nigeria",
+        flag: "NG.png",
+        active: false
+    },
+    {
+        name: "Ghana",
+        flag: "GH.png",
+        active: false
+    },
+    {
+        name: "Senegal",
+        flag: "SN.png",
+        active: false
+    },
+    {
+        name: "Gambia",
+        flag: "GM.png",
+        active: false
+    },
+    {
+        name: "Sierra Leone",
+        flag: "SL.png",
+        active: false
+    },
+    {
+        name: "Liberia",
+        flag: "LR.png",
+        active: false
+    },
+    
 ]
 
 
@@ -321,7 +367,7 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                     content: XComparisonTextStack({content1: 'Exchange rate', content2: <div> (1 {constants.COMPETITOR_RATES_BASE_CURRENCY} <img src={asset('icons', 'white-arrow.svg')} alt="->" className="mobile-hide" /> <img src={asset('icons', 'green-round-arrow.svg')} alt="->" className="desktop-hide" /> {constants.COMPETITOR_RATES_TARGET_CURRENCY}  ) </div>, className: 'w-fit mx-auto text-align-left' })
                 },
                 {
-                    content: XComparisonTextStack({ content1: <div className="w-60 mx-auto"> Rate compared to SB Remit </div> , content2: '', className: 'text-align-left' })
+                    content: XComparisonTextStack({ content1: <div className="mx-auto"> Rate compared to SB Remit </div> , content2: '', className: 'text-align-left' })
                 },
                 {
                     content: XComparisonTextStack({content1: 'Transfer fee', className: 'text-align-center'})

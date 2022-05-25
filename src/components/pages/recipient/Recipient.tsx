@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
-import { constants, maxTransfersUnverified, resources } from '../../../util/constants';
+import { constants, maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
@@ -106,6 +106,7 @@ const Recipient = () => {
     }, [recipients])
 
     const handleRecipientClick = (recipient: any) => {
+        console.log(recipient)
         if (recipient.profile.transferMethod !== transferMethod) {
             if (!editMode()) {
 
@@ -116,6 +117,15 @@ const Recipient = () => {
                         message: `Select a recipient with ${transfer.transferMethod?.replace( '_', ' ' )} transfer method for this transaction`
                     })
             }
+        }
+
+        if ( transfer.remittanceHandler !== (recipient.profile.remittanceHandler || remittanceHandlers.MANUAL_REMITTANCE_HANDLER) ) {
+            return toastAction({
+                show: true,
+                type: "warning",
+                timeout: 5000,
+                message: `Select a recipient with a mobile money provider for non-manual remittances`
+            })
         }
         setSelectedRecipient(recipient);
         dispatch({type: RECIPIENT, payload: recipient})

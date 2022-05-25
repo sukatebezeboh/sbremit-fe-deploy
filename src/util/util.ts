@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toastAction } from "redux/actions/actions";
-import { constants, currencySymbols } from "./constants";
+import { constants, currencySymbols, remittanceHandlers, remittanceHandlersTransferCriteria } from "./constants";
 import { settings } from "./settings";
 
 export const asset = (folder: string, name: string) => {
@@ -332,3 +332,52 @@ export const scrollTo = (sectionSelector : string) =>  {
         block: 'start' // the upper border of the element will be aligned at the top of the visible part of the window of the scrollable area.
     })
 }
+
+
+const resolveRemittanceCriteriaMatch = ( handlerCriteria: any, prop: any, transferProp: any ) => {
+    // console.log(handlerCriteria, prop, transferProp)
+    if ( handlerCriteria[prop].constructor === Array ) {
+        return Boolean(handlerCriteria[prop]?.find((p: string|number) => p === transferProp[prop]));
+    } else if ( handlerCriteria[prop].constructor === Object ) {
+        for ( const newProp in handlerCriteria[prop] ) {
+            const matched = resolveRemittanceCriteriaMatch( handlerCriteria[prop], newProp, transferProp[prop] )
+            if (!matched) {
+                return false;
+            }
+        }
+        return true;
+    } 
+    else if ( typeof handlerCriteria[prop] === "string" || typeof handlerCriteria[prop] === "number" ) {
+        return Boolean( handlerCriteria[prop] === transferProp[prop] )
+    }
+    throw new Error('No check in remittance resolver for provided datatype of property,' + prop + ' in handler criteria')
+}
+
+export const getRemittanceHandler = (transfer: any): ('PIVOT'|'MANUAL') => {
+    for ( const handlerCriteria of remittanceHandlersTransferCriteria) {
+        let handlerMatch = true;
+        for (const prop in handlerCriteria ) {
+            if ( prop == 'handler' ) {
+                continue
+            } 
+            // console.log(handlerCriteria, prop, transfer, "TOP LEVEL")
+
+            const matched = resolveRemittanceCriteriaMatch( handlerCriteria, prop, transfer )
+            // console.log(matched, "TOP LEVEL")
+            if (!matched) {
+                handlerMatch = false
+                break;
+            }
+        }
+
+        if ( handlerMatch ) {
+            // console.log(handlerMatch, handlerCriteria['handler'], "AFTER LOOP")
+            return handlerCriteria['handler']
+        }
+    }
+
+    return remittanceHandlers.MANUAL_REMITTANCE_HANDLER
+}
+
+
+

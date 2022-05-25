@@ -13,6 +13,22 @@ export const REASONS = [
     "Other"
 ];
 
+export const remittanceHandlers: any = {
+   PIVOT_REMITTANCE_HANDLER: "PIVOT",
+   MANUAL_REMITTANCE_HANDLER: "MANUAL"
+}
+
+// these criteria are properties as present on the redux transfer object
+export const remittanceHandlersTransferCriteria: any[] = [
+   {
+      handler: remittanceHandlers.PIVOT_REMITTANCE_HANDLER,
+      toReceive: {
+         currency: [ "KES", "UGX" ]
+      },
+      transferMethod: "mobile_money",
+   }
+]
+
 export const maxTransfersUnverified: any = {
   GBP: 800,
   CAD: Number.MAX_SAFE_INTEGER,
@@ -32,7 +48,7 @@ export interface CountryType {
   countryCodeAlt: string;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 }
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
-const countriesAndCodes: readonly CountryType[] = [
+export const countriesAndCodes: readonly CountryType[] = [
   {
      "countryCode":"AD",
      "name":"Andorra",

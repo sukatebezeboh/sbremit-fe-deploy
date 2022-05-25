@@ -427,3 +427,33 @@ button:disabled{
     margin-left: auto;
     margin-right: auto;
 }
+
+/* @keyframes slide_in_from_top {
+    0% {
+        top: -50vh;
+    }
+    100% {
+        top: 100vh;
+        margin-top: -50%;
+    }
+} */
+
+/* @keyframes slide_out_to_top {
+    0% {
+        top: 50vh;
+    }
+    100% {
+        top: -500px;
+    }
+} */
+
+/* .animate-in-from-top {
+    display: grid;
+    -webkit-animation: slide_in_from_top 0.8s ease forwards ;
+    animation: slide_in_from_top 0.8s ease forwards;
+} */
+/* .animate-out-to-top {
+    display: grid;
+    -webkit-animation: slide_out_to_top 0.8s ease forwards;
+    animation: slide_out_to_top 0.8s ease forwards;
+} */

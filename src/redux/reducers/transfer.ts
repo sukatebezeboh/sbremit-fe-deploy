@@ -10,6 +10,7 @@ const initialTransferState: {} = {
     paymentMethod: "",
     transactionDetails: undefined,
     transferMethod: "mobile_money",
+    remittanceHandler: "MANUAL",
     transactions: [],
     paginatedTransactions: {},
     paginatedCompletedTransactions: {},

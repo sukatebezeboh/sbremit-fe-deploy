@@ -527,13 +527,15 @@ export const getRecipient = (id: string) => {
 }
 
 export const createRecipient = (recipientData: any, callback?: any) => {
-  const transferMethod = store.getState().transfer.transferMethod
+  const transfer = store.getState().transfer;
+  const transferMethod = transfer.transferMethod
   recipientData = {
     firstName: recipientData.firstName,
     lastName: recipientData.lastName,
     profile: {
       ...recipientData,
       transferMethod,
+      remittanceHandler: transfer.remittanceHandler
     },
   }
   store.dispatch({ type: SUBMITTING, payload: paths.RECIPIENT })
@@ -1583,4 +1585,55 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
       store.dispatch({ type: LOADING, payload: false })
       finalCallback?.()
     })
+}
+
+export const verifyPivotRecipientReference = (payload: any, successCallback = () => {}, failedCallback = () => {}) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+  http.post(endpoints.VERIFY_PIVOT_REFERENCE, {
+    telecomCode: payload.mobileMoneyProvider,
+    customerAccountNumber: payload.phoneCode + payload.mobile
+  })
+  .then(res => {
+      console.log(res)
+      if (res.data?.data?.responseCode === "SUCCESS") {
+        const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
+        if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
+          successCallback?.()
+        } else {
+
+          
+          stackNewToast({
+            name: "confirm-momo-recipient-mismatch",
+            show: true,
+            type: 'warning',
+            timeout: 5000,
+            defaultThemeName: themeNames.CENTER_PROMPT,
+            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match ${res?.data?.data?.customerName} found for the provided mobile number`,
+            message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
+            close: () => {
+              unstackNewToast({name: "confirm-momo-recipient-mismatch"})
+            },
+            closeBtnText: "Make corrections",
+            extraBtnText: "Proceed anyway",
+            extraBtnHandler: () => {
+              unstackNewToast({name: "confirm-momo-recipient-mismatch"})
+              failedCallback?.()
+            },
+            extraBtnClass: 'verif-toast-failed-extra-btn-class'
+            })
+        }
+      } else {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: `Recipient mobile not found for ${payload.mobileMoneyProvider} MOMO service`,
+        })
+      }
+  })
+  .catch(() => {})
+  .then(() => {
+    store.dispatch({ type: LOADING, payload: false })
+  })
 }

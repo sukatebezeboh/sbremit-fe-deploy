@@ -17,11 +17,12 @@ const Button = styled.button`
         }
 `
 
-const FormButton = ({label, formName}: any) => {
+const FormButton = (props: any) => {
+    const {label, formName}: any = props;
     const submitting = useSelector((state: any) => state.submitting)
 
     return (
-        <Button type="submit" className={submitting === formName ? "grid-col-1-0" : ""} disabled={submitting === formName}> <span> {label} </span> { submitting === formName && <ButtonLoader/>} </Button>
+        <Button type="submit" {...props} className={submitting === formName ? "grid-col-1-0" : ""} disabled={submitting === formName}> <span> {label} </span> { submitting === formName && <ButtonLoader/>} </Button>
     )
 }
 

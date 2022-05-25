@@ -7,7 +7,7 @@ import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setN
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getValueFromArray } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getValueFromArray, getRemittanceHandler } from '../../../util/util';
 // import { asset } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
@@ -51,6 +51,8 @@ const GetQuote = () => {
     ) {
         rate = promo.settings.rate
     }
+
+    console.log(transfer);
 
     useEffect(() => {
         if (!transferMethod) {
@@ -160,7 +162,7 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, transferMethod, serviceFee, promo?.code, rate, userReferralDiscount?.value])
+    }, [promo, toSend.value, toReceive.value, toSend.currency, toReceive.currency, transferMethod, serviceFee, promo?.code, rate, userReferralDiscount?.value])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
@@ -220,6 +222,7 @@ const GetQuote = () => {
                 toSend: {...toSend, adjusted: getAdjustedValue(toSend.value, toReceive.value, allowOperatorFee, transfer.transferMethod, false), total: `${total}`},
                 // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))},
                 toReceive: {...toReceive, total: getAdjustedValue(toReceive.value, toReceive.value, allowOperatorFee, transfer.transferMethod, true)},
+                remittanceHandler: getRemittanceHandler(transfer)
             }
         })
 
