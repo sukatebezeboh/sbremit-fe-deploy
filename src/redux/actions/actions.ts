@@ -1600,16 +1600,20 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
         if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
           successCallback?.()
+          toastAction({
+            show: true,
+            type: 'success',
+            timeout: 10000,
+            message: `Recipient reference verified!`,
+          })
         } else {
-
-          
           stackNewToast({
             name: "confirm-momo-recipient-mismatch",
             show: true,
             type: 'warning',
             timeout: 5000,
             defaultThemeName: themeNames.CENTER_PROMPT,
-            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match ${res?.data?.data?.customerName} found for the provided mobile number`,
+            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
             message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
             close: () => {
               unstackNewToast({name: "confirm-momo-recipient-mismatch"})
