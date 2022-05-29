@@ -105,16 +105,20 @@ const NavBar = () => {
                                 <div><Link to="/profile">View Profile</Link></div>
                          </div>
                          <div className="notif-option">
-                                <div> <img src={asset('icons', 'prev.svg')} alt="settings"/> </div>
+                                <div> <img src={asset('icons', 'prev.svg')} alt="dashboard"/> </div>
                                 <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
                          </div>
                          <div className="notif-option">
-                                <div> <img src={asset('icons', 'download-file.svg')} alt="settings"/> </div>
+                                <div> <img src={asset('icons', 'download-file.svg')} alt="Marketting permissions"/> </div>
                                 <div><Link to={paths.MARKETING_PERMISSION}>Marketing permissions</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>
                                 <div>Settings</div>
+                         </div>
+                         <div className="notif-option">
+                                <div> <img src={asset('icons', 'referral.png')} alt="referrals"/> </div>
+                                <div><Link to={paths.REFERRALS}>Referrals</Link></div>
                          </div>
                          <hr/>
                          <div className="notif-option sign-out-option" onClick={() => signOutAction()}>

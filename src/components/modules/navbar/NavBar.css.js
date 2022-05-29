@@ -44,14 +44,15 @@ const Bar = styled.div.attrs(props => ({
         img{
             height: 49px;
             margin-left: 24.5%;
-            position: relative;
-            top: -16px;
+            /* position: relative;
+            top: -16px; */
         }
     }
     >div.right-opt {
         position: relative;
         width: 100%;
         text-align: right;
+        white-space: nowrap;
         .notif{
             >img{
                 width: 30px;
@@ -235,9 +236,9 @@ const Bar = styled.div.attrs(props => ({
         }
         .logo {
             img{
-                height: 17px;
+                height: 27px;
                 margin-left: 10%;
-                top: -32px;
+                /* top: -32px; */
             }
         }
         .dropdown {
