@@ -1542,7 +1542,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
 
 export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Function) => {
     const transfer = store.getState().transfer;
-    console.log("Transfer::: ", transfer);
+    // console.log("Transfer::: ", transfer);
     store.dispatch({ type: LOADING, payload: true });
     const transferMethodIdMap: any = {
       mobile_money: 1,
@@ -1564,7 +1564,8 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
       exchangeRateQuoteId: exchangeRateQuoteId,
       promoCode: transfer.promo?.code,
       destinationCountryCode: transfer.toReceive.countryCode,
-      originCountryCode:  transfer.toSend.countryCode
+      originCountryCode:  transfer.toSend.countryCode,
+      calculatorDestinationAmount: transfer.toReceive.value
     })
     .then(res => {
       if (res?.data?.status == '200') {
