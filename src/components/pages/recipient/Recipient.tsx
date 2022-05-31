@@ -21,7 +21,7 @@ const Recipient = () => {
     const recipient = useSelector((state: any)=>state.recipients.recipient);
     const transfer = useSelector((state: any)=>state.transfer);
 
-    const [ transferDetailsModalOpen, setTransferDetailsModalOpen ] = useState(true)
+    const [ transferDetailsModalOpen, setTransferDetailsModalOpen ] = useState(false)
 
     const {toSend, toReceive, transferMethod} = transfer; 
 
