@@ -18,10 +18,12 @@ const style = () => styled.div`
     top: 0px;
     left: 0px;
     width: 100%;
-    height: ${(document.body.clientWidth || document.documentElement.clientWidth || window.innerWidth) + 1000}px;
+    height: 200vh;
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(2px);
     z-index: 1;
+    overflow-y: scroll;
+    padding-bottom: 500px;
     .disable {
         opacity: 0.2;
         pointer-events: none;
@@ -465,6 +467,7 @@ const style = () => styled.div`
                 }
             }
         }
+
     }
 
 `

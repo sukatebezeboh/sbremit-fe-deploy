@@ -42,6 +42,8 @@ const Div = styled.div`
                 text-align: right;
                 font: normal normal normal 16px/19px Montserrat;
                 color: #007B5D;
+                width: fit-content;
+                float: right;
             }
         }
     }
