@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo'
 import style from '../shared/auth.css'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, useFormikContext } from 'formik'
 import { SignUpValidator } from '../../../util/form-validators'
 import { signUpAction } from '../../../redux/actions/actions'
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
@@ -13,6 +13,7 @@ import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
 import { asset, getQueryParam, isPhoneNumber } from '../../../util/util'
+import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput'
 
 const Body = style('signup')
 
@@ -27,9 +28,13 @@ const SignUp = () => {
   const [pwIcon, setPwIcon] = useState('show')
   const [openModal, setOpenModal] = useState(false)
   const [redirect, setRedirect] = useState(false)
+  const [signUpMode, setSignUpMode] = useState("email" as "email" | "phone")
+  const [phoneInput, setPhoneInput] = useState({code: "44", number: ""})
+
   const history = useHistory()
   const dispatch = useDispatch()
   const submitting = useSelector((state: any) => state.submitting)
+
   const createAccountSuccess = useSelector(
     (state: any) => state.createAccountSuccess,
   )
@@ -37,7 +42,6 @@ const SignUp = () => {
     (state: any) => state.createAccountError,
   )
   const countries: any = useSelector((state: any) => state.appValues.countries)
-
 
   useEffect(() => {
     setOpenModal(false)
@@ -83,6 +87,11 @@ const SignUp = () => {
     dispatch(signUpAction(values))
   }
 
+  const handlePhoneNumberChange = (value: any, callback?: Function) => {
+    setPhoneInput(value)
+    callback?.()
+  }
+
   return (
     <>
       {openModal && (
@@ -125,6 +134,8 @@ const SignUp = () => {
       )}
 
       <Body>
+
+
         <div></div>
         <div>
           <SBRemitLogo />
@@ -132,8 +143,18 @@ const SignUp = () => {
             initialValues={{ ...initialValues }}
             validationSchema={SignUpValidator}
             onSubmit={(values) => {
+              if ( signUpMode === "email" ) {
+                values.mobile = ""
+                values.phoneCode = ""
+              } else {
+                values.username = phoneInput.code + phoneInput.number;
+                if (!phoneInput.number) return
+              }
               const {checked, ...newValue}  = values
+              console.log(values);
+              console.log(newValue);
 
+              // return;
               const newValues = {
                 ...newValue,
                 settings: {
@@ -144,7 +165,11 @@ const SignUp = () => {
               handleSubmit(newValues)}}
           >
             {({ errors, touched, values }: any) => (
-              <Form className="form">
+              <Form className="form" onChange={() => {
+                if ( signUpMode === "phone" ) {
+                  values.username = phoneInput.code + phoneInput.number
+                }
+              }}>
                 <div className="heading">Create an account. It’s free!</div>
                 <div className="sub-heading">
                   Already have an account?{' '}
@@ -213,24 +238,51 @@ const SignUp = () => {
                       </div>
                     )}
                   </div>
+
+
+
                   <div
                     className={
                       touched.username && errors.username ? 'form-error' : ''
                     }
                   >
-                    <div>
-                    Email or Phone Number<i>*</i>
-                    </div>
-                    <Field
-                      name="username"
-                      type="text"
-                      placeholder="Your email address or phone number"
-                    />
-                    {touched.username && errors.username && (
-                      <div className="form-error-message">
-                        {errors.username}
+                    <div className='mb-20'>
+                      <span>Sign up with:</span>  
+
+                      <div className="sign-up-mode-select">
+                        <div className="mode-toggle">
+                          <div className={`option ${signUpMode === 'email' && 'active'}`} onClick={() => setSignUpMode('email')} >
+                            Email
+                          </div>
+                          <div className={`option ${signUpMode === 'phone' && 'active'}`} onClick={() => setSignUpMode('phone')}>
+                            Phone
+                          </div>
+                        </div>
                       </div>
-                    )}
+                      
+                      <i>*</i>
+                    </div>
+
+                    <div className="username-field-wrapper pt-10">
+                      {signUpMode === 'email' && <Field
+                        name="username"
+                        type="text"
+                        placeholder="Your email address"
+                      />}
+
+                      {signUpMode === 'phone' && <PhoneNumberInput
+                          name="username"
+                          placeholder="Your phone number without the leading zero or country code"
+                          value={phoneInput}
+                          onChange={(value: any) => handlePhoneNumberChange(value)}
+                      />}
+                      {touched.username && errors.username && (
+                        <div className="form-error-message">
+                          {errors.username}
+                        </div>
+                      )}                      
+                    </div>
+
                   </div>
                   <div
                     className={

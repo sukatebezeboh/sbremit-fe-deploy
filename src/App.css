@@ -97,9 +97,15 @@ body::-webkit-scrollbar {
     grid-column: 1/3;
 }
 
-.form-error input, .form-error select {
+.form-error input, .form-error select, .form-error .input-error-div {
     border: 1px solid red!important;
 }
+
+.form-error .input-error-div input, .form-error .input-error-div select{
+    border: initial!important;
+    border-right: initial!important;
+}
+
 .form-error i {
     color: red!important;
 }
