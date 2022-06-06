@@ -1642,3 +1642,33 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
     store.dispatch({ type: LOADING, payload: false })
   })
 }
+
+
+export const inviteBusinessUser = (values: any) => {
+
+    store.dispatch({ type: LOADING, payload: true })
+
+    http.post(endpoints.INVITE_BUSINESS_USERS, {
+      ...values
+    })
+    .then((res: any) => {
+      if (res?.data?.status == '200') {
+        toastAction({
+          show: true,
+          type: 'success',
+          timeout: 10000,
+          message: 'You have invited a new user',
+        })
+      } else {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: res.data?.error?.message || 'User invitation failed',
+        })
+      }
+    })
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}

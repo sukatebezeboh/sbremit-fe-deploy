@@ -66,6 +66,10 @@ export const ResetEmailValidator = Yup.object().shape({
     username: Yup.string().required("Required").email("Enter valid email"),
 });
 
+export const InviteUserValidator = Yup.object().shape({
+  email: Yup.string().required("Required").email("Enter valid email"),
+});
+
 export const RecipientValidator = Yup.object().shape({
     firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),

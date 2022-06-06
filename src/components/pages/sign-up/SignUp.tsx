@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo'
 import style from '../shared/auth.css'
-import { Formik, Form, Field, useFormikContext } from 'formik'
+import { Formik, Form, Field, useFormikContext, useFormik } from 'formik'
 import { SignUpValidator } from '../../../util/form-validators'
 import { signUpAction } from '../../../redux/actions/actions'
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
@@ -30,6 +30,7 @@ const SignUp = () => {
   const [redirect, setRedirect] = useState(false)
   const [signUpMode, setSignUpMode] = useState("email" as "email" | "phone")
   const [phoneInput, setPhoneInput] = useState({code: "44", number: ""})
+
 
   const history = useHistory()
   const dispatch = useDispatch()
@@ -91,6 +92,8 @@ const SignUp = () => {
     setPhoneInput(value)
     callback?.()
   }
+
+
 
   return (
     <>
@@ -160,6 +163,11 @@ const SignUp = () => {
                 settings: {
                   marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
                 }
+              }
+
+              const businessSignUpToken = getQueryParam('business_signup_token');
+              if ( businessSignUpToken ) {
+                newValues['businessSignUpToken'] = businessSignUpToken;
               }
 
               handleSubmit(newValues)}}

@@ -29,7 +29,7 @@ const Dashboard = () => {
     const appValues = useSelector((state: any) => state.appValues)
     const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
     const user = useSelector((state: any) => state.auth.user);
-
+    const [isBusinessAccount, setIsBusinessAccount] = useState(true);
 
     const dispatch = useDispatch()
     useEffect(() => {
@@ -155,10 +155,10 @@ const Dashboard = () => {
                         <div className="red-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())}</div>
                         <div>Cancelled Transactions</div>
                     </div>
-                    <Link to="/transfer-method">
+                    <Link to={isBusinessAccount ?  paths.INVITE_BUSINESS_USER : paths.TRANSFER_METHOD }>
                         <div className="green-bg start-transfer">
-                            <div> <img src={asset('icons', 'add.svg')} alt=""/> </div>
-                            <div> Start new transfer</div>
+                            <div> <img src={asset('icons', isBusinessAccount ? 'white-arrow.svg' : 'add.svg')} alt=""/> </div>
+                            <div> {isBusinessAccount ? 'Invite a user' : 'Start new transfer' }</div>
                         </div>
                     </Link>
                 </div>

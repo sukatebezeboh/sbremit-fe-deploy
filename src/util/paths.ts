@@ -34,6 +34,7 @@ export const paths = {
     REFERRALS: "/referrals",
     REGISTER_COUNTRY: "/country/register",
     NOTIFICATIONS: "/notifications",
+    INVITE_BUSINESS_USER: "/business/invite",
 
     LEGAL: "/support/legal",
     PRIVACY_POLICY: "/support/legal/privacy",

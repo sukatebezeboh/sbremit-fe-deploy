@@ -66,13 +66,13 @@ const NavBar = () => {
                     <span></span>
                 </span> */}
                 <span className="logo">
-                    <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
+                    <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="/assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
             </div>
 
             <div className="right-opt">
                 <span className="notif">
-                    <img src="./assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
+                    <img src="/assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
                     <span></span>
                      {showNotifDropdown && <div className="dropdown notif-dropdown">
                          <div className="notif-head">Notifications</div>
@@ -128,7 +128,7 @@ const NavBar = () => {
                     </div> }
                 </span>
                 <span className="arrow-down">
-                    <img src="./assets/icons/angle-down.svg" alt="arrow down" onClick={()=>handleDropdownClick('profile')}/>
+                    <img src={asset('icons', 'angle-down.svg')} alt="arrow down" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
             </div>
 
