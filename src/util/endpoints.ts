@@ -15,7 +15,7 @@ const endpoints = {
     CREATE_TRANSFER: '/user/$_1/transfer',
     UPDATE_TRANSFER: '/user/transfer/$_1',
     GET_TRANSFER: '/user/$_1/transfer/$_2',
-    GET_TRANSFERS: '/user/$_1/transfers',
+    GET_TRANSFERS: '/user/$_1/transfers?businessId=49',
     QUOTE_SERVICE: '/exchange/$_1/$_2',
     GET_QUOTE: '/quote/$_1',
     GET_SERVICES: '/transfer/services',
