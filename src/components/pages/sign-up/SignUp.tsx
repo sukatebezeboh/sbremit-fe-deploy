@@ -94,6 +94,39 @@ const SignUp = () => {
   }
 
 
+  const formik = useFormik({
+    initialValues: { ...initialValues },
+    validationSchema: SignUpValidator,
+    onSubmit: (values) => {
+      if ( signUpMode === "email" ) {
+        values.mobile = ""
+        values.phoneCode = ""
+      } else {
+        values.username = phoneInput.code + phoneInput.number;
+        if (!phoneInput.number) return
+      }
+      const {checked, ...newValue}  = values
+      console.log(values);
+      console.log(newValue);
+
+      // return;
+      const newValues = {
+        ...newValue,
+        settings: {
+          marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+        }
+      }
+
+      const businessSignUpToken = getQueryParam('business_signup_token');
+      if ( businessSignUpToken ) {
+        newValues['businessSignUpToken'] = businessSignUpToken;
+      }
+
+      handleSubmit(newValues)
+    }
+})
+
+const { touched, errors, values } = formik;
 
   return (
     <>
@@ -142,42 +175,12 @@ const SignUp = () => {
         <div></div>
         <div>
           <SBRemitLogo />
-          <Formik
-            initialValues={{ ...initialValues }}
-            validationSchema={SignUpValidator}
-            onSubmit={(values) => {
-              if ( signUpMode === "email" ) {
-                values.mobile = ""
-                values.phoneCode = ""
-              } else {
-                values.username = phoneInput.code + phoneInput.number;
-                if (!phoneInput.number) return
-              }
-              const {checked, ...newValue}  = values
-              console.log(values);
-              console.log(newValue);
 
-              // return;
-              const newValues = {
-                ...newValue,
-                settings: {
-                  marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
-                }
-              }
-
-              const businessSignUpToken = getQueryParam('business_signup_token');
-              if ( businessSignUpToken ) {
-                newValues['businessSignUpToken'] = businessSignUpToken;
-              }
-
-              handleSubmit(newValues)}}
-          >
-            {({ errors, touched, values }: any) => (
-              <Form className="form" onChange={() => {
+              <form className="form" onChange={() => {
                 if ( signUpMode === "phone" ) {
                   values.username = phoneInput.code + phoneInput.number
                 }
-              }}>
+              }} onSubmit={formik.handleSubmit}>
                 <div className="heading">Create an account. It’s free!</div>
                 <div className="sub-heading">
                   Already have an account?{' '}
@@ -197,7 +200,13 @@ const SignUp = () => {
                       <div>
                         First Name<i>*</i>
                       </div>
-                      <Field name="firstName" type="text" placeholder="John" />
+                      <input 
+                        onChange={formik.handleChange}
+                        value={values.firstName} 
+                        name="firstName" 
+                        type="text" 
+                        placeholder="John" 
+                      />
                       {touched.firstName && errors.firstName && (
                         <div className="form-error-message">
                           {errors.firstName}
@@ -213,7 +222,7 @@ const SignUp = () => {
                       <div>
                         Last Name<i>*</i>
                       </div>
-                      <Field name="lastName" type="text" placeholder="Doe" />
+                      <input onChange={formik.handleChange} value={values.lastName} name="lastName" type="text" placeholder="Doe" />
                       {touched.lastName && errors.lastName && (
                         <div className="form-error-message">
                           {errors.lastName}
@@ -231,11 +240,11 @@ const SignUp = () => {
                     <div>
                       Country of Residence<i>*</i>
                     </div>
-                    <Field as="select" name="location_country" id="">
+                    <select onChange={formik.handleChange} value={values.location_country} name="location_country" id="">
                       {Object.keys(constants.SIGNUP_COUNTRIES).map((key) => (
                         <option value={key}>{countries[key]}</option>
                       ))}
-                    </Field>
+                    </select>
                     <img
                       src={asset('flags', `${values.location_country}.png`)}
                       alt={values.location_country}
@@ -272,7 +281,9 @@ const SignUp = () => {
                     </div>
 
                     <div className="username-field-wrapper pt-10">
-                      {signUpMode === 'email' && <Field
+                      {signUpMode === 'email' && <input
+                        onChange={formik.handleChange}
+                        value={values.username}
                         name="username"
                         type="text"
                         placeholder="Your email address"
@@ -300,7 +311,9 @@ const SignUp = () => {
                     <div>
                       Password<i>*</i>
                     </div>
-                    <Field
+                    <input
+                      onChange={formik.handleChange}
+                      value={values.password}
                       name="password"
                       type={passwordType}
                       placeholder="Create your password"
@@ -326,7 +339,9 @@ const SignUp = () => {
                     <div>
                       Referral Code <i>(optional)</i>
                     </div>
-                    <Field
+                    <input
+                      onChange={formik.handleChange}
+                      value={values.referral}
                       name="referral"
                       type="text"
                       placeholder="Referred by someone? Use their referral code here"
@@ -339,7 +354,7 @@ const SignUp = () => {
                   </div>
 
                   <div className="marketing-permission-box">
-                    <Field type="checkbox" name="checked" />
+                    <input onChange={formik.handleChange} value={values.checked} type="checkbox" name="checked" />
                     <label>
                       By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
                     </label>
@@ -360,9 +375,7 @@ const SignUp = () => {
                   By signing up you agree to our <span>Terms of Use</span> and{' '}
                   <span>Privacy Policy.</span>
                 </div>
-              </Form>
-            )}
-          </Formik>
+              </form>
         </div>
       </Body> 
     </>

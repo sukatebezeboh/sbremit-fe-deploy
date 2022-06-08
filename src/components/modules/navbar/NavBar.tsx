@@ -88,13 +88,13 @@ const NavBar = () => {
                     <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
                 <span className="name" onClick={()=>handleDropdownClick('profile')}>
-                    <span>{user.profile.firstName}</span>
+                    <span>{ user.profile.businessName || user.profile.firstName }</span>
                     {showProfileDropdown && <div className="dropdown profile-dropdown">
                             <div>
                                 <div className="notif-body">
-                                    <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic"/>
+                                    <img src={`${resources.DICE_BEAR_USER}${(user.profile.firstName || user.profile.businessName) + ' ' + (user.profile.lastName || '')+ user.meta.customerId}.svg`} alt="pic"/>
                                     <div>
-                                        <div className="heading"><b>{user.profile.firstName + ' ' + user.profile.lastName}</b></div>
+                                        <div className="heading"><b>{(user.profile.firstName || user.profile.businessName) + ' ' + (user.profile.lastName || '')}</b></div>
                                         <div>Membership number SBR{user.meta.customerId}</div>
                                     </div>
                                 </div>

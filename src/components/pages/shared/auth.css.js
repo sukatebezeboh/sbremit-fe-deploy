@@ -65,7 +65,7 @@ const style = (page) => styled.div`
                         color: #A3A3A3;
                     }
                 }
-                select{
+                select:not(.phone-code){
                     -webkit-appearance: none;
                     -moz-appearance: none;
                     background: transparent;
