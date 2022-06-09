@@ -138,10 +138,9 @@ const LandingPageLayout = ({data, max, inputRef, setCountriesDropDownOpen, count
                                     ))
                                 }
                             </ul>
-                        </div>                        
+                        </div>
                     </div>
-
-                }           
+                }
             </div>
 
         </div>

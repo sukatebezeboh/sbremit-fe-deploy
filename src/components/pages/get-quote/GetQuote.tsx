@@ -1,4 +1,6 @@
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
+import Modal from 'components/modules/modal/Modal';
+import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries';
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
@@ -335,6 +337,8 @@ const GetQuote = () => {
         ExchangeRateInput: QuoteExchangeRateInput
     }
 
+    const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
+
     return (
         <Body>
             <NavBar />
@@ -344,7 +348,18 @@ const GetQuote = () => {
                 <div className="box">
                     <ExchangeRateCalculator {...calculatorProps} />
                 </div>
-                <div className="btns"><span>Cancel</span> <button onClick={()=>handleContinue()}>Continue</button> </div>
+                <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
+                <div className="btns">
+                    <span>Cancel</span>
+                    <button onClick={()=> {
+                        if (toReceive.countryCode === 'CM') {
+                            handleContinue()
+                        }
+                        else{
+                            setOpenComingSoonModal(true)
+                        }
+                    }}>Continue</button>
+                </div>
             </div>
         </Body>
     )
@@ -353,3 +368,7 @@ const GetQuote = () => {
 }
 
 export default GetQuote;
+function setOpen(arg0: boolean) {
+    throw new Error('Function not implemented.');
+}
+
