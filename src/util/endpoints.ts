@@ -35,7 +35,8 @@ const endpoints = {
     ACCOUNT_ACTIVATION: '/user/activation',
     TRANSFER_QUOTE: '/transfer/quote',
     VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate',
-    INVITE_BUSINESS_USERS: '/business/invite'
+    INVITE_BUSINESS_USERS: '/business/invite',
+    UTC_DATE_TIME_UTIL: '/time/utc'
 }
 
 export default endpoints;
