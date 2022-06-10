@@ -57,12 +57,17 @@ interface IPhoneNumberInput {
         code: string,
         number: string|number
     },
-    onChange: Function
+    onChange: Function,
+    name?: string
 }
 
-const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange }: any) => {
+const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange, name }: any) => {
     const [selected, setSelected]: any = useState(constants.COUNTRIES_PHONE_CODES[0])
     const handleChange = (type: "code" | "number", val: any) => {
+        console.log(type, val)
+        if ( type === "number" && val > 99999999999999) return
+        if ( type === "number" && val === '0' ) return
+
         const newValue = {
             ...value,
         }
@@ -74,30 +79,30 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange }
     }
   return (
     <StyleWrapper>
-            <div className="phone-input-wrapper input">
+            <div className="phone-input-wrapper input-error-div input">
                 <div className="phone-code-wrapper">
                     <select
-                    className="phone-code"
-                    name="phoneCode"
-                    value={value?.code}
-                    onChange={(event) => handleChange('code', event.target.value)}
-                    id="">
-                    {constants.COUNTRIES_PHONE_CODES.map(
-                        (country) => (
-                        <option
-                            value={country.phoneCode}>
-                            {country.phoneCode} -
-                            {country.name}
-                        </option>
-                        ),
-                    )}
+                        className="phone-code"
+                        name={"phoneCode"}
+                        value={value?.code}
+                        onChange={(event) => handleChange('code', event.target.value)}
+                        id="">
+                        {constants.COUNTRIES_PHONE_CODES.map(
+                            (country) => (
+                            <option
+                                value={country.phoneCode}>
+                                {country.phoneCode} -
+                                {country.name}
+                            </option>
+                            ),
+                        )}
                     </select>
                     <img className='flag' src={asset('flags', selected?.countryCode )} alt={value?.code}/>
                 </div>                
                     <input
                         className="green-txt phone-no"
-                        type="text"
-                        name="mobile"
+                        type="number"
+                        name={name || "mobile"}
                         value={value?.number}
                         onChange={(event) => handleChange('number', event.target.value)}
                         placeholder={placeholder}

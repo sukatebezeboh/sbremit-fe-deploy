@@ -66,13 +66,13 @@ const NavBar = () => {
                     <span></span>
                 </span> */}
                 <span className="logo">
-                    <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="./assets/main-logo.svg" alt="logo"/> </Link>
+                    <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="/assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
             </div>
 
             <div className="right-opt">
                 <span className="notif">
-                    <img src="./assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
+                    <img src="/assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
                     <span></span>
                      {showNotifDropdown && <div className="dropdown notif-dropdown">
                          <div className="notif-head">Notifications</div>
@@ -88,13 +88,13 @@ const NavBar = () => {
                     <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
                 <span className="name" onClick={()=>handleDropdownClick('profile')}>
-                    <span>{user.profile.firstName}</span>
+                    <span>{ user.profile.businessName || user.profile.firstName }</span>
                     {showProfileDropdown && <div className="dropdown profile-dropdown">
                             <div>
                                 <div className="notif-body">
-                                    <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic"/>
+                                    <img src={`${resources.DICE_BEAR_USER}${(user.profile.firstName || user.profile.businessName) + ' ' + (user.profile.lastName || '')+ user.meta.customerId}.svg`} alt="pic"/>
                                     <div>
-                                        <div className="heading"><b>{user.profile.firstName + ' ' + user.profile.lastName}</b></div>
+                                        <div className="heading"><b>{(user.profile.firstName || user.profile.businessName) + ' ' + (user.profile.lastName || '')}</b></div>
                                         <div>Membership number SBR{user.meta.customerId}</div>
                                     </div>
                                 </div>
@@ -105,16 +105,20 @@ const NavBar = () => {
                                 <div><Link to="/profile">View Profile</Link></div>
                          </div>
                          <div className="notif-option">
-                                <div> <img src={asset('icons', 'prev.svg')} alt="settings"/> </div>
+                                <div> <img src={asset('icons', 'prev.svg')} alt="dashboard"/> </div>
                                 <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
                          </div>
                          <div className="notif-option">
-                                <div> <img src={asset('icons', 'download-file.svg')} alt="settings"/> </div>
+                                <div> <img src={asset('icons', 'download-file.svg')} alt="Marketting permissions"/> </div>
                                 <div><Link to={paths.MARKETING_PERMISSION}>Marketing permissions</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>
                                 <div>Settings</div>
+                         </div>
+                         <div className="notif-option">
+                                <div> <img src={asset('icons', 'referral.png')} alt="referrals"/> </div>
+                                <div><Link to={paths.REFERRALS}>Referrals</Link></div>
                          </div>
                          <hr/>
                          <div className="notif-option sign-out-option" onClick={() => signOutAction()}>
@@ -124,7 +128,7 @@ const NavBar = () => {
                     </div> }
                 </span>
                 <span className="arrow-down">
-                    <img src="./assets/icons/angle-down.svg" alt="arrow down" onClick={()=>handleDropdownClick('profile')}/>
+                    <img src={asset('icons', 'angle-down.svg')} alt="arrow down" onClick={()=>handleDropdownClick('profile')}/>
                 </span>
             </div>
 

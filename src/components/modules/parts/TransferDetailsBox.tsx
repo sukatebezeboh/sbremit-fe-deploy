@@ -42,6 +42,8 @@ const Div = styled.div`
                 text-align: right;
                 font: normal normal normal 16px/19px Montserrat;
                 color: #007B5D;
+                width: fit-content;
+                float: right;
             }
         }
     }
@@ -186,7 +188,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                     </div>}
                     <div className="row">
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transferQuote?.transferMethod || transaction?.transferMethod)}} ></div>
-                        <div className="right uppercase">  { (Number(serviceFee) || transferMethod === "mobile money" ) ? `+${serviceFee}` : `${Number(getServiceRateValue(getMoneyValue(receiveAmount), transferMethod?.replace(' ', '_'), false, false, xRate))}`} {sendCurrency}</div>
+                        <div className="right uppercase"> +{serviceFee} {sendCurrency}</div>
                     </div>
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>

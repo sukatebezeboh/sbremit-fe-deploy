@@ -20,10 +20,10 @@ const Recipient = () => {
     const recipients = useSelector((state: any)=>state.recipients.recipients);
     const recipient = useSelector((state: any)=>state.recipients.recipient);
     const transfer = useSelector((state: any)=>state.transfer);
-    const user = useSelector((state: any)=> state.auth.user)
 
-    const {toSend, toReceive, serviceFee, transferMethod} = transfer; 
-    const max  = getMax(transfer.transferMethod);
+    const [ transferDetailsModalOpen, setTransferDetailsModalOpen ] = useState(false)
+
+    const {toSend, toReceive, transferMethod} = transfer; 
 
     const dispatch = useDispatch()
 
@@ -178,13 +178,20 @@ const Recipient = () => {
             <NavBar />
             <ProgressBar point={2} />
             <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} recipientData={recipientDataForUpdate} />
+
+            {transferDetailsModalOpen && (<div className="timeline-modal-container desktop-hide">
+                <div className="overlay" onClick={()=>setTransferDetailsModalOpen(false)}></div>
+                <div className="timeline-modal">
+                    <TransferDetailsBox transferId={paramTransferId} />
+                </div>
+            </div>)}
             <div className="page-content">
                 <div className="search">
                     <div><input type="text" onChange={(e) => filterRecipients(e)} placeholder="Search recipients"/> <button className=""> <img src={asset("icons", "search.svg")} alt="search"/> </button> </div>
                 </div>
                 <div className={openNRModal ? "mobile-hide" : ''}>
                     <PageHeading heading="Recipient" subheading="Who are you sending money to?" back={paths.GET_QUOTE} />
-                    <div className="green-txt desktop-hide view-td">View transfer details</div>
+                    <div className="green-txt desktop-hide view-td is-link" onClick={() => setTransferDetailsModalOpen(true)}  >View transfer details</div>
                 </div>
                 {/* <RoundFloatingPlus showPlus={!openNRModal} callBack={()=>setOpenNRModal(true)} /> */}
                 <div className="box-container">

@@ -34,6 +34,9 @@ const style = (page) => styled.div`
                     font: normal normal 600 20px/30px Montserrat;
                 }
             }
+            .phone-input-wrapper {
+                border: 1px solid #007B5D;
+            }
             .inputs{
                 margin-top: 50px;
                 margin: 30px auto;
@@ -47,7 +50,8 @@ const style = (page) => styled.div`
                     color: #007B5D;
                     cursor: pointer;
                 }
-                input, select{
+                
+                input:not(.phone-no), select:not(.phone-code){
                     width: 100%;
                     height: 48px;
                     border: 2px solid #7FBCAD;
@@ -61,7 +65,7 @@ const style = (page) => styled.div`
                         color: #A3A3A3;
                     }
                 }
-                select{
+                select:not(.phone-code){
                     -webkit-appearance: none;
                     -moz-appearance: none;
                     background: transparent;
@@ -142,6 +146,44 @@ const style = (page) => styled.div`
 
     }
 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield; /* Firefox */
+    }
+    .sign-up-mode-select {
+        display: inline-block;
+        margin-left: 20px;
+        margin-right: 5px;
+        .mode-toggle {
+            display: flex;
+            width: fit-content;
+            /* gap: 5px; */
+            border: 1px solid lightgrey;
+            border-radius: 5px;
+            .option {
+                flex: 1;
+                padding: 5px 25px;
+                /* border: 1px solid lightgrey; */
+                cursor: pointer;
+                &:first-child {
+                    border-right: none;
+                }
+
+                &.active {
+                    color: white;
+                    background: #007B5D;
+                    border: 1px solid #007B5D;
+                }
+            }
+        }
+    }
+
     .marketing-permission-box {
         input[type="checkbox"] {
             width: auto !important;
@@ -196,16 +238,16 @@ const style = (page) => styled.div`
                     input{
                         padding: 10px 20px;
                     }
-                    input, select{
+                    input:not(.phone-no), select:not(.phone-code){
                         height: 30px;
                         font: normal normal normal 14px/18px Montserrat;
                         border: 1px solid #7FBCAD;
                     }
-                    select{
+                    select:not(.phone-code){
                         padding: 0px 40px;
                         background-position-y: 3px;
                     }
-                    select+img{
+                    select:not(.phone-code)+img{
                         top: -25px;
                         left: 10px;
                     }

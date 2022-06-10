@@ -470,7 +470,7 @@ function NewRecipientModal(props: any) {
                                                 <div className="margin-adjust"></div>
                                                 <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                             </div>
-                                            {transfer.transferMethod === "mobile_money" && <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                            {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Mobile money provider</div>
                                                 <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
                                                     <option value="">Select</option>

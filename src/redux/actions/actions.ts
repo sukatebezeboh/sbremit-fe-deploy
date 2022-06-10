@@ -1542,7 +1542,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
 
 export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Function) => {
     const transfer = store.getState().transfer;
-    console.log("Transfer::: ", transfer);
+    // console.log("Transfer::: ", transfer);
     store.dispatch({ type: LOADING, payload: true });
     const transferMethodIdMap: any = {
       mobile_money: 1,
@@ -1564,7 +1564,8 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
       exchangeRateQuoteId: exchangeRateQuoteId,
       promoCode: transfer.promo?.code,
       destinationCountryCode: transfer.toReceive.countryCode,
-      originCountryCode:  transfer.toSend.countryCode
+      originCountryCode:  transfer.toSend.countryCode,
+      calculatorDestinationAmount: transfer.toReceive.value
     })
     .then(res => {
       if (res?.data?.status == '200') {
@@ -1600,16 +1601,20 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
         if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
           successCallback?.()
+          toastAction({
+            show: true,
+            type: 'success',
+            timeout: 10000,
+            message: `Recipient reference verified!`,
+          })
         } else {
-
-          
           stackNewToast({
             name: "confirm-momo-recipient-mismatch",
             show: true,
             type: 'warning',
             timeout: 5000,
             defaultThemeName: themeNames.CENTER_PROMPT,
-            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match ${res?.data?.data?.customerName} found for the provided mobile number`,
+            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
             message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
             close: () => {
               unstackNewToast({name: "confirm-momo-recipient-mismatch"})
@@ -1636,4 +1641,34 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
   .then(() => {
     store.dispatch({ type: LOADING, payload: false })
   })
+}
+
+
+export const inviteBusinessUser = (values: any) => {
+
+    store.dispatch({ type: LOADING, payload: true })
+
+    http.post(endpoints.INVITE_BUSINESS_USERS, {
+      ...values
+    })
+    .then((res: any) => {
+      if (res?.data?.status == '200') {
+        toastAction({
+          show: true,
+          type: 'success',
+          timeout: 10000,
+          message: 'You have invited a new user',
+        })
+      } else {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: res.data?.error?.message || 'User invitation failed',
+        })
+      }
+    })
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
 }

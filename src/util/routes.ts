@@ -37,6 +37,7 @@ import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sm
 import LandingPage from 'components/pages/landing-page/LandingPage';
 import RegisterCountry from 'components/pages/register-country/RegisterCountry';
 import Notifications from 'components/pages/notifications/Notifications';
+import InviteBusinessUser from 'components/pages/invite-business-user/InviteBusinessUser';
 
 
 export interface IRoute {
@@ -258,6 +259,10 @@ export const Routing: IRoute[] = [
         component: TruelayerProviders,
         protected: true
     },
-
+    {
+        path: paths.INVITE_BUSINESS_USER,
+        component: InviteBusinessUser,
+        protected: true
+    }
 
 ]
