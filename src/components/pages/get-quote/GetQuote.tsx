@@ -366,9 +366,4 @@ const GetQuote = () => {
 
 
 }
-
 export default GetQuote;
-function setOpen(arg0: boolean) {
-    throw new Error('Function not implemented.');
-}
-
