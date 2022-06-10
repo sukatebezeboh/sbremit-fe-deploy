@@ -12,7 +12,7 @@ import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
 import { AppFooter } from './components/modules/app-footer/AppFooter';
-import ComingSoon from './components/modules/coming-soon/ComingSoon';
+import UpcomingCountries from './components/modules/upcoming-countries/UpcomingCountries';
 import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget';
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
 

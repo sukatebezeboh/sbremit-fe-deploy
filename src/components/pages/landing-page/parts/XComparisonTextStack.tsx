@@ -62,10 +62,10 @@ const XComparisonTextStack: FC<ITextStack> = ({content1, status = 'neutral', con
   return (
     <Container className={` text-align-center ${className}`}>
         <div className='line line-1'> {content1} </div>
-        {content2 && 
+        {content2 &&
             <div className='line line-2'>
-              {format === 'received' && <img src={asset('icons', `${ status === 'success' ? 'green-arrow-up.svg' : 'red-arrow-down.svg'}`)} alt="" />} 
-              {content2} 
+              {format === 'received' && <img src={asset('icons', `${ status === 'success' ? 'green-arrow-up.svg' : 'red-arrow-down.svg'}`)} alt="" />}
+              {content2}
             </div>
         }
     </Container>

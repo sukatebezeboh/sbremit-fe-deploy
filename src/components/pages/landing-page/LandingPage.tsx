@@ -22,6 +22,7 @@ const LandingPage = () => {
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
     const appValues = useSelector((state: any) => state.appValues);
+    //console.log(appValues, "Hellow")
     const promo = transfer.promo
     const [promoText, setPromoText] = useState("")
 
@@ -83,10 +84,10 @@ const LandingPage = () => {
         setTransferMethod(selected)
         getQuoteService(toSend.currency, toReceive.currency);
         updateAppValues();
-        getCompetitorRates({ 
-                baseCurrency: constants.COMPETITOR_RATES_BASE_CURRENCY, 
-                targetCurrency: constants.COMPETITOR_RATES_TARGET_CURRENCY, 
-                sendAmount: constants.COMPETITOR_RATES_COMPARE_AMOUNT 
+        getCompetitorRates({
+                baseCurrency: constants.COMPETITOR_RATES_BASE_CURRENCY,
+                targetCurrency: constants.COMPETITOR_RATES_TARGET_CURRENCY,
+                sendAmount: constants.COMPETITOR_RATES_COMPARE_AMOUNT
             },
             setCompetitorRates
         )
@@ -464,7 +465,7 @@ const LandingPage = () => {
                                             src={asset('flags', listing.flag)} 
                                             srcSet={`${asset('flags', listing.flag)} 2x`} 
                                             alt={listing.name} 
-                                            loading="lazy" />                                        
+                                            loading="lazy" />
                                     </div>
 
                                     <div className="text">{listing.name}</div>

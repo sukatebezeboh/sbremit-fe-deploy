@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export default styled.div`
     background: white;
-    main { 
+    main {
         background: #007B5D;
         position: relative;
         overflow-x: clip;
@@ -11,7 +11,7 @@ export default styled.div`
             position: fixed;
             z-index: 1;
         }
-        .main-inner { 
+        .main-inner {
             width: 80%;
             margin: auto;
             padding: 50px;
@@ -25,7 +25,7 @@ export default styled.div`
             @media only screen and (max-width: 300px) {
                 padding: 5px;
             }
-            .nav { 
+            .nav {
                 display: grid;
                 grid-template-columns: 0fr 1fr 0fr;
                 @media only screen and (max-width: 900px) {
@@ -37,11 +37,11 @@ export default styled.div`
                     color: white;
                     cursor: pointer;
                 }
-                .logo-container { 
+                .logo-container {
 
-                    .img-wrapper { 
+                    .img-wrapper {
 
-                        .logo { 
+                        .logo {
                             width: 200px;
                             @media only screen and (max-width: 900px) {
                                 width: 100px;
@@ -50,12 +50,12 @@ export default styled.div`
                     }
                 }
 
-                .content-links { 
+                .content-links {
                     text-align: center;
                     @media only screen and (max-width: 900px) {
                         display: none;
                     }
-                    .content-links-wrapper { 
+                    .content-links-wrapper {
                         display: grid;
                         grid-template-columns: 1fr 1fr 1fr;
                         width: fit-content;
@@ -71,15 +71,15 @@ export default styled.div`
                     }
                 }
 
-                .auth-links { 
+                .auth-links {
 
-                    .auth-links-inner { 
+                    .auth-links-inner {
                         display: grid;
                         grid-template-columns: 1fr 1fr;
                         grid-gap: 24px;
                         white-space: nowrap;
                         /* margin-top: 10px; */
-                        .sign-in { 
+                        .sign-in {
                             font-weight: 500;
                             font-size: 18px;
                             line-height: 20px;
@@ -88,7 +88,7 @@ export default styled.div`
                             background: none;
                         }
 
-                        .sign-up { 
+                        .sign-up {
                             font-weight: 500;
                             font-size: 16px;
                             line-height: 20px;
@@ -142,7 +142,7 @@ export default styled.div`
                 }
             }
 
-            .mobile-nav { 
+            .mobile-nav {
                 width: 100%;
                 background: #F0F5F4;
                 position: fixed;
@@ -150,20 +150,20 @@ export default styled.div`
                 margin-top: 10px;
                 height: 150vh;
                 z-index: 999999;
-                .mobile-nav-inner { 
+                .mobile-nav-inner {
                     padding-top: 20px;
-                    ul.links-container { 
+                    ul.links-container {
                         list-style-type: none;
                         padding: 0;
                         margin: 0;
 
-                        .nav-link { 
+                        .nav-link {
                             display: flex;
                             justify-content: space-between;
                             width: 100%;
                             padding: 16px 24px;
                             border-bottom: 1px solid rgba(66, 66, 66, 0.17);
-                            .text { 
+                            .text {
                                 font-weight: 400;
                                 font-size: 16px;
                                 line-height: 21px;
@@ -173,16 +173,16 @@ export default styled.div`
                                 color: #424242;
                             }
 
-                            .icon { 
+                            .icon {
 
-                                img { 
+                                img {
                                     width: 20px;
                                 }
                             }
                         }
                     }
 
-                    .nav-foot { 
+                    .nav-foot {
                         height: fit-content;
                         position: fixed;
                         bottom: 30px;
@@ -190,7 +190,7 @@ export default styled.div`
                         width: 100%;
                         padding: 10px;
 
-                        .foot-text { 
+                        .foot-text {
                             font-weight: 400;
                             font-size: 16px;
                             line-height: 21px;
@@ -199,9 +199,9 @@ export default styled.div`
                         }
 
 
-                        .foot-btn { 
+                        .foot-btn {
 
-                            button { 
+                            button {
                                 background: #FDDB3A;
                                 border-radius: 6px;
                                 font-weight: 500;
@@ -220,27 +220,24 @@ export default styled.div`
                 }
 
             }
-            .hero { 
+            .hero {
 
-                .hero-inner { 
+                .hero-inner {
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));;
-                    
                     padding: 50px 0px 50px;
 
                     @media only screen and (max-width: 900px) {
                         grid-template-columns: 1fr;
                     }
 
-                    .left { 
-                        /* align-self: flex-end;
-                        margin-bottom: 200px; */
+                    .left {
                         margin: auto 0;
                         @media only screen and (max-width: 900px) {
                             margin: auto;
                             text-align: center;
                         }
-                        .hero-heading { 
+                        .hero-heading {
                             font-weight: 400;
                             font-size: 42px;
                             line-height: 56px;
@@ -251,7 +248,7 @@ export default styled.div`
                             }
                         }
 
-                        .hero-text { 
+                        .hero-text {
                             font-weight: 400;
                             font-size: 24px;
                             line-height: 40px;
@@ -271,7 +268,7 @@ export default styled.div`
                                 left: 0;
                                 width: 100%;
                             }
-                            .hero-fca { 
+                            .hero-fca {
                                 margin-top: 70px;
                                 padding: 13px 16px;
                                 background: none;
@@ -290,7 +287,7 @@ export default styled.div`
                                     margin: 30px auto;
                                     font-size: 16px;
                                 }
-                                img { 
+                                img {
                                     margin: auto 18px;
                                     width: 24px;
                                     height: 24px;
@@ -299,15 +296,15 @@ export default styled.div`
                                         height: 20px;
                                     }
                                 }
-                            }                            
+                            }
                         }
 
                     }
 
-                    .right { 
+                    .right {
                         @media only screen and (max-width: 900px) {
                         }
-                        .right-inner { 
+                        .right-inner {
 
                         }
                     }
@@ -323,7 +320,7 @@ export default styled.div`
             left: 25px;
             bottom: 0px;
         }
-        .background-circle { 
+        .background-circle {
             width: 600px;
             height: 528px;
             background: rgba(184, 203, 198, 0.1);
@@ -331,7 +328,7 @@ export default styled.div`
             z-index: 0;
             &.bg-circle-up {
                 right: 50px;
-                top: -300px;            
+                top: -300px;
                 position: absolute;
             }
             &.bg-circle-down {
@@ -373,22 +370,22 @@ export default styled.div`
                 font-size: 16px;
             }
         }
-        &.countries-remit { 
+        &.countries-remit {
 
-            .section-inner { 
+            .section-inner {
                 padding: 50px;
                 @media only screen and (max-width: 900px) {
                     padding: 25px;
                 }
-                .heading { 
+                .heading {
 
                 }
 
-                .subheading { 
+                .subheading {
 
                 }
 
-                .listings { 
+                .listings {
                     width: 75%;
                     margin: 80px auto;
                     display: grid;
@@ -399,7 +396,7 @@ export default styled.div`
                         width: 90%;
                         margin: 70px auto;
                     }
-                    .listing { 
+                    .listing {
                         max-width: 550px;
                         width: 100%;
                         margin: auto;
@@ -413,7 +410,7 @@ export default styled.div`
                             padding: 15px;
                             height: fit-content;
                         }
-                        .listing-inner { 
+                        .listing-inner {
                             display: grid;
                             grid-template-columns: 0fr 1fr;
                             grid-gap: 16px;
@@ -423,7 +420,7 @@ export default styled.div`
                                 height: 42px;
                                 border-radius: 50%;
                                 position: relative;
-                                img {   
+                                img {
                                     /* width: 20px; */
                                     aspect-ratio: 1/1;
                                     height: 100%;
@@ -433,7 +430,7 @@ export default styled.div`
                             }
 
 
-                            .text { 
+                            .text {
                                 /* font-family: 'Faro'; */
                                 font-style: normal;
                                 font-weight: 400;
@@ -448,7 +445,7 @@ export default styled.div`
                             }
                         }
 
-                        .checkmark { 
+                        .checkmark {
 
                             border-radius: 20px;
                             width: fit-content;
@@ -457,7 +454,7 @@ export default styled.div`
                             top: -20px;
                             right: 15px;
 
-                            img { 
+                            img {
                                 width: 24px;
                                 height: 24px;
                                 @media only screen and (max-width: 900px) {
@@ -489,7 +486,7 @@ export default styled.div`
                 }
             }
 
-            .big-image { 
+            .big-image {
                 width: 80%;
                 margin: auto;
                 overflow: hidden;
@@ -498,14 +495,14 @@ export default styled.div`
                 @media only screen and (max-width: 900px) {
                     min-height: 140px;
                 }
-                img { 
+                img {
                     width: 100%;
                     height: 100%;
                     z-index: 0;
                 }
             }
 
-            .register-interest { 
+            .register-interest {
                 background: #FBFCFB;
                 font-weight: 400;
                 font-size: 18px;
@@ -523,28 +520,28 @@ export default styled.div`
                     margin-top: 0px;
                     font-size: 16px;
                 }
-                .register-interest-link { 
+                .register-interest-link {
                     text-decoration: underline;
                     cursor: pointer;
                 }
             }
         }
 
-        &.we-are-different { 
+        &.we-are-different {
             background: #F3F5F5;
-            .section-inner { 
+            .section-inner {
                 padding: 64px 10px 100px;
                 @media only screen and (max-width: 900px) {
                     padding: 32px 5px 50px
                 }
-                .heading { 
+                .heading {
                     padding-bottom: 50px;
                     @media only screen and (max-width: 900px) {
                         padding-bottom: 25px;
                     }
                 }
 
-                .points-list { 
+                .points-list {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
                     width: fit-content;
@@ -554,14 +551,14 @@ export default styled.div`
                         grid-template-columns: 1fr;
                         grid-gap: 16px;
                     }
-                    .point-container { 
+                    .point-container {
                         &:last-child {
                             grid-column: 1/3;
                             @media only screen and (max-width: 900px) {
                                 grid-column: auto;
                             }
                         }
-                        .point { 
+                        .point {
                             display: grid;
                             grid-template-columns: 0fr 1fr;
                             grid-gap: 24px;
@@ -577,9 +574,9 @@ export default styled.div`
                             @media only screen and (max-width: 900px) {
                                 padding: 16px;
                             }
-                            .icon-side { 
+                            .icon-side {
 
-                                .icon-wrapper { 
+                                .icon-wrapper {
                                     background: #F3F5F5;
                                     border: 0.3px solid rgba(0, 123, 93, 0.07);
                                     padding: 10px;
@@ -589,7 +586,7 @@ export default styled.div`
                                     @media only screen and (max-width: 900px) {
                                         padding: 7px;
                                     }
-                                    .icon { 
+                                    .icon {
                                         width: 34px;
                                         height: 34px;
 
@@ -601,9 +598,9 @@ export default styled.div`
                                 }
                             }
 
-                            .text-side { 
+                            .text-side {
 
-                                .title { 
+                                .title {
                                     /* font-family: 'Faro'; */
                                     font-style: normal;
                                     font-weight: 600;
@@ -616,7 +613,7 @@ export default styled.div`
                                     }
                                 }
 
-                                .text { 
+                                .text {
                                     font-weight: 400;
                                     font-size: 16px;
                                     line-height: 28px;
@@ -634,15 +631,15 @@ export default styled.div`
             }
         }
 
-        &.transfer-methods { 
+        &.transfer-methods {
 
-            .section-inner { 
+            .section-inner {
                 padding: 80px 10px;
-                .heading { 
+                .heading {
 
                 }
 
-                .subheading { 
+                .subheading {
 
                 }
 
@@ -651,21 +648,21 @@ export default styled.div`
                     flex-wrap: wrap;
                     flex-basis: 50%;
                     margin: 50px auto;
-                    .method-step { 
+                    .method-step {
                         flex: 1;
                         text-align: center;
-                        .image-up { 
+                        .image-up {
 
-                            img { 
+                            img {
                                 width: 340px;
                             }
                         }
 
-                        .text-down { 
+                        .text-down {
                             text-align: left;
                             width: fit-content;
                             margin: auto;
-                            .step-title { 
+                            .step-title {
                                 /* font-family: 'Faro'; */
                                 font-style: normal;
                                 font-weight: 600;
@@ -684,18 +681,18 @@ export default styled.div`
                                 }
                             }
 
-                            .steps { 
+                            .steps {
 
-                                .step { 
+                                .step {
                                     display: grid;
                                     grid-template-columns: 0fr 1fr;
                                     margin: 16px 0;
                                     grid-gap: 10px;
-                                    .numbering { 
+                                    .numbering {
 
                                     }
 
-                                    .instruction { 
+                                    .instruction {
                                         /* font-family: 'Fuzzy Bubbles', 'cursive'; */
                                         font-style: normal;
                                         font-weight: 400;
@@ -711,18 +708,18 @@ export default styled.div`
             }
         }
 
-        &.compare { 
+        &.compare {
             background: #E9EFED;
-            .section-inner { 
+            .section-inner {
                 padding: 50px 1px;
 
-                .heading { 
+                .heading {
                     margin-bottom: 35px;
                 }
 
-                .btn-div { 
+                .btn-div {
 
-                    button.compare-btn { 
+                    button.compare-btn {
                         background: #086A5E;
                         width: 461px;
                         text-align: center;
@@ -738,7 +735,7 @@ export default styled.div`
                     }
                 }
 
-                .table { 
+                .table {
                     width: 60%;
                     margin: 32px auto 50px;
                     min-width: 850px;
@@ -880,9 +877,6 @@ export default styled.div`
                                 border-radius: 6px;
                                 border: none;
                                 color: #000000;
-
-
-                                
                             }
                         }
                     }
@@ -891,11 +885,11 @@ export default styled.div`
             }
         }
 
-        &.partners { 
+        &.partners {
 
-            .section-inner { 
+            .section-inner {
                 padding: 70px 10px;
-                .small-heading { 
+                .small-heading {
                     /* font-family: 'Faro'; */
                     font-style: normal;
                     font-weight: 400;
@@ -908,14 +902,14 @@ export default styled.div`
                     margin-bottom: 43px;
                 }
 
-                .partner-listing { 
+                .partner-listing {
                     width: 70%;
                     margin: auto;
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
                     padding-bottom: 50px;
                     border-bottom: 1px solid rgba(0, 0, 0, 0.21);
-                    img { 
+                    img {
                         /* width: 107px; */
                         height: 32px;
                         margin: 10px;
@@ -924,16 +918,15 @@ export default styled.div`
             }
         }
 
-        &.happy-customers { 
+        &.happy-customers {
 
-            .section-inner { 
+            .section-inner {
 
-                .heading { 
+                .heading {
                     margin: 40px auto;
                 }
 
-                .image-container { 
-                    /* height: 588px; */
+                .image-container {
                     width: 45%;
                     position: relative;
                     margin: auto;

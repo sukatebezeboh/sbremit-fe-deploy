@@ -278,16 +278,6 @@ export const supportedCountriesListing = [
         active: false
     },
     {
-        name: "Cent. Africa Republic",
-        flag: 'CF.png',
-        active: false
-    },
-    {
-        name: "Republic of Congo",
-        flag: 'CG.png',
-        active: false
-    },
-    {
         name: "Gabon",
         flag: 'GA.png',
         active: false
@@ -342,11 +332,10 @@ export const supportedCountriesListing = [
         flag: "LR.png",
         active: false
     },
-    
 ]
 
 
-const getFromRateData = (ratesData: any, competitor: string, returnKey: string) => { 
+const getFromRateData = (ratesData: any, competitor: string, returnKey: string) => {
     const value = getValueFromArray( competitor, 'name', ratesData, returnKey );
     if (value && typeof value !== 'object') {
         return value

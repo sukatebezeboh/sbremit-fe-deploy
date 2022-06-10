@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { asset } from '../../../../util/util'
 
 const Button = styled.button`
-    padding: 5px 10px;        
+    padding: 5px 10px;
     background: #007B5D;
     border-radius: 5px;
     border: none;
@@ -33,7 +33,7 @@ const CheapestBtn = ({isCheapest}: any) => {
             <img src={asset('icons', 'white-checkmark.svg')} alt="" />
             <span>
                 Cheapest
-            </span>            
+            </span>
         </div>
 
     </Button>
