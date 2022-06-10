@@ -34,7 +34,8 @@ const endpoints = {
     COMPETITOR_RATES: '/competitors/rates/$_1/$_2/$_3',
     ACCOUNT_ACTIVATION: '/user/activation',
     TRANSFER_QUOTE: '/transfer/quote',
-    VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate'
+    VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate',
+    UTC_DATE_TIME_UTIL: '/time/utc'
 }
 
 export default endpoints;

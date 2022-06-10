@@ -1642,3 +1642,21 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
     store.dispatch({ type: LOADING, payload: false })
   })
 }
+
+export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:Function) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+  axios.get( endpoints.UTC_DATE_TIME_UTIL )
+  .then(res=> {
+      if (res?.data?.status == "200" ) {
+        const utcDateTime = res?.data?.data?.utc_time
+        console.log(utcDateTime)
+        setUtcDateTime?.(utcDateTime)        
+      }
+  }).catch(() => {
+
+  })
+  .then(() => {
+    store.dispatch({ type: LOADING, payload: false })
+  })
+}
