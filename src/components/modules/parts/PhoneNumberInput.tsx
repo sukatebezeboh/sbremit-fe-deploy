@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import styled from 'styled-components'
-import { constants } from '../../../util/constants'
+import { constants, CountryType } from '../../../util/constants'
 import { asset } from '../../../util/util'
 
 const StyleWrapper = styled.div`
@@ -58,10 +58,31 @@ interface IPhoneNumberInput {
         number: string|number
     },
     onChange: Function,
-    name?: string
+    name?: string,
+    phoneCodeDisabled?: boolean,
+    phoneCodeName?: string,
+    phoneCodeIsControlledComp?: boolean
+    Input?: any,
+    Select?: any,
+    phoneCodeExternalProps?: any,
+    countries?: readonly CountryType[]
+    phoneNumberExternalProps?: any
 }
-
-const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange, name }: any) => {
+const input = styled.input``
+const select = styled.select``
+const PhoneNumberInput: FC<IPhoneNumberInput> = ({
+    placeholder, 
+    value, 
+    onChange, 
+    name, 
+    countries = constants.COUNTRIES_PHONE_CODES,
+    phoneCodeName, 
+    phoneCodeIsControlledComp = true, 
+    Input = input, 
+    Select = select,
+    phoneCodeExternalProps = {},
+    phoneNumberExternalProps = {}
+}: IPhoneNumberInput) => {
     const [selected, setSelected]: any = useState(constants.COUNTRIES_PHONE_CODES[0])
     const handleChange = (type: "code" | "number", val: any) => {
         console.log(type, val)
@@ -77,17 +98,28 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange, 
         }
         onChange(newValue)
     }
+
+    const phoneCodeControlProps = phoneCodeIsControlledComp ? {
+        value: value?.code,
+        onChange: (event: any) => handleChange('code', event.target.value)
+    } : {}
+
+    const phoneNumberControlProps = phoneCodeIsControlledComp ? {
+        value: value?.number,
+        onChange: (event: any) => handleChange('number', event.target.value)
+    } : {}
   return (
     <StyleWrapper>
             <div className="phone-input-wrapper input-error-div input">
                 <div className="phone-code-wrapper">
-                    <select
+                    <Select
                         className="phone-code"
-                        name={"phoneCode"}
-                        value={value?.code}
-                        onChange={(event) => handleChange('code', event.target.value)}
-                        id="">
-                        {constants.COUNTRIES_PHONE_CODES.map(
+                        name={ phoneCodeName || "phoneCode"}
+                        id=""
+                        {...phoneCodeControlProps}
+                        {...phoneCodeExternalProps}
+                        >
+                        {countries.map(
                             (country) => (
                             <option
                                 value={country.phoneCode}>
@@ -96,16 +128,16 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({placeholder, value, onChange, 
                             </option>
                             ),
                         )}
-                    </select>
+                    </Select>
                     <img className='flag' src={asset('flags', selected?.countryCode )} alt={value?.code}/>
                 </div>                
-                    <input
+                    <Input
                         className="green-txt phone-no"
                         type="number"
                         name={name || "mobile"}
-                        value={value?.number}
-                        onChange={(event) => handleChange('number', event.target.value)}
                         placeholder={placeholder}
+                        {...phoneNumberControlProps}
+                        {...phoneNumberExternalProps}
                     />
 
                 </div>

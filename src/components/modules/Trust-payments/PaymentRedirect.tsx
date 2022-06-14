@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { resources } from '../../../util/constants'
 import { settings } from '../../../util/settings'
-import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from '../../../util/util'
+
 import sjcl from 'sjcl';
+import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from 'redux/actions/actions';
+import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from '../../../util/util';
 require('dotenv').config();
 
 interface IPaymentRedirect {
@@ -15,10 +17,16 @@ interface IPaymentRedirect {
 }
 
 const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
+    const [ utcDateTime, setUtcDateTime ] = useState(getDateTimeNowInYYYY_MM_DD__HH_MM_SS())
+
+    useEffect(() => {
+        getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer(setUtcDateTime);
+    }, [])
+
     const stdefaultprofile = 'st_paymentcardonly'
     const orderReference = transactionId;
     const password = process.env.REACT_APP_TRUST_SITE_PASSWORD
-    const siteSecurityTimestamp = getDateTimeNowInYYYY_MM_DD__HH_MM_SS();
+    const siteSecurityTimestamp = utcDateTime
     const version = 2;
     const ruleIdentifier1 = "STR-1";
     const ruleIdentifier2 = "STR-2";
@@ -53,6 +61,7 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     stringToHash += password ?? ''
     const siteSecurityHash = 'h' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(stringToHash));
 
+    console.log(utcDateTime);
     return (
         <span>
             <form method="POST" action={resources.TRUST_PAYMENT_URL}  >

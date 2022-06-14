@@ -139,7 +139,7 @@ const Dashboard = () => {
                         <Link to={paths.REFERRALS}>
                             Invite a friend and earn {getUserDefaultCurrency(user, appValues, true)}{referralSettings?.data?.referrerDiscountValue} in credit
                         </Link>
-                    </span>
+                    </span>                    
                 </div>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}>
