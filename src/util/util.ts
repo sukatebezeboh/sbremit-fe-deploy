@@ -1,8 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { toastAction } from "redux/actions/actions";
 import { constants, currencySymbols, remittanceHandlers, remittanceHandlersTransferCriteria } from "./constants";
-import endpoints from "./endpoints";
 import { settings } from "./settings";
 
 export const asset = (folder: string, name: string) => {

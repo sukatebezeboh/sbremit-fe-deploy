@@ -197,7 +197,7 @@ const Div = styled.div`
                 top: -40px;
                 float: right;
                 cursor: pointer;
-
+                
             }
         }
         .modal-btns {
@@ -464,7 +464,7 @@ function NewRecipientModal(props: any) {
                                             </div>
                                             <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
                                             {/* <div> */}
-                                                <div className="mobile-head">Mobile<i>*</i></div>
+                                                <div className="mobile-head">Mobile Number<i>*</i></div>
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
                                                     <option value={`${country?.phoneCode}`}>{country?.phoneCode} {country?.name}</option>
