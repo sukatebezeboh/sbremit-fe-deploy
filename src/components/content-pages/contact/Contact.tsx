@@ -111,31 +111,31 @@ const Contact = () => {
                             <div className="form-group-2">
                                 <div className="input-div">
                                     <label htmlFor="fullname">Full name</label>
-                                    <input onChange={handleChange} type="text" name="fullname" placeholder="Enter your full name" value={values.fullname} />
+                                    <input onChange={handleChange} type="text" name="fullname" placeholder="Enter your full name" value={values.fullname} required />
                                 </div>
 
                                 <div className="input-div">
                                     <label htmlFor="mobile">Mobile</label>
-                                    <input onChange={handleChange} type="text" name="mobile" placeholder="e.g. +44(0)3301334158" value={values.mobile}  />
+                                    <input onChange={handleChange} type="tel" name="mobile" placeholder="e.g. +44(0)3301334158" value={values.mobile} required  />
                                 </div>
                             </div>
 
                             <div className="form-group-2">
                                 <div className="input-div">
                                     <label htmlFor="email">Email</label>
-                                    <input onChange={handleChange} type="text" name="email" placeholder="Enter your email address" value={values.email} />
+                                    <input onChange={handleChange} type="email" name="email" placeholder="Enter your email address" value={values.email} required />
                                 </div>
 
                                 <div className="input-div">
                                     <label htmlFor="transfer-id">Transfer ID</label>
-                                    <input onChange={handleChange} type="text" name="transferId" placeholder="e.g TR71294645323" value={values.transferId} />
+                                    <input onChange={handleChange} type="text" name="transferId" placeholder="e.g TR71294645323" value={values.transferId} required />
                                 </div>
                             </div>
 
                             <div className="form-group-1">
                                 <div className="input-div">
                                     <label htmlFor="mobile">Message</label>
-                                    <textarea onChange={handleChange} name="message" placeholder="Type your message" value={values.message}></textarea>
+                                    <textarea onChange={handleChange} name="message" placeholder="Type your message" value={values.message} required></textarea>
                                 </div>
                             </div>
 

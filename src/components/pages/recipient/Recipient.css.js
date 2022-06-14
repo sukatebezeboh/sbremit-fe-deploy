@@ -1,6 +1,94 @@
 import styled from 'styled-components';
 
 export default styled.div`
+
+
+    .timeline-modal-container {
+        
+            .overlay {
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                z-index: 3;
+                width: 100%;
+                background: #000000;
+                opacity: 0.3;
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+                height: 130vh;
+            }
+            .timeline-modal {
+                width: 85%;
+                background: #007B5D;
+                /* box-shadow: 0px 2px 4px #CCCCCC80; */
+                border-radius: 8px;
+                /* height: 330px; */
+                margin: auto auto;
+                position: fixed;
+                top: 175px;
+                left: 7.5%;
+                display: block;
+                z-index: 3;
+                /* padding: 30px 50px; */
+                color: white;
+                font: normal normal normal 13px/16px Montserrat;
+                .transfer-details {
+                    background: transparent;
+                    box-shadow: none;
+                    color: white;
+                    font: normal normal normal 13px/16px Montserrat;
+                    padding: 35px 30px;
+                    hr {
+                        border: none;
+                        border-bottom: 1px solid #13765e;
+                    }
+
+                    .heading {
+                        .title {
+                            color: white;
+                            font: normal normal normal 13px/16px Montserrat;
+                        }
+                        a {
+                            .update {
+                                color: #064032;
+                                font: normal normal normal 13px/16px Montserrat;
+                            }
+                        }
+                    }
+
+                    .row {
+                        margin: 30px 0px;
+                        .left {
+                            color: white;
+                            font: normal normal normal 13px/16px Montserrat;
+                            a.click-hover-tab {
+                                color: #064032;
+                            }
+
+                            .hover-tab {
+                                .tab-list {
+                                    color: #A3A3A3;
+                                    &:hover {
+                                        color: #007B5D;
+                                    }
+                                }
+                            }
+                        }
+
+                        .right {
+                            color: lightgrey;
+                            font: normal normal normal 13px/16px Montserrat;
+
+                            .green-txt {
+                                color: #064032!important;
+                            }
+                        }
+                    }
+                }
+
+            
+            }
+        }
     .page-content {
         margin-top: 0px;
         .box-container {

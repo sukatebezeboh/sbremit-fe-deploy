@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo'
 import style from '../shared/auth.css'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, useFormikContext, useFormik } from 'formik'
 import { SignUpValidator } from '../../../util/form-validators'
 import { signUpAction } from '../../../redux/actions/actions'
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
@@ -13,6 +13,7 @@ import { constants } from '../../../util/constants'
 import { CreationModal } from '../../modules/creation-modal/CreationModal'
 import styled from 'styled-components'
 import { asset, getQueryParam, isPhoneNumber } from '../../../util/util'
+import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput'
 
 const Body = style('signup')
 
@@ -27,9 +28,14 @@ const SignUp = () => {
   const [pwIcon, setPwIcon] = useState('show')
   const [openModal, setOpenModal] = useState(false)
   const [redirect, setRedirect] = useState(false)
+  const [signUpMode, setSignUpMode] = useState("email" as "email" | "phone")
+  const [phoneInput, setPhoneInput] = useState({code: "44", number: ""})
+
+
   const history = useHistory()
   const dispatch = useDispatch()
   const submitting = useSelector((state: any) => state.submitting)
+
   const createAccountSuccess = useSelector(
     (state: any) => state.createAccountSuccess,
   )
@@ -37,7 +43,6 @@ const SignUp = () => {
     (state: any) => state.createAccountError,
   )
   const countries: any = useSelector((state: any) => state.appValues.countries)
-
 
   useEffect(() => {
     setOpenModal(false)
@@ -83,6 +88,46 @@ const SignUp = () => {
     dispatch(signUpAction(values))
   }
 
+  const handlePhoneNumberChange = (value: any, callback?: Function) => {
+    setPhoneInput(value)
+    callback?.()
+  }
+
+
+  const formik = useFormik({
+    initialValues: { ...initialValues },
+    validationSchema: SignUpValidator,
+    onSubmit: (values) => {
+      if ( signUpMode === "email" ) {
+        values.mobile = ""
+        values.phoneCode = ""
+      } else {
+        values.username = phoneInput.code + phoneInput.number;
+        if (!phoneInput.number) return
+      }
+      const {checked, ...newValue}  = values
+      console.log(values);
+      console.log(newValue);
+
+      // return;
+      const newValues = {
+        ...newValue,
+        settings: {
+          marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+        }
+      }
+
+      const businessSignUpToken = getQueryParam('business_signup_token');
+      if ( businessSignUpToken ) {
+        newValues['businessSignUpToken'] = businessSignUpToken;
+      }
+
+      handleSubmit(newValues)
+    }
+})
+
+const { touched, errors, values } = formik;
+
   return (
     <>
       {openModal && (
@@ -125,26 +170,17 @@ const SignUp = () => {
       )}
 
       <Body>
+
+
         <div></div>
         <div>
           <SBRemitLogo />
-          <Formik
-            initialValues={{ ...initialValues }}
-            validationSchema={SignUpValidator}
-            onSubmit={(values) => {
-              const {checked, ...newValue}  = values
 
-              const newValues = {
-                ...newValue,
-                settings: {
-                  marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+              <form className="form" onChange={() => {
+                if ( signUpMode === "phone" ) {
+                  values.username = phoneInput.code + phoneInput.number
                 }
-              }
-
-              handleSubmit(newValues)}}
-          >
-            {({ errors, touched, values }: any) => (
-              <Form className="form">
+              }} onSubmit={formik.handleSubmit}>
                 <div className="heading">Create an account. It’s free!</div>
                 <div className="sub-heading">
                   Already have an account?{' '}
@@ -164,7 +200,13 @@ const SignUp = () => {
                       <div>
                         First Name<i>*</i>
                       </div>
-                      <Field name="firstName" type="text" placeholder="John" />
+                      <input 
+                        onChange={formik.handleChange}
+                        value={values.firstName} 
+                        name="firstName" 
+                        type="text" 
+                        placeholder="John" 
+                      />
                       {touched.firstName && errors.firstName && (
                         <div className="form-error-message">
                           {errors.firstName}
@@ -180,7 +222,7 @@ const SignUp = () => {
                       <div>
                         Last Name<i>*</i>
                       </div>
-                      <Field name="lastName" type="text" placeholder="Doe" />
+                      <input onChange={formik.handleChange} value={values.lastName} name="lastName" type="text" placeholder="Doe" />
                       {touched.lastName && errors.lastName && (
                         <div className="form-error-message">
                           {errors.lastName}
@@ -198,11 +240,11 @@ const SignUp = () => {
                     <div>
                       Country of Residence<i>*</i>
                     </div>
-                    <Field as="select" name="location_country" id="">
+                    <select onChange={formik.handleChange} value={values.location_country} name="location_country" id="">
                       {Object.keys(constants.SIGNUP_COUNTRIES).map((key) => (
                         <option value={key}>{countries[key]}</option>
                       ))}
-                    </Field>
+                    </select>
                     <img
                       src={asset('flags', `${values.location_country}.png`)}
                       alt={values.location_country}
@@ -213,24 +255,53 @@ const SignUp = () => {
                       </div>
                     )}
                   </div>
+
+
+
                   <div
                     className={
                       touched.username && errors.username ? 'form-error' : ''
                     }
                   >
-                    <div>
-                    Email or Phone Number<i>*</i>
-                    </div>
-                    <Field
-                      name="username"
-                      type="text"
-                      placeholder="Your email address or phone number"
-                    />
-                    {touched.username && errors.username && (
-                      <div className="form-error-message">
-                        {errors.username}
+                    <div className='mb-20'>
+                      <span>Sign up with:</span>  
+
+                      <div className="sign-up-mode-select">
+                        <div className="mode-toggle">
+                          <div className={`option ${signUpMode === 'email' && 'active'}`} onClick={() => setSignUpMode('email')} >
+                            Email
+                          </div>
+                          <div className={`option ${signUpMode === 'phone' && 'active'}`} onClick={() => setSignUpMode('phone')}>
+                            Phone
+                          </div>
+                        </div>
                       </div>
-                    )}
+                      
+                      <i>*</i>
+                    </div>
+
+                    <div className="username-field-wrapper pt-10">
+                      {signUpMode === 'email' && <input
+                        onChange={formik.handleChange}
+                        value={values.username}
+                        name="username"
+                        type="text"
+                        placeholder="Your email address"
+                      />}
+
+                      {signUpMode === 'phone' && <PhoneNumberInput
+                          name="username"
+                          placeholder="Your phone number without the leading zero or country code"
+                          value={phoneInput}
+                          onChange={(value: any) => handlePhoneNumberChange(value)}
+                      />}
+                      {touched.username && errors.username && (
+                        <div className="form-error-message">
+                          {errors.username}
+                        </div>
+                      )}                      
+                    </div>
+
                   </div>
                   <div
                     className={
@@ -240,7 +311,9 @@ const SignUp = () => {
                     <div>
                       Password<i>*</i>
                     </div>
-                    <Field
+                    <input
+                      onChange={formik.handleChange}
+                      value={values.password}
                       name="password"
                       type={passwordType}
                       placeholder="Create your password"
@@ -266,7 +339,9 @@ const SignUp = () => {
                     <div>
                       Referral Code <i>(optional)</i>
                     </div>
-                    <Field
+                    <input
+                      onChange={formik.handleChange}
+                      value={values.referral}
                       name="referral"
                       type="text"
                       placeholder="Referred by someone? Use their referral code here"
@@ -279,7 +354,7 @@ const SignUp = () => {
                   </div>
 
                   <div className="marketing-permission-box">
-                    <Field type="checkbox" name="checked" />
+                    <input onChange={formik.handleChange} value={values.checked} type="checkbox" name="checked" />
                     <label>
                       By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
                     </label>
@@ -300,9 +375,7 @@ const SignUp = () => {
                   By signing up you agree to our <Link to={paths.TERMS}><span>Terms of Use</span></Link> and{' '}
                   <Link to={paths.PRIVACY_POLICY}><span>Privacy Policy.</span></Link>
                 </div>
-              </Form>
-            )}
-          </Formik>
+              </form>
         </div>
       </Body>
     </>
