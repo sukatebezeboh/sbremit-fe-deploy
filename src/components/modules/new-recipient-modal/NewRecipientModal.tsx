@@ -342,11 +342,20 @@ function NewRecipientModal(props: any) {
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
 
+    const getCountry = () => {
+        return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
+    }
+
+
+    const country = getCountry();
+
     const initialValues = {
         firstName: recipientData?.firstName || "",
         lastName: recipientData?.lastName || "",
         mobile: recipientData?.profile?.mobile || "",
-        phoneCode: recipientData?.profile?.phoneCode || "+237",
+        phoneCode: recipientData?.profile?.phoneCode || '+' + country?.phoneCode,
+        confirmMobile: recipientData?.profile?.mobile || "",
+        confirmPhoneCode: recipientData?.profile?.phoneCode || '+' + country?.phoneCode,
         email: recipientData?.profile?.email || "",
         state: recipientData?.profile?.state || "",
         reason: recipientData?.profile?.reason || "",
@@ -458,18 +467,31 @@ function NewRecipientModal(props: any) {
                                                 <div className="mobile-head">Mobile<i>*</i></div>
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
-                                                    {/* <option value="+01">United Kingdom</option> */}
-                                                    <option value="+237">Cameroon</option>
-                                                    <option value="+256">Uganda</option>
-                                                    <option value="+254">Kenya</option>
+                                                    <option value={`${country?.phoneCode}`}>{country?.phoneCode} {country?.name}</option>
                                                 </Field>
                                                 <div className="country-code">
-                                                    <img src={asset( 'flags', `${countriesAndCodes.find((c) => '+'+c.phoneCode === values.phoneCode)?.countryCode}.png`)} alt="country"/>
+                                                <img src={asset( 'flags', `${transfer.toReceive.countryCode}.png`)} alt="country"/>
                                                     <p>{values.phoneCode}</p>
                                                 </div>
                                                 <div className="margin-adjust"></div>
                                                 <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                             </div>
+
+                                            <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
+                                            {/* <div> */}
+                                                <div className="mobile-head">Confirm Mobile Number<i>*</i></div>
+                                                <Field type="text" name="confirmMobile" className="phone-no" placeholder="e.g 07967885952" />
+                                                <Field as="select" name="confirmPhoneCode" id="" className="phone" >
+                                                    <option value={`${country?.phoneCode}`}>{country?.phoneCode} {country?.name}</option>
+                                                </Field>
+                                                <div className="country-code">
+                                                    <img src={asset( 'flags', `${transfer.toReceive.countryCode}.png`)} alt="country"/>
+                                                    <p>{values.confirmPhoneCode}</p>
+                                                </div>
+                                                <div className="margin-adjust"></div>
+                                                <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
+                                            </div>
+
                                             {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Mobile money provider</div>
                                                 <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
