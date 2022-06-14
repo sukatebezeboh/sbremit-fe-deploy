@@ -101,6 +101,7 @@ const style = (page) => styled.div`
                         position: relative;
                         top: -33px;
                         left: 90%;
+                        cursor: pointer;
                     }
                     >div{
                         font: normal normal normal 15px/19px Montserrat;
@@ -123,6 +124,7 @@ const style = (page) => styled.div`
                     color: #424242;
                     margin-top: 50px;
                     align-items: center;
+                    cursor: pointer;
                 }
             }
             hr{

@@ -64,7 +64,7 @@ const style = () => styled.div`
             margin-right: 50px;
             font: normal normal normal 25px/30px Montserrat;
             color: #424242;
-            cursor: default;
+            cursor: pointer;
         }
         button {
             background: #FCD20F 0% 0% no-repeat padding-box;
@@ -76,9 +76,10 @@ const style = () => styled.div`
             color: #424242;
             border: none;
             outline: none;
+            cursor: pointer;
         }
     }
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     .box {
         padding: 20px;
         padding-bottom: 40px;
@@ -164,7 +165,6 @@ const style = () => styled.div`
                         top: 45px;
                     }
                 }
-                
             }
             .pickup {
                 position: relative;
