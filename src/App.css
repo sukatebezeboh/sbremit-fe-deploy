@@ -111,20 +111,8 @@ body::-webkit-scrollbar {
 }
 
 .form-error .form-error-message {
-    display: inline-block;
     font-size: small!important;
     color: red;
-}
-
-
-.form-success .form-error-message {
-    display: inline-block;
-    font-size: small!important;
-    color: #007B5D;
-}
-
-.form-error-message {
-    display: none;
 }
 
 .form-error  .form-error-message.form-error-message-adjust-up {
