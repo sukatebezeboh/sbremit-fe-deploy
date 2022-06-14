@@ -19,12 +19,12 @@ const NavBar = () => {
 
     const handleDropdownClick = (type: string) => {
         if (type === 'notif') {
-            setShowNotifDropdown(prev => !prev);
+            setShowNotifDropdown(prev=>!prev);
             setShowProfileDropdown(false);
         }
         else if (type === 'profile'){
             setShowNotifDropdown(false);
-            setShowProfileDropdown(prev => !prev);
+            setShowProfileDropdown(prev=>!prev);
         }
     }
 

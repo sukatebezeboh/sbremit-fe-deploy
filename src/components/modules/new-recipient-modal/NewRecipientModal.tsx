@@ -197,7 +197,7 @@ const Div = styled.div`
                 top: -40px;
                 float: right;
                 cursor: pointer;
-                
+
             }
         }
         .modal-btns {
@@ -347,8 +347,6 @@ function NewRecipientModal(props: any) {
         lastName: recipientData?.lastName || "",
         mobile: recipientData?.profile?.mobile || "",
         phoneCode: recipientData?.profile?.phoneCode || "+237",
-        confirmMobile: recipientData?.profile?.mobile || "",
-        confirmPhoneCode: recipientData?.profile?.phoneCode || "+237",
         email: recipientData?.profile?.email || "",
         state: recipientData?.profile?.state || "",
         reason: recipientData?.profile?.reason || "",
@@ -457,7 +455,7 @@ function NewRecipientModal(props: any) {
                                             </div>
                                             <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
                                             {/* <div> */}
-                                                <div className="mobile-head">Mobile Number<i>*</i></div>
+                                                <div className="mobile-head">Mobile<i>*</i></div>
                                                 <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
                                                 <Field as="select" name="phoneCode" id="" className="phone" >
                                                     {/* <option value="+01">United Kingdom</option> */}
@@ -472,25 +470,6 @@ function NewRecipientModal(props: any) {
                                                 <div className="margin-adjust"></div>
                                                 <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                             </div>
-
-                                            <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
-                                            {/* <div> */}
-                                                <div className="mobile-head">Confirm Mobile Number<i>*</i></div>
-                                                <Field type="text" name="confirmMobile" className="phone-no" placeholder="e.g 07967885952" />
-                                                <Field as="select" name="confirmPhoneCode" id="" className="phone" >
-                                                    {/* <option value="+01">United Kingdom</option> */}
-                                                    <option value="+237">Cameroon</option>
-                                                    <option value="+256">Uganda</option>
-                                                    <option value="+254">Kenya</option>
-                                                </Field>
-                                                <div className="country-code">
-                                                    <img src={asset( 'flags', `${countriesAndCodes.find((c) => '+'+c.phoneCode === values.confirmPhoneCode)?.countryCode}.png`)} alt="country"/>
-                                                    <p>{values.confirmPhoneCode}</p>
-                                                </div>
-                                                <div className="margin-adjust"></div>
-                                                <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
-                                            </div>
-
                                             {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Mobile money provider</div>
                                                 <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
