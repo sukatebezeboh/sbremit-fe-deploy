@@ -372,12 +372,12 @@ const { touched, errors, values } = formik;
                 </div>
                 <hr />
                 <div className="terms">
-                  By signing up you agree to our <span>Terms of Use</span> and{' '}
-                  <span>Privacy Policy.</span>
+                  By signing up you agree to our <Link to={paths.TERMS}><span>Terms of Use</span></Link> and{' '}
+                  <Link to={paths.PRIVACY_POLICY}><span>Privacy Policy.</span></Link>
                 </div>
               </form>
         </div>
-      </Body> 
+      </Body>
     </>
   )
 }
