@@ -53,6 +53,7 @@ const Bar = styled.div.attrs(props => ({
         width: 100%;
         text-align: right;
         .notif{
+            cursor: pointer;
             >img{
                 width: 30px;
                 height: 30px;
@@ -189,6 +190,8 @@ const Bar = styled.div.attrs(props => ({
             position: relative;
             top: 5px;
             margin-right: 10px;
+            cursor: pointer;
+
             img {
                 width: 48px;
                 height: 48px;
@@ -200,8 +203,10 @@ const Bar = styled.div.attrs(props => ({
             color: #424242;
             position: relative;
             top: -10px;
+            cursor: pointer;
         }
         .arrow-down {
+            cursor: pointer;
             img {
                 width: 24px;
                 height: 14px;
