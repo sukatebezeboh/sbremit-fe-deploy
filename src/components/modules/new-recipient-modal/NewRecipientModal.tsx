@@ -155,9 +155,13 @@ const Div = styled.div`
             select.phone  {
                 background-position-x: 22%;
                 padding-left: 200px;
+                border: none;
             }
             input.phone-no {
                 width: 100%;
+                border: none;
+                border-left: 1px solid #7FBCAD;
+                border-radius: 0px;
             }
             div.mobile-head {
                 margin-bottom: -50px;
@@ -459,7 +463,7 @@ function NewRecipientModal(props: any) {
                                         <Field type="text" name="lastName" placeholder="Doe" />
                                     </div>
                                     <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
-                                        
+
                                         <div className="modified-tel-input">
                                             <div>Last name<i>*</i></div>
                                             <PhoneNumberInput
@@ -479,15 +483,6 @@ function NewRecipientModal(props: any) {
                                             <div className="margin-adjust"></div>
                                             <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
                                         </div>
-                                        {/* <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
-                                        <Field as="select" name="phoneCode" id="" className="phone" >
-                                            <option value={`${country?.phoneCode}`}>{country?.phoneCode} {country?.name}</option>
-                                        </Field> */}
-                                        {/*  <div className="country-code">
-                                            <img src={asset( 'flags', `${transfer.toReceive.countryCode}.png`)} alt="country"/>
-                                            <p>{values.phoneCode}</p>
-                                        </div> */}
-                                        
                                     </div>
 
                                     <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
@@ -511,14 +506,6 @@ function NewRecipientModal(props: any) {
                                             <div className="margin-adjust"></div>
                                             <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
                                         </div>
-                                        {/* <Field type="text" name="confirmMobile" className="phone-no" placeholder="e.g 07967885952" />
-                                        <Field as="select" name="confirmPhoneCode" id="" className="phone" >
-                                            <option value={`${country?.phoneCode}`}>{country?.phoneCode} {country?.name}</option>
-                                        </Field>
-                                        <div className="country-code">
-                                            <img src={asset( 'flags', `${transfer.toReceive.countryCode}.png`)} alt="country"/>
-                                            <p>{values.confirmPhoneCode}</p>
-                                        </div> */}
                                     </div>
 
                                     {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
