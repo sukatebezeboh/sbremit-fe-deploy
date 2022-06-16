@@ -1413,7 +1413,7 @@ export const countriesAndCodes: readonly CountryType[] = [
   },
   {
      "countryCode":"TZ",
-     "name":"United Republic of Tanzania",
+     "name":"Tanzania",
      "phoneCode":"255",
      "countryCodeAlt":"TZA"
   },
@@ -1673,6 +1673,11 @@ export const countriesTransferMethodAvailability: any = {
        bank_transfer: false,
        cash_pickup: false
    },
+   LR: {
+      mobile_money: true,
+      bank_transfer: false,
+      cash_pickup: false
+   },
    NG: {
        mobile_money: true,
        bank_transfer: true,
@@ -1690,7 +1695,7 @@ export const countriesTransferMethodAvailability: any = {
    },
    TZ: {
        mobile_money: true,
-       bank_transfer: false,
+       bank_transfer: true,
        cash_pickup: false
    },
    UG: {
