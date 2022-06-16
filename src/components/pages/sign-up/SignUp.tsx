@@ -264,7 +264,7 @@ const { touched, errors, values } = formik;
                     }
                   >
                     <div className='mb-20'>
-                      <span>Sign up with:</span>  
+                      <span>Sign up with:</span>
 
                       <div className="sign-up-mode-select">
                         <div className="mode-toggle">
@@ -276,7 +276,7 @@ const { touched, errors, values } = formik;
                           </div>
                         </div>
                       </div>
-                      
+
                       <i>*</i>
                     </div>
 
@@ -299,7 +299,7 @@ const { touched, errors, values } = formik;
                         <div className="form-error-message">
                           {errors.username}
                         </div>
-                      )}                      
+                      )}
                     </div>
 
                   </div>

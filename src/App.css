@@ -475,3 +475,9 @@ button:disabled{
     -webkit-animation: slide_out_to_top 0.8s ease forwards;
     animation: slide_out_to_top 0.8s ease forwards;
 } */
+
+
+.is-unavailable-option {
+    opacity: 0.3!important;
+    pointer-events: none!important;
+}

@@ -1636,3 +1636,66 @@ export const months: any = {
     November: 11,
     December: 12,
 }
+
+export const countriesTransferMethodAvailability: any = {
+   CM: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: true
+   },
+   TD: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GQ: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GA: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GM: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: true
+   },
+   GH: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   KE: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   NG: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   SN: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   SL: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   TZ: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   UG: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+};
