@@ -50,7 +50,7 @@ export const RememberPassword = ({hasText = false}: {hasText?: boolean}) => {
       {hasText && <p>Remember Password?</p>}
       <Link to='/sign-in'>
         <img src={asset('newAuth', 'back.png')} alt="" />
-        Back to login
+        &nbsp; Back to login
       </Link>
     </RememberPasswordStyle>
   )
