@@ -34,6 +34,8 @@ export default styled.div`
 
                 .mobile-nav-close-x {
                     font-size: 32px;
+                    margin-top: -7px;
+                    margin-right: 1px;
                     color: white;
                     cursor: pointer;
                 }
@@ -112,6 +114,10 @@ export default styled.div`
                     left: 0;
                     top: 60px;
                     padding: 10px;
+
+                    @media (max-width: 900px) {
+                        top: 70px;
+                    }
                     .inner {
                         display: flex;
                         width: 95%;
@@ -147,9 +153,11 @@ export default styled.div`
                 background: #F0F5F4;
                 position: fixed;
                 left: 0;
-                margin-top: 10px;
                 height: 150vh;
                 z-index: 999999;
+                @media(max-width: 900px) {
+                    top: 70px;
+                }
                 .mobile-nav-inner {
                     padding-top: 20px;
                     ul.links-container {
