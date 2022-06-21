@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components';
 import { paths } from 'util/paths';
-import {NewAuthLayout, AuthButton} from '../../modules/new-auth-layout/NewAuthLayout'
+import {NewAuthLayout, AuthButton, RememberPassword} from '../../modules/new-auth-layout/NewAuthLayout'
 
 const ForgetPassword = () => {
   const [selectedOption, setSelectedOption] = useState('')
@@ -37,6 +37,7 @@ const ForgetPassword = () => {
         </OptionHolder>
       </div>
       <AuthButton text='Continue' onClick={onOptionSelect} />
+      <RememberPassword hasText />
     </NewAuthLayout>
   )
 }

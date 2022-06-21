@@ -372,7 +372,7 @@ const LandingPage = () => {
                     </div>
                 </nav>
 
-                { 
+                {
                     mobileNavOpen &&
                     <div className="mobile-nav">
                        <div className="mobile-nav-inner">
