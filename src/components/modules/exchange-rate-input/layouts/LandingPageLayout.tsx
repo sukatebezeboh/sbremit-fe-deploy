@@ -1,6 +1,9 @@
 import React from 'react'
 import { asset, formatCurrencyWithoutFloats } from '../../../../util/util'
 import styled from 'styled-components'
+import { countriesAndCodes, countriesTransferMethodAvailability } from 'util/constants'
+import { useSelector } from 'react-redux'
+
 const Field = styled.div`
         margin: 0px 16px;
         .text { 
@@ -107,8 +110,10 @@ const Field = styled.div`
 `
 
 const LandingPageLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }: any) => {
+  const transfer = useSelector((state: any)=>state.transfer);
+
   return (
-    
+
     <Field className="exchange-rate-input">
         <div className="text">
             {data?.isSend ? 'YOU SEND': 'THEY GET'}
@@ -133,9 +138,11 @@ const LandingPageLayout = ({data, max, inputRef, setCountriesDropDownOpen, count
                         <div className="countries-dropdown">
                             <ul>
                                 {
-                                    Object.keys(countries).map(country => (
-                                        <li onClick={() => handleCountrySelection(country)}>{country}</li>
-                                    ))
+                                    Object.keys(countries).map(country => {
+                                        const countryCode: any = countriesAndCodes.find(_country => _country.name === country)?.countryCode
+                                        const isAvailableCountry = countriesTransferMethodAvailability[countryCode]?.[transfer.transferMethod]
+                                       return <li className={`${isAvailableCountry === false && 'is-unavailable-option'}`} onClick={() => handleCountrySelection(country)}>{country}</li>
+                                    })
                                 }
                             </ul>
                         </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { transfer } from 'redux/reducers/transfer'
 import styled from 'styled-components'
 import { formatCurrencyWithoutFloats } from 'util/util'
 
@@ -77,7 +78,7 @@ const Field = styled.div`
                     border: none;
                     outline: none;
                     /* color: #007B5D; */
-                    @media only screen and (max-width: 900px) { 
+                    @media only screen and (max-width: 900px) {
                         width: 120px;
                     }
                 }
@@ -92,8 +93,8 @@ const Field = styled.div`
                 >img{
                     box-shadow: 0px 3px 6px #00000029;
                     width: 40px;
-                    height: 40px;    
-                    border-radius: 50%;   
+                    height: 40px;
+                    border-radius: 50%;
                     margin: 5px 10px;
                 }
                 .data-c{
@@ -115,8 +116,9 @@ const Field = styled.div`
             }
         }
 `
-
+console.log(transfer, "here");
 const QuotesLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }: any) => {
+
   return (
     <Field key={data?.currency +'-field-'+ window.location.pathname}>
         <div className={`x-input ${(max && data?.total > max) ? 'selected-border-re' : ''}`}>

@@ -48,6 +48,7 @@ export default styled.div`
                         font-size: 12px;
                         line-height: 15px;
                     }
+
                     &.active {
                         border-bottom: 5px solid #007B5D;
                         color: #007B5D;

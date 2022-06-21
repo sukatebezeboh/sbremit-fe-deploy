@@ -134,7 +134,7 @@ const ExchangeRateInputWrapper = (props: any) =>{
         console.log(countries[country], "//")
         if (data.isSend) {
             dispatch({
-                type: TRANSFER, 
+                type: TRANSFER,
                 payload: {
                     ...transfer,
                     toSend: {...data, currency: countries[country], image: countryKey, countryCode: countryKey},
