@@ -1,7 +1,7 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
 import { featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';

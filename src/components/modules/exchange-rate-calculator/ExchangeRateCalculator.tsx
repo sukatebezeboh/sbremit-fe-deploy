@@ -177,7 +177,7 @@ const ExchangeRateCalculator = ({
 
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                if (toReceive.countryCode === 'CM') {
+                if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
                     setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
                 }
                 else{

@@ -352,7 +352,7 @@ const GetQuote = () => {
                 <div className="btns">
                     <span>Cancel</span>
                     <button onClick={()=> {
-                        if (toReceive.countryCode === 'CM') {
+                        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
                             handleContinue()
                         }
                         else{

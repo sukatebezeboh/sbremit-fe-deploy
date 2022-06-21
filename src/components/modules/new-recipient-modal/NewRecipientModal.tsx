@@ -8,7 +8,7 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { countriesAndCodes, providersMobileMoney, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
 import { asset, isObjectNotEmpty } from '../../../util/util';
 import { themeNames } from '../toast-factory/themes';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
@@ -373,7 +373,7 @@ function NewRecipientModal(props: any) {
 
     const handleReasonsChange = (e: any) => {
         const {value} = e.target;
-        if (value == 'Other') {
+        if (value === 'Other') {
             setReasonValue('')
             setOtherReasons(true);
         }
@@ -398,8 +398,11 @@ function NewRecipientModal(props: any) {
     const updateVerifyStep = (values: any) => {
         if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
             setShowVerifyStep(true)
+            console.log(setShowVerifyStep)
         }
     }
+
+    const [mobileProviders, setMobileProviders] = useState("")
 
     return (
         modalOpen && <Div>
@@ -407,7 +410,7 @@ function NewRecipientModal(props: any) {
             </div>
             <div className="modal">
                 <div className="head mobile-hide">
-                    <div className="t-id">Add a new recipient <span className="no-wrap"> ( {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
+                    <div className="t-id">Add a new recipient <span className="no-wrap"> ({mobileProviders} {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 {transfer.transferMethod === "bank_transfer" && (
@@ -452,6 +455,18 @@ function NewRecipientModal(props: any) {
                             <Form>
                                 <FormikFormObserver callback={(newValues: any) => {
                                     updateVerifyStep(newValues)
+                                    if (transfer.toReceive.countryCode === 'UG' && String(newValues.mobile).substring(0, 2) === '70') {
+                                        setMobileProviders("Airtel")
+                                    } else if (transfer.toReceive.countryCode === 'UG' && String(newValues.mobile).substring(0, 2) === '77') {
+                                        setMobileProviders("MTN")
+                                    } else if (transfer.toReceive.countryCode === 'KE' && String(newValues.mobile).substring(0, 2) === '72') {
+                                        setMobileProviders("Mpesa, Airtel")
+                                    } else if (transfer.toReceive.countryCode === 'TZ' && String(newValues.mobile).substring(0, 2) === '71') {
+                                        setMobileProviders("Safaricom, Vodafone")
+                                    } else {
+                                        setMobileProviders("")
+                                    }
+
                                 }} />
                                 <div className="form grid-col-1-1 grid-gap-3">
                                     <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
@@ -477,6 +492,7 @@ function NewRecipientModal(props: any) {
                                                 phoneCodeName="phoneCode"
                                                 countries={country ? [country] : undefined}
                                                 name="mobile"
+                                                //onChange={(e: any) => detectNetworkProvider(String(e.target.value))}
                                                 placeholder="e.g 07967885952"
                                                 showBorder={true}
                                             />
@@ -486,7 +502,6 @@ function NewRecipientModal(props: any) {
                                     </div>
 
                                     <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
-
                                         <div className="modified-tel-input">
                                             <div>Last name<i>*</i></div>
                                             <PhoneNumberInput
