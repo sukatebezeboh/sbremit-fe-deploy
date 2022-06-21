@@ -1704,3 +1704,18 @@ export const countriesTransferMethodAvailability: any = {
        cash_pickup: false
    },
 };
+
+export const providersMobileMoney = {
+   UG: {
+      airtel: 70,
+      mtn: 77
+   },
+   KE: {
+     mpesa: 72,
+     airtel: 72
+   },
+   TZ: {
+      safaricom: 71,
+      vodafone: 71
+    }
+ };

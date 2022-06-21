@@ -69,7 +69,6 @@ const Field = styled.div`
                         height: 24px;
                     }
                 }
-                
                 .countries-dropdown-wrapper {
                     .countries-dropdown {
                         width: 100%;
@@ -95,7 +94,7 @@ const Field = styled.div`
                                 }
                             }
                         }
-                    }                    
+                    }
                 }
 
             }
