@@ -53,15 +53,15 @@ const ExchangeRateCalculator = ({
 
             <div className="calculator-nav">
                 <div className="options">
-                    <div onClick={() => setTransferMethod('mobile_money')} className={`option ${ !transferMethodAvailability['mobile_money'] && 'is-unavailable-option'}  ${selectedTransferMethod === "mobile_money" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('mobile_money')} className={`option ${ !transferMethodAvailability?.['mobile_money'] && 'is-unavailable-option'}  ${selectedTransferMethod === "mobile_money" ? "selectedTM active" : ""}`}>
                         Mobile Money
                     </div>
 
-                    <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${ !transferMethodAvailability['bank_transfer'] && 'is-unavailable-option' }  ${selectedTransferMethod === "bank_transfer" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${ !transferMethodAvailability?.['bank_transfer'] && 'is-unavailable-option' }  ${selectedTransferMethod === "bank_transfer" ? "selectedTM active" : ""}`}>
                         Bank Transfer
                     </div>
 
-                    <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${ !transferMethodAvailability['cash_pickup'] && 'is-unavailable-option' }  ${selectedTransferMethod === "cash_pickup" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${ !transferMethodAvailability?.['cash_pickup'] && 'is-unavailable-option' }  ${selectedTransferMethod === "cash_pickup" ? "selectedTM active" : ""}`}>
                         Cash Pickup
                     </div>
                 </div>
