@@ -88,7 +88,7 @@ const Bar = styled.div.attrs(props => ({
                 height: 0px;
                 border-style: solid;
                 border-width: 0px 10px 15px 10px;
-                border-color: transparent transparent white transparent;  
+                border-color: transparent transparent white transparent;
                 outline-width: 10px;
                 outline-color: black;
                 display: inline-block;
@@ -143,7 +143,6 @@ const Bar = styled.div.attrs(props => ({
                 font: normal normal normal 12px/13px Montserrat;
                 color: #007B5D;
             }
-            
         }
         .profile-dropdown {
             top: 47px;
@@ -228,7 +227,7 @@ const Bar = styled.div.attrs(props => ({
         grid-template-columns: 1fr 1fr;
         height: 60px;
         padding: 15px 3%;
-        
+
         >div.right-opt {
             transform: scale(0.65, 0.65);
             top: -12px;
@@ -296,6 +295,7 @@ const Bar = styled.div.attrs(props => ({
             height: 130vh;
             padding-bottom: 30vh;
             left: 0;
+            padding-top: 50px;
             z-index: +2;
             margin-top: -40px;
             overflow-y: scroll;
