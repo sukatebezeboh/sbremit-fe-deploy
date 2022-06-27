@@ -337,21 +337,27 @@ const getRecipientCreateValidationSchema = ( transferMethod: string, onChangeCal
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient, recipientData} = props;
     const dispatch = useDispatch()
+    const recipients = useSelector((state: any) => state.recipients);
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
+    const [mobileProvider, setMobileProvider] = useState('')
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const getCountry = () => {
         return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
     }
 
+    console.log(recipients, "::oka")
+
     const country = getCountry();
 
     const initialValues = {
-        firstName: recipientData?.firstName || "",
-        lastName: recipientData?.lastName || "",
+        firstName: recipientData?.firstName || firstName,
+        lastName: recipientData?.lastName || lastName,
         mobile: recipientData?.profile?.mobile || "",
         phoneCode: recipientData?.profile?.phoneCode || '+' + country?.phoneCode,
         confirmMobile: recipientData?.profile?.mobile || "",
@@ -368,7 +374,7 @@ function NewRecipientModal(props: any) {
         countryCode: "CM21",
         accountBranch: "",
         recipientAccountNumber: "",
-        mobileMoneyProvider: recipientData?.profile?.mobileMoneyProvider || ""
+        mobileMoneyProvider: recipientData?.profile?.mobileMoneyProvider || mobileProvider
     }
 
     const handleReasonsChange = (e: any) => {
@@ -391,19 +397,27 @@ function NewRecipientModal(props: any) {
 
     const verifyRecipient = (event: any, payload: any) => {
         event.preventDefault()
-        verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
+        payload.mobileMoneyProvider = mobileProvider
+        verifyPivotRecipientReference(payload, (res: any) => {
+            const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
+            const customerNames = customerName.split(' ');
+            setLastName(customerNames[1])
+            setFirstName(customerNames[0]);
+            setShowVerifyStep(false)
+        }, () => setShowVerifyStep(false))
     }
 
     const updateVerifyStep = (values: any) => {
         if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
             setShowVerifyStep(true)
-            console.log(setShowVerifyStep)
         }
     }
 
-    const [mobileProviders, setMobileProviders] = useState("")
+    const isCustomerNameDisabled = () => {
+        return transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER
+    }
 
-    console.log()
+    console.log(transfer, "::blame")
 
     return (
         modalOpen && <Div>
@@ -411,7 +425,7 @@ function NewRecipientModal(props: any) {
             </div>
             <div className="modal">
                 <div className="head mobile-hide">
-                    <div className="t-id">Add a new recipient <span className="no-wrap"> ({mobileProviders} {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
+                    <div className="t-id">Add a new recipient <span className="no-wrap"> ({transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 {transfer.transferMethod === "bank_transfer" && (
@@ -437,8 +451,8 @@ function NewRecipientModal(props: any) {
                     validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, () => {} )}
                     onSubmit={values => {
                         const newValue = {
-                            firstName: values.firstName,
-                            lastName: values.lastName,
+                            firstName: isCustomerNameDisabled() ? firstName : values.firstName,
+                            lastName: isCustomerNameDisabled() ? lastName : values.lastName,
                             mobile: values.mobile,
                             phoneCode: values.phoneCode,
                             email: values.email,
@@ -446,7 +460,7 @@ function NewRecipientModal(props: any) {
                             reason: values.reason,
                             bankName: values.bankName,
                             accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
-                            mobileMoneyProvider: values.mobileMoneyProvider
+                            mobileMoneyProvider: mobileProvider
                         }
                         dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                     }}>
@@ -454,34 +468,43 @@ function NewRecipientModal(props: any) {
                         ({errors, touched, values}: any) => {
                             return(
                             <Form>
-                                <FormikFormObserver callback={(newValues: any) => {
+                                <FormikFormObserver callback={(newValues: any, context: any) => {
+                                    console.log(newValues, values, ':::context')
                                     updateVerifyStep(newValues)
-                                    if (transfer.toReceive.countryCode === 'UG' && String(newValues.mobile).substring(0, 2) === '70') {
-                                        setMobileProviders("Airtel")
-                                    } else if (transfer.toReceive.countryCode === 'UG' && String(newValues.mobile).substring(0, 2) === '77') {
-                                        setMobileProviders("MTN")
-                                    } else if (transfer.toReceive.countryCode === 'KE' && String(newValues.mobile).substring(0, 2) === '72') {
-                                        setMobileProviders("Mpesa, Airtel")
-                                    } else if (transfer.toReceive.countryCode === 'TZ' && String(newValues.mobile).substring(0, 2) === '71') {
-                                        setMobileProviders("Safaricom, Vodafone")
-                                    } else {
-                                        setMobileProviders("")
-                                    }
+                                    transfer.toReceive.countryCode === 'UG'
+                                    && String(newValues.mobile).substring(0, 2) === '70'
+                                    ? setMobileProvider("AIRTEL")
+                                    : transfer.toReceive.countryCode === 'UG'
+                                    && String(newValues.mobile).substring(0, 2) === '77'
+                                    ? setMobileProvider("MTN")
+                                    : transfer.toReceive.countryCode === 'KE'
+                                    && String(newValues.mobile).substring(0, 2) === '72'
+                                    ? setMobileProvider("MPESA")
+                                    // : transfer.toReceive.countryCode === 'KE'
+                                    // && String(newValues.mobile).substring(0, 3) === '072'
+                                    // ? setMobileProviders(["Airtel"])
+                                    : transfer.toReceive.countryCode === 'TZ'
+                                    && String(newValues.mobile).substring(0, 2) === '71'
+                                    ? setMobileProvider("Safaricom")
+                                    // : transfer.toReceive.countryCode === 'TZ'
+                                    // && String(newValues.mobile).substring(0, 3) === '071'
+                                    // ? setMobileProviders(["Vodafone"])
+                                    : setMobileProvider("")
 
                                 }} />
                                 <div className="form grid-col-1-1 grid-gap-3">
                                     <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
                                         <div>First name<i>*</i></div>
-                                        <Field type="text" name="firstName" placeholder="John" />
+                                        <Field type="text" name="firstName" placeholder="John" {...(isCustomerNameDisabled() ? {value: firstName}: {})} disabled={isCustomerNameDisabled()} />
                                     </div>
                                     <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
                                         <div>Last name<i>*</i></div>
-                                        <Field type="text" name="lastName" placeholder="Doe" />
+                                        <Field type="text" name="lastName" placeholder="Doe" {...(isCustomerNameDisabled() ? {value: lastName}: {})}  disabled={isCustomerNameDisabled()} />
                                     </div>
                                     <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
 
                                         <div className="modified-tel-input">
-                                            <div>Last name<i>*</i></div>
+                                            <div>Mobile<i>*</i></div>
                                             <PhoneNumberInput
                                                 Input={Field}
                                                 Select={Field}
@@ -504,7 +527,7 @@ function NewRecipientModal(props: any) {
 
                                     <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
                                         <div className="modified-tel-input">
-                                            <div>Last name<i>*</i></div>
+                                            <div>Confirm Mobile<i>*</i></div>
                                             <PhoneNumberInput
                                                 Input={Field}
                                                 Select={Field}
@@ -526,25 +549,40 @@ function NewRecipientModal(props: any) {
 
                                     {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                         <div>Mobile money provider</div>
-                                        <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
-                                            <option value="">Select</option>
+                                        <Field as="select" name='mobileMoneyProvider' id="mobileMoneyProvider">
                                             {
-                                                ['MTN', 'Airtel', 'MPESA'].map((provider: string) => (
-                                                    <option value={provider}>{provider}</option>
-                                                    )
-                                                )
+                                                [mobileProvider].map((provider: any) => {
+                                                    return <option value={provider}>{provider}</option>
+                                                })
                                             }
 
                                         </Field>
                                     </div>}
-                                    <div className={(touched.email && errors.email) ? 'form-error': ''}>
-                                        <div>Email</div>
-                                        <Field type="text" name="email" placeholder="Recipient’s email address" />
-                                    </div>
-                                    <div className={(touched.state && errors.state) ? 'form-error': ''}>
-                                        <div>City/State</div>
-                                        <Field type="text" name="state" placeholder="" />
-                                    </div>
+
+                                    {
+                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
+                                        " "
+                                        :
+                                        (
+                                            <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                                <div>Email</div>
+                                                <Field type="text" name="email" placeholder="Recipient’s email address" />
+                                            </div>
+                                        )
+                                    }
+
+                                    {
+                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
+                                        " "
+                                        :
+                                        (
+                                            <div className={(touched.state && errors.state) ? 'form-error': ''}>
+                                                <div>City/State</div>
+                                                <Field type="text" name="state" placeholder="" />
+                                            </div>
+                                        )
+                                    }
+
                                     <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
                                         <div>Reason</div>
                                             <Field as="select"  name='reason' id="reason" value={reasonValue || initialValues.reason} onInput={(e: any) => handleReasonsChange(e)}>

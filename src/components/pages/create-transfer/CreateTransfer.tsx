@@ -111,10 +111,9 @@ const Body = styled.div`
                 }
             }
         }
-        
     }
 
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     .page-content {
         width: 100%;
         height: 120vh;

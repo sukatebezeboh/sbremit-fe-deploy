@@ -15,6 +15,7 @@ import http from '../../../util/http';
 import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 import { remittanceHandlers } from '../../../util/constants';
+import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
 
 const Body = styled.div`
     .page-content {
@@ -24,6 +25,13 @@ const Body = styled.div`
             grid-template-columns: 2fr 1.5fr;
             grid-gap: 4%;
             padding-top: 50px;
+
+            .box-container {
+                display: grid;
+                grid-template-columns: 2fr;
+                grid-gap: 5%;
+                padding-top: 50px;
+            }
         }
         hr {
             border: 1px solid #f8f7f8;
@@ -85,8 +93,33 @@ const Body = styled.div`
         }
         
     }
-
-@media only screen and (max-width: 900px) { 
+    .pls-note {
+        font: normal normal 600 16px Montserrat;
+        color: #424242;
+    }
+    .list {
+        font: normal normal normal 16px Montserrat;
+        color: #424242;
+        ul {
+            margin-top: 15px;
+            list-style: none;
+            li{
+                text-indent: 20px;
+                margin-top: 15px;
+                :before {
+                    content: ' ';
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: #FCD20F;
+                    display: inline-block;
+                    margin-right: 4%;
+                    margin-left: -7%;
+                }
+            }
+        }
+    }
+@media only screen and (max-width: 900px) {
     .page-content {
         width: 100%;
         height: 120vh;
@@ -273,25 +306,25 @@ const PaymentMethod = () => {
 
     return (
         <Body>
-            {openConfirmModal === 'forCancel' ? 
-            <ConfirmModal 
+            {openConfirmModal === 'forCancel' ?
+            <ConfirmModal
             message="Are you sure you want to cancel this transfer?"
             onSave={{
                 label: 'Yes, cancel',
                 fn: ()=>handleCancel()
-            }} 
+            }}
             onCancel={{
                 label: "No, don't cancel",
                 fn: () => setOpenConfirmModal(null)
             }}
-            /> : 
-            openConfirmModal === 'forProceed' ? 
-            <ConfirmModal 
+            /> :
+            openConfirmModal === 'forProceed' ?
+            <ConfirmModal
             message="Are you sure you want to procced?"
             onSave={{
                 label: 'Yes, proceed',
                 fn: ()=>handleProceed(transfer)
-            }} 
+            }}
             onCancel={{
                 label: "No, not yet",
                 fn: () => setOpenConfirmModal(null)
@@ -308,7 +341,7 @@ const PaymentMethod = () => {
                 <div className="box-container details">
                     <div>
                         {
-                            selected === "bank_transfer" 
+                            selected === "bank_transfer"
                             && <div className="radio-card" onClick={()=>setSelected('bank_transfer')}>
                                 <div className="radio-div">
                                     {/* <RadioButton selected={selected==='bank_transfer'} /> */}
@@ -329,35 +362,20 @@ const PaymentMethod = () => {
                                 </div>
                             </div>
                         }
+                            <div>
+                                <div className="pls-note">Please note</div>
+                                <div className="list">
+                                    <ul>
+                                        <li>Please ensure the <span className="green-txt"> payment details</span> of your recipient are &nbsp; correct. <span className="red-txt"> Any error after this step cannot be corrected</span> <span className="green-txt"><Link to={paths.RECIPIENT + "?t=" + transferId}>Edit recipient details</Link> </span></li>
+                                        <li>If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer</li>
+                                    </ul>
+                                </div>
+                            </div>
                         { 
-                            selected==='card' 
-                            && <div className="radio-card disabled" onClick={() => {
-                                setSelected('card')
-                                }}>
-                                <div className="radio-div">
-                                    {/* <RadioButton selected={selected==='card'}/> */}
-                                </div>
-                                <div>
-                                    {/* <div className="rc-head">Debit Card</div> */}
-                                    <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
-                                    <div className="rc-body">
-                                        {/* <div>
-                                            Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
-                                        </div> */}
-                                        <div className="green-txt">
-                                            <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link> 
-                                        </div>
-                                        <br /> <br /><br />
-                                        <div>
-                                            {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
-                                        </div>
-                                        <div>
-                                            If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer
-                                        </div>
-                                    </div>
-                                    <div className="rc-foot">
-                                    </div>
-                                </div>
+                            selected==='card'
+                            && <div className="box-container details">
+                                <RecipientDetailsBox hideType="mobile-hide" green_mamba />
+                                <RecipientDetailsBox hideType="desktop-hide" />
                             </div>
                         }
 
@@ -375,7 +393,7 @@ const PaymentMethod = () => {
                                                 Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
                                             </div> */}
                                             <div className="green-txt">
-                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link> 
+                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link>
                                             </div>
                                             <br /> <br /><br />
                                             <div>
@@ -396,7 +414,7 @@ const PaymentMethod = () => {
                         <TransferDetailsBox transferId={transferId} />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span> 
+                <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
                  {
                     selected==="card" ?
                     <PaymentRedirect 
