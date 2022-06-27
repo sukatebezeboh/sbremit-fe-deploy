@@ -895,13 +895,9 @@ export const getServiceRate = (
   if (!transfer.allowOperatorFee) {
     store.dispatch({ type: TRANSFER, payload: { ...transfer, serviceFee: 0 } })
     return 0
-  }
-  const transferMethodsIds: any = {
-    mobile_money: '1',
-    bank_transfer: '2',
-    cash_pickup: '3',
-  }
+  } 
   const services = store.getState().appValues.services
+  const transferMethodsIds: any = getTransferMethodIds()
   const service =
     services?.data?.filter(
       (s: any) =>
@@ -948,12 +944,8 @@ export const getServiceRateValue = (
 ) => {
   const transfer = store.getState().transfer
   if (!transfer.allowOperatorFee && checkOperatorFee) return 0
-  const transferMethodsIds: any = {
-    mobile_money: '1',
-    bank_transfer: '2',
-    cash_pickup: '3',
-  }
   const services = store.getState().appValues.services
+  const transferMethodsIds: any = getTransferMethodIds()
   const service =
     services?.data?.filter(
       (s: any) => s.id === transferMethodsIds[transferMethod],
@@ -988,6 +980,17 @@ export const getServiceRateValue = (
         ).toFixed(2)
       : equiFee
   return Number(serviceFee) || 0
+}
+
+export const getTransferMethodIds = () => {
+  const transfer = store.getState().transfer
+  const services = store.getState().appValues.services
+  const mobileMoneyId = services?.data?.find((service:any) => service.name.toLowerCase() === "mobile money" && service.country === transfer?.toReceive?.countryCode)?.id || '1'
+  return {
+    mobile_money: mobileMoneyId,
+    bank_transfer: '2',
+    cash_pickup: '3',
+  }
 }
 
 export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
@@ -1542,17 +1545,12 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
 
 export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Function) => {
     const transfer = store.getState().transfer;
-    // console.log("Transfer::: ", transfer);
     store.dispatch({ type: LOADING, payload: true });
-    const transferMethodIdMap: any = {
-      mobile_money: 1,
-      bank_transfer: 2,
-      cash_pickup: 3
-    };
+    const transferMethodIdMap: any = getTransferMethodIds();
     const idTransferMethodMap: any = {
-      1: 'mobile_money',
-      2: 'bank_transfer',
-      3: 'cash_pickup'
+      [transferMethodIdMap['mobile_money']]: 'mobile_money',
+      [transferMethodIdMap['bank_transfer']]: 'bank_transfer',
+      [transferMethodIdMap['cash_pickup']]: 'cash_pickup'
     };
 
     http.post(endpoints.TRANSFER_QUOTE, {
@@ -1565,7 +1563,7 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
       promoCode: transfer.promo?.code,
       destinationCountryCode: transfer.toReceive.countryCode,
       originCountryCode:  transfer.toSend.countryCode,
-      calculatorDestinationAmount: transfer.toReceive.value
+      calculatorDestinationAmount: transfer.toReceive.value,
     })
     .then(res => {
       if (res?.data?.status == '200') {
@@ -1626,7 +1624,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
               failedCallback?.()
             },
             extraBtnClass: 'verif-toast-failed-extra-btn-class'
-            })
+          })
         }
       } else {
         toastAction({
@@ -1635,6 +1633,45 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           timeout: 10000,
           message: `Recipient mobile not found for ${payload.mobileMoneyProvider} MOMO service`,
         })
+      }
+  })
+  .catch(() => {})
+  .then(() => {
+    store.dispatch({ type: LOADING, payload: false })
+  })
+}
+
+export const verifyPivotRecipientAccount = (payload: any, callback = () => {}) => {
+  store.dispatch({ type: LOADING, payload: true })
+
+  http.post(endpoints.VERIFY_PIVOT_REFERENCE, {
+    telecomCode: payload?.mobileMoneyProvider,
+    customerAccountNumber: payload?.mobile
+  })
+  .then(res => {
+      console.log(res)
+      if (res.data?.data?.responseCode === "SUCCESS") {
+          toastAction({
+            show: true,
+            type: 'success',
+            timeout: 10000,
+            message: `Recipient account verified!`,
+          })
+      } else {
+          stackNewToast({
+            name: "confirm-momo-recipient-account",
+            show: true,
+            type: 'error',
+            timeout: 5000,
+            defaultThemeName: themeNames.CENTER_PROMPT,
+            title: `The recipient account has failed Pivot transaction check.`,
+            message: "<div style='color: grey;'>This could be due to exceeding maximum account transactions.</div>",
+            close: () => {
+              unstackNewToast({name: "confirm-momo-recipient-account"})
+              callback?.()
+            },
+            closeBtnText: "Make corrections",
+          })
       }
   })
   .catch(() => {})

@@ -391,7 +391,6 @@ function NewRecipientModal(props: any) {
 
     const verifyRecipient = (event: any, payload: any) => {
         event.preventDefault()
-        console.log(payload)
         verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
     }
 

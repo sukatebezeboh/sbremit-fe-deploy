@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -8,12 +8,13 @@ import styled from "styled-components";
 import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction, verifyPivotRecipientAccount, verifyPivotRecipientReference } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
 import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
+import { remittanceHandlers } from '../../../util/constants';
 
 const Body = styled.div`
     .page-content {
@@ -188,7 +189,8 @@ const Body = styled.div`
 const PaymentMethod = () => {
     const history = useHistory();
     const [selected, setSelected] = useState('')
-    const recipient = useSelector((state: any)=>state.recipients.recipient)
+    const recipients = useSelector((state: any)=>state.recipients.recipients)
+
     const user = useSelector((state: any)=>state.auth.user)
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer?.transactionDetails;
@@ -196,6 +198,7 @@ const PaymentMethod = () => {
     // const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
+    const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction.recipientId ), [recipients, transaction])
 
     const dispatch = useDispatch()
 
@@ -235,7 +238,17 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         autoSelectPaymentMethod()
+
     }, [transaction])
+
+    useEffect(() => {
+        if ( recipient?.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
+            verifyPivotRecipientAccount({
+                mobile: recipient?.mobile,
+                mobileMoneyProvider: recipient?.mobileMoneyProvider
+            }, () => history.push(paths.RECIPIENT + "?t=" + transferId))            
+        }
+    }, [recipient])
 
     const autoSelectPaymentMethod = () => {
         if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
@@ -386,9 +399,16 @@ const PaymentMethod = () => {
                 <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span> 
                  {
                     selected==="card" ?
-                    <PaymentRedirect mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} currencyiso3a = {transaction?.originCurrency} transactionId={transaction?.meta?.transactionId} transferId={transferId} />
+                    <PaymentRedirect 
+                        mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} 
+                        currencyiso3a = {transaction?.originCurrency} 
+                        transactionId={transaction?.meta?.transactionId} 
+                        transferId={transferId} 
+                    />
                     :
-                    <span> <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> </span>
+                    <span> 
+                        <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> 
+                    </span>
                 }
                 </div>
             </div>
