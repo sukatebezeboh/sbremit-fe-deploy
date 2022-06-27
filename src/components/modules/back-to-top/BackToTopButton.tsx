@@ -13,7 +13,6 @@ const Div = styled.div`
         border: 3px solid #ffffff89;
         background: #227863;
         color: white;
-        font-size: 20px;
         width: 100px;
         height: 100px;
         border-radius: 50%;
@@ -21,6 +20,16 @@ const Div = styled.div`
         cursor: pointer;
         z-index: 2;
         box-shadow: 0px 2px 9px 10px rgba(0, 0, 0, 0.2);
+
+        @media(max-width: 900px) {
+            width: 80px;
+            height: 80px;
+
+            .arrow-up-icon {
+                width: 50px;
+                height: 50px;
+            }
+        }
     }
 `
 
@@ -47,7 +56,7 @@ const BackToTopButton = () => {
     <Div>
         {backToTopButton && (
             <button onClick={scrollUp}>
-                <img src={asset('icons', 'arrow-up.png')} alt="arrow-up" />
+                <img className="arrow-up-icon" src={asset('icons', 'arrow-up.png')} alt="arrow-up" />
             </button>
         )}
     </Div>

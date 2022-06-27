@@ -125,7 +125,8 @@ background: #007B5D;
                 grid-gap: 16px;
                 /* max-width: 570px; */
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                input.search-input { 
+
+                input.search-input {
                     width: 100%;
                     background: #FBFCFB;
                     border: 0.3px solid rgba(0, 0, 0, 0.33);
