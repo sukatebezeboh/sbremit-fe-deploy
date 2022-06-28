@@ -8,10 +8,11 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { countriesAndCodes, providersMobileMoney, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
 import { asset, isObjectNotEmpty } from '../../../util/util';
 import { themeNames } from '../toast-factory/themes';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
+import PhoneNumberInput from '../parts/PhoneNumberInput';
 
 const Div = styled.div`
     .overlay {
@@ -154,18 +155,13 @@ const Div = styled.div`
             select.phone  {
                 background-position-x: 22%;
                 padding-left: 200px;
+                border: none;
             }
             input.phone-no {
-                position: relative;
-                top: 51px;
-                width: 73%;
-                height: 44px;
-                margin-left: 20%;
-                margin-right: 2px;
-                padding-left: 10px;
-                border: none !important;
-                background: #fff;
-                float: right;
+                width: 100%;
+                border: none;
+                border-left: 1px solid #7FBCAD;
+                border-radius: 0px;
             }
             div.mobile-head {
                 margin-bottom: -50px;
@@ -185,7 +181,7 @@ const Div = styled.div`
                 }
             }
             div.phone-no-error-box{
-                margin-top: 15px;
+                margin-top: 50px;
             }
             div.margin-adjust {
                 margin-bottom: -44px;
@@ -197,7 +193,7 @@ const Div = styled.div`
                 top: -40px;
                 float: right;
                 cursor: pointer;
-
+                
             }
         }
         .modal-btns {
@@ -252,11 +248,18 @@ const Div = styled.div`
             width: 90%;
             >div {
                 margin-top: 15px;
+
+                .modified-tel-input {
+                    //width: 40%;
+                    .phone-input-wrapper {
+                        width: 100%;
+                    }
+                }
                 div {
                     font: normal normal normal 10px/13px Montserrat;
                 }
                 input, select {
-                    height: 30px;
+                    //height: 30px;
                     border: 1px solid #7FBCAD;
                     border-radius: 4px;
                     padding: 0px 15px;
@@ -269,11 +272,10 @@ const Div = styled.div`
                 }
                 input.phone-no {
                     top: 32px;
-                    height: 25px!important;
-                    margin-left: 15%;
                     width: calc(100% - 80px);
-                    padding-left: 5px;
-                    border: 1px solid transparent;
+                    border-top: 1px solid #7FBCAD;
+                    border-right: 1px solid #7FBCAD;
+                    border-bottom: 1px solid #7FBCAD;
                     padding: 0px 5px;
                 }
                 select {
@@ -295,7 +297,7 @@ const Div = styled.div`
                     top: -32px;
                 }
                 div.phone-no-error-box{
-                    margin-top: 0;
+                    margin-top: 30px;
                 }
             }
         }
@@ -320,7 +322,6 @@ const Div = styled.div`
         }
     }
 }
-
 `
 
 const getRecipientCreateValidationSchema = ( transferMethod: string, onChangeCallback?:Function ) => {
@@ -336,17 +337,31 @@ const getRecipientCreateValidationSchema = ( transferMethod: string, onChangeCal
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient, recipientData} = props;
     const dispatch = useDispatch()
+    const recipients = useSelector((state: any) => state.recipients);
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
+    const [mobileProvider, setMobileProvider] = useState('')
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+
+    const getCountry = () => {
+        return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
+    }
+
+    console.log(recipients, "::oka")
+
+    const country = getCountry();
 
     const initialValues = {
-        firstName: recipientData?.firstName || "",
-        lastName: recipientData?.lastName || "",
+        firstName: recipientData?.firstName || firstName,
+        lastName: recipientData?.lastName || lastName,
         mobile: recipientData?.profile?.mobile || "",
-        phoneCode: recipientData?.profile?.phoneCode || "+237",
+        phoneCode: recipientData?.profile?.phoneCode || '+' + country?.phoneCode,
+        confirmMobile: recipientData?.profile?.mobile || "",
+        confirmPhoneCode: recipientData?.profile?.phoneCode || '+' + country?.phoneCode,
         email: recipientData?.profile?.email || "",
         state: recipientData?.profile?.state || "",
         reason: recipientData?.profile?.reason || "",
@@ -359,12 +374,12 @@ function NewRecipientModal(props: any) {
         countryCode: "CM21",
         accountBranch: "",
         recipientAccountNumber: "",
-        mobileMoneyProvider: recipientData?.profile?.mobileMoneyProvider || ""
+        mobileMoneyProvider: recipientData?.profile?.mobileMoneyProvider || mobileProvider
     }
 
     const handleReasonsChange = (e: any) => {
         const {value} = e.target;
-        if (value == 'Other') {
+        if (value === 'Other') {
             setReasonValue('')
             setOtherReasons(true);
         }
@@ -382,8 +397,14 @@ function NewRecipientModal(props: any) {
 
     const verifyRecipient = (event: any, payload: any) => {
         event.preventDefault()
-        console.log(payload)
-        verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
+        payload.mobileMoneyProvider = mobileProvider
+        verifyPivotRecipientReference(payload, (res: any) => {
+            const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
+            const customerNames = customerName.split(' ');
+            setLastName(customerNames[1])
+            setFirstName(customerNames[0]);
+            setShowVerifyStep(false)
+        }, () => setShowVerifyStep(false))
     }
 
     const updateVerifyStep = (values: any) => {
@@ -392,13 +413,19 @@ function NewRecipientModal(props: any) {
         }
     }
 
+    const isCustomerNameDisabled = () => {
+        return transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER
+    }
+
+    console.log(transfer, "::blame")
+
     return (
         modalOpen && <Div>
             <div className="overlay">
             </div>
             <div className="modal">
                 <div className="head mobile-hide">
-                    <div className="t-id">Add a new recipient <span className="no-wrap"> ( {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
+                    <div className="t-id">Add a new recipient <span className="no-wrap"> ({transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 {transfer.transferMethod === "bank_transfer" && (
@@ -420,155 +447,218 @@ function NewRecipientModal(props: any) {
                 </div>
                 )}
                 <Formik
-                        initialValues={{...initialValues}}
-                        validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, () => {} )}
-                        onSubmit={values => {
-                            const newValue = {
-                                firstName: values.firstName,
-                                lastName: values.lastName,
-                                mobile: values.mobile,
-                                phoneCode: values.phoneCode,
-                                email: values.email,
-                                state: values.state,
-                                reason: values.reason,
-                                bankName: values.bankName,
-                                accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
-                                mobileMoneyProvider: values.mobileMoneyProvider
-                            }
-                            dispatch(createRecipient(newValue, { openModal, selectRecipient }))
-                        }}>
-                        {
-                            ({errors, touched, values}: any) => {
-                                return(
-                                <Form>
-                                    <FormikFormObserver callback={(newValues: any) => {
-                                        updateVerifyStep(newValues)
-                                    }} />
-                                    <div className="form grid-col-1-1 grid-gap-3">
-                                            <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
-                                                <div>First name<i>*</i></div>
-                                                <Field type="text" name="firstName" placeholder="John" />
-                                            </div>
-                                            <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
-                                                <div>Last name<i>*</i></div>
-                                                <Field type="text" name="lastName" placeholder="Doe" />
-                                            </div>
-                                            <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
-                                            {/* <div> */}
-                                                <div className="mobile-head">Mobile<i>*</i></div>
-                                                <Field type="text" name="mobile" className="phone-no" placeholder="e.g 07967885952" />
-                                                <Field as="select" name="phoneCode" id="" className="phone" >
-                                                    {/* <option value="+01">United Kingdom</option> */}
-                                                    <option value="+237">Cameroon</option>
-                                                    <option value="+256">Uganda</option>
-                                                    <option value="+254">Kenya</option>
-                                                </Field>
-                                                <div className="country-code">
-                                                    <img src={asset( 'flags', `${countriesAndCodes.find((c) => '+'+c.phoneCode === values.phoneCode)?.countryCode}.png`)} alt="country"/>
-                                                    <p>{values.phoneCode}</p>
-                                                </div>
-                                                <div className="margin-adjust"></div>
-                                                <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
-                                            </div>
-                                            {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
-                                                <div>Mobile money provider</div>
-                                                <Field as="select"  name='mobileMoneyProvider' id="mobileMoneyProvider">
-                                                    <option value="">Select</option>
-                                                    {
-                                                        ['MTN', 'Airtel', 'MPESA'].map((provider: string) => (
-                                                            <option value={provider}>{provider}</option>
-                                                            )
-                                                        )
-                                                    }
+                    initialValues={{...initialValues}}
+                    validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, () => {} )}
+                    onSubmit={values => {
+                        const newValue = {
+                            firstName: isCustomerNameDisabled() ? firstName : values.firstName,
+                            lastName: isCustomerNameDisabled() ? lastName : values.lastName,
+                            mobile: values.mobile,
+                            phoneCode: values.phoneCode,
+                            email: values.email,
+                            state: values.state,
+                            reason: values.reason,
+                            bankName: values.bankName,
+                            accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
+                            mobileMoneyProvider: mobileProvider
+                        }
+                        dispatch(createRecipient(newValue, { openModal, selectRecipient }))
+                    }}>
+                    {
+                        ({errors, touched, values}: any) => {
+                            return(
+                            <Form>
+                                <FormikFormObserver callback={(newValues: any, context: any) => {
+                                    console.log(newValues, values, ':::context')
+                                    updateVerifyStep(newValues)
+                                    transfer.toReceive.countryCode === 'UG'
+                                    && String(newValues.mobile).substring(0, 2) === '70'
+                                    ? setMobileProvider("AIRTEL")
+                                    : transfer.toReceive.countryCode === 'UG'
+                                    && String(newValues.mobile).substring(0, 2) === '77'
+                                    ? setMobileProvider("MTN")
+                                    : transfer.toReceive.countryCode === 'KE'
+                                    && String(newValues.mobile).substring(0, 2) === '72'
+                                    ? setMobileProvider("MPESA")
+                                    // : transfer.toReceive.countryCode === 'KE'
+                                    // && String(newValues.mobile).substring(0, 3) === '072'
+                                    // ? setMobileProviders(["Airtel"])
+                                    : transfer.toReceive.countryCode === 'TZ'
+                                    && String(newValues.mobile).substring(0, 2) === '71'
+                                    ? setMobileProvider("Safaricom")
+                                    // : transfer.toReceive.countryCode === 'TZ'
+                                    // && String(newValues.mobile).substring(0, 3) === '071'
+                                    // ? setMobileProviders(["Vodafone"])
+                                    : setMobileProvider("")
 
-                                                </Field>
-                                            </div>}
+                                }} />
+                                <div className="form grid-col-1-1 grid-gap-3">
+                                    <div className={(touched.firstName && errors.firstName) ? 'form-error': ''}>
+                                        <div>First name<i>*</i></div>
+                                        <Field type="text" name="firstName" placeholder="John" {...(isCustomerNameDisabled() ? {value: firstName}: {})} disabled={isCustomerNameDisabled()} />
+                                    </div>
+                                    <div className={(touched.lastName && errors.lastName) ? 'form-error': ''}>
+                                        <div>Last name<i>*</i></div>
+                                        <Field type="text" name="lastName" placeholder="Doe" {...(isCustomerNameDisabled() ? {value: lastName}: {})}  disabled={isCustomerNameDisabled()} />
+                                    </div>
+                                    <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
+
+                                        <div className="modified-tel-input">
+                                            <div>Mobile<i>*</i></div>
+                                            <PhoneNumberInput
+                                                Input={Field}
+                                                Select={Field}
+                                                isControlledComp={false}
+                                                phoneCodeExternalProps={{
+                                                    as: 'select',
+                                                    required: true,
+                                                }}
+                                                phoneCodeName="phoneCode"
+                                                countries={country ? [country] : undefined}
+                                                name="mobile"
+                                                //onChange={(e: any) => detectNetworkProvider(String(e.target.value))}
+                                                placeholder="e.g 07967885952"
+                                                showBorder={true}
+                                            />
+                                            <div className="margin-adjust"></div>
+                                            <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
+                                        <div className="modified-tel-input">
+                                            <div>Confirm Mobile<i>*</i></div>
+                                            <PhoneNumberInput
+                                                Input={Field}
+                                                Select={Field}
+                                                isControlledComp={false}
+                                                phoneCodeExternalProps={{
+                                                    as: 'select',
+                                                    required: true,
+                                                }}
+                                                phoneCodeName="confirmPhoneCode"
+                                                countries={country ? [country] : undefined}
+                                                name="confirmMobile"
+                                                placeholder="e.g 07967885952"
+                                                showBorder={true}
+                                            />
+                                            <div className="margin-adjust"></div>
+                                            <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
+                                        </div>
+                                    </div>
+
+                                    {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                        <div>Mobile money provider</div>
+                                        <Field as="select" name='mobileMoneyProvider' id="mobileMoneyProvider">
+                                            {
+                                                [mobileProvider].map((provider: any) => {
+                                                    return <option value={provider}>{provider}</option>
+                                                })
+                                            }
+
+                                        </Field>
+                                    </div>}
+
+                                    {
+                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
+                                        " "
+                                        :
+                                        (
                                             <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                                 <div>Email</div>
                                                 <Field type="text" name="email" placeholder="Recipient’s email address" />
                                             </div>
+                                        )
+                                    }
+
+                                    {
+                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
+                                        " "
+                                        :
+                                        (
                                             <div className={(touched.state && errors.state) ? 'form-error': ''}>
                                                 <div>City/State</div>
                                                 <Field type="text" name="state" placeholder="" />
                                             </div>
-                                            <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
-                                                <div>Reason</div>
-                                                    <Field as="select"  name='reason' id="reason" value={reasonValue || initialValues.reason} onInput={(e: any) => handleReasonsChange(e)}>
-                                                        <option value="">Select</option>
-                                                        {
-                                                            REASONS.map((reason: string) => (
-                                                                // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>)
-                                                                <option value={reason}>{reason}</option>
-                                                                )
-                                                            )
-                                                        }
+                                        )
+                                    }
 
-                                                    </Field>
+                                    <div className={(touched.reason && errors.reason) ? 'form-error': ''}>
+                                        <div>Reason</div>
+                                            <Field as="select"  name='reason' id="reason" value={reasonValue || initialValues.reason} onInput={(e: any) => handleReasonsChange(e)}>
+                                                <option value="">Select</option>
                                                 {
-                                                    otherReasons ?
-                                                    <Field placeholder="Enter your reason here" value={reasonValue} onInput={(e :any) => setReasonValue(e.target.value)} type="text" name={otherReasons ? 'reason' : ''} id="" />
-                                                    : <></>
+                                                    REASONS.map((reason: string) => (
+                                                        // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>)
+                                                        <option value={reason}>{reason}</option>
+                                                        )
+                                                    )
                                                 }
-                                            </div>
-                                            {transfer.transferMethod === "bank_transfer" ?
-                                            <React.Fragment>
-                                                {modeTransfer === "bankTransfer" && (
+
+                                            </Field>
+                                        {
+                                            otherReasons ?
+                                            <Field placeholder="Enter your reason here" value={reasonValue} onInput={(e :any) => setReasonValue(e.target.value)} type="text" name={otherReasons ? 'reason' : ''} id="" />
+                                            : <></>
+                                        }
+                                    </div>
+                                    {transfer.transferMethod === "bank_transfer" ?
+                                    <React.Fragment>
+                                        {modeTransfer === "bankTransfer" && (
+                                        <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
+                                            <div> Beneficiary Bank Name<i>*</i></div>
+                                            <Field type="text" name="bankName" placeholder="" />
+                                        </div>
+                                        )}
+                                        {modeTransfer === "microfinanceTransfer" && (
+                                            <>
                                                 <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                    <div> Beneficiary Bank Name<i>*</i></div>
+                                                    <div> Micro Finance Name<i>*</i></div>
                                                     <Field type="text" name="bankName" placeholder="" />
                                                 </div>
-                                                )}
-                                                {modeTransfer === "microfinanceTransfer" && (
-                                                    <>
-                                                        <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
-                                                            <div> Micro Finance Name<i>*</i></div>
-                                                            <Field type="text" name="bankName" placeholder="" />
-                                                        </div>
-                                                    </>
-                                                )}
-                                                {modeTransfer === "bankTransfer" && (
-                                                <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
-                                                    <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.bankCode || errors.branchCode || errors.accountNumber || errors.key}</span> </div>
-                                                    <Field as="select" name="countryCode">
-                                                        <option value="CM12">CM21</option>
-                                                    </Field>
-                                                    <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
-                                                    <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
-                                                    <Field type="text" className="account-number" name="accountNumber" placeholder="Account no" />
-                                                    <Field type="text" className="key" name="key" placeholder="key" />
+                                            </>
+                                        )}
+                                        {modeTransfer === "bankTransfer" && (
+                                        <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
+                                            <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.bankCode || errors.branchCode || errors.accountNumber || errors.key}</span> </div>
+                                            <Field as="select" name="countryCode">
+                                                <option value="CM12">CM21</option>
+                                            </Field>
+                                            <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
+                                            <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
+                                            <Field type="text" className="account-number" name="accountNumber" placeholder="Account no" />
+                                            <Field type="text" className="key" name="key" placeholder="key" />
+                                        </div>
+                                        )}
+                                        {modeTransfer === "microfinanceTransfer" && (
+                                            <>
+                                                <div>
+                                                <div>Account Number<i>*</i><span className="red-txt">{errors.recipientAccountNumber}</span></div>
+                                                <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
                                                 </div>
-                                                )}
-                                                {modeTransfer === "microfinanceTransfer" && (
-                                                    <>
-                                                        <div>
-                                                        <div>Account Number<i>*</i><span className="red-txt">{errors.recipientAccountNumber}</span></div>
-                                                        <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
-                                                        </div>
-                                                        <div className={(touched.accountBranch && errors.accountBranch) ? 'form-error': ''}>
-                                                            <div> Account Branch<i>*</i></div>
-                                                        <Field type="text" name="accountBranch" placeholder="" />
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </React.Fragment> : ''}
-
-                                            {transfer.transferMethod === "cash_pickup" ?
-                                                <div className={(touched.pickup_point && errors.pickup_point) ? 'form-error': ''}>
-                                                    <div>Pickup point</div>
-                                                    <Field as="select" type="text" name="pickupPoint" placeholder="e.g. 3450012398" >
-                                                        <option value=""> - Select - </option>
-                                                        <option value="SB Capital (Akwa)"> SB Capital (Akwa)</option>
-                                                    </Field>
+                                                <div className={(touched.accountBranch && errors.accountBranch) ? 'form-error': ''}>
+                                                    <div> Account Branch<i>*</i></div>
+                                                <Field type="text" name="accountBranch" placeholder="" />
                                                 </div>
-                                             : ''}
+                                            </>
+                                        )}
+                                    </React.Fragment> : ''}
 
-
-                                    </div>
-                                    <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> { showVerifyStep ? <button onClick={(e) => verifyRecipient(e, values)}>Verify</button> : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} /> } </div>
-                                </Form>
-                            )}
-                        }
-                    </Formik>
+                                    {transfer.transferMethod === "cash_pickup" ?
+                                        <div className={(touched.pickup_point && errors.pickup_point) ? 'form-error': ''}>
+                                            <div>Pickup point</div>
+                                            <Field as="select" type="text" name="pickupPoint" placeholder="e.g. 3450012398" >
+                                                <option value=""> - Select - </option>
+                                                <option value="SB Capital (Akwa)"> SB Capital (Akwa)</option>
+                                            </Field>
+                                        </div>
+                                    : ''}
+                                </div>
+                                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> { showVerifyStep ? <button onClick={(e) => verifyRecipient(e, values)}>Verify</button> : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} /> } </div>
+                            </Form>
+                        )}
+                    }
+                </Formik>
             </div>
 
              {/* MOBILE NR MODAL */}

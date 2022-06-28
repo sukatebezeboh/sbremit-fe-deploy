@@ -54,6 +54,7 @@ const Bar = styled.div.attrs(props => ({
         text-align: right;
         white-space: nowrap;
         .notif{
+            cursor: pointer;
             >img{
                 width: 30px;
                 height: 30px;
@@ -80,13 +81,14 @@ const Bar = styled.div.attrs(props => ({
             box-shadow: 0px 1px 16px #CCCCCC80;
             padding: 5px 0;
             z-index: 2;
+            white-space: normal;
             ::before{
                 content: '';
                 width: 0px;
                 height: 0px;
                 border-style: solid;
                 border-width: 0px 10px 15px 10px;
-                border-color: transparent transparent white transparent;  
+                border-color: transparent transparent white transparent;
                 outline-width: 10px;
                 outline-color: black;
                 display: inline-block;
@@ -141,7 +143,6 @@ const Bar = styled.div.attrs(props => ({
                 font: normal normal normal 12px/13px Montserrat;
                 color: #007B5D;
             }
-            
         }
         .profile-dropdown {
             top: 47px;
@@ -190,6 +191,8 @@ const Bar = styled.div.attrs(props => ({
             position: relative;
             top: 5px;
             margin-right: 10px;
+            cursor: pointer;
+
             img {
                 width: 48px;
                 height: 48px;
@@ -201,8 +204,10 @@ const Bar = styled.div.attrs(props => ({
             color: #424242;
             position: relative;
             top: -10px;
+            cursor: pointer;
         }
         .arrow-down {
+            cursor: pointer;
             img {
                 width: 24px;
                 height: 14px;
@@ -222,7 +227,7 @@ const Bar = styled.div.attrs(props => ({
         grid-template-columns: 1fr 1fr;
         height: 60px;
         padding: 15px 3%;
-        
+
         >div.right-opt {
             transform: scale(0.65, 0.65);
             top: -12px;
@@ -290,6 +295,7 @@ const Bar = styled.div.attrs(props => ({
             height: 130vh;
             padding-bottom: 30vh;
             left: 0;
+            padding-top: 50px;
             z-index: +2;
             margin-top: -40px;
             overflow-y: scroll;

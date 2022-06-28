@@ -45,7 +45,7 @@ export interface CountryType {
   countryCode: string;
   name: string;
   phoneCode: string;
-  countryCodeAlt: string;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+  countryCodeAlt: string;
 }
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 export const countriesAndCodes: readonly CountryType[] = [
@@ -1413,7 +1413,7 @@ export const countriesAndCodes: readonly CountryType[] = [
   },
   {
      "countryCode":"TZ",
-     "name":"United Republic of Tanzania",
+     "name":"Tanzania",
      "phoneCode":"255",
      "countryCodeAlt":"TZA"
   },
@@ -1636,3 +1636,86 @@ export const months: any = {
     November: 11,
     December: 12,
 }
+
+export const countriesTransferMethodAvailability: any = {
+   CM: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: true
+   },
+   TD: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GQ: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GA: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   GM: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: true
+   },
+   GH: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   KE: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   LR: {
+      mobile_money: true,
+      bank_transfer: false,
+      cash_pickup: false
+   },
+   NG: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   SN: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   SL: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+   TZ: {
+       mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   },
+   UG: {
+       mobile_money: true,
+       bank_transfer: false,
+       cash_pickup: false
+   },
+};
+
+export const providersMobileMoney = {
+   UG: {
+      airtel: 70,
+      mtn: 77
+   },
+   KE: {
+     mpesa: 72,
+     airtel: 72
+   },
+   TZ: {
+      safaricom: 71,
+      vodafone: 71
+    }
+ };

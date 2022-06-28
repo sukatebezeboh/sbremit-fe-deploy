@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { paths } from 'util/paths';
 import { setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { CookieService } from '../../../services/CookieService';
-import { constants } from '../../../util/constants';
+import { constants, countriesTransferMethodAvailability } from '../../../util/constants';
 import { formatCurrency } from '../../../util/util';
 import LandingPageExchangeRateInput from '../exchange-rate-input/LandingPageExchangeRateInput';
 import FancyToggle from '../parts/FancyToggle';
@@ -36,13 +36,13 @@ const ExchangeRateCalculator = ({
     payOutCountries,
     ExchangeRateInput,
     user,
-    userReferralDiscount
+    userReferralDiscount,
 
 }: any) => {
 
     const history = useHistory()
     const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
-    // console.log(toSend)
+    const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
 
   return (
     <Container className="exchange-rate-calculator">
@@ -53,15 +53,15 @@ const ExchangeRateCalculator = ({
 
             <div className="calculator-nav">
                 <div className="options">
-                    <div onClick={() => setTransferMethod('mobile_money')} className={`option ${selectedTransferMethod === "mobile_money" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('mobile_money')} className={`option ${ !transferMethodAvailability?.['mobile_money'] && 'is-unavailable-option'}  ${selectedTransferMethod === "mobile_money" ? "selectedTM active" : ""}`}>
                         Mobile Money
                     </div>
 
-                    <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${selectedTransferMethod === "bank_transfer" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('bank_transfer')}  className={`option ${ !transferMethodAvailability?.['bank_transfer'] && 'is-unavailable-option' }  ${selectedTransferMethod === "bank_transfer" ? "selectedTM active" : ""}`}>
                         Bank Transfer
                     </div>
 
-                    <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${selectedTransferMethod === "cash_pickup" ? "selectedTM active" : ""}`}>
+                    <div onClick={() => setTransferMethod('cash_pickup')} className={`option ${ !transferMethodAvailability?.['cash_pickup'] && 'is-unavailable-option' }  ${selectedTransferMethod === "cash_pickup" ? "selectedTM active" : ""}`}>
                         Cash Pickup
                     </div>
                 </div>
@@ -115,8 +115,8 @@ const ExchangeRateCalculator = ({
                             </div>
                         </div>
 
-                        { 
-                            Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) && 
+                        {
+                            Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) &&
                             <div className="transactional-points">
                                 <div className="point-icon">
                                     -
@@ -177,7 +177,7 @@ const ExchangeRateCalculator = ({
 
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                if (toReceive.countryCode === 'CM') {
+                if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
                     setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
                 }
                 else{

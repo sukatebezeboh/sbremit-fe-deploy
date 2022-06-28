@@ -29,7 +29,7 @@ const Body = styled.div`
                         font-size: 12px;
                         /* white-space: nowrap; */
                         min-width: 120px;
-                    }                    
+                    }
                 }
 
             }
@@ -61,11 +61,10 @@ const Notifications = () => {
                             <div className='message-container'>
                                 <div className="notif-date" > {convertDateString(notif.dateCreated)} </div>
                                 <div className="notif-message"> {notif.meta.message} <b>  </b></div>
-                                
                             </div>
                         </div>
                     ))
-                }                
+                }
             </div>
 
 

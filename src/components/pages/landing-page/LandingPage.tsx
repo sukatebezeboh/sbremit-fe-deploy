@@ -1,7 +1,7 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
 import { featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
@@ -15,6 +15,7 @@ import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/
 import Scrollspy from 'react-scrollspy'
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
+import BackToTopButton from 'components/modules/back-to-top/BackToTopButton';
 
 const LandingPage = () => {
 
@@ -33,7 +34,6 @@ const LandingPage = () => {
 
     const [competitorRates, setCompetitorRates]: any = useState([]);
         console.log('competitorRates', competitorRates);
-        
     let rate= conversionRate?.rate;
     if (
         promo?.type === "FIXED_RATE"
@@ -323,11 +323,11 @@ const LandingPage = () => {
                     <div className="content-links">
                         <div className="content-links-wrapper">
                             <span className="link">
-                                <Link to={paths.ABOUT}>About</Link> 
+                                <Link to={paths.ABOUT}>About</Link>
                             </span>
 
                             <span className="link">
-                                <Link to={paths.CONTACT}>Contact</Link> 
+                                <Link to={paths.CONTACT}>Contact</Link>
                             </span>
 
                             <span className="link">
@@ -372,7 +372,7 @@ const LandingPage = () => {
                     </div>
                 </nav>
 
-                { 
+                {
                     mobileNavOpen &&
                     <div className="mobile-nav">
                        <div className="mobile-nav-inner">
@@ -829,7 +829,7 @@ const LandingPage = () => {
 
             </div>
         </section>
-
+        <BackToTopButton />
     </Body>
   )
 }
