@@ -230,7 +230,7 @@ const PaymentMethod = () => {
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
-    const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction.recipientId ), [recipients, transaction])
+    const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
 
     const dispatch = useDispatch()
 
@@ -293,8 +293,8 @@ const PaymentMethod = () => {
             history.push(paths.VERIFICATION)
         }
         if (transaction?.originCurrency === 'GBP') {
-            // setSelected('truelayer')
-            setSelected('card')
+            setSelected('truelayer')
+            // setSelected('card')
         } else if ( (transaction?.originCurrency === "CAD" || transaction?.originCurrency === "EUR") ) {
             setSelected('card')
         } else {
@@ -370,42 +370,41 @@ const PaymentMethod = () => {
                                 </div>
                             </div>
                         { 
-                            selected==='card'
-                            && <div className="box-container details">
+                            <div className="box-container details">
                                 <RecipientDetailsBox hideType="mobile-hide" green_mamba />
                                 <RecipientDetailsBox hideType="desktop-hide" />
                             </div>
                         }
 
                         {
-                            selected==='truelayer'
-                            && <div className="radio-card" onClick={()=>setSelected('truelayer')}>
-                                    <div className="radio-div">
-                                        {/* <RadioButton selected={selected==='truelayer'} /> */}
-                                    </div>
-                                    <div>
-                                        {/* <div className="rc-head">Bank Transfer with Truelayer</div> */}
-                                        <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
-                                        <div className="rc-body">
-                                            {/* <div>
-                                                Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
-                                            </div> */}
-                                            <div className="green-txt">
-                                               <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link>
-                                            </div>
-                                            <br /> <br /><br />
-                                            <div>
-                                                {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
-                                            </div>
-                                            <div>
-                                                If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer
-                                            </div>
-                                        </div>
-                                        <div className="rc-foot">
-                                                {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
-                                        </div>
-                                    </div>
-                                </div>
+                            // selected==='truelayer'
+                            // && <div className="radio-card" onClick={()=>setSelected('truelayer')}>
+                            //         <div className="radio-div">
+                            //             {/* <RadioButton selected={selected==='truelayer'} /> */}
+                            //         </div>
+                            //         <div>
+                            //             {/* <div className="rc-head">Bank Transfer with Truelayer</div> */}
+                            //             <div className="rc-head">Please ensure the <span className="green-txt"> payment details</span> of your recipient are correct. <span className="red-txt"> Any error after this step cannot be corrected</span></div>
+                            //             <div className="rc-body">
+                            //                 {/* <div>
+                            //                     Please ensure payment detail of your recipient is correct, any error after this step cannot be corrected
+                            //                 </div> */}
+                            //                 <div className="green-txt">
+                            //                    <Link to={paths.RECIPIENT + "?t=" + transferId}>Click here to confirm you have selected the right recipient</Link>
+                            //                 </div>
+                            //                 <br /> <br /><br />
+                            //                 <div>
+                            //                     {/* Pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction.originCurrency}</b> directly from your bank account. This is a more immediate process than the manual alternative. Your transfer will be completed as soon as your payment reflects on our account. */}
+                            //                 </div>
+                            //                 <div>
+                            //                     If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer
+                            //                 </div>
+                            //             </div>
+                            //             <div className="rc-foot">
+                            //                     {/* Low cost transfer - {transfer.serviceFee} {transfer.toSend.currency} */}
+                            //             </div>
+                            //         </div>
+                            //     </div>
                         }
                     </div>
                     <div className="mobile-hide">
