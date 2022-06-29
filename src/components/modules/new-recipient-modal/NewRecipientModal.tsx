@@ -351,7 +351,6 @@ function NewRecipientModal(props: any) {
         return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
     }
 
-    console.log(recipients, "::oka")
 
     const country = getCountry();
 
@@ -417,8 +416,6 @@ function NewRecipientModal(props: any) {
         return transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER
     }
 
-    console.log(transfer, "::blame")
-
     return (
         modalOpen && <Div>
             <div className="overlay">
@@ -469,7 +466,6 @@ function NewRecipientModal(props: any) {
                             return(
                             <Form>
                                 <FormikFormObserver callback={(newValues: any, context: any) => {
-                                    console.log(newValues, values, ':::context')
                                     updateVerifyStep(newValues)
                                     transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '70'
@@ -480,15 +476,9 @@ function NewRecipientModal(props: any) {
                                     : transfer.toReceive.countryCode === 'KE'
                                     && String(newValues.mobile).substring(0, 2) === '72'
                                     ? setMobileProvider("MPESA")
-                                    // : transfer.toReceive.countryCode === 'KE'
-                                    // && String(newValues.mobile).substring(0, 3) === '072'
-                                    // ? setMobileProviders(["Airtel"])
                                     : transfer.toReceive.countryCode === 'TZ'
                                     && String(newValues.mobile).substring(0, 2) === '71'
                                     ? setMobileProvider("Safaricom")
-                                    // : transfer.toReceive.countryCode === 'TZ'
-                                    // && String(newValues.mobile).substring(0, 3) === '071'
-                                    // ? setMobileProviders(["Vodafone"])
                                     : setMobileProvider("")
 
                                 }} />
@@ -516,7 +506,6 @@ function NewRecipientModal(props: any) {
                                                 phoneCodeName="phoneCode"
                                                 countries={country ? [country] : undefined}
                                                 name="mobile"
-                                                //onChange={(e: any) => detectNetworkProvider(String(e.target.value))}
                                                 placeholder="e.g 07967885952"
                                                 showBorder={true}
                                             />
@@ -589,7 +578,6 @@ function NewRecipientModal(props: any) {
                                                 <option value="">Select</option>
                                                 {
                                                     REASONS.map((reason: string) => (
-                                                        // (reason !== 'Other') ? (<option value={reason}>{reason}</option>) : (<option value={REASONS.includes(values.reason) ? '-' : values.reason }>{reason}</option>)
                                                         <option value={reason}>{reason}</option>
                                                         )
                                                     )

@@ -49,9 +49,6 @@ const TransferMethod = () => {
         return history.push(paths.GET_QUOTE);
     }
 
-    const serviceFee = transfer.serviceFee;
-    // const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
-
 
     return (
         <Body>

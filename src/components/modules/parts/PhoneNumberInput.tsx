@@ -87,7 +87,7 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
 }: IPhoneNumberInput) => {
     const [selected, setSelected]: any = useState(countries[0])
     const handleChange = (type: "code" | "number", val: any) => {
-        console.log(type, val)
+
         if ( type === "number" && val > 99999999999999) return
         if ( type === "number" && val === '0' ) return
 

@@ -39,7 +39,6 @@ const Recipient = () => {
     useEffect(() => {
         refreshUserDetails((user: any) => checkPageAuthorization(user));
     }, [transfer])
-    // history.replace(paths.VERIFICATION)
 
     const paramTransferId = getQueryParam('t');
     const editMode = () => {
@@ -106,7 +105,7 @@ const Recipient = () => {
     }, [recipients])
 
     const handleRecipientClick = (recipient: any) => {
-        console.log(recipient)
+
         if (recipient.profile.transferMethod !== transferMethod) {
             if (!editMode()) {
 

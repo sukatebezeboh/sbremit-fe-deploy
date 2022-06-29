@@ -228,7 +228,6 @@ const PaymentMethod = () => {
     const transfer = useSelector((state: any)=>state.transfer);
     const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
-    // const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction.recipientId ), [recipients, transaction])
@@ -267,11 +266,10 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
-    }, [])
+    }, [transferId])
 
     useEffect(() => {
         autoSelectPaymentMethod()
-
     }, [transaction])
 
     useEffect(() => {

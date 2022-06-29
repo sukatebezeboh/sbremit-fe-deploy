@@ -53,7 +53,6 @@ export const Routing: IRoute[] = [
         path: paths.EN_LANDING,
         component: LandingPage,
         protected: false,
-        // footerless: true
     },
     {
         path: paths.CA_LANDING,

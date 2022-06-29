@@ -51,7 +51,7 @@ const Container = styled.div`
 `
 const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode,  setClose}: any) => {
     const country = countriesAndCodes.find(country => country.countryCode === destinationCountryCode)
-    console.log(country, "here");
+
     return (
         <Container>
             <div className="modal-content">

@@ -106,8 +106,6 @@ const Div = styled.div`
 
 const TransferDetailsBox = ( { transferId } :any ) => {
 
-    const history = useHistory();
-
     const transfer = useSelector((state: any) => state.transfer);    
     const transaction = transfer?.transactionDetails;
     const transferQuote = transfer.currentTransferQuote
@@ -124,11 +122,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     const promoCode = transferId ? transaction?.meta?.promoCode : transferQuote?.meta?.promoCode;
     const referralDiscountValue = transferId ? transaction?.meta?.referralDiscountValue : transferQuote?.meta?.referralDiscount;
 
-    // console.log(receiveAmount, transferMethod, Number(getServiceRateValue(getMoneyValue(receiveAmount), transferMethod?.replace(' ', '_'), false, false)));
     useEffect(() => {
-        // if (!transferId && !transferQuote.id) {
-        //     history.push(paths.GET_QUOTE)
-        // }
         if ( transferId ) {
             getTransactionDetails( undefined, transferId )
         }
@@ -156,9 +150,6 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     }
 
     return (
-        // !(transfer.transferMethod && transfer.conversionRate?.rate && transfer.serviceFee && transfer.toSend.value && transfer.toReceive.value) ?
-        // <Redirect to={paths.TRANSFER_METHOD} />
-        // :
         <Div className="">
             <div className="transfer-details part">
                     <div className="heading">

@@ -64,8 +64,7 @@ const Div = styled.div`
 const RecipientDetailsBox = (props: any) => {
     const {hideType, green_mamba} = props;
     const recipient = useSelector((state: any) => state.recipients.recipient)
-    const transfer = useSelector((state: any) => state.transfer)
-    console.log(transfer, "::here")
+
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
