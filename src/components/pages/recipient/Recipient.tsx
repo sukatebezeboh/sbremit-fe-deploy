@@ -3,16 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
-import { constants, maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
+import { maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getMax, getQueryParam, getValueFromArray, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
+import { asset, getQueryParam, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
-import { themeNames } from '../../modules/toast-factory/themes';
 import Body from './Recipient.css';
 
 const Recipient = () => {
@@ -23,7 +21,7 @@ const Recipient = () => {
 
     const [ transferDetailsModalOpen, setTransferDetailsModalOpen ] = useState(false)
 
-    const {toSend, toReceive, transferMethod} = transfer; 
+    const {toSend, toReceive, transferMethod} = transfer;
 
     const dispatch = useDispatch()
 
@@ -39,7 +37,6 @@ const Recipient = () => {
     useEffect(() => {
         refreshUserDetails((user: any) => checkPageAuthorization(user));
     }, [transfer])
-    // history.replace(paths.VERIFICATION)
 
     const paramTransferId = getQueryParam('t');
     const editMode = () => {
@@ -81,11 +78,9 @@ const Recipient = () => {
             return
         }
         if (userIsVerified(user)) {
-            // history.push(paths.RECIPIENT)
         } else {
             if (isUserFirstTransaction(user) && Number(toSend.total) < maxTransfersUnverified[toSend?.currency?.toUpperCase()]) {
-                // history.push(paths.RECIPIENT)
-            } 
+            }
             else if (userHasReachedFinalVerificationStage(user)) {}
             else {
                 toastAction({
@@ -227,10 +222,10 @@ const Recipient = () => {
                 <div className="btns">
                     {
                        editMode() ? <>
-                            <button onClick={handleContinueEditMode}>Update transfer</button> 
+                            <button onClick={handleContinueEditMode}>Update transfer</button>
                         </> : <>
-                            <span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span> 
-                            <button onClick={handleContinue}>Continue</button> 
+                            <span onClick={()=>history.push(paths.GET_QUOTE)}>Back</span>
+                            <button onClick={handleContinue}>Continue</button>
                         </>
                     }
                 </div>

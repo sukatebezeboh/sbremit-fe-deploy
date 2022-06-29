@@ -84,7 +84,7 @@ export const signUpAction = (data: any) => {
       },
     )
     .then((res: any) => {
-      if (res.data.status == '200') {
+      if (res.data.status === '200') {
         return store.dispatch({
           type: CREATE_ACCOUNT_SUCCESS,
           payload: res.data.data,
@@ -1587,7 +1587,7 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
     })
 }
 
-export const verifyPivotRecipientReference = (payload: any, successCallback = (res: any) => {}, failedCallback = () => {}) => {
+export const verifyPivotRecipientReference = (payload: any, successCallback = () => {}, failedCallback = () => {}) => {
   store.dispatch({ type: LOADING, payload: true })
 
   http.post(endpoints.VERIFY_PIVOT_REFERENCE, {
@@ -1598,13 +1598,13 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = (r
       console.log(res)
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
-        if ( customerName ) {
-          successCallback?.(res)
+        if ( customerName .includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
+          successCallback?.()
           toastAction({
             show: true,
             type: 'success',
             timeout: 10000,
-            message: `Recipient reference received!`,
+            message: `Recipient reference verified!`,
           })
         } else {
           stackNewToast({
@@ -1628,12 +1628,18 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = (r
           type: 'warning',
           timeout: 5000,
           defaultThemeName: themeNames.CENTER_PROMPT,
-          title: `The recipient details were not received`,
-          message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
+          title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
+          message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
           close: () => {
             unstackNewToast({name: "confirm-momo-recipient-mismatch"})
           },
           closeBtnText: "Make corrections",
+          extraBtnText: "Proceed anyway",
+            extraBtnHandler: () => {
+              unstackNewToast({name: "confirm-momo-recipient-mismatch"})
+              failedCallback?.()
+            },
+            extraBtnClass: 'verif-toast-failed-extra-btn-class'
           })
       }
   })
@@ -1660,20 +1666,12 @@ export const verifyPivotRecipientAccount = (payload: any, callback = () => {}) =
             message: `Recipient account verified!`,
           })
       } else {
-          stackNewToast({
-            name: "confirm-momo-recipient-account",
-            show: true,
-            type: 'error',
-            timeout: 5000,
-            defaultThemeName: themeNames.CENTER_PROMPT,
-            title: `The recipient account has failed Pivot transaction check.`,
-            message: "<div style='color: grey;'>This could be due to exceeding maximum account transactions.</div>",
-            close: () => {
-              unstackNewToast({name: "confirm-momo-recipient-account"})
-              callback?.()
-            },
-            closeBtnText: "Make corrections",
-          })
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 10000,
+          message: `Recipient mobile not found for ${payload.mobileMoneyProvider} MOMO service`,
+        })
       }
   })
   .catch(() => {})
