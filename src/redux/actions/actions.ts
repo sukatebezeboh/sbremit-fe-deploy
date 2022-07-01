@@ -1550,7 +1550,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
       console.log(res)
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
-        if ( customerName .includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
+        if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
           successCallback?.()
           toastAction({
             show: true,

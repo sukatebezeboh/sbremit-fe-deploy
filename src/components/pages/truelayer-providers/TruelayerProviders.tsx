@@ -253,7 +253,7 @@ const TruelayerProviders = () => {
                     <div className="box-container-inner">
 
                       { tProviders.map((provider: any) => (
-                        <div className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-yellow"}`} onClick={()=>setSelected(provider)}>
+                        <div className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-green"}`} onClick={()=>setSelected(provider)}>
                             <div className="radio-card-inner">
                                 <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
                                 <div className="provider-name">

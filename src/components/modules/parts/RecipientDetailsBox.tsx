@@ -74,22 +74,22 @@ const RecipientDetailsBox = (props: any) => {
             <div className={`${green_mamba && 'recipient-details'}`}>
                 <div className="heading">
                     <div className="title">Recipient’s Details</div>
-                    <Link to={`${paths.RECIPIENT}?update=${recipient.id}`}><div className="update">Update</div></Link>
+                    <Link to={`${paths.RECIPIENT}?update=${recipient?.id}`}><div className="update">Update</div></Link>
                 </div>
                 <hr/>
                 <div className="row">
                     <div className="left">Name</div>
-                    <div className="right">{recipient.firstName + ' ' + recipient.lastName }</div>
+                    <div className="right">{recipient?.firstName + ' ' + recipient?.lastName }</div>
                 </div>
                 <div className="row">
                     <div className="left">Mobile No.</div>
-                    <div className="right">{recipient.profile.mobile}</div>
+                    <div className="right">{recipient?.profile?.mobile}</div>
                 </div>
                 {
                     recipient.profile.email &&
                     <div className="row">
                         <div className="left">Email</div>
-                        <div className="right">{recipient.profile.email || '-'}</div>
+                        <div className="right">{recipient?.profile?.email || '-'}</div>
                     </div>
                 }
 
@@ -97,19 +97,19 @@ const RecipientDetailsBox = (props: any) => {
                     recipient.profile.state &&
                     <div className="row">
                         <div className="left">City</div>
-                        <div className="right">{recipient.profile.state || '-'}</div>
+                        <div className="right">{recipient?.profile?.state || '-'}</div>
                     </div>
                 }
                 <div className="row">
                     <div className="left">Reason</div>
-                    <div className="right">{recipient.profile.reason || '-'}</div>
+                    <div className="right">{recipient?.profile?.reason || '-'}</div>
                 </div>
 
                 {
                     recipient.profile.bankName &&
                     <div className="row">
                         <div className="left">Recipient’s Bank Name</div>
-                        <div className="right">{recipient.profile.bankName || '-'}</div>
+                        <div className="right">{recipient?.profile?.bankName || '-'}</div>
                     </div>
                 }
 
@@ -117,14 +117,17 @@ const RecipientDetailsBox = (props: any) => {
                     !recipient.profile.accountNumber &&
                     <div className="row">
                         <div className="left">Account Number</div>
-                        <div className="right">{recipient.profile.accountNumber || '-'}</div>
+                        <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                     </div>
                 }
 
-                {recipient.profile.pickupPoint && <div className="row">
-                    <div className="left">Pickup point</div>
-                    <div className="right">{recipient.profile.pickupPoint || '-'}</div>
-                </div>}
+                {
+                    recipient.profile.pickupPoint && 
+                    <div className="row">
+                        <div className="left">Pickup point</div>
+                        <div className="right">{recipient?.profile?.pickupPoint || '-'}</div>
+                    </div>
+                }
             </div>
         </Div>
     )
