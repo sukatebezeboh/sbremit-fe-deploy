@@ -1026,7 +1026,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
     .put(parseEndpointParameters(endpoints.USER, userId), {
       profile: { ...values },
     })
-    .then((res) => {
+    .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
         toastAction({
@@ -1035,7 +1035,19 @@ export const editProfileAction = (values: any, callback?: Function) => {
           timeout: 10000,
           message: 'Profile updated',
         })
-        CookieService.put('user', JSON.stringify(res.data.data))
+
+        if ( Number(res.headers['name-change-occured']) ) {
+          stackNewToast({
+            name: "name-change-account-lock",
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            defaultThemeName: themeNames.CENTER_PROMPT,
+            title: "Change request received",
+            message: `<div style="color: grey; padding-top: 5px;">An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change</div>`,
+          })
+        }
+        // CookieService.put('user', JSON.stringify(res.data.data))
         store.dispatch({
           type: AUTH,
           payload: { ...store.getState().auth, user: res.data.data },
@@ -1046,7 +1058,8 @@ export const editProfileAction = (values: any, callback?: Function) => {
           show: true,
           type: 'error',
           timeout: 10000,
-          message: 'Could not update profile',
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          message: `<div style="color: grey;">${res?.data?.error?.message || 'Could not update profile'} </div>`,
         })
       }
     })
@@ -1073,7 +1086,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
     .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), {
       settings: { ...values },
     })
-    .then((res) => {
+    .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
         toastAction({
@@ -1093,7 +1106,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
           show: true,
           type: 'error',
           timeout: 10000,
-          message: 'Could not update profile',
+          message: res?.data?.error?.message || 'Could not update setting',
         })
       }
     })
