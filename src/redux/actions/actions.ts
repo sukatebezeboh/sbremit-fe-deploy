@@ -1543,6 +1543,15 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
             }
           },
         })
+      } else {
+        toastAction({
+          name: "account-locked-notice",
+          show: true,
+          type: 'error',
+          timeout: 60000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          message: res?.data?.error?.message,
+        })
       }
     })
     .catch(() => {})

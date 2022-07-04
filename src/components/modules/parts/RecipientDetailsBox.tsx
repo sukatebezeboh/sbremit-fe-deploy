@@ -86,15 +86,15 @@ const RecipientDetailsBox = (props: any) => {
                     <div className="right">{recipient?.profile?.mobile}</div>
                 </div>
                 {
-                    recipient.profile.email &&
+                    recipient?.profile?.username &&
                     <div className="row">
                         <div className="left">Email</div>
-                        <div className="right">{recipient?.profile?.email || '-'}</div>
+                        <div className="right">{recipient?.profile?.username || '-'}</div>
                     </div>
                 }
 
                 {
-                    recipient.profile.state &&
+                    recipient?.profile?.state &&
                     <div className="row">
                         <div className="left">City</div>
                         <div className="right">{recipient?.profile?.state || '-'}</div>
@@ -106,7 +106,7 @@ const RecipientDetailsBox = (props: any) => {
                 </div>
 
                 {
-                    recipient.profile.bankName &&
+                    recipient?.profile?.bankName &&
                     <div className="row">
                         <div className="left">Recipient’s Bank Name</div>
                         <div className="right">{recipient?.profile?.bankName || '-'}</div>
@@ -114,7 +114,7 @@ const RecipientDetailsBox = (props: any) => {
                 }
 
                 {
-                    !recipient.profile.accountNumber &&
+                    !recipient?.profile?.accountNumber &&
                     <div className="row">
                         <div className="left">Account Number</div>
                         <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
@@ -122,7 +122,7 @@ const RecipientDetailsBox = (props: any) => {
                 }
 
                 {
-                    recipient.profile.pickupPoint && 
+                    recipient?.profile?.pickupPoint && 
                     <div className="row">
                         <div className="left">Pickup point</div>
                         <div className="right">{recipient?.profile?.pickupPoint || '-'}</div>
