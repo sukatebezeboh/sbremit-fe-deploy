@@ -153,7 +153,7 @@ export const RecipientMobileMoneyValidator = Yup.object().shape({
   }),
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
   confirmPhoneCode: Yup.string().required("Required").oneOf([Yup.ref('phoneCode')], 'Phone codes does not match'),
-  confirmMobile: Yup.string().required("Required").oneOf([Yup.ref('mobile')], 'Mobile number does not match'),
+  confirmMobile: Yup.string().required("Required").oneOf([Yup.ref('mobile')], 'Numbers do not match, please update'),
   mobileMoneyProvider: Yup.string(),
   email: Yup.string().email("Enter valid email"),
   state: Yup.string().min(3, "Too short").max(25, "Too long"),

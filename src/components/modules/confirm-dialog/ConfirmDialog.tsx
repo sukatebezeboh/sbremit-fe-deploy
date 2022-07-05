@@ -63,7 +63,7 @@ export const ConfirmDialog = () => {
             </div>
             {confirmState.field && <div>
                 <h3>{confirmState.field.title}</h3>
-                <input className='field-input' type="text" placeholder={confirmState.field.placeholder || 'Extra details here'} required={confirmState.field.required} onChange={(e) => setFieldValue(e.target.value)} />
+                <input className='field-input' type={confirmState.field.type || 'text'} placeholder={confirmState.field.placeholder || 'Extra details here'} required={confirmState.field.required} onChange={(e) => setFieldValue(e.target.value)} />
             </div>}
             <hr/>
             <div className="buttons">

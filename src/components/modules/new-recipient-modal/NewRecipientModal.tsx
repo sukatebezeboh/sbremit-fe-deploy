@@ -8,7 +8,7 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { countriesAndCodes, providersMobileMoney, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
 import { asset, isObjectNotEmpty } from '../../../util/util';
 import { themeNames } from '../toast-factory/themes';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
@@ -389,8 +389,9 @@ function NewRecipientModal(props: any) {
         }
     }, [])
 
-    const verifyRecipient = (event: any, payload: any) => {
+    const verifyRecipient = (event: any, payload: any, errors: any) => {
         event.preventDefault()
+        if (Object.values(errors).length) return;
         verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
     }
 
@@ -410,7 +411,7 @@ function NewRecipientModal(props: any) {
             </div>
             <div className="modal">
                 <div className="head mobile-hide">
-                <div className="t-id">Add a new recipient <span className="no-wrap"> ({mobileProviders} {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
+                <div className="t-id">Add a new recipient <span className="no-wrap"> ( {transferMethodsInWords[transfer?.transferMethod]} ) </span> </div>
                     <div className="close" onClick={()=>openModal(false)} >x</div>
                 </div>
                 {transfer.transferMethod === "bank_transfer" && (
@@ -628,7 +629,14 @@ function NewRecipientModal(props: any) {
                                         </div>
                                     : ''}
                                 </div>
-                                <div className="modal-btns"><span onClick={()=>openModal(false)}>Cancel</span> { showVerifyStep ? <button onClick={(e) => verifyRecipient(e, values)}>Verify</button> : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} /> } </div>
+                                <div className="modal-btns">
+                                    <span onClick={()=>openModal(false)}>Cancel</span>
+                                    { 
+                                        showVerifyStep
+                                        ? <FormButton className={errors.pickup_point && ''} onClick={(e: any) => verifyRecipient(e, values, errors)} label={"Verify"} />
+                                        : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} />
+                                    }
+                                </div>
                             </Form>
                         )}
                     }
