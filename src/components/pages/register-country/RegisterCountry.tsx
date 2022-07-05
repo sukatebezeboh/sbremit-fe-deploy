@@ -242,11 +242,11 @@ const RegisterCountry = () => {
         <div className="container">
             <div className="logo-line">
                 <img src={asset('', 'main-logo.svg')} alt="SBRemit" />
-            </div>    
+            </div>
 
             <div className="summary">
                 We are constantly adding more countries to the list. Register your interest
-            </div>        
+            </div>
 
             <div className="form">
                 <div className="input-wrapper">

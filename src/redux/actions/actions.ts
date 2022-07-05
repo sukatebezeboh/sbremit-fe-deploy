@@ -832,14 +832,14 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     $_2 = $_2 ?? transfer.toReceive.currency;
     axios.get(config.API_HOST + parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2 ))
     .then(res => {
-        if(res.data.status === "200"){
-            const data = res.data.data;
-            if (data?.base?.toUpperCase() === "EUR") {
-                data.rate = 655.96;
-            }
-            store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
-            store.dispatch({type: LOADING, payload: false})
-        }
+      if(res.data.status === "200"){
+          const data = res.data.data;
+          if (data?.base?.toUpperCase() === "EUR") {
+              data.rate = 655.96;
+          }
+          store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
+          store.dispatch({type: LOADING, payload: false})
+      }
     }).catch(()=>{
         store.dispatch({type: LOADING, payload: false})
     })
@@ -1016,6 +1016,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
       field: {
           title: 'Password:',
           placeholder: 'Your account password here...',
+          type: 'password',
           required: true
       },
       callback: (fieldValue: string) => confirmUserPassword(fieldValue, executeProfileEdit)

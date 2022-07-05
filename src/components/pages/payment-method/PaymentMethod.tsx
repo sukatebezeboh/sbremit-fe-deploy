@@ -295,7 +295,7 @@ const PaymentMethod = () => {
             verifyPivotRecipientAccount({
                 mobile: recipient?.mobile,
                 mobileMoneyProvider: recipient?.mobileMoneyProvider
-            }, () => history.push(paths.RECIPIENT + "?t=" + transferId))            
+            }, () => history.push(paths.RECIPIENT + "?t=" + transferId))
         }
     }, [recipient])
 

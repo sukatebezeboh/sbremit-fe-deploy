@@ -15,7 +15,10 @@ const Div = styled.div`
                 background: #007B5D;
             }
 
-            .recipient-details .header .title, .recipient-details .row .left, .recipient-details .row .right{
+            .recipient-details .heading .title,
+            .recipient-details .heading .update,
+            .recipient-details .row .left,
+            .recipient-details .row .right{
                 color: white !important;
             }
             hr {

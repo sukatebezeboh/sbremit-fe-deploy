@@ -35,7 +35,7 @@ const StyleWrapper = styled.div`
                 top: 10px;
                 left: 5px;
                 pointer-events: none;
-            }            
+            }
         }
         input.phone-no {
             height: 100%;
@@ -65,7 +65,7 @@ interface IPhoneNumberInput {
     Input?: any,
     Select?: any,
     phoneCodeExternalProps?: any,
-    countries?: readonly CountryType[]
+    countries?: readonly CountryType[] | any
     phoneNumberExternalProps?: any
     showBorder?: boolean
 }
@@ -85,6 +85,7 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
     phoneNumberExternalProps = {},
     showBorder = false
 }: IPhoneNumberInput) => {
+    countries.sort((a: any, b: any) => a.name.localeCompare(b.name));
     const [selected, setSelected]: any = useState(countries[0])
     const handleChange = (type: "code" | "number", val: any) => {
 
@@ -116,13 +117,13 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
                 <div className="phone-code-wrapper">
                     <Select
                         className="phone-code"
-                        name={ phoneCodeName || "phoneCode"}
+                        name={ phoneCodeName || "phoneCode"} 
                         id=""
                         {...phoneCodeControlProps}
                         {...phoneCodeExternalProps}
                         >
                         {countries.map(
-                            (country) => (
+                            (country: any) => (
                             <option
                                 value={country.phoneCode}>
                                 {country.phoneCode} -
