@@ -106,10 +106,7 @@ const SignUp = () => {
         if (!phoneInput.number) return
       }
       const {checked, ...newValue}  = values
-      console.log(values);
-      console.log(newValue);
 
-      // return;
       const newValues = {
         ...newValue,
         settings: {

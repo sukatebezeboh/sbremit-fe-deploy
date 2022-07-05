@@ -73,7 +73,7 @@ const EditProfile = () => {
   };
 
   const handleDOBClick = () => {
-    // alert()
+
     toastAction({
       show: true,
       type: "warning",

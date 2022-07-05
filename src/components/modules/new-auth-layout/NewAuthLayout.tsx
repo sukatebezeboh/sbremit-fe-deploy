@@ -104,7 +104,6 @@ form{
 }
 `;
 
-// layout styles
 const LayoutStyle = styled.div<{marginBottomOff: boolean}>`
   min-height: 100vh;
   position: relative;

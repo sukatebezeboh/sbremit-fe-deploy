@@ -424,7 +424,7 @@ export const changePasswordAction = (values: any) => {
 }
 export const resetPasswordAction = (values: any, stage = 'email', linkTo?: any) => {
   store.dispatch({ type: SUBMITTING, payload: paths.RESET_PASSWORD })
-  console.log('values', values)
+
   if (stage === 'email') {
     axios
       .post(
@@ -435,14 +435,6 @@ export const resetPasswordAction = (values: any, stage = 'email', linkTo?: any) 
       .then((res) => {
         if (res.status === 200) {
           linkTo(values.username)
-          console.log('reset res', res.status, res.data)
-          // toastAction({
-          //   show: true,
-          //   type: 'info',
-          //   timeout: 60000,
-          //   title: `Now, check your mail`,
-          //   message: `The password reset link has been sent to you at ${values.username}`,
-          // })
           store.dispatch({ type: SUBMITTING, payload: '' })
         } else {
           toastAction({
@@ -578,40 +570,11 @@ export const confirmTransfer = (
   callback: Function,
 ) => {
   store.dispatch({ type: LOADING, payload: true })
-  // const payload = {
-  //   transferMethod: transfer.transferMethod,
-  //   recipientId: recipient.id,
-  //   originCurrency: transfer.toSend?.currency,
-  //   originAmount: Number(transfer.toSend?.adjusted ?? transfer.toSend?.value),
-  //   destinationCurrency: transfer.toReceive?.currency,
-  //   destinationAmount: Number(transfer.toReceive?.total),
-  //   paymentMethod: {},
-  //   promo: transfer.promo?.code,
-  //   referralDiscountValue: transfer?.referralDiscount?.value,
-  //   meta: {
-  //     serviceFee: transfer.serviceFee,
-  //     equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
-  //     exchangeBase: transfer.conversionRate?.base,
-  //     exchangeRate: formatCurrency(transfer.conversionRate?.rate),
-  //     exchangeTarget: transfer.conversionRate?.target,
-  //     totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`),
-  //   },
-  // }
 
-  console.log(transfer.currentTransferQuote?.id);
 
   const payload = {
     recipientId: recipient.id,
     transferQuoteId: transfer.currentTransferQuote?.id,
-    // originCurrency: transfer.toSend?.currency,  
-    // meta: {
-    //   serviceFee: transfer.serviceFee,
-    //   equivalentServiceFee: getServiceRateValue(transfer.toReceive?.value, transfer.transferMethod, false, false),
-    //   exchangeBase: transfer.conversionRate?.base,
-    //   exchangeRate: formatCurrency(transfer.conversionRate?.rate),
-    //   exchangeTarget: transfer.conversionRate?.target,
-    //   totalToPay: formatCurrency(`${Number(transfer.toSend.total)}`),
-    // },
   }
   const user = store.getState().auth.user
   http
@@ -1045,7 +1008,6 @@ export const confirmDialog = (data: {message: string, isPositive?: boolean, open
 }
 
 export const editProfileAction = (values: any, callback?: Function) => {
-  // store.dispatch({ type: LOADING, payload: true })
   const userId = store.getState().auth.user?.id
   confirmDialog({
       message: `Please, input your account password to make this change`,
@@ -1065,7 +1027,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
     .put(parseEndpointParameters(endpoints.USER, userId), {
       profile: { ...values },
     })
-    .then((res) => {
+    .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
         toastAction({
@@ -1074,7 +1036,19 @@ export const editProfileAction = (values: any, callback?: Function) => {
           timeout: 10000,
           message: 'Profile updated',
         })
-        CookieService.put('user', JSON.stringify(res.data.data))
+
+        if ( Number(res.headers['name-change-occured']) ) {
+          stackNewToast({
+            name: "name-change-account-lock",
+            show: true,
+            type: 'info',
+            timeout: 10000,
+            defaultThemeName: themeNames.CENTER_PROMPT,
+            title: "Change request received",
+            message: `<div style="color: grey; padding-top: 5px;">An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change</div>`,
+          })
+        }
+        // CookieService.put('user', JSON.stringify(res.data.data))
         store.dispatch({
           type: AUTH,
           payload: { ...store.getState().auth, user: res.data.data },
@@ -1085,7 +1059,8 @@ export const editProfileAction = (values: any, callback?: Function) => {
           show: true,
           type: 'error',
           timeout: 10000,
-          message: 'Could not update profile',
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          message: `<div style="color: grey;">${res?.data?.error?.message || 'Could not update profile'} </div>`,
         })
       }
     })
@@ -1112,7 +1087,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
     .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), {
       settings: { ...values },
     })
-    .then((res) => {
+    .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
         toastAction({
@@ -1132,7 +1107,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
           show: true,
           type: 'error',
           timeout: 10000,
-          message: 'Could not update profile',
+          message: res?.data?.error?.message || 'Could not update setting',
         })
       }
     })
@@ -1151,8 +1126,6 @@ export const userVerificationAction = (values: any, callback: Function, skipVeri
     .then(res => {
         if (res.data.status === "200") {
             store.dispatch({type: LOADING, payload: false})
-            // CookieService.put('user', JSON.stringify(res.data.data));
-            // store.dispatch({type: AUTH, payload: { ...store.getState().auth, user: res.data.data}})
             callback?.()
         }
         else {
@@ -1171,7 +1144,6 @@ export const userVerificationAction = (values: any, callback: Function, skipVeri
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
-  // callback()
 }
 
 export const pollServerForVerificationStatus = (seconds: number) => {
@@ -1183,7 +1155,6 @@ export const pollServerForVerificationStatus = (seconds: number) => {
                     name: "verification-success",
                     show: true,
                     type: 'success',
-                    // timeout: 15000,
                     defaultThemeName: themeNames.CLEAR_MAMBA,
                     title: "Verification was successful",
                     message: "Your ID verification has been completed successfully",
@@ -1220,7 +1191,6 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
             name: "verification-failed",
             show: true,
             type: 'error',
-            // timeout: 15000,
             defaultThemeName: themeNames.CLEAR_MAMBA,
             title: "We were unable to verify your account",
             message: "<div style='color: grey;'>Something went wrong with your account verification. Please, try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
@@ -1233,7 +1203,6 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
           name: "verification-success",
           show: true,
           type: 'success',
-          // timeout: 15000,
           defaultThemeName: themeNames.CLEAR_MAMBA,
           title: "Verification was successful",
           message: "Your ID verification has been completed successfully",
@@ -1271,7 +1240,6 @@ export const confirmAccountEmail = (redirectTo: Function) => {
       message: `No token provided`,
     })
     store.dispatch({ type: LOADING, payload: false })
-    // callback()
     return
   }
   const payload: any = {
@@ -1307,7 +1275,6 @@ export const confirmAccountEmail = (redirectTo: Function) => {
         })
 
         if (returnRoute) {
-          console.log(phone)
           redirectTo(returnRoute + '?phone=' + encodeURIComponent(phone))
         }
         store.dispatch({ type: LOADING, payload: false })
@@ -1427,9 +1394,8 @@ export const fetchTruelayerProviders = (callback: Function) => {
     http.get(parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT))
         .then((res) => {
             callback(res.data?.results);
-            // store.dispatch({type: LOADING, payload: false})
         })
-        .catch()
+        .catch(() => {})
         .then(() => {
             store.dispatch({type: LOADING, payload: false})
         });
@@ -1533,7 +1499,6 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
     axios.get(config.API_HOST + parseEndpointParameters(endpoints.COMPETITOR_RATES, baseCurrency, targetCurrency, `${sendAmount}`))
     .then(res => {
       if (res.data.status === '200') {
-        console.log(res.data.data);
         setStateCallback(res.data.data)
       }
     })
@@ -1579,6 +1544,15 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
             }
           },
         })
+      } else {
+        toastAction({
+          name: "account-locked-notice",
+          show: true,
+          type: 'error',
+          timeout: 60000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          message: res?.data?.error?.message,
+        })
       }
     })
     .catch(() => {})
@@ -1599,7 +1573,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
       console.log(res)
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
-        if ( customerName .includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
+        if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
           successCallback?.()
           toastAction({
             show: true,
@@ -1719,7 +1693,6 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:
   .then(res=> {
       if (res?.data?.status == "200" ) {
         const utcDateTime = res?.data?.data?.utc_time
-        console.log(utcDateTime)
         setUtcDateTime?.(utcDateTime)        
       }
   }).catch(() => {

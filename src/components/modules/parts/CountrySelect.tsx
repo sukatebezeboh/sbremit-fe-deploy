@@ -10,7 +10,6 @@ export default function CountrySelect({placeholder = "", value, onChange}: any) 
       sx={{ width: '100%' }}
       options={countries}
       autoHighlight
-      // value={value}
       onChange={onChange}
       getOptionLabel={(option) => option.label}
       renderOption={(props, option) => (
@@ -32,7 +31,7 @@ export default function CountrySelect({placeholder = "", value, onChange}: any) 
           placeholder={placeholder}
           inputProps={{
             ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
+            autoComplete: 'new-password',
           }}
         />
       )}

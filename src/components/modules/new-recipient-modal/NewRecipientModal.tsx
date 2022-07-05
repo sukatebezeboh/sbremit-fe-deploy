@@ -1,8 +1,8 @@
-import { Field, Form, Formik, useFormik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 
-import { createRecipient, stackNewToast, verifyPivotRecipientReference } from '../../../redux/actions/actions';
+import { createRecipient, verifyPivotRecipientReference } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
 import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrofinanceTransferValidator, RecipientCashPickupValidator, RecipientMobileMoneyValidator, RecipientValidator } from "../../../util/form-validators";
 import FormButton from '../form-button/FormButton';
@@ -342,6 +342,7 @@ function NewRecipientModal(props: any) {
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
+    const [mobileProvider, setMobileProvider] = useState("")
 
     const getCountry = () => {
         return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
@@ -392,6 +393,7 @@ function NewRecipientModal(props: any) {
     const verifyRecipient = (event: any, payload: any, errors: any) => {
         event.preventDefault()
         if (Object.values(errors).length) return;
+        payload.mobileMoneyProvider = mobileProvider
         verifyPivotRecipientReference(payload, () => setShowVerifyStep(false), () => setShowVerifyStep(false))
     }
 
@@ -401,9 +403,6 @@ function NewRecipientModal(props: any) {
         }
     }
 
-    const [mobileProviders, setMobileProviders] = useState("")
-
-    // console.log(transfer)
 
     return (
         modalOpen && <Div>
@@ -446,7 +445,7 @@ function NewRecipientModal(props: any) {
                             reason: values.reason,
                             bankName: values.bankName,
                             accountNumber: `${modeTransfer === 'bankTransfer' ? `${values.countryCode} ${values.bankCode} ${values.branchCode} ${values.accountNumber} ${values.key}` : values.recipientAccountNumber}`,
-                            mobileMoneyProvider: values.mobileMoneyProvider
+                            mobileMoneyProvider: values.mobileMoneyProvider || mobileProvider
                         }
                         dispatch(createRecipient(newValue, { openModal, selectRecipient }))
                     }}>
@@ -458,11 +457,11 @@ function NewRecipientModal(props: any) {
                                     updateVerifyStep(newValues)
                                     transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '70'
-                                    ? setMobileProviders("AIRTEL")
+                                    ? setMobileProvider("AIRTEL")
                                     : transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '77'
-                                    ? setMobileProviders("MTN")
-                                    : setMobileProviders("")
+                                    ? setMobileProvider("MTN")
+                                    : setMobileProvider("")
 
                                 }} />
                                 <div className="form grid-col-1-1 grid-gap-3">
@@ -524,7 +523,7 @@ function NewRecipientModal(props: any) {
                                         <Field as="select" name='mobileMoneyProvider' id="mobileMoneyProvider">
                                             {
                                                 transfer.toReceive.countryCode === 'UG'
-                                                ? [mobileProviders].map((provider: any) => {
+                                                ? [mobileProvider].map((provider: any) => {
                                                     return <option value={provider}>{provider}</option>
                                                 })
                                                 : ['MTN', 'AIRTEL', 'MPESA'].map((provider: any) => {

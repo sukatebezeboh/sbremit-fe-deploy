@@ -52,7 +52,7 @@ const PromoCodeField = ({transfer, className}: any) => {
     const textInput: any = useRef(null);
 
     const [img, setImg] = useState<null | 'check-mark' | 'crossed' | 'rolling-loader-black'>(null)
-    // const transfer = useSelector((state: any) => state.transfer)
+
     const user = useSelector((state: any) => state.auth.user)
     const promo = transfer.promo
     const dispatch = useDispatch();

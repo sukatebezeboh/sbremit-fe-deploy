@@ -26,8 +26,8 @@ const Button = styled.button`
     }
 `
 const CheapestBtn = ({isCheapest}: any) => {
-    console.log(isCheapest);
-  return (
+
+    return (
     isCheapest && <Button>
         <div className="inner">
             <img src={asset('icons', 'white-checkmark.svg')} alt="" />

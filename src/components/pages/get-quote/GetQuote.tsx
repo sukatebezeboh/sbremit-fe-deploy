@@ -1,22 +1,17 @@
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 import Modal from 'components/modules/modal/Modal';
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries';
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import { AppService } from 'services/AppService';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewTransferQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
+import { useHistory } from 'react-router-dom';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
-import { constants } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getValueFromArray, getRemittanceHandler } from '../../../util/util';
-// import { asset } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import FancyToggle from '../../modules/parts/FancyToggle';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
-import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import Body from './GetQuote.css';
 
 const GetQuote = () => {
@@ -53,8 +48,6 @@ const GetQuote = () => {
     ) {
         rate = promo.settings.rate
     }
-
-    console.log(transfer);
 
     useEffect(() => {
         if (!transferMethod) {
@@ -112,10 +105,7 @@ const GetQuote = () => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    // toSend: {...toSend, adjusted: value - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, false, false))), value: `${value}`}, 
                     toSend: {...toSend, adjusted: getAdjustedValue(value, value * rate, allowOperatorFee, transfer.transferMethod, false), value: `${value}`}, 
-                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value * rate, transfer.transferMethod, true, false))) },
                     toReceive: {...toReceive, value: `${value * rate}`, total: getAdjustedValue(value * rate, value * rate, allowOperatorFee, transfer.transferMethod, true) },
                     referralDiscount: {
                         value: userReferralDiscount?.value,
@@ -141,11 +131,8 @@ const GetQuote = () => {
                 type: TRANSFER, 
                 payload: {
                     ...transfer,
-                    // toSend: {...toSend, adjusted: (value / rate) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, false, false))), value: `${(value / rate).toFixed(2)}`}, 
                     toSend: {...toSend, adjusted: getAdjustedValue(value/rate, value, allowOperatorFee, transfer.transferMethod, false), value: `${(value / rate).toFixed(2)}`}, 
                     toReceive: {...toReceive, value: `${value}`, total: getAdjustedValue(value, value, allowOperatorFee, transfer.transferMethod, true)},
-                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(value, transfer.transferMethod, true, false)))},
-                    // toReceive: {...toReceive, value: `${value}`, total: Number(value)},
                     referralDiscount: {
                         value: userReferralDiscount?.value,
                         type: userReferralDiscount?.type
@@ -164,16 +151,25 @@ const GetQuote = () => {
 
     useEffect(() => {
         setTotalValue()
-    }, [promo, toSend.value, toReceive.value, toSend.currency, toReceive.currency, transferMethod, serviceFee, promo?.code, rate, userReferralDiscount?.value])
+    }, [
+        promo, 
+        toSend.value, 
+        toReceive.value, 
+        toSend.currency, 
+        toReceive.currency, 
+        transferMethod, 
+        serviceFee, 
+        promo?.code, 
+        rate, 
+        userReferralDiscount?.value
+    ])
 
     const mutateInputValueDirectly = (rate: any) => {
         if (changedInput === 'toSend') {
             toReceive.value = toSend.value * rate
         } else if (changedInput === 'toReceive'){
             toSend.value = (toReceive.value / rate).toFixed(2)
-        } else {
-
-        }
+        } else {}
     }
 
     const setTotalValue = () => {
@@ -195,7 +191,6 @@ const GetQuote = () => {
                 case 'FIXED_RATE':
                     if (toSend.currency === promo.settings.baseCurrency && toReceive.currency === promo.settings.targetCurrency) {
                         setPromoText(`1 ${promo.settings.baseCurrency} = ${promo.settings.rate} ${promo.settings.targetCurrency} fixed rate`);
-                        // handleXInputChange( 0 , {isSend: true})
                         mutateInputValueDirectly(promo.settings.rate)
                     } else {
                         mutateInputValueDirectly(conversionRate?.rate)
@@ -220,9 +215,7 @@ const GetQuote = () => {
             type: TRANSFER, 
             payload: {
                 ...transfer,
-                // toSend: {...toSend, adjusted: toSend.value - ( (allowOperatorFee || transferMethod === "mobile_money") ? 0 : Number(getServiceRateValue(toReceive.value, transfer.transferMethod, false, false))), total: `${total}`},
                 toSend: {...toSend, adjusted: getAdjustedValue(toSend.value, toReceive.value, allowOperatorFee, transfer.transferMethod, false), total: `${total}`},
-                // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, transfer.transferMethod, true))},
                 toReceive: {...toReceive, total: getAdjustedValue(toReceive.value, toReceive.value, allowOperatorFee, transfer.transferMethod, true)},
                 remittanceHandler: getRemittanceHandler(transfer)
             }
@@ -246,7 +239,6 @@ const GetQuote = () => {
     const isAcceptablePromoValue = (promo: any) => {
         return Number(toSend.value) >= Number(promo.settings.minimumSpend)
         && Number(toSend.value) <= Number(promo.settings.maximumSpend)
-        // && Math.floor(Number(toSend.value) * Number(promo.settings.rate)) === Math.floor(toReceive.value);
     }
 
     const handleContinue = () => {

@@ -71,64 +71,66 @@ const Div = styled.div`
 const RecipientDetailsBox = (props: any) => {
     const {hideType, green_mamba} = props;
     const recipient = useSelector((state: any) => state.recipients.recipient)
-    const transfer = useSelector((state: any) => state.transfer)
-    console.log(transfer, "::here")
+
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
                 <div className="heading">
                     <div className="title">Recipient’s Details</div>
-                    <Link to={`${paths.RECIPIENT}?update=${recipient.id}`}><div className="update">Update</div></Link>
+                    <Link to={`${paths.RECIPIENT}?update=${recipient?.id}`}><div className="update">Update</div></Link>
                 </div>
                 <hr/>
                 <div className="row">
                     <div className="left">Name</div>
-                    <div className="right">{recipient.firstName + ' ' + recipient.lastName }</div>
+                    <div className="right">{recipient?.firstName + ' ' + recipient?.lastName }</div>
                 </div>
                 <div className="row">
                     <div className="left">Mobile No.</div>
-                    <div className="right">{recipient.profile.mobile}</div>
+                    <div className="right">{recipient?.profile?.mobile}</div>
                 </div>
                 {
-                    recipient.profile.email &&
+                    recipient?.profile?.username &&
                     <div className="row">
                         <div className="left">Email</div>
-                        <div className="right">{recipient.profile.email || '-'}</div>
+                        <div className="right">{recipient?.profile?.username || '-'}</div>
                     </div>
                 }
 
                 {
-                    recipient.profile.state &&
+                    recipient?.profile?.state &&
                     <div className="row">
                         <div className="left">City</div>
-                        <div className="right">{recipient.profile.state || '-'}</div>
+                        <div className="right">{recipient?.profile?.state || '-'}</div>
                     </div>
                 }
                 <div className="row">
                     <div className="left">Reason</div>
-                    <div className="right">{recipient.profile.reason || '-'}</div>
+                    <div className="right">{recipient?.profile?.reason || '-'}</div>
                 </div>
 
                 {
-                    recipient.profile.bankName &&
+                    recipient?.profile?.bankName &&
                     <div className="row">
                         <div className="left">Recipient’s Bank Name</div>
-                        <div className="right">{recipient.profile.bankName || '-'}</div>
+                        <div className="right">{recipient?.profile?.bankName || '-'}</div>
                     </div>
                 }
 
                 {
-                    !recipient.profile.accountNumber &&
+                    !recipient?.profile?.accountNumber &&
                     <div className="row">
                         <div className="left">Account Number</div>
-                        <div className="right">{recipient.profile.accountNumber || '-'}</div>
+                        <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                     </div>
                 }
 
-                {recipient.profile.pickupPoint && <div className="row">
-                    <div className="left">Pickup point</div>
-                    <div className="right">{recipient.profile.pickupPoint || '-'}</div>
-                </div>}
+                {
+                    recipient?.profile?.pickupPoint && 
+                    <div className="row">
+                        <div className="left">Pickup point</div>
+                        <div className="right">{recipient?.profile?.pickupPoint || '-'}</div>
+                    </div>
+                }
             </div>
         </Div>
     )
