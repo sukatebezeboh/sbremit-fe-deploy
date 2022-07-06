@@ -1582,19 +1582,27 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
             message: `Recipient reference verified!`,
           })
         } else {
+
           stackNewToast({
             name: "confirm-momo-recipient-mismatch",
             show: true,
             type: 'warning',
             timeout: 5000,
             defaultThemeName: themeNames.CENTER_PROMPT,
-            title: `The recipient details were not received`,
-            message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
+            title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
+            message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
             close: () => {
               unstackNewToast({name: "confirm-momo-recipient-mismatch"})
             },
             closeBtnText: "Make corrections",
-            })
+            extraBtnText: "Proceed anyway",
+              extraBtnHandler: () => {
+                unstackNewToast({name: "confirm-momo-recipient-mismatch"})
+                failedCallback?.()
+              },
+              extraBtnClass: 'verif-toast-failed-extra-btn-class'
+          })
+
         }
       } else {
         stackNewToast({
@@ -1603,19 +1611,16 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           type: 'warning',
           timeout: 5000,
           defaultThemeName: themeNames.CENTER_PROMPT,
-          title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
-          message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
+          title: `The recipient details were not received`,
+          message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
           close: () => {
             unstackNewToast({name: "confirm-momo-recipient-mismatch"})
           },
           closeBtnText: "Make corrections",
-          extraBtnText: "Proceed anyway",
-            extraBtnHandler: () => {
-              unstackNewToast({name: "confirm-momo-recipient-mismatch"})
-              failedCallback?.()
-            },
-            extraBtnClass: 'verif-toast-failed-extra-btn-class'
-          })
+        })
+
+        
+
       }
   })
   .catch(() => {})
