@@ -491,6 +491,8 @@ function NewRecipientModal(props: any) {
                                                 name="mobile"
                                                 placeholder="e.g 07967885952"
                                                 showBorder={true}
+                                                isNotCopy={true}
+                                                isNotPaste={true}
                                             />
                                             <div className="margin-adjust"></div>
                                             <div className="phone-no-error-box"><span className="red-txt">{errors.mobile}</span> </div>
@@ -513,6 +515,8 @@ function NewRecipientModal(props: any) {
                                                 name="confirmMobile"
                                                 placeholder="e.g 07967885952"
                                                 showBorder={true}
+                                                isNotPaste={true}
+                                                isNotCopy={true}
                                             />
                                             <div className="margin-adjust"></div>
                                             <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>

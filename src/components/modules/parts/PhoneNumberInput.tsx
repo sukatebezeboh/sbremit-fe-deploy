@@ -58,6 +58,8 @@ interface IPhoneNumberInput {
         number: string|number
     },
     onChange?: Function,
+    isNotCopy?: boolean,
+    isNotPaste?: boolean,
     name?: string,
     phoneCodeDisabled?: boolean,
     phoneCodeName?: string,
@@ -75,6 +77,8 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
     placeholder,
     value,
     onChange,
+    isNotCopy,
+    isNotPaste,
     name,
     countries = constants.COUNTRIES_PHONE_CODES,
     phoneCodeName,
@@ -117,7 +121,7 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
                 <div className="phone-code-wrapper">
                     <Select
                         className="phone-code"
-                        name={ phoneCodeName || "phoneCode"} 
+                        name={ phoneCodeName || "phoneCode"}
                         id=""
                         {...phoneCodeControlProps}
                         {...phoneCodeExternalProps}
@@ -139,6 +143,14 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
                         type="number"
                         name={name || "mobile"}
                         placeholder={placeholder}
+                        onCopy={isNotCopy && ((e: any) => {
+                            e.preventDefault()
+                            return false
+                        })}
+                        onPaste={isNotPaste && ((e: any) => {
+                            e.preventDefault()
+                            return false
+                        })}
                         {...phoneNumberControlProps}
                         {...phoneNumberExternalProps}
                     />

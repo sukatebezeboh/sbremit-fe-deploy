@@ -72,7 +72,7 @@ const RecipientDetailsBox = (props: any) => {
     const {hideType, green_mamba} = props;
     const recipient = useSelector((state: any) => state.recipients.recipient)
     const transfer = useSelector((state: any) => state.transfer)
-    console.log(transfer, "::here")
+    console.log(recipient.profile.pickupPoint, "::here")
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
@@ -86,22 +86,14 @@ const RecipientDetailsBox = (props: any) => {
                     <div className="right">{recipient.firstName + ' ' + recipient.lastName }</div>
                 </div>
                 <div className="row">
-                    <div className="left">Mobile No.</div>
+                    <div className="left">Mobile Number.</div>
                     <div className="right">{recipient.profile.mobile}</div>
                 </div>
                 {
-                    recipient.profile.email &&
+                    transfer.transferMethod === 'mobile_money' &&
                     <div className="row">
-                        <div className="left">Email</div>
-                        <div className="right">{recipient.profile.email || '-'}</div>
-                    </div>
-                }
-
-                {
-                    recipient.profile.state &&
-                    <div className="row">
-                        <div className="left">City</div>
-                        <div className="right">{recipient.profile.state || '-'}</div>
+                        <div className="left">Network provider</div>
+                        <div className="right">{recipient.profile.mobileMoneyProvider || '-'}</div>
                     </div>
                 }
                 <div className="row">
@@ -118,9 +110,9 @@ const RecipientDetailsBox = (props: any) => {
                 }
 
                 {
-                    !recipient.profile.accountNumber &&
+                    recipient.profile.accountNumber &&
                     <div className="row">
-                        <div className="left">Account Number</div>
+                        <div className="left">Recipient’s account number</div>
                         <div className="right">{recipient.profile.accountNumber || '-'}</div>
                     </div>
                 }
