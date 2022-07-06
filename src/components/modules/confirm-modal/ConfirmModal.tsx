@@ -6,13 +6,13 @@ const Div = styled.div`
         background: #14141430;
         position: fixed;
         width: 100%;
-        height: 100vh;
+        height: 150vh;
         z-index: 1;
     }
     .confirm {
         background: #fff;
         position: fixed;
-        width: 35%;
+        width: 30%;
         height: 150px;
         display: block;
         left: 30%;
@@ -41,6 +41,7 @@ const Div = styled.div`
                 border: none;
                 outline: none;
                 float: right;
+                cursor: pointer;
             }
             .cancel {
                 background: transparent 0% 0% no-repeat padding-box;
@@ -52,7 +53,13 @@ const Div = styled.div`
                 border: none;
                 outline: none;
                 float: right;
+                cursor: pointer;
             }
+        }
+
+        @media (max-width: 900px) {
+            left: 5%;
+            width: 90%;
         }
     }
 `

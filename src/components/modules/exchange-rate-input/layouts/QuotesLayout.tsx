@@ -116,7 +116,6 @@ const Field = styled.div`
             }
         }
 `
-console.log(transfer, "here");
 const QuotesLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }: any) => {
 
   return (

@@ -16,8 +16,7 @@ http.interceptors.request.use((config: any) => {
     
     config.transformRequest = [
         (data: any, headers: any) => {
-            // This check is a temporary fix for netlify hashing hitch. This check should be removed once the staging environment is no longer netlify
-            // or api calls are now made to an SSL certified endpoint
+            
             const url = env.API_PROXY ? env.API_PROXY + config.url : env.API_HOST + config.url;
             const payload = JSON.stringify(data);
             const authToken = authData.authToken

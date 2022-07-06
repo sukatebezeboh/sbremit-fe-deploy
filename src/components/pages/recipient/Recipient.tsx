@@ -101,7 +101,7 @@ const Recipient = () => {
     }, [recipients])
 
     const handleRecipientClick = (recipient: any) => {
-        console.log(recipient)
+
         if (recipient.profile.transferMethod !== transferMethod) {
             if (!editMode()) {
 

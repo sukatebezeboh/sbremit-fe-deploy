@@ -139,8 +139,6 @@ const Div = styled.div`
 const ForgotPasswordModal = (props: any) => {
     let {show, setShow} = props;
     const history = useHistory();
-    // const redirect = useSelector((state: any)=> state.redirect)
-    // redirect.resetPassword && history.push(paths.RESET_PASSWORD)
     
     const handleSendLink = useCallback(() => history.push('/email/password-reset'), [history]);
 

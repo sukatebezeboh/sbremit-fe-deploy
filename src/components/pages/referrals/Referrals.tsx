@@ -615,7 +615,8 @@ const Referrals = () => {
 									</div>
 
 									{
-								referredUser?.useStatus === "Used" ?
+
+									referredUser?.useStatus === "Used" ?
 									 <div className="label danger">
 										Used
 									</div> :

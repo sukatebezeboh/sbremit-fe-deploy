@@ -59,6 +59,7 @@ const Container = styled.div`
 const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode,  setClose}: any) => {
     const country = countriesAndCodes.find(country => country.countryCode === destinationCountryCode)
     const history = useHistory();
+
     return (
         <Container>
             <div className="modal-content">
