@@ -957,12 +957,20 @@ export const getTransferMethodIds = () => {
   }
 }
 
+export const getTransferMethodById = (id: string|number) => {
+  const services = store.getState().appValues.services
+
+  const tmIdToNameMap:any = {};
+  services?.data?.forEach((service: any) => {
+    tmIdToNameMap[service.id] = service.name.toLowerCase().replace(' ', '_');
+  })
+  return tmIdToNameMap[id];
+}
+
 export const initiatePayment = (callback?: Function, meta = {}, data = {}) => {
     store.dispatch({type: LOADING, payload: true})
-
     const transfer = store.getState().transfer
     const userId = store.getState().auth.user.id;
-
     const payload = {
         transferId: transfer.transactionDetails.id,
         method: transfer.paymentMethod,
