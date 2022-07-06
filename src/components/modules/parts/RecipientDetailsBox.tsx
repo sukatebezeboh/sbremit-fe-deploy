@@ -10,7 +10,6 @@ const Div = styled.div`
             /* grid-template-columns: 3fr 2.3fr; */
             width: 100% ;
             margin: 0px auto 50px;
-            
             .recipient-details {
                 background: #007B5D;
             }
@@ -110,7 +109,7 @@ const RecipientDetailsBox = (props: any) => {
                 }
 
                 {
-                    recipient.profile.accountNumber &&
+                    transfer.transferMethod === 'bank_transfer'  &&
                     <div className="row">
                         <div className="left">Recipient’s account number</div>
                         <div className="right">{recipient.profile.accountNumber || '-'}</div>

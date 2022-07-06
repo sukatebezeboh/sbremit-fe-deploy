@@ -141,7 +141,8 @@ export const RecipientCashPickupValidator = Yup.object().shape({
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
   email: Yup.string().email("Enter valid email"),
   state: Yup.string().min(3, "Too short").max(25, "Too long"),
-  reason: Yup.string()
+  reason: Yup.string(),
+  pickupPoint: Yup.string().required("Required")
 });
 
 export const RecipientMobileMoneyValidator = Yup.object().shape({

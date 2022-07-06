@@ -437,6 +437,7 @@ function NewRecipientModal(props: any) {
                     validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, () => {} )}
                     onSubmit={values => {
                         const newValue = {
+                            ...values,
                             firstName: values.firstName,
                             lastName: values.lastName,
                             mobile: values.mobile,
@@ -624,7 +625,7 @@ function NewRecipientModal(props: any) {
                                     </React.Fragment> : ''}
 
                                     {transfer.transferMethod === "cash_pickup" ?
-                                        <div className={(touched.pickup_point && errors.pickup_point) ? 'form-error': ''}>
+                                        <div className={(touched.pickupPoint && errors.pickupPoint) ? 'form-error': ''}>
                                             <div>Pickup point</div>
                                             <Field as="select" type="text" name="pickupPoint" placeholder="e.g. 3450012398" >
                                                 <option value=""> - Select - </option>
@@ -637,7 +638,7 @@ function NewRecipientModal(props: any) {
                                     <span onClick={()=>openModal(false)}>Cancel</span>
                                     { 
                                         showVerifyStep
-                                        ? <FormButton className={errors.pickup_point && ''} onClick={(e: any) => verifyRecipient(e, values, errors)} label={"Verify"} />
+                                        ? <FormButton onClick={(e: any) => verifyRecipient(e, values, errors)} label={"Verify"} />
                                         : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} />
                                     }
                                 </div>
