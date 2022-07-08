@@ -10,7 +10,6 @@ const Div = styled.div`
             /* grid-template-columns: 3fr 2.3fr; */
             width: 100% ;
             margin: 0px auto 50px;
-            
             .recipient-details {
                 background: #007B5D;
             }
@@ -71,7 +70,8 @@ const Div = styled.div`
 const RecipientDetailsBox = (props: any) => {
     const {hideType, green_mamba} = props;
     const recipient = useSelector((state: any) => state.recipients.recipient)
-
+    const transfer = useSelector((state: any) => state.transfer)
+    console.log(recipient.profile.pickupPoint, "::here")
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
@@ -85,22 +85,14 @@ const RecipientDetailsBox = (props: any) => {
                     <div className="right">{recipient?.firstName + ' ' + recipient?.lastName }</div>
                 </div>
                 <div className="row">
-                    <div className="left">Mobile No.</div>
-                    <div className="right">{recipient?.profile?.mobile}</div>
+                    <div className="left">Mobile Number.</div>
+                    <div className="right">{recipient.profile.mobile}</div>
                 </div>
                 {
-                    recipient?.profile?.username &&
+                    transfer.transferMethod === 'mobile_money' &&
                     <div className="row">
-                        <div className="left">Email</div>
-                        <div className="right">{recipient?.profile?.username || '-'}</div>
-                    </div>
-                }
-
-                {
-                    recipient?.profile?.state &&
-                    <div className="row">
-                        <div className="left">City</div>
-                        <div className="right">{recipient?.profile?.state || '-'}</div>
+                        <div className="left">Network provider</div>
+                        <div className="right">{recipient.profile.mobileMoneyProvider || '-'}</div>
                     </div>
                 }
                 <div className="row">
@@ -117,10 +109,10 @@ const RecipientDetailsBox = (props: any) => {
                 }
 
                 {
-                    !recipient?.profile?.accountNumber &&
+                    transfer.transferMethod === 'bank_transfer'  &&
                     <div className="row">
-                        <div className="left">Account Number</div>
-                        <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
+                        <div className="left">Recipient’s account number</div>
+                        <div className="right">{recipient.profile.accountNumber || '-'}</div>
                     </div>
                 }
 

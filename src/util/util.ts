@@ -325,7 +325,7 @@ export const validatePromo = (promo: any, user: any, transfer: any) => {
 export const scrollTo = (sectionSelector : string) =>  {
     const section = document.querySelector(sectionSelector);
     section?.scrollIntoView({
-        behavior: 'smooth', 
+        behavior: 'smooth',
         block: 'start'
     })
 }

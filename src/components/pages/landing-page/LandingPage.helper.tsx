@@ -273,6 +273,21 @@ export const supportedCountriesListing = [
         active: true
     },
     {
+        name: "Uganda",
+        flag: 'UG.png',
+        active: true
+    },
+    {
+        name: "Tanzania",
+        flag: 'TZ.png',
+        active: true
+    },
+    {
+        name: "Kenya",
+        flag: 'KE.png',
+        active: true
+    },
+    {
         name: "Chad",
         flag: 'TD.png',
         active: false
@@ -285,21 +300,6 @@ export const supportedCountriesListing = [
     {
         name: "Equitorial Guinea",
         flag: 'GQ.png',
-        active: false
-    },
-    {
-        name: "Uganda",
-        flag: 'UG.png',
-        active: false
-    },
-    {
-        name: "Tanzania",
-        flag: 'TZ.png',
-        active: false
-    },
-    {
-        name: "Kenya",
-        flag: 'KE.png',
         active: false
     },
     {
@@ -330,6 +330,11 @@ export const supportedCountriesListing = [
     {
         name: "Liberia",
         flag: "LR.png",
+        active: false
+    },
+    {
+        name: "Congo Brazzaville",
+        flag: "CG.png",
         active: false
     },
 ]

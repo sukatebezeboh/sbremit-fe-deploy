@@ -16,7 +16,6 @@ http.interceptors.request.use((config: any) => {
     
     config.transformRequest = [
         (data: any, headers: any) => {
-            
             const url = env.API_PROXY ? env.API_PROXY + config.url : env.API_HOST + config.url;
             const payload = JSON.stringify(data);
             const authToken = authData.authToken
