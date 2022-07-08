@@ -291,7 +291,7 @@ export const countriesAndCodes: readonly CountryType[] = [
   },
   {
      "countryCode":"CG",
-     "name":"Congo, Republic of the",
+     "name":"Congo Brazzaville",
      "phoneCode":"242",
      "countryCodeAlt":"COG"
   },
@@ -1665,8 +1665,8 @@ export const countriesTransferMethodAvailability: any = {
    },
    GH: {
        mobile_money: true,
-       bank_transfer: false,
-       cash_pickup: false
+       bank_transfer: true,
+       cash_pickup: true
    },
    KE: {
        mobile_money: true,
@@ -1681,7 +1681,7 @@ export const countriesTransferMethodAvailability: any = {
    NG: {
        mobile_money: true,
        bank_transfer: true,
-       cash_pickup: false
+       cash_pickup: true
    },
    SN: {
        mobile_money: true,
@@ -1695,12 +1695,17 @@ export const countriesTransferMethodAvailability: any = {
    },
    TZ: {
        mobile_money: true,
-       bank_transfer: true,
+       bank_transfer: false,
        cash_pickup: false
    },
    UG: {
        mobile_money: true,
-       bank_transfer: false,
+       bank_transfer: true,
        cash_pickup: false
    },
+   CG: {
+      mobile_money: true,
+       bank_transfer: true,
+       cash_pickup: false
+   }
 };

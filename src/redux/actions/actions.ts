@@ -160,7 +160,7 @@ export const signInAction = (data: any, history: any) => {
             type: 'error',
             timeout: 10000,
             message: `${errorMessage}`,
-          })          
+          })
         }
 
       }

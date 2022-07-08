@@ -67,7 +67,7 @@ const GetQuote = () => {
         })
     }
 
-    const handleXInputChange = (e: any, data: any) => {        
+    const handleXInputChange = (e: any, data: any) => {
         try {
                 const caret = e.target.selectionStart
                 const element = e.target
