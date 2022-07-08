@@ -1,7 +1,7 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
-import { featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
-import React, { useEffect, useState, useRef } from 'react';
+import { featureCompareTableData, getExchangeRateTableData, supportedCountriesListing } from './LandingPage.helper'
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
@@ -12,8 +12,6 @@ import { constants } from '../../../util/constants';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
-import Scrollspy from 'react-scrollspy'
-import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 import BackToTopButton from 'components/modules/back-to-top/BackToTopButton';
 

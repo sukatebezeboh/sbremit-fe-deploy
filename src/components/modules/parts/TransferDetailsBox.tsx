@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 import styled from "styled-components";
-import { getServiceRateValue, getTransactionDetails } from '../../../redux/actions/actions';
+import { getServiceRateValue, getTransactionDetails, getTransferMethodById } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { constants, transferMethodsInWords } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -106,7 +106,7 @@ const Div = styled.div`
 
 const TransferDetailsBox = ( { transferId } :any ) => {
 
-    const transfer = useSelector((state: any) => state.transfer);    
+    const transfer = useSelector((state: any) => state.transfer);
     const transaction = transfer?.transactionDetails;
     const transferQuote = transfer.currentTransferQuote
     const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transferQuote?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transferQuote?.meta?.serviceFee);
@@ -129,6 +129,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     }, [])
 
     const getTransferFeeText = (selectedMethod: string) => {
+        selectedMethod = getTransferMethodById(selectedMethod)
         const texts: any = {
             "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Cash Out Fee</a>:
                 <div class="hover-tab">
@@ -181,6 +182,10 @@ const TransferDetailsBox = ( { transferId } :any ) => {
                         <div className="left" dangerouslySetInnerHTML={{__html: getTransferFeeText(transferQuote?.transferMethod || transaction?.transferMethod)}} ></div>
                         <div className="right uppercase"> +{serviceFee} {sendCurrency}</div>
                     </div>
+                    {/* <div className="row">
+                        <div className="left">Mobile operator cash-out fee</div>
+                        <div className="right uppercase"> +{serviceFee} {sendCurrency}</div>
+                    </div> */}
                     <div className="row">
                         <div className="left">SB Remit Transfer Charge</div>
                         <div className="right uppercase">{"0.00"} {sendCurrency}</div>

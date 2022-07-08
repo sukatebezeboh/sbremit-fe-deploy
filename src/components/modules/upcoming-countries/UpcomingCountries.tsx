@@ -78,7 +78,7 @@ const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode, 
 
                 <div className="info-container">
                     <p className="info-text">
-                        Great News!!! We are excited to announce that we will soon be remitting to  <span className="green-text">{country?.name?.toUpperCase()}.</span>
+                        Great News!!! We are excited to announce that we will soon be remitting to  <span className="green-text">{country?.name}.</span>
                         &nbsp;Please register to indicate your interest in remitting to this country.
                     </p>
                     <button className="modify-btn" onClick={()=>history.push('/country/register')}>Register your interest</button>
