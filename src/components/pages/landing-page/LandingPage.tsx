@@ -19,7 +19,6 @@ import BackToTopButton from 'components/modules/back-to-top/BackToTopButton';
 
 const LandingPage = () => {
 
-    const [screenType] = useResizeObserver(constants.MOBILE)
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
     const appValues = useSelector((state: any) => state.appValues);
@@ -257,18 +256,6 @@ const LandingPage = () => {
     const isAcceptablePromoValue = (promo: any) => {
         return Number(toSend.value) >= Number(promo.settings.minimumSpend)
         && Number(toSend.value) <= Number(promo.settings.maximumSpend);
-    }
-
-    const getXInputMarginAdjust = (newLinesValues: boolean[]) => {
-        let initialMargin = screenType === constants.MOBILE ? 160 : -50;
-
-        for( const newLine of newLinesValues ) {
-            if (newLine) {
-                initialMargin += 50
-            }
-        }
-
-        return initialMargin + "px";
     }
 
     const calculatorProps = {

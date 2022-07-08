@@ -14,8 +14,9 @@ import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
 import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
-import { remittanceHandlers } from '../../../util/constants';
+import { constants, remittanceHandlers } from '../../../util/constants';
 import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
+import { themeNames } from 'components/modules/toast-factory/themes';
 
 const Body = styled.div`
     .page-content {
@@ -288,6 +289,16 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         autoSelectPaymentMethod()
+        if ( transaction && transaction.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING ) {
+            toastAction({
+                show: true,
+                type: "warning",
+                timeout: 60000,
+                defaultThemeName: themeNames.CLEAR_MAMBA,
+                message: "You cannot make a payment for a transfer that's not pending!"
+            })
+            return history.push(paths.TRANSFER_METHOD)
+        }
     }, [transaction])
 
     useEffect(() => {
