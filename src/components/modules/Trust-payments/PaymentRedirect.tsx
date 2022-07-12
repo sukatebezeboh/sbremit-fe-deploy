@@ -61,7 +61,6 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     stringToHash += password ?? ''
     const siteSecurityHash = 'h' + sjcl.codec.hex.fromBits(sjcl.hash.sha256.hash(stringToHash));
 
-    console.log(utcDateTime);
     return (
         <span>
             <form method="POST" action={resources.TRUST_PAYMENT_URL}  >

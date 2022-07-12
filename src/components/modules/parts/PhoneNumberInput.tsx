@@ -35,7 +35,7 @@ const StyleWrapper = styled.div`
                 top: 10px;
                 left: 5px;
                 pointer-events: none;
-            }            
+            }
         }
         input.phone-no {
             height: 100%;
@@ -58,6 +58,8 @@ interface IPhoneNumberInput {
         number: string|number
     },
     onChange?: Function,
+    isNotCopy?: boolean,
+    isNotPaste?: boolean,
     name?: string,
     phoneCodeDisabled?: boolean,
     phoneCodeName?: string,
@@ -65,7 +67,7 @@ interface IPhoneNumberInput {
     Input?: any,
     Select?: any,
     phoneCodeExternalProps?: any,
-    countries?: readonly CountryType[]
+    countries?: readonly CountryType[] | any
     phoneNumberExternalProps?: any
     showBorder?: boolean
 }
@@ -75,6 +77,8 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
     placeholder,
     value,
     onChange,
+    isNotCopy,
+    isNotPaste,
     name,
     countries = constants.COUNTRIES_PHONE_CODES,
     phoneCodeName,
@@ -85,9 +89,10 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
     phoneNumberExternalProps = {},
     showBorder = false
 }: IPhoneNumberInput) => {
+    countries.sort((a: any, b: any) => a.name.localeCompare(b.name));
     const [selected, setSelected]: any = useState(countries[0])
     const handleChange = (type: "code" | "number", val: any) => {
-        console.log(type, val)
+
         if ( type === "number" && val > 99999999999999) return
         if ( type === "number" && val === '0' ) return
 
@@ -122,7 +127,7 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
                         {...phoneCodeExternalProps}
                         >
                         {countries.map(
-                            (country) => (
+                            (country: any) => (
                             <option
                                 value={country.phoneCode}>
                                 {country.phoneCode} -
@@ -138,6 +143,14 @@ const PhoneNumberInput: FC<IPhoneNumberInput> = ({
                         type="number"
                         name={name || "mobile"}
                         placeholder={placeholder}
+                        onCopy={isNotCopy && ((e: any) => {
+                            e.preventDefault()
+                            return false
+                        })}
+                        onPaste={isNotPaste && ((e: any) => {
+                            e.preventDefault()
+                            return false
+                        })}
                         {...phoneNumberControlProps}
                         {...phoneNumberExternalProps}
                     />

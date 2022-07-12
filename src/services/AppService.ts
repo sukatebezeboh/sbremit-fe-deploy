@@ -60,7 +60,7 @@ export class AppService {
             return countries;
         }
         else{
-            const res = await axios.get(config.API_HOST + endpoints.VALUE + '/' + id);               
+            const res = await axios.get(config.API_HOST + endpoints.VALUE + '/' + id);
             return res.data.data
         }
     }

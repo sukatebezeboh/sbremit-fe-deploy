@@ -65,7 +65,6 @@ export const getValueFromArray = <T>(id: string|number, targetId: string|number,
 
 export const genPaginationHashTable = (array: any[], noPerPage: number) => {
     const hashTable: any = {}
-    // const paginationList = Math.ceil(array.length / noPerPage)
     array.forEach((val: any, i: number)=>{
         const temp = Math.floor(i/noPerPage) + 1
         if (hashTable[temp]) {
@@ -227,8 +226,7 @@ export const isMobileOrTablet = ()  => {
 };
 
 export const getUserReferralDiscount = (user: any, appValues: any) => {
-    // console.log(appValues)
-    // console.log(getValueFromArray('settings', 'name', appValues?.values?.data), "uset")
+
     const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
     let discount = Number(user?.referral?.useCount || 0) * Number(referralSettings?.data?.referrerDiscountValue);
 
@@ -326,16 +324,15 @@ export const validatePromo = (promo: any, user: any, transfer: any) => {
 
 export const scrollTo = (sectionSelector : string) =>  {
     const section = document.querySelector(sectionSelector);
-    console.log(section)
     section?.scrollIntoView({
-        behavior: 'smooth', // smooth scroll
-        block: 'start' // the upper border of the element will be aligned at the top of the visible part of the window of the scrollable area.
+        behavior: 'smooth',
+        block: 'start'
     })
 }
 
 
 const resolveRemittanceCriteriaMatch = ( handlerCriteria: any, prop: any, transferProp: any ) => {
-    // console.log(handlerCriteria, prop, transferProp)
+
     if ( handlerCriteria[prop].constructor === Array ) {
         return Boolean(handlerCriteria[prop]?.find((p: string|number) => p === transferProp[prop]));
     } else if ( handlerCriteria[prop].constructor === Object ) {
@@ -357,13 +354,13 @@ export const getRemittanceHandler = (transfer: any): ('PIVOT'|'MANUAL') => {
     for ( const handlerCriteria of remittanceHandlersTransferCriteria) {
         let handlerMatch = true;
         for (const prop in handlerCriteria ) {
+
             if ( prop == 'handler' ) {
                 continue
             } 
-            // console.log(handlerCriteria, prop, transfer, "TOP LEVEL")
 
             const matched = resolveRemittanceCriteriaMatch( handlerCriteria, prop, transfer )
-            // console.log(matched, "TOP LEVEL")
+
             if (!matched) {
                 handlerMatch = false
                 break;
@@ -371,7 +368,6 @@ export const getRemittanceHandler = (transfer: any): ('PIVOT'|'MANUAL') => {
         }
 
         if ( handlerMatch ) {
-            // console.log(handlerMatch, handlerCriteria['handler'], "AFTER LOOP")
             return handlerCriteria['handler']
         }
     }

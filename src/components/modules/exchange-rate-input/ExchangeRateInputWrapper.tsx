@@ -131,7 +131,6 @@ const ExchangeRateInputWrapper = (props: any) =>{
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
         const countryKey =  Object.keys(countriesList).find(key => countriesList[key] === country);
-        console.log(countries[country], "//")
         if (data.isSend) {
             dispatch({
                 type: TRANSFER,
@@ -154,8 +153,6 @@ const ExchangeRateInputWrapper = (props: any) =>{
         getNewQuote();
         triggerInputChange()
     }
-
-    console.log(transfer)
 
     const triggerInputChange = () => {
         inputRef.current?.dispatchEvent( new Event( 'change', {bubbles: true} ) );

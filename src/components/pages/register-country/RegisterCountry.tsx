@@ -1,12 +1,11 @@
-import { Checkbox, FormControlLabel, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material'
+import { Checkbox, FormControlLabel, Radio, RadioGroup } from '@mui/material'
 import CountrySelect from 'components/modules/parts/CountrySelect'
 import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput'
 import { themeNames } from 'components/modules/toast-factory/themes'
-// import AccountCircle from '@mui/icons-material/AccountCircle';
 
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { registerCountry, stackNewToast, toastAction } from 'redux/actions/actions'
+import { registerCountry, stackNewToast } from 'redux/actions/actions'
 import styled from 'styled-components'
 import { paths } from 'util/paths'
 import { asset } from '../../../util/util'
@@ -215,7 +214,7 @@ const RegisterCountry = () => {
             }
         }
         setErrors(newErrors)
-        console.log(errors, values)
+
         if (!(Object.keys(newErrors)).length) {
             registerCountry(values)
         } else {
@@ -243,11 +242,11 @@ const RegisterCountry = () => {
         <div className="container">
             <div className="logo-line">
                 <img src={asset('', 'main-logo.svg')} alt="SBRemit" />
-            </div>    
+            </div>
 
             <div className="summary">
                 We are constantly adding more countries to the list. Register your interest
-            </div>        
+            </div>
 
             <div className="form">
                 <div className="input-wrapper">

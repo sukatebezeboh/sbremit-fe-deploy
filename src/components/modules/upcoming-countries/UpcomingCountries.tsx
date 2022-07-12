@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom';
 import styled  from "styled-components";
 import { countriesAndCodes } from 'util/constants';
 import { asset } from '../../../util/util';
@@ -47,14 +48,22 @@ const Container = styled.div`
                 cursor: pointer;
             }
         }
+
+        .close-btn {
+            text-align: right;
+            font-size: 50px;
+            cursor: pointer;
+        }
     }
 `
 const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode,  setClose}: any) => {
     const country = countriesAndCodes.find(country => country.countryCode === destinationCountryCode)
-    console.log(country, "here");
+    const history = useHistory();
+
     return (
         <Container>
             <div className="modal-content">
+                <div className="close-btn" onClick={setClose}>&times;</div>
                 <div className="country-flag-container">
                     <div className="send-flag resize">
                         <img src={asset ( 'flags', `${toSendFlag}` )} />
@@ -69,11 +78,10 @@ const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode, 
 
                 <div className="info-container">
                     <p className="info-text">
-                        We are excited to announce that you will be able to send money to <span className="green-text">{country?.name}</span>
-                        &nbsp;from the 22nd of July 2022. To continue, please select a country we currently
-                        remit to.
+                        Great News!!! We are excited to announce that we will soon be remitting to  <span className="green-text">{country?.name}.</span>
+                        &nbsp;Please register to indicate your interest in remitting to this country.
                     </p>
-                    <button className="modify-btn" onClick={setClose}>Modify</button>
+                    <button className="modify-btn" onClick={()=>history.push('/country/register')}>Register your interest</button>
                 </div>
             </div>
         </Container>

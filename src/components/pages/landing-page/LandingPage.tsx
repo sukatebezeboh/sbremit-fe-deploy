@@ -1,7 +1,7 @@
 import Body from './LandingPage.css'
 import Table from 'components/modules/table/Table'
-import { featureCompareTableData, getExchangeRateTableData, slideContents, supportedCountriesListing } from './LandingPage.helper'
-import React, { useEffect, useState, useRef } from 'react';
+import { featureCompareTableData, getExchangeRateTableData, supportedCountriesListing } from './LandingPage.helper'
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
@@ -12,8 +12,6 @@ import { constants } from '../../../util/constants';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
-import Scrollspy from 'react-scrollspy'
-import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 import BackToTopButton from 'components/modules/back-to-top/BackToTopButton';
 
@@ -23,7 +21,7 @@ const LandingPage = () => {
     const transfer = useSelector((state: any)=>state.transfer)
     const history = useHistory();
     const appValues = useSelector((state: any) => state.appValues);
-    //console.log(appValues, "Hellow")
+
     const promo = transfer.promo
     const [promoText, setPromoText] = useState("")
 
@@ -33,7 +31,7 @@ const LandingPage = () => {
     const [changedInput, setChangedInput]: any = useState(null);
 
     const [competitorRates, setCompetitorRates]: any = useState([]);
-        console.log('competitorRates', competitorRates);
+
     let rate= conversionRate?.rate;
     if (
         promo?.type === "FIXED_RATE"
@@ -44,7 +42,6 @@ const LandingPage = () => {
     ) {
         rate = promo.settings.rate
     }
-    // toReceive.value = transfer.toSend.value * rate
     const serviceFee = Number(toSend.value) ? transfer.serviceFee : formatCurrency("0");
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
@@ -121,7 +118,6 @@ const LandingPage = () => {
         ) {
             rate = promo.settings.rate
         }
-        // if(!value) return;
         if (data.isSend) {
             if (
                 promo?.type === "FIXED_RATE"
@@ -149,12 +145,7 @@ const LandingPage = () => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    // toSend: {...toSend, value: `${value}`},
-                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, selected, true))},
-                    // toSend: {...toSend, adjusted: value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value * rate, selected, false, false))), value: `${value}`}, 
                     toSend: {...toSend, adjusted: getAdjustedValue(value, value * rate, allowOperatorFee, selected, false), value: `${value}`}, 
-                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) + Number(getServiceRateValue(value, transfer.transferMethod, true))},
-                    // toReceive: {...toReceive, value: `${value * rate}`, total: Number(value * rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false))) },
                     toReceive: {...toReceive, value: `${value * rate}`, total: getAdjustedValue(value * rate, value * rate, allowOperatorFee, selected, true ) },
                 }
             })
@@ -164,11 +155,7 @@ const LandingPage = () => {
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    // toSend: {...toSend, value: `${(value / rate).toFixed(2)}`},
-                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) + Number(getServiceRateValue(value, selected, true))},
-                    // toSend: {...toSend, adjusted: (value / rate) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, false, false))), value: `${(value / rate).toFixed(2)}`}, 
                     toSend: {...toSend, adjusted: getAdjustedValue(value/rate, value, allowOperatorFee, selected, false), value: `${(value / rate).toFixed(2)}`}, 
-                    // toReceive: {...toReceive, value: `${value}`, total: Number(value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(value, selected, true, false)))},
                     toReceive: {...toReceive, value: `${value}`, total: getAdjustedValue(value, value, allowOperatorFee, selected, true)},
                 }
             })
@@ -205,7 +192,6 @@ const LandingPage = () => {
     }
 
     const setTotalValue = () => {
-        // debugger;
         let total = Number(toSend.value) + Number(serviceFee);
 
         if (
@@ -246,11 +232,7 @@ const LandingPage = () => {
             type: TRANSFER,
             payload: {
                 ...transfer,
-                // toSend: {...toSend, total: `${total}`},
-                // toReceive: {...toReceive, total: Number(toReceive.value) + Number(getServiceRateValue(toReceive.value, selected, true))},
-                // toSend: {...toSend, adjusted: toSend.value - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, false, false))), total: `${total}`},
                 toSend: {...toSend, adjusted: getAdjustedValue(toSend.value, toReceive.value, allowOperatorFee, selected, false), total: `${total}`},
-                // toReceive: {...toReceive, total: Number(toReceive.value) - ( allowOperatorFee ? 0 : Number(getServiceRateValue(toReceive.value, selected, true, false)))},
                 toReceive: {...toReceive, total: getAdjustedValue(toReceive.value, toReceive.value, allowOperatorFee, selected, true )},
                 remittanceHandler: getRemittanceHandler(transfer)
             }
