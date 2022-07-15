@@ -97,7 +97,7 @@ const ExchangeRateCalculator = ({
                                 </div>
 
                                 <div className="point-text">
-                                    <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selectedTransferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> 
+                                    <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selectedTransferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span>
 
                                     {/* Mobile Operator <span className="green-txt">Cash Out Fee</span> from: <span className="green-txt"> 0 GBP</span> */}
                                 </div>

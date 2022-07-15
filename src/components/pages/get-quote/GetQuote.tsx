@@ -286,11 +286,7 @@ const GetQuote = () => {
 
     const getTransferFeeText = (selectedMethod: string) => {
         const texts: any = {
-            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Cash Out Fee </a> from: 
-                <div class="hover-tab">
-                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
-                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
-                </div>
+            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee </a>
             `,
             "bank_transfer": "Bank Pay Out Fee: ",
             "cash_pickup": "Cash Pick-up Partner Fee: "

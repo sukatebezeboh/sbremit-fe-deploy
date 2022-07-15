@@ -342,7 +342,7 @@ function NewRecipientModal(props: any) {
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
-    const [mobileProvider, setMobileProvider] = useState("")
+    const [mobileProvider, setMobileProvider] = useState('')
 
     const getCountry = () => {
         return countriesAndCodes.find(country => country.countryCode === transfer.toReceive.countryCode);
@@ -458,11 +458,11 @@ function NewRecipientModal(props: any) {
                                     updateVerifyStep(newValues)
                                     transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '70'
-                                    ? setMobileProvider("AIRTEL")
+                                    ? setMobileProvider('AIRTEL')
                                     : transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '77'
-                                    ? setMobileProvider("MTN")
-                                    : setMobileProvider("")
+                                    ? setMobileProvider('MTN')
+                                    : setMobileProvider('')
 
                                 }} />
                                 <div className="form grid-col-1-1 grid-gap-3">

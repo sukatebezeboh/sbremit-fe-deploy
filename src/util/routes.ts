@@ -38,6 +38,7 @@ import LandingPage from 'components/pages/landing-page/LandingPage';
 import RegisterCountry from 'components/pages/register-country/RegisterCountry';
 import Notifications from 'components/pages/notifications/Notifications';
 import InviteBusinessUser from 'components/pages/invite-business-user/InviteBusinessUser';
+import MobileMoneyRate from 'components/content-pages/support/mobile-money-rate/MobileMoneyRate';
 
 
 export interface IRoute {
@@ -100,6 +101,12 @@ export const Routing: IRoute[] = [
     {
         path: paths.CONTACT,
         component: Contact,
+        protected: false,
+        exact: true
+    },
+    {
+        path: paths.MOBILE_MONEY_RATE,
+        component: MobileMoneyRate,
         protected: false,
         exact: true
     },
