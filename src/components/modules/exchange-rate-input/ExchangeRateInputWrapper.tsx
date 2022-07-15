@@ -121,16 +121,18 @@ const Field = styled.div`
 
 const ExchangeRateInputWrapper = (props: any) =>{
     const {data, handleXInputChange, max, countries, setChangedInput, LayoutComponent} = props;
-    const [countriesDropDown, setCountriesDropDownOpen] = useState(false);
+    const [countriesDropDownOpen, setCountriesDropDownOpen] = useState(false);
     const dispatch = useDispatch();
     const transfer = useSelector((state: any) => state.transfer)
     const appValues = useSelector((state: any) => state.appValues)
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleCountrySelection = (country: string) => {
+        console.log(country)
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
         const countryKey =  Object.keys(countriesList).find(key => countriesList[key] === country);
+        console.log(countryKey)
         if (data.isSend) {
             dispatch({
                 type: TRANSFER,
@@ -158,7 +160,7 @@ const ExchangeRateInputWrapper = (props: any) =>{
         inputRef.current?.dispatchEvent( new Event( 'change', {bubbles: true} ) );
     }
 
-    const propsBundle = {data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }
+    const propsBundle = {data, max, inputRef, setCountriesDropDownOpen, countriesDropDown: countriesDropDownOpen, handleXInputChange, setChangedInput, countries, handleCountrySelection }
 
        return (
             <LayoutComponent {...propsBundle} />

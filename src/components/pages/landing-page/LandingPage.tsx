@@ -45,6 +45,8 @@ const LandingPage = () => {
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
 
+    console.log(appValues)
+
     const dispatch = useDispatch()
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");

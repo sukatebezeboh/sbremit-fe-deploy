@@ -33,7 +33,7 @@ const TransactionDetail = (props: any) => {
        return data.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || data.meta.paymentCompleted
     }
 
-    const referralDiscountValue = data?.referralDiscountValue;
+    const referralDiscountValue = data?.meta?.referralDiscount;
 
 
     return (
@@ -158,7 +158,7 @@ const TransactionDetail = (props: any) => {
                                 <div className="left">Promo used</div>
                                 <div className="right"> {data?.meta?.promoCode}</div>
                             </div>}
-                            {Boolean(referralDiscountValue) && <div className="row ">
+                            {Boolean(Number(referralDiscountValue)) && <div className="row ">
                                 <div className="left green-txt">Referral Discount</div>
                                 <div className="right uppercase green-txt"> {referralDiscountValue} {data.originCurrency} </div>
                             </div>}
