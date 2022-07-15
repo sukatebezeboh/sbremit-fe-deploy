@@ -23,7 +23,7 @@ export const remittanceHandlersTransferCriteria: any[] = [
    {
       handler: remittanceHandlers.PIVOT_REMITTANCE_HANDLER,
       toReceive: {
-         currency: [ "KES", "UGX" ]
+         currency: [ "KES", "UGX", "TZS" ]
       },
       transferMethod: "mobile_money",
    }
