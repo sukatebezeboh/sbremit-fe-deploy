@@ -5,7 +5,7 @@ import React, { createElement, useState } from "react"
 import { asset, getValueFromArray, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
 import { constants } from "util/constants"
-
+import store from "redux/store"
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
     heading: [
@@ -504,29 +504,19 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
     }
 }
 
+export const getCountryMomoData = (countryServicesData: any) => {
+    const cameroonMomoHeadings =  Object.keys(countryServicesData?.fees?.[0] || {})?.map((headerTxt: any) => ({content: headerTxt}))
+    const cameroonMomoData =  Object.values(countryServicesData?.fees || [])?.map((data: any) => (Object.values(data).map((dataValue: any) => ({content: dataValue}))))
+    console.log(cameroonMomoData, "::here")
 
-    
+    const mobileMoneyRateTableData: {heading: TableCell[][], rows: TableCell[][]} = {
+        heading: [
+            [],
+            cameroonMomoHeadings
+        ],
+        rows: cameroonMomoData
+    }
 
-export const slideContents = [
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-]
+    return mobileMoneyRateTableData;
+}
+
