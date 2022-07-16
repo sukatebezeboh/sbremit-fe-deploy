@@ -899,6 +899,7 @@ export const getServiceRate = (
   return Number(serviceFee) || 0
 }
 
+
 export const getServiceRateValue = (
   toReceiveValue: string | number,
   transferMethod: string,
