@@ -116,10 +116,10 @@ export const translateTransactionStatus = (status: string) => {
         expired: "Transfer expired",
         payment_completed: "Funds received by SB",
         complete: "Paid to recipient",
-        rejected: "Transfer rejected",
-        refunded: "Transfer refunded",
+        rejected: "Rejected",
+        refunded: "Refunded",
         cancelled: "Transfer cancelled",
-        pending_verification: "Pending identity verification",
+        pending_verification: "Pending ID verification",
         pending_documentation: "Pending documentation",
         payment_suspended: "Payment suspended"
     }
