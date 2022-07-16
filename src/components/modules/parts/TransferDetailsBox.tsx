@@ -104,23 +104,26 @@ const Div = styled.div`
             }
 `
 
-const TransferDetailsBox = ( { transferId } :any ) => {
+const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
 
     const transfer = useSelector((state: any) => state.transfer);
-    const transaction = transfer?.transactionDetails;
+
+    const transaction = transferData || transfer?.transactionDetails;
+    const isTransaction = transferData || transferId;
+
     const transferQuote = transfer.currentTransferQuote
-    const serviceFee = transferId ? transaction?.meta?.serviceFee : ( transferQuote?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transferQuote?.meta?.serviceFee);
-    const transferMethod = transferId ? transferMethodsInWords[transaction?.transferMethod] : transferMethodsInWords[transferQuote?.transferMethod];
-    const sendAmount = transferId ? formatCurrency(transaction?.originAmount) : formatCurrency(transferQuote?.originAmount);
-    const sendCurrency = transferId ? transaction?.originCurrency : transferQuote?.originCurrency;
-    const xBase = transferId ? transaction?.meta?.exchangeBase : transferQuote?.meta?.exchangeBase;
-    const xRate = transferId ? transaction?.meta?.exchangeRate : formatCurrency( transferQuote?.meta?.exchangeRate );
-    const xTarget = transferId ? transaction?.meta?.exchangeTarget : transferQuote?.meta?.exchangeTarget;
-    const receiveAmount = transferId ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transferQuote?.destinationAmount);
-    const receiveCurrency = transferId ? transaction?.destinationCurrency : transferQuote?.destinationCurrency;
-    const totalToPay = transferId ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transferQuote?.totalToPay)}`);
-    const promoCode = transferId ? transaction?.meta?.promoCode : transferQuote?.meta?.promoCode;
-    const referralDiscountValue = transferId ? transaction?.meta?.referralDiscountValue : transferQuote?.meta?.referralDiscount;
+    const serviceFee = isTransaction ? transaction?.meta?.serviceFee : ( transferQuote?.promo?.type === constants.FREE_OPERATOR_FEE ? 0 : transferQuote?.meta?.serviceFee);
+    const transferMethod = isTransaction ? transferMethodsInWords[transaction?.transferMethod] : transferMethodsInWords[transferQuote?.transferMethod];
+    const sendAmount = isTransaction ? formatCurrency(transaction?.originAmount) : formatCurrency(transferQuote?.originAmount);
+    const sendCurrency = isTransaction ? transaction?.originCurrency : transferQuote?.originCurrency;
+    const xBase = isTransaction ? transaction?.meta?.exchangeBase : transferQuote?.meta?.exchangeBase;
+    const xRate = isTransaction ? transaction?.meta?.exchangeRate : formatCurrency( transferQuote?.meta?.exchangeRate );
+    const xTarget = isTransaction ? transaction?.meta?.exchangeTarget : transferQuote?.meta?.exchangeTarget;
+    const receiveAmount = isTransaction ? formatCurrency(transaction?.destinationAmount) : formatCurrency(transferQuote?.destinationAmount);
+    const receiveCurrency = isTransaction ? transaction?.destinationCurrency : transferQuote?.destinationCurrency;
+    const totalToPay = isTransaction ? transaction?.meta?.totalToPay : formatCurrency(`${Number(transferQuote?.totalToPay)}`);
+    const promoCode = isTransaction ? transaction?.meta?.promoCode : transferQuote?.meta?.promoCode;
+    const referralDiscountValue = isTransaction ? transaction?.meta?.referralDiscount : transferQuote?.meta?.referralDiscount;
 
     useEffect(() => {
         if ( transferId ) {
@@ -129,7 +132,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
     }, [])
 
     const getTransferFeeText = (selectedMethod: string) => {
-        selectedMethod = getTransferMethodById(selectedMethod)
+        selectedMethod = getTransferMethodById(selectedMethod) || selectedMethod
         const texts: any = {
             "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Cash Out Fee</a>:
                 <div class="hover-tab">
@@ -155,7 +158,7 @@ const TransferDetailsBox = ( { transferId } :any ) => {
             <div className="transfer-details part">
                     <div className="heading">
                         <div className="title">Transfer Details</div>
-                        {!transferId && <Link to={paths.TRANSFER_METHOD}><div className="update">Edit</div></Link>}
+                        {!isTransaction && <Link to={paths.TRANSFER_METHOD}><div className="update">Edit</div></Link>}
                     </div>
                     <hr/>
                     <div className="row">

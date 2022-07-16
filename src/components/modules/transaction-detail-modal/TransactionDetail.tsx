@@ -1,17 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components'
-import { cancelTransfer, getUserTransactions, toastAction } from '../../../redux/actions/actions';
-import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
+import { useHistory } from 'react-router-dom';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, downloadPDF, formatCurrency, getValueFromArray } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
 import PageHeading from '../page-heading/PageHeading';
-import Pdf from "react-to-pdf";
 import Receipt from '../receipt/Receipt';
-import { constants, transferMethodsInWords } from '../../../util/constants';
-import ProgressBar from '../progress-bar/ProgressBar';
+import { constants } from '../../../util/constants';
 import Modal from './TransactionDetail.css'
+import TransferDetailsBox from '../parts/TransferDetailsBox';
+import RecipientDetailsBox from '../parts/RecipientDetailsBox';
 
 const ref: any = React.createRef()
 
@@ -20,7 +17,6 @@ const TransactionDetail = (props: any) => {
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
     const recipients = useSelector((state: any) => state.recipients.recipients);
     const transfer = useSelector((state: any) => state.transfer);
-    const dispatch = useDispatch();
     const history = useHistory();
     const showMobileModal = (bool: boolean) => {
         handleOpenMobileTimeline(bool)
@@ -97,7 +93,7 @@ const TransactionDetail = (props: any) => {
                 </div>
 
                 <div className="details">
-                    <div className="recipient-details mobile-hide">
+                    {/* <div className="recipient-details mobile-hide">
                         <div className="heading">
                             <div className="title">Recipient’s Details</div>
                             <div className="update">Update</div>
@@ -131,51 +127,11 @@ const TransactionDetail = (props: any) => {
                             <div className="left">Account Number</div>
                             <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                         </div>
-                    </div>
-                    <div className="transfer-details" >
-                        <div className="heading">
-                                <div className="title">Transfer Details</div>
-                                {/* <div className="update">Update</div> */}
-                            </div>
-                            <hr/>
-                            <div className="row">
-                                <div className="left">Transfer method</div>
-                                <div className="right sentence-case">{transferMethodsInWords[data.transferMethod]}</div>
-                            </div>
-                            <div className="row">
-                                <div className="left">You send</div>
-                                <div className="right"><b>{formatCurrency(data.originAmount)} {data.originCurrency}</b></div>
-                            </div>
-                            <div className="row">
-                                <div className="left">Exchange rate</div>
-                                <div className="right"> 1 {data?.meta?.exchangeBase} = {data?.meta?.exchangeRate} {data?.meta?.exchangeTarget} </div>
-                            </div>
-                            <div className="row">
-                                <div className="left">Service fee</div>
-                                <div className="right"> {data?.meta?.serviceFee} {data.originCurrency} </div>
-                            </div>
-                            {data?.meta?.promoCode && <div className="row">
-                                <div className="left">Promo used</div>
-                                <div className="right"> {data?.meta?.promoCode}</div>
-                            </div>}
-                            {Boolean(Number(referralDiscountValue)) && <div className="row ">
-                                <div className="left green-txt">Referral Discount</div>
-                                <div className="right uppercase green-txt"> {referralDiscountValue} {data.originCurrency} </div>
-                            </div>}
-                            <div className="row">
-                                <div className="left">They get <small className="sentence-case"> ({data?.transferMethod.replace("_", " ")} fee inclusive) </small> </div>
-                                <div className="right "><b>{formatCurrency(data.destinationAmount)} {data.destinationCurrency}</b> </div>
-                            </div>
-                            <div className="row">
-                                <div className="left">Total paid</div>
-                                <div className="right"><b className="green">{data?.meta?.totalToPay} {data.originCurrency} </b></div>
-                            </div>
-                            {/* <div className="row">
-                                <div className="left">Transfer time</div>
-                                <div className="right">within 2 hours</div>
-                            </div> */}
-                    </div>
-                    <div className="recipient-details desktop-hide">
+                    </div> */}
+                    <RecipientDetailsBox recipientData={recipient} />
+                    <TransferDetailsBox transferData={data}  />
+
+                    {/* <div className="recipient-details desktop-hide">
                         <div className="heading">
                             <div className="title">Recipient’s Details</div>
                             <div className="update">Update</div>
@@ -209,7 +165,7 @@ const TransactionDetail = (props: any) => {
                             <div className="left">Account Number</div>
                             <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

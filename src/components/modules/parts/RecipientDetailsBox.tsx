@@ -67,11 +67,13 @@ const Div = styled.div`
 }
 `
 
-const RecipientDetailsBox = (props: any) => {
-    const {hideType, green_mamba} = props;
-    const recipient = useSelector((state: any) => state.recipients.recipient)
+const RecipientDetailsBox = ({hideType, green_mamba, recipientData} : any) => {
+
+    let recipient = useSelector((state: any) => state.recipients.recipient)
     const transfer = useSelector((state: any) => state.transfer)
-    console.log(recipient.profile.pickupPoint, "::here")
+    if (recipientData) {
+        recipient = recipientData
+    }
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
@@ -86,13 +88,13 @@ const RecipientDetailsBox = (props: any) => {
                 </div>
                 <div className="row">
                     <div className="left">Mobile Number.</div>
-                    <div className="right">{recipient.profile.mobile}</div>
+                    <div className="right">{recipient?.profile?.mobile}</div>
                 </div>
                 {
                     transfer.transferMethod === 'mobile_money' &&
                     <div className="row">
                         <div className="left">Network provider</div>
-                        <div className="right">{recipient.profile.mobileMoneyProvider || '-'}</div>
+                        <div className="right">{recipient?.profile?.mobileMoneyProvider || '-'}</div>
                     </div>
                 }
                 <div className="row">
@@ -112,7 +114,7 @@ const RecipientDetailsBox = (props: any) => {
                     transfer.transferMethod === 'bank_transfer'  &&
                     <div className="row">
                         <div className="left">Recipient’s account number</div>
-                        <div className="right">{recipient.profile.accountNumber || '-'}</div>
+                        <div className="right">{recipient?.profile?.accountNumber || '-'}</div>
                     </div>
                 }
 

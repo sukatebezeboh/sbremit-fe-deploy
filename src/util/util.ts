@@ -80,11 +80,8 @@ export const genPaginationHashTable = (array: any[], noPerPage: number) => {
     return {paginated: hashTable, pages }
 }
 
-export const downloadPDF = (id: string) => {
-    const element = document.getElementById(id)
-}
 
-export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object).length)
+export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object || {}).length)
 
 
 export const replaceUnderscores = (method: string) => {

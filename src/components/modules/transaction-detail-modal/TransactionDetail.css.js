@@ -206,46 +206,16 @@ export default styled.div`
             grid-template-columns: 3fr 2.3fr;
             width: 90% ;
             margin: 0px auto 50px;
+            gap: 5%;
+            >div>div {
+                margin-top: 0;
+            }
             .recipient-details {
                 margin-left: 25px;
             }
             hr {
                 margin: 20px 0px;
                 border: 1px solid #f8f7f8;
-            }
-            >div {
-                background: #FFFFFF 0% 0% no-repeat padding-box;
-                box-shadow: 0px 10px 12px #CCCCCC80;
-                border-radius: 15px;
-                width: 90%;
-                padding: 50px;
-                margin: auto;
-                .heading {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    .title {
-                        font: normal normal normal 20px/24px Montserrat;
-                        color: #A3A3A3;
-                    }
-                    .update {
-                        text-align: right;
-                        font: normal normal normal 16px/19px Montserrat;
-                        color: #007B5D;
-                    }
-                }
-                .row {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    margin: 5px 0px;
-                    font: normal normal normal 16px/44px Montserrat;
-                    .left {
-                        color: #A3A3A3;
-                    }
-                    .right {
-                        text-align: right;
-                        color: #424242;
-                    }
-                }
             }
         }
     }
