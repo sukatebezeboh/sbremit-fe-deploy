@@ -52,7 +52,7 @@ const Div = styled.div`
                 width: 12% !important;
             }
             .account-number {
-                width: 25% !important;
+                width: 100% !important; /* Initial value was 25% with other fields   */
                 margin-right: 5px;
             }
         }
@@ -422,12 +422,16 @@ function NewRecipientModal(props: any) {
                         >
                             Bank transfer
                         </li>
-                        <li
-                            className={`${modeTransfer === 'microfinanceTransfer' ? 'underline microfinance' : 'microfinance'}`}
-                            onClick={() => setModeTransfer('microfinanceTransfer')}
-                        >
-                            Microfinance transfer
-                        </li>
+                        {
+                            transfer.toReceive.countryCode === 'CM'
+                            ? (<li
+                                className={`${modeTransfer === 'microfinanceTransfer' ? 'underline microfinance' : 'microfinance'}`}
+                                onClick={() => setModeTransfer('microfinanceTransfer')}
+                            >
+                                Microfinance transfer
+                            </li>)
+                            : ''
+                        }
                     </ul>
                 </div>
                 )}
@@ -600,13 +604,7 @@ function NewRecipientModal(props: any) {
                                         {modeTransfer === "bankTransfer" && (
                                         <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
                                             <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.bankCode || errors.branchCode || errors.accountNumber || errors.key}</span> </div>
-                                            <Field as="select" name="countryCode">
-                                                <option value="CM12">CM21</option>
-                                            </Field>
-                                            <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
-                                            <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
                                             <Field type="text" className="account-number" name="accountNumber" placeholder="Account no" />
-                                            <Field type="text" className="key" name="key" placeholder="key" />
                                         </div>
                                         )}
                                         {modeTransfer === "microfinanceTransfer" && (
