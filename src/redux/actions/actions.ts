@@ -7,6 +7,7 @@ import {
   CONFIRM,
   CREATE_ACCOUNT_ERROR,
   CREATE_ACCOUNT_SUCCESS,
+  EXCHANGE_SPREADS,
   LOADING,
   NOTIFICATIONS,
   RECIPIENT,
@@ -736,6 +737,8 @@ export const setNewQuoteWithoutAuth = (
       }
     })
     .catch((error) => {
+      store.dispatch({ type: LOADING, payload: false })
+    }).then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
 }
@@ -1512,7 +1515,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
       }
     })
     .catch((err) => {
-      console.log(err);
+      ;
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -1579,7 +1582,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
     customerAccountNumber: payload.phoneCode + payload.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
         if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
@@ -1646,7 +1649,7 @@ export const verifyPivotRecipientAccount = (payload: any, callback = () => {}) =
     customerAccountNumber: payload?.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
           toastAction({
             show: true,
@@ -1703,16 +1706,32 @@ export const inviteBusinessUser = (values: any) => {
 export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:Function) => {
   store.dispatch({ type: LOADING, payload: true })
 
-  axios.get( endpoints.UTC_DATE_TIME_UTIL )
+  axios.get( config.API_HOST + endpoints.UTC_DATE_TIME_UTIL )
   .then(res=> {
       if (res?.data?.status == "200" ) {
         const utcDateTime = res?.data?.data?.utc_time
-        setUtcDateTime?.(utcDateTime)        
+        setUtcDateTime?.(utcDateTime)
       }
   }).catch(() => {
 
   })
   .then(() => {
     store.dispatch({ type: LOADING, payload: false })
+  })
+}
+
+export const getSpreads = () => {
+  store.dispatch({type: LOADING, payload: true})
+
+  axios.get(parseEndpointParameters(config.API_HOST + endpoints.EXCHANGE_RATE_SPREADS), {
+    headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+  })
+  .then(res => {
+      if (res.data.status === "200") {
+          store.dispatch({type: EXCHANGE_SPREADS, payload: [...res.data.data ] })
+      }
+  }).catch(err=>
+  .then(()=>{
+      store.dispatch({type: LOADING, payload: false})
   })
 }

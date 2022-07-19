@@ -9,10 +9,11 @@ import {
   notifications,
   createAccountSuccess,
   createAccountError,
-  confirmDialog
+  confirmDialog,
 } from './app'
 import { recipients } from './recipients'
 import { transfer } from './transfer'
+import {  exchange } from './exchange'
 
 export interface IAction {
   type: string
@@ -31,5 +32,6 @@ export default combineReducers({
   loading,
   transfer,
   notifications,
-  confirmDialog
+  confirmDialog,
+  exchange
 })

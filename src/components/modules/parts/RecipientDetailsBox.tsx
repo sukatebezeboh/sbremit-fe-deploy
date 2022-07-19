@@ -74,6 +74,7 @@ const RecipientDetailsBox = ({hideType, green_mamba, recipientData} : any) => {
     if (recipientData) {
         recipient = recipientData
     }
+    
     return (
         <Div className={hideType}>
             <div className={`${green_mamba && 'recipient-details'}`}>
