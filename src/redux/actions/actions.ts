@@ -1730,7 +1730,8 @@ export const getSpreads = () => {
       if (res.data.status === "200") {
           store.dispatch({type: EXCHANGE_SPREADS, payload: [...res.data.data ] })
       }
-  }).catch(err=>
+  })
+  .catch(err=>{})
   .then(()=>{
       store.dispatch({type: LOADING, payload: false})
   })
