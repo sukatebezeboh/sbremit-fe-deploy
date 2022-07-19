@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toastAction } from "redux/actions/actions";
+import store from "redux/store";
 import { constants, currencySymbols, remittanceHandlers, remittanceHandlersTransferCriteria } from "./constants";
 import { settings } from "./settings";
 
@@ -372,5 +373,12 @@ export const getRemittanceHandler = (transfer: any): ('PIVOT'|'MANUAL') => {
     return remittanceHandlers.MANUAL_REMITTANCE_HANDLER
 }
 
+export const isCurrencyPairDowntimeUp = (baseCurrency: string, targetCurrency: string) => {
+    const spreads = store.getState().exchange.exchangeRateSpreads;
 
+    const spread = spreads.find((spread: any) => spread?.base?.toUpperCase() === baseCurrency?.toUpperCase() && spread?.target?.toUpperCase() === targetCurrency?.toUpperCase());
+
+    console.log(spread, ":::IN CHECK")
+    return Boolean(Number(spread?.downtimeStatus));
+}
 

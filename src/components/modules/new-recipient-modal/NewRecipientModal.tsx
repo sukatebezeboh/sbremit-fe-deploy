@@ -633,7 +633,7 @@ function NewRecipientModal(props: any) {
                                 </div>
                                 <div className="modal-btns">
                                     <span onClick={()=>openModal(false)}>Cancel</span>
-                                    { 
+                                    {
                                         showVerifyStep
                                         ? <FormButton onClick={(e: any) => verifyRecipient(e, values, errors)} label={"Verify"} />
                                         : <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label={isObjectNotEmpty(recipientData) ? "Save" : "Add recipient"} formName={paths.RECIPIENT} />
