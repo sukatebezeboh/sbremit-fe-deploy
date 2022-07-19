@@ -75,7 +75,7 @@ const CurrencyPairDowntimeNotif = ({ toSendFlag, toRecieveFlag, setClose, handle
                 </div>
                 <div className="info-container">
                     <p className="info-text">
-                        Currency Pair is experiencing a downtime at the moment
+                        Currency pair is experiencing a downtime at the moment
                     </p>
                     <button className="modify-btn" onClick={handleContinue}>Continue</button>
                 </div>

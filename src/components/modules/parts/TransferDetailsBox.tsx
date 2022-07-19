@@ -134,12 +134,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
     const getTransferFeeText = (selectedMethod: string) => {
         selectedMethod = getTransferMethodById(selectedMethod) || selectedMethod
         const texts: any = {
-            "mobile_money": `Mobile Operator <a href="#" class='light-green click-hover-tab'>Cash Out Fee</a>:
-                <div class="hover-tab">
-                    <div class="tab-list"> <a href="https://mtn.cm/momo/fees" target="_blank">MTN MOMO Fees</a> </div>
-                    <div class="tab-list"> <a href="https://www.orange.cm/fr/tarification-orange-money.html" target="_blank"> Orange Money Fees </a> </div>
-                </div>
-            `,
+            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee</a>`,
             "bank_transfer": `Bank Pay Out Fee: <a href="#" class='light-green click-hover-tab fas fa-info'></a>
             <div class="hover-tab">
                 <div class="tab-list"> A fee charged by local payout partner which is added to the amount you send or deducted from the amount the recipient gets </div>
