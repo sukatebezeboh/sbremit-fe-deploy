@@ -378,7 +378,6 @@ export const isCurrencyPairDowntimeUp = (baseCurrency: string, targetCurrency: s
 
     const spread = spreads.find((spread: any) => spread?.base?.toUpperCase() === baseCurrency?.toUpperCase() && spread?.target?.toUpperCase() === targetCurrency?.toUpperCase());
 
-    
     return Boolean(Number(spread?.downtimeStatus));
 }
 
