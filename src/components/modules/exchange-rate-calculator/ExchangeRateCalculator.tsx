@@ -1,18 +1,19 @@
 import _env from 'env';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from './ExchangeRateCalculator.css'
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { paths } from 'util/paths';
-import { setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
+import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer, getSpreads, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { CookieService } from '../../../services/CookieService';
 import { constants, countriesTransferMethodAvailability } from '../../../util/constants';
-import { formatCurrency } from '../../../util/util';
+import { formatCurrency, isCurrencyPairDowntimeUp } from '../../../util/util';
 import LandingPageExchangeRateInput from '../exchange-rate-input/LandingPageExchangeRateInput';
 import FancyToggle from '../parts/FancyToggle';
 import PromoCodeField from '../promo-code-field/PromoCodeField';
 import Modal from '../modal/Modal'
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries'
+import CurrencyPairDowntimeNotif from '../currency-pair-downtime/CurrencyPairDowntime';
 
 const ExchangeRateCalculator = ({
     page,
@@ -42,8 +43,20 @@ const ExchangeRateCalculator = ({
 
     const history = useHistory()
     const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
+    const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
     const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
 
+    useEffect(() => {
+        getSpreads()
+    }, [])
+
+    const continueSending = () => {
+        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
+            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
+        } else{
+            setOpenComingSoonModal(true)
+        }
+    }
   return (
     <Container className="exchange-rate-calculator">
         <div className="calculator-inner">
@@ -175,14 +188,13 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
+            <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} />} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} />
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
-                    setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
+                if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
+                    return setOpenCurrencyPairDowntimeNotif(true)
                 }
-                else{
-                    setOpenComingSoonModal(true)
-                }
+                continueSending()
             }} >Start sending money</button>
         </div>
     </Container>

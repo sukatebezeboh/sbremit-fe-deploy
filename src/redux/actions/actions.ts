@@ -7,6 +7,7 @@ import {
   CONFIRM,
   CREATE_ACCOUNT_ERROR,
   CREATE_ACCOUNT_SUCCESS,
+  EXCHANGE_SPREADS,
   LOADING,
   NOTIFICATIONS,
   RECIPIENT,
@@ -736,6 +737,8 @@ export const setNewQuoteWithoutAuth = (
       }
     })
     .catch((error) => {
+      store.dispatch({ type: LOADING, payload: false })
+    }).then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
 }
@@ -1714,5 +1717,21 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:
   })
   .then(() => {
     store.dispatch({ type: LOADING, payload: false })
+  })
+}
+
+export const getSpreads = () => {
+  store.dispatch({type: LOADING, payload: true})
+
+  axios.get(parseEndpointParameters(config.API_HOST + endpoints.EXCHANGE_RATE_SPREADS), {
+    headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+  })
+  .then(res => {
+      if (res.data.status === "200") {
+          store.dispatch({type: EXCHANGE_SPREADS, payload: [...res.data.data ] })
+      }
+  }).catch(err=>console.log(err))
+  .then(()=>{
+      store.dispatch({type: LOADING, payload: false})
   })
 }

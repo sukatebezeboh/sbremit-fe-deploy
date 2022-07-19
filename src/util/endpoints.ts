@@ -36,7 +36,8 @@ const endpoints = {
     TRANSFER_QUOTE: '/transfer/quote',
     VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate',
     INVITE_BUSINESS_USERS: '/business/invite',
-    UTC_DATE_TIME_UTIL: '/time/utc'
+    UTC_DATE_TIME_UTIL: '/time/utc',
+    EXCHANGE_RATE_SPREADS: '/rate/spreads'
 }
 
 export default endpoints;
