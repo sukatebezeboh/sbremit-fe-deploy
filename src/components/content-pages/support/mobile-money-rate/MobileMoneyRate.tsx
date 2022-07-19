@@ -24,7 +24,7 @@ const Support = () => {
         setOpenPanels( [...new Set([...openPanels, panelId])] )
     }
 
-    console.log(servicesData)
+    
 
     return (
         <Body>

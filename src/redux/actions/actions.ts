@@ -1515,7 +1515,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
       }
     })
     .catch((err) => {
-      console.log(err);
+      ;
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -1582,7 +1582,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
     customerAccountNumber: payload.phoneCode + payload.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
         if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
@@ -1649,7 +1649,7 @@ export const verifyPivotRecipientAccount = (payload: any, callback = () => {}) =
     customerAccountNumber: payload?.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
           toastAction({
             show: true,
@@ -1730,7 +1730,7 @@ export const getSpreads = () => {
       if (res.data.status === "200") {
           store.dispatch({type: EXCHANGE_SPREADS, payload: [...res.data.data ] })
       }
-  }).catch(err=>console.log(err))
+  }).catch(err=>
   .then(()=>{
       store.dispatch({type: LOADING, payload: false})
   })
