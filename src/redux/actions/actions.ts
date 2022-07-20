@@ -1624,7 +1624,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           timeout: 5000,
           defaultThemeName: themeNames.CENTER_PROMPT,
           title: `The recipient details were not received`,
-          message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
+          message: "<div style='color: grey;'>Please provide a valid mobile number</div>",
           close: () => {
             unstackNewToast({name: "confirm-momo-recipient-mismatch"})
           },

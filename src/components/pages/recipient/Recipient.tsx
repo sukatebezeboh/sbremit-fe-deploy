@@ -167,6 +167,10 @@ const Recipient = () => {
 
         updateTransferRecipient(()=>history.push(paths.PAYMENT_METHOD + "?t=" + paramTransferId), paramTransferId);
     }
+
+   /*  const handleRecipientHover = (event) => {
+        return event ? true : false;
+    } */
     return (
         <Body>
             <NavBar />
@@ -200,8 +204,13 @@ const Recipient = () => {
                                     <span>Add recipient</span>
                                 </div>
                                 {
-                                    filteredRecipients.map((recipient: any, i: number)=>(
-                                        <div key={i} className={`recipient ${selectedRecipient?.id == recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
+                                    filteredRecipients.map((recipient: any)=>(
+                                        <div key={recipient.id} className={`recipient /* hoveredRecipientId === recipient.id && 'recipient-hovered' */ ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)} /* onMouseEnter={() => handleRecipientHover(recipient.id)} */>
+                                            {
+                                                <div className='recipient-dropdown-container'>
+                                                    <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
+                                                </div>
+                                            }
                                             <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
                                             <div>
                                                 <div>{recipient.firstName + ' ' + recipient.lastName}</div>
@@ -209,7 +218,6 @@ const Recipient = () => {
                                                 {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
                                             </div>
                                         </div>
-
                                     ))
                                 }
                             </div>

@@ -85,8 +85,6 @@ export default styled.div`
                         }
                     }
                 }
-
-            
             }
         }
     .page-content {
@@ -127,6 +125,7 @@ export default styled.div`
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 .recipient {
+                    position: relative;
                     display: grid!important;
                     grid-template-rows: 1fr 1fr;
                     border-radius: 8px;
@@ -149,7 +148,7 @@ export default styled.div`
                     .recipient-transfer-method {
                         color: #A3A3A3;
                     }
-                    @media only screen and (min-width: 2550px) and (max-width: 4000px) { 
+                    @media only screen and (min-width: 2550px) and (max-width: 4000px) {
                         padding: 45px 0px;
                         height: 220px;
                     }
@@ -159,6 +158,16 @@ export default styled.div`
                     color: white;
                     img {
                         border-radius: 0px;
+                    }
+                }
+
+                .recipient-dropdown-container {
+                    position: absolute;
+                    right: 5px;
+                    cursor: pointer;
+
+                    .recipient-dropdown-btn {
+                        height: 80px;
                     }
                 }
             }
