@@ -837,7 +837,7 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     .then(res => {
       if(res.data.status === "200"){
           const data = res.data.data;
-          if (data?.base?.toUpperCase() === "EUR") {
+          if (data?.base?.toUpperCase() === "EUR" && data?.target?.toUpperCase() === "XAF" ) {
               data.rate = 655.96;
           }
           store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
