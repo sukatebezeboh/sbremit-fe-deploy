@@ -42,11 +42,13 @@ const Body = styled.div`
         .payment-options-card {
             background: #fff;
             padding: 15px;
-            display: inline-block;
+            display: inline-grid;
+            grid-template-columns: 0fr 1fr;
             margin: 10px 10px 50px;
             min-width: 200px;
             cursor: pointer;
             box-shadow: 1px 1px 3px grey;
+            border-radius: 2px;
 
             .inp-container {
                 display: block;
