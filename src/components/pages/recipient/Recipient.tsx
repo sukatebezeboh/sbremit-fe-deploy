@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
+import { deleteRecipient, getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -29,6 +29,8 @@ const Recipient = () => {
     const [selectedRecipient, setSelectedRecipient] = useState(recipient)
     const [filteredRecipients, setFilteredRecipients] = useState(recipients);
     const [recipientDataForUpdate, setRecipientDataForUpdate] = useState({})
+    const [hoveredRecipientId, setHoveredRecipientId] = useState(null)
+
     useEffect(() => {
         getRecipients();
         getUserTransactions();
@@ -167,6 +169,16 @@ const Recipient = () => {
 
         updateTransferRecipient(()=>history.push(paths.PAYMENT_METHOD + "?t=" + paramTransferId), paramTransferId);
     }
+
+    const handleRecipientDelete  = (recipientId: string|number) => {
+
+        deleteRecipient(recipientId, () => getRecipients())
+
+    }
+
+    
+    const [ recipientHover, setRecipientHover ] = useState('')
+
     return (
         <Body>
             <NavBar />
@@ -200,8 +212,18 @@ const Recipient = () => {
                                     <span>Add recipient</span>
                                 </div>
                                 {
-                                    filteredRecipients.map((recipient: any, i: number)=>(
-                                        <div key={i} className={`recipient ${selectedRecipient?.id == recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
+                                    filteredRecipients.map((recipient: any)=>(
+                                        <div key={recipient.id} onMouseLeave={() => setHoveredRecipientId(null)} className={`recipient recipient-hoverable  ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={() => handleRecipientClick(recipient)} >
+                                            <div className={`recipient-dropdown-container ${selectedRecipient?.id === recipient.id && 'selected-icon'}`} onClick={() => setHoveredRecipientId(recipient.id)}>
+                                                <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
+                                            </div>
+                                            { hoveredRecipientId === recipient.id && 
+                                            <div className='recipient-dropdown-option-container'>
+                                                <div className="icon-container">
+                                                    <img className="recipient-icon-delete" src={asset('icons', 'bin.svg')} alt="" />
+                                                </div>
+                                                <div className="delete-txt" onClick={() => handleRecipientDelete(recipient.id)}>Delete</div>
+                                            </div>}
                                             <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
                                             <div>
                                                 <div>{recipient.firstName + ' ' + recipient.lastName}</div>
@@ -209,7 +231,6 @@ const Recipient = () => {
                                                 {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
                                             </div>
                                         </div>
-
                                     ))
                                 }
                             </div>

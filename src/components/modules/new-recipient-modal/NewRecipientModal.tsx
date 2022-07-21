@@ -403,7 +403,6 @@ function NewRecipientModal(props: any) {
         }
     }
 
-
     return (
         modalOpen && <Div>
             <div className="overlay">
@@ -503,29 +502,32 @@ function NewRecipientModal(props: any) {
                                         </div>
                                     </div>
 
-                                    <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
-                                        <div className="modified-tel-input">
-                                            <div>Confirm Phone number<i>*</i></div>
-                                            <PhoneNumberInput
-                                                Input={Field}
-                                                Select={Field}
-                                                isControlledComp={false}
-                                                phoneCodeExternalProps={{
-                                                    as: 'select',
-                                                    required: true,
-                                                }}
-                                                phoneCodeName="confirmPhoneCode"
-                                                countries={country ? [country] : undefined}
-                                                name="confirmMobile"
-                                                placeholder="e.g 07967885952"
-                                                showBorder={true}
-                                                isNotPaste={true}
-                                                isNotCopy={true}
-                                            />
-                                            <div className="margin-adjust"></div>
-                                            <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
-                                        </div>
-                                    </div>
+                                        {
+                                            transfer.transferMethod === 'mobile_money' &&
+                                            <div className={(touched.confirmMobile && errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-error' : (touched.confirmMobile && !errors.confirmMobile) || (touched.confirmPhoneCode && errors.confirmPhoneCode) ? 'form-success' : ''}>
+                                                <div className="modified-tel-input">
+                                                    <div>Confirm Phone number<i>*</i></div>
+                                                    <PhoneNumberInput
+                                                        Input={Field}
+                                                        Select={Field}
+                                                        isControlledComp={false}
+                                                        phoneCodeExternalProps={{
+                                                            as: 'select',
+                                                            required: true,
+                                                        }}
+                                                        phoneCodeName="confirmPhoneCode"
+                                                        countries={country ? [country] : undefined}
+                                                        name="confirmMobile"
+                                                        placeholder="e.g 07967885952"
+                                                        showBorder={true}
+                                                        isNotPaste={true}
+                                                        isNotCopy={true}
+                                                    />
+                                                    <div className="margin-adjust"></div>
+                                                    <div className="phone-no-error-box"><span className={`${errors.confirmMobile || errors.confirmPhoneCode ? 'red-txt' : 'green-txt'} form-error-message`}>{errors.confirmMobile || errors.confirmPhoneCode || 'Phone Numbers Match'  }</span> </div>
+                                                </div>
+                                            </div>
+                                        }
 
                                     {transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER && <div className={(touched.email && errors.email) ? 'form-error': ''}>
                                         <div>Mobile money provider</div>
@@ -544,27 +546,19 @@ function NewRecipientModal(props: any) {
                                     </div>}
 
                                     {
-                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
-                                        " "
-                                        :
-                                        (
-                                            <div className={(touched.email && errors.email) ? 'form-error': ''}>
-                                                <div>Email</div>
-                                                <Field type="text" name="email" placeholder="Recipient’s email address" />
-                                            </div>
-                                        )
+                                        transfer.transferMethod === "cash_pickup" &&
+                                        <div className={(touched.email && errors.email) ? 'form-error': ''}>
+                                            <div>Email {transfer.currentTransferQuote.transferMethod === "mobile_money" && '-Optional'}</div>
+                                            <Field type="text" name="email" placeholder="Recipient’s email address" />
+                                        </div>
                                     }
 
                                     {
-                                        transfer.currentTransferQuote.transferMethod === "mobile_money" ?
-                                        " "
-                                        :
-                                        (
-                                            <div className={(touched.state && errors.state) ? 'form-error': ''}>
-                                                <div>City/State</div>
-                                                <Field type="text" name="state" placeholder="" />
-                                            </div>
-                                        )
+                                        transfer.transferMethod === "cash_pickup" &&
+                                        <div className={(touched.state && errors.state) ? 'form-error': ''}>
+                                            <div>City/State</div>
+                                            <Field type="text" name="state" placeholder="" />
+                                        </div>
                                     }
 
                                     <div className={(touched.reason && errors.reason) ? 'form-error': ''}>

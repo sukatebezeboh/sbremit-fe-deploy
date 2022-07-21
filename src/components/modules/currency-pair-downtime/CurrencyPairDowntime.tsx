@@ -1,7 +1,6 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom';
 import styled  from "styled-components";
-import { countriesAndCodes } from 'util/constants';
 import { asset } from '../../../util/util';
 const Container = styled.div`
     .modal-content {
@@ -56,7 +55,7 @@ const Container = styled.div`
         }
     }
 `
-const CurrencyPairDowntimeNotif = ({ toSendFlag, toRecieveFlag, setClose, handleContinue}: any) => {
+const CurrencyPairDowntimeNotif = ({ toSendFlag, toRecieveFlag, setClose, handleContinue, toSendCountry}: any) => {
     const history = useHistory();
     return (
         <Container>
@@ -75,7 +74,12 @@ const CurrencyPairDowntimeNotif = ({ toSendFlag, toRecieveFlag, setClose, handle
                 </div>
                 <div className="info-container">
                     <p className="info-text">
-                        Currency pair is experiencing a downtime at the moment
+                        We are experiencing some delays with payments to
+                        <span className="deep-green"> {toSendCountry} </span> caused by temporary downtime.
+                        We are working to resolve this quickly and
+                        you will be notified once the system is up and
+                        running. We apologise for any inconvenience this
+                        may have caused.
                     </p>
                     <button className="modify-btn" onClick={handleContinue}>Continue</button>
                 </div>

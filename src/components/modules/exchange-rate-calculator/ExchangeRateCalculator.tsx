@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { paths } from 'util/paths';
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer, getSpreads, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { CookieService } from '../../../services/CookieService';
-import { constants, countriesTransferMethodAvailability } from '../../../util/constants';
+import { constants, countriesAndCodes, countriesTransferMethodAvailability } from '../../../util/constants';
 import { formatCurrency, isCurrencyPairDowntimeUp } from '../../../util/util';
 import LandingPageExchangeRateInput from '../exchange-rate-input/LandingPageExchangeRateInput';
 import FancyToggle from '../parts/FancyToggle';
@@ -14,6 +14,7 @@ import PromoCodeField from '../promo-code-field/PromoCodeField';
 import Modal from '../modal/Modal'
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries'
 import CurrencyPairDowntimeNotif from '../currency-pair-downtime/CurrencyPairDowntime';
+import { appValues } from 'redux/reducers/app';
 
 const ExchangeRateCalculator = ({
     page,
@@ -45,6 +46,7 @@ const ExchangeRateCalculator = ({
     const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
     const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
     const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
+    const countryName = countriesAndCodes.find((_country: any) => _country.countryCode === transfer.toReceive.countryCode)?.name
 
     useEffect(() => {
         getSpreads()
@@ -57,6 +59,7 @@ const ExchangeRateCalculator = ({
             setOpenComingSoonModal(true)
         }
     }
+    
   return (
     <Container className="exchange-rate-calculator">
         <div className="calculator-inner">
@@ -188,8 +191,8 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} />} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} />
-            <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
+            <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} toSendCountry={countryName}/>} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} />
+            <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
                 if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
                     return setOpenCurrencyPairDowntimeNotif(true)
