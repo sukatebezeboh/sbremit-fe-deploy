@@ -35,7 +35,6 @@ const Body = styled.div`
                     margin-top: -40px;
                     transform: scale(0.6, 0.6) rotate(-10deg);
                 }
-                
             }
             .completed-head {
                 font: normal normal 600 25px/40px Montserrat;
@@ -47,6 +46,7 @@ const Body = styled.div`
                 color: #A3A3A3;
                 margin-top: 20px;
                 margin-bottom: 70px;
+                padding: 10px 30px;
             }
             .download {
                 >div {
@@ -112,6 +112,7 @@ const Body = styled.div`
                     margin: auto;
                     font: normal normal normal 13px/20px Montserrat;
                     margin-bottom: 30px;
+                    
                 }
                 .download {
                     >div {
@@ -182,7 +183,6 @@ const TransferComplete = () => {
                         <div className="success-icon">
                             <SuccessIcon />
                         </div>
-                        
                         <div className="completed-head">
                             Transfer created!
                         </div>

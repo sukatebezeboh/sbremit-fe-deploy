@@ -47,12 +47,75 @@ const Body = styled.div`
             min-width: 200px;
             cursor: pointer;
             box-shadow: 1px 1px 3px grey;
-            .title {
-                font-size: 18px;
+
+            .inp-container {
+                display: block;
+                position: relative;
+                padding-left: 35px;
+                margin-bottom: 12px;
+                cursor: pointer;
+                font-size: 22px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+
+                input {
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                    height: 0;
+                    width: 0;
+
+                }
+
+                .checkmark {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 14px;
+                    width: 14px;
+                    background-color: #cfcfcf;
+                    border-radius: 50%;
+                }
+
+                .container:hover input ~ .checkmark {
+                    background-color: #ccc;
+                }
+
+                input:checked ~ .checkmark {
+                    background-color: #007B5D;
+                }
+
+                .checkmark:after {
+                    content: "";
+                    position: absolute;
+                    display: none;
+                }
+
+                input:checked ~ .checkmark:after {
+                    display: block;
+                }
+
+                .checkmark:after {
+                    top: 4px;
+                    left: 4px;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: white;
+                }
+
             }
-            .provider {
-                font-size: 12px;
-                text-align: right;
+
+            .method-container {
+
+                .title {
+                    font-size: 18px;
+                }
+                .provider {
+                    font-size: 12px;
+                }
             }
         }
 
@@ -378,18 +441,25 @@ const PaymentMethod = () => {
                     <div className="green-txt desktop-hide view-td">View transfer details</div>
                 </div>
                 <div className="box-container details">
-                    
                     <div>
                         {
                             paymentMethodOptions.map((pm: any) => (
-                                <div className={`payment-options-card ${pm.slug === selected && "selected-border-green"}`} onClick={() => setSelected(pm.slug)}>
-                                    <div className="title">
-                                        {pm.method}
+                                <label htmlFor={pm.method}>
+                                    <div className={`payment-options-card ${pm.slug === selected && "selected-border-green"}`} onClick={() => setSelected(pm.slug)}>
+                                        <div className="inp-container">
+                                            <input type="radio" name="payment-option" id={pm.method} value={pm.method} />
+                                            <span className="checkmark"></span>
+                                        </div>
+                                        <div className="method-container">
+                                            <div className="title">
+                                                {pm.method}
+                                            </div>
+                                            <div className="provider green-txt">
+                                                {pm.provider}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="provider green-txt">
-                                        {pm.provider}
-                                    </div>
-                                </div>
+                                </label>
                             ))
                         }
                         {
