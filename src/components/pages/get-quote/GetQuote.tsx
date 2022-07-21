@@ -290,8 +290,7 @@ const GetQuote = () => {
 
     const getTransferFeeText = (selectedMethod: string) => {
         const texts: any = {
-            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee </a>
-            `,
+            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee </a>`,
             "bank_transfer": "Bank Pay Out Fee: ",
             "cash_pickup": "Cash Pick-up Partner Fee: "
         }
@@ -310,7 +309,7 @@ const GetQuote = () => {
 
     const continueSending = () => {
         if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
-            setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
+            handleContinue()
         } else{
             setOpenComingSoonModal(true)
         }
