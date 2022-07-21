@@ -1736,3 +1736,13 @@ export const getSpreads = () => {
       store.dispatch({type: LOADING, payload: false})
   })
 }
+
+
+export const deleteRecipient = (recipientId: any, callback: Function) => {
+  const user = store.getState().auth.user;
+  http.delete(parseEndpointParameters(endpoints.RECIPIENT, user.id, recipientId))
+  .then((res) => {
+    console.log(res)
+    callback();
+  })
+}

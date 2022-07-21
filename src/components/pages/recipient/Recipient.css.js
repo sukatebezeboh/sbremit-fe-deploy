@@ -148,11 +148,74 @@ export default styled.div`
                     .recipient-transfer-method {
                         color: #A3A3A3;
                     }
+
+                    .recipient-dropdown-option-container {
+                        position: absolute;
+                        display: flex;
+                        gap: 5px;
+                        font-weight: bold;
+                        top: 0;
+                        right: 0;
+                        padding: 10px 10px 0px;
+                        width: 100%;
+                        background: #fff;
+                        box-shadow: 0px 5px 5px 1px rgb(0 0 0 / 20%);
+                        border-radius: 8px 8px 0px 0px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background: red;
+                            color: white ;
+                        }
+                        .icon-container {
+                            display: inline-block;
+                            height: fit-content;
+                            max-height: 30px;
+
+                        }
+
+                        .delete-txt {
+                            margin-top: 2px;
+                        }
+
+                        .recipient-icon-delete {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
+                    .selected-icon .recipient-dropdown-option-container {
+                        position: absolute;
+                        display: flex;
+                        gap: 5px;
+                        font-weight: bold;
+                        top: 0;
+                        right: 0;
+                        padding: 10px;
+                        width: 100%;
+                        background: #fff;
+                        box-shadow: 2px 10px 8px 10px rgba(0, 0, 0, 0.2);
+
+                        .icon-container {
+                            display: inline-block;
+                        }
+
+                        .delete-txt {
+                            margin-top: 2px;
+                        }
+
+                        .recipient-icon-delete {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
                     @media only screen and (min-width: 2550px) and (max-width: 4000px) {
                         padding: 45px 0px;
                         height: 220px;
                     }
                 }
+
                 .plus {
                     background: #007B5D;
                     color: white;
@@ -160,18 +223,32 @@ export default styled.div`
                         border-radius: 0px;
                     }
                 }
+                .recipient-hoverable{
 
-                .recipient-dropdown-container {
-                    position: absolute;
-                    right: 5px;
-                    cursor: pointer;
-
-                    .recipient-dropdown-btn {
-                        height: 80px;
+                    .recipient-dropdown-container {
+                        display: none ;
+                        .recipient-dropdown-btn {
+                            height: 80px;
+                        }
                     }
                 }
-            }
+
+                .recipient-hoverable:hover{
+                    position: relative;
+
+                    .recipient-dropdown-container {
+                        position: absolute;
+                        right: 5px;
+                        cursor: pointer;
+                        display: inline-block;
+
+                        .recipient-dropdown-btn {
+                            height: 80px;
+                        }
+                    }
+                }
         }
+    }
 
         .search {
             float: right;
