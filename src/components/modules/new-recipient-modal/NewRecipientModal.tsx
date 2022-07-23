@@ -8,7 +8,7 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { BANKNAME, countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
 import { asset, isObjectNotEmpty } from '../../../util/util';
 import { themeNames } from '../toast-factory/themes';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
@@ -52,7 +52,18 @@ const Div = styled.div`
                 width: 12% !important;
             }
             .account-number {
-                width: 100% !important; /* Initial value was 25% with other fields   */
+                width: 25% !important;
+                margin-right: 5px;
+            }
+            .display-show {
+                display: inline-block;
+            }
+            .display-out {
+                display: none;
+            }
+
+            .show-account-number {
+                width: 100% !important;
                 margin-right: 5px;
             }
         }
@@ -339,6 +350,7 @@ function NewRecipientModal(props: any) {
     const dispatch = useDispatch()
     const [otherReasons, setOtherReasons] = useState(false);
     const [reasonValue, setReasonValue] = useState('');
+    const [bankValue, setBankValue] = useState('');
     const [modeTransfer, setModeTransfer] = useState<String>('bankTransfer');
     const [ showVerifyStep, setShowVerifyStep ] = useState(false);
     const transfer = useSelector((state: any) => state.transfer)
@@ -382,6 +394,12 @@ function NewRecipientModal(props: any) {
             setReasonValue(value)
             setOtherReasons(false)
         }
+    }
+
+    const handleBankChange = (e: any) => {
+        const {value} = e.target;
+        if (value === 'Other') setBankValue('');
+        else setBankValue(value);
     }
 
     useEffect(() => {
@@ -590,7 +608,20 @@ function NewRecipientModal(props: any) {
                                         {modeTransfer === "bankTransfer" && (
                                         <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
                                             <div> Beneficiary Bank Name<i>*</i></div>
-                                            <Field type="text" name="bankName" placeholder="" />
+                                            {
+                                                !(transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ')
+                                                ? <Field type="text" name="bankName" placeholder="" />
+                                                : <Field as="select"  name='bankName' value={bankValue || initialValues.bankName} onInput={(e: any) => handleBankChange(e)}>
+                                                        <option value="">Select</option>
+                                                        {
+                                                            BANKNAME.map((name: string) => (
+                                                                <option value={name}>{name}</option>
+                                                                )
+                                                            )
+                                                        }
+
+                                                    </Field>
+                                            }
                                         </div>
                                         )}
                                         {modeTransfer === "microfinanceTransfer" && (
@@ -603,15 +634,46 @@ function NewRecipientModal(props: any) {
                                         )}
                                         {modeTransfer === "bankTransfer" && (
                                         <div className={(touched.accountNumber && errors.accountNumber) ? 'form-error transfer-fields': 'transfer-fields'}>
-                                            <div>Recipient Account Number<i>*</i> <span className="red-txt">{errors.bankCode || errors.branchCode || errors.accountNumber || errors.key}</span> </div>
-                                            <Field type="text" className="account-number" name="accountNumber" placeholder="Account no" />
+                                            <div>Recipient Account Number<i>*</i>
+                                                <span className="red-txt">
+                                                    {
+                                                        !(transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ')
+                                                        ? (errors.bankCode || errors.branchCode || errors.accountNumber || errors.key)
+                                                        : (errors.accountNumberStandAlone)
+                                                    }
+                                                </span>
+                                            </div>
+                                            {
+                                                !(transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ') &&
+                                                <span>
+                                                    <Field as="select" name="countryCode">
+                                                        <option value="CM12">CM21</option>
+                                                    </Field>
+                                                    <Field type="text" className="bank-code" name="bankCode" placeholder="Bank code" />
+                                                    <Field type="text" className="branch-code" name="branchCode" placeholder="Branch code" />
+                                                </span>
+                                            }
+
+                                            <Field type="text"
+                                                className={`account-number ${(transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ') && 'show-account-number'}`}
+                                                name={
+                                                    (transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ')
+                                                    ? "accountNumberStandAlone"
+                                                    : "accountNumber"
+                                                }
+                                                placeholder="Account no"
+                                            />
+                                            {
+                                                !(transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ') &&
+                                                <Field type="text" className="key" name="key" placeholder="key" />
+                                            }
                                         </div>
                                         )}
                                         {modeTransfer === "microfinanceTransfer" && (
                                             <>
                                                 <div>
                                                 <div>Account Number<i>*</i><span className="red-txt">{errors.recipientAccountNumber}</span></div>
-                                                <Field type="text"name="recipientAccountNumber" placeholder="Account no" />
+                                                <Field type="text" name="recipientAccountNumber" placeholder="Account no" />
                                                 </div>
                                                 <div className={(touched.accountBranch && errors.accountBranch) ? 'form-error': ''}>
                                                     <div> Account Branch<i>*</i></div>
