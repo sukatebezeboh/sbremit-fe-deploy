@@ -212,25 +212,25 @@ const Recipient = () => {
                                 {
                                     filteredRecipients
                                     .filter((isTransferMethod: any) => isTransferMethod.profile.transferMethod === transfer.transferMethod)
-                                        .map((recipient: any)=>(
-                                            <div key={recipient.id} onMouseLeave={() => setHoveredRecipientId(null)} className={`recipient recipient-hoverable  ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={() => handleRecipientClick(recipient)} >
-                                                <div className={`recipient-dropdown-container ${selectedRecipient?.id === recipient.id && 'selected-icon'}`} onClick={() => setHoveredRecipientId(recipient.id)}>
-                                                    <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
-                                                </div>
-                                                { hoveredRecipientId === recipient.id &&
-                                                <div className='recipient-dropdown-option-container'>
-                                                    <div className="icon-container">
-                                                        <img className="recipient-icon-delete" src={asset('icons', 'bin.svg')} alt="" />
-                                                    </div>
-                                                    <div className="delete-txt" onClick={() => handleRecipientDelete(recipient.id)}>Delete</div>
-                                                </div>}
-                                                <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
-                                                <div>
-                                                    <div>{recipient.firstName + ' ' + recipient.lastName}</div>
-                                                    {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({replaceUnderscores(recipient.profile.transferMethod)})</small>}
-                                                    {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
-                                                </div>
+                                    .map((recipient: any)=>(
+                                        <div key={recipient.id} onMouseLeave={() => setHoveredRecipientId(null)} className={`recipient recipient-hoverable  ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={() => handleRecipientClick(recipient)} >
+                                            <div className={`recipient-dropdown-container ${selectedRecipient?.id === recipient.id && 'selected-icon'}`} onClick={() => setHoveredRecipientId(recipient.id)}>
+                                                <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
                                             </div>
+                                            { hoveredRecipientId === recipient.id &&
+                                            <div className='recipient-dropdown-option-container'>
+                                                <div className="icon-container">
+                                                    <img className="recipient-icon-delete" src={asset('icons', 'bin.svg')} alt="" />
+                                                </div>
+                                                <div className="delete-txt" onClick={() => handleRecipientDelete(recipient.id)}>Delete</div>
+                                            </div>}
+                                            <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
+                                            <div>
+                                                <div>{recipient.firstName + ' ' + recipient.lastName}</div>
+                                                {recipient.profile.transferMethod && <small className="capitalize recipient-transfer-method" >({replaceUnderscores(recipient.profile.transferMethod)})</small>}
+                                                {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
+                                            </div>
+                                        </div>
                                     ))
                                 }
                             </div>
