@@ -126,7 +126,7 @@ const Support = () => {
 
                     <div className={`content ${isPanelOpen(3) || " collapsed"}`}>
                         <div className="body">
-                            <h3>Uganda?</h3>
+                            <h3>Uganda</h3>
                             <div className="details">
                                 <div className="compare" id="compare">
                                     <div className="section-inner">

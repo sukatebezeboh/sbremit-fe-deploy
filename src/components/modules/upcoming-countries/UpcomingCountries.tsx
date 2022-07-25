@@ -56,8 +56,7 @@ const Container = styled.div`
         }
     }
 `
-const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode,  setClose}: any) => {
-    const country = countriesAndCodes.find(country => country.countryCode === destinationCountryCode)
+const UpcomingCountries = ({ toSendFlag, toRecieveFlag, setClose, toSendCountry}: any) => {
     const history = useHistory();
 
     return (
@@ -78,7 +77,7 @@ const UpcomingCountries = ({ toSendFlag, toRecieveFlag, destinationCountryCode, 
 
                 <div className="info-container">
                     <p className="info-text">
-                        Great News!!! We are excited to announce that we will soon be remitting to  <span className="green-text">{country?.name}.</span>
+                        Great News!!! We are excited to announce that we will soon be remitting to  <span className="green-text">{toSendCountry}.</span>
                         &nbsp;Please register to indicate your interest in remitting to this country.
                     </p>
                     <button className="modify-btn" onClick={()=>history.push('/country/register')}>Register your interest</button>

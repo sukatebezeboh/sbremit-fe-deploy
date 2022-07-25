@@ -1,13 +1,16 @@
+import CurrencyPairDowntimeNotif from 'components/modules/currency-pair-downtime/CurrencyPairDowntime';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 import Modal from 'components/modules/modal/Modal';
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries';
+import _env from 'env';
 import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
+import { CookieService } from 'services/CookieService';
+import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, setNewQuoteWithoutAuth, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler, isCurrencyPairDowntimeUp } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -21,6 +24,7 @@ const GetQuote = () => {
     const user = useSelector((state: any) => state.auth.user);
     const promo = transfer.promo
     const [promoText, setPromoText] = useState("")
+    const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
 
     const conversionRate = transfer.conversionRate;
     const toSend = transfer.toSend;
@@ -286,8 +290,7 @@ const GetQuote = () => {
 
     const getTransferFeeText = (selectedMethod: string) => {
         const texts: any = {
-            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee </a>
-            `,
+            "mobile_money": `Mobile Operator <a href="/mobile-money-rate" class='light-green click-hover-tab'>Cash Out Fee </a>`,
             "bank_transfer": "Bank Pay Out Fee: ",
             "cash_pickup": "Cash Pick-up Partner Fee: "
         }
@@ -298,6 +301,18 @@ const GetQuote = () => {
 
     const setTransferMethod = (method: string) => {
         dispatch({type: TRANSFER, payload: {...transfer, transferMethod: method}})
+    }
+
+    useEffect(() => {
+        getSpreads()
+    }, [])
+
+    const continueSending = () => {
+        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
+            handleContinue()
+        } else{
+            setOpenComingSoonModal(true)
+        }
     }
 
     const calculatorProps = {
@@ -336,16 +351,15 @@ const GetQuote = () => {
                 <div className="box">
                     <ExchangeRateCalculator {...calculatorProps} />
                 </div>
+                <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} />} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} />
                 <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
                 <div className="btns">
                     <span>Cancel</span>
-                    <button onClick={()=> {
-                        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
-                            handleContinue()
+                    <button className="send-btn" onClick={()=> {
+                        if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
+                            return setOpenCurrencyPairDowntimeNotif(true)
                         }
-                        else{
-                            setOpenComingSoonModal(true)
-                        }
+                        continueSending()
                     }}>Continue</button>
                 </div>
             </div>

@@ -837,7 +837,7 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     .then(res => {
       if(res.data.status === "200"){
           const data = res.data.data;
-          if (data?.base?.toUpperCase() === "EUR") {
+          if (data?.base?.toUpperCase() === "EUR" && data?.target?.toUpperCase() === "XAF" ) {
               data.rate = 655.96;
           }
           store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
@@ -1624,7 +1624,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           timeout: 5000,
           defaultThemeName: themeNames.CENTER_PROMPT,
           title: `The recipient details were not received`,
-          message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
+          message: "<div style='color: grey;'>Please provide a valid mobile number</div>",
           close: () => {
             unstackNewToast({name: "confirm-momo-recipient-mismatch"})
           },
@@ -1734,5 +1734,15 @@ export const getSpreads = () => {
   .catch(err=>{})
   .then(()=>{
       store.dispatch({type: LOADING, payload: false})
+  })
+}
+
+
+export const deleteRecipient = (recipientId: any, callback: Function) => {
+  const user = store.getState().auth.user;
+  http.delete(parseEndpointParameters(endpoints.RECIPIENT, user.id, recipientId))
+  .then((res) => {
+    console.log(res)
+    callback();
   })
 }
