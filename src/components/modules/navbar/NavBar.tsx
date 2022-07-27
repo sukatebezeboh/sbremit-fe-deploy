@@ -5,7 +5,7 @@ import { asset, convertDateString } from '../../../util/util';
 import Bar from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
-import { fetchUserNotifications, signOutAction } from '../../../redux/actions/actions';
+import { fetchUserNotifications, signOutAction, updateUserNotifReadStatus } from '../../../redux/actions/actions';
 import { resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 
@@ -26,11 +26,12 @@ const NavBar = () => {
             setShowProfileDropdown(prev => !prev);
         }
     }
+    console.log(showNotifDropdown, "::")
 
     const notifList = (notifs: any[]) => {
         return notifs?.map((notif: any, index: any) =>
-            index < 5 && (
-            <div className={`notif-body ${notif.status.toLowerCase() }`}>
+            index < 8 && (
+            <div onClick={() => updateUserNotifReadStatus(notif.id, () => fetchUserNotifications(10))} className={`notif-body is-link ${notif.status.toLowerCase() }`}>
                 <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
                 <div>
                     <div> {notif.meta.message} <b>  </b></div>
@@ -57,6 +58,8 @@ const NavBar = () => {
         }
       })
 
+    const unreadNotifCount = notifs?.filter((notif: any) => notif?.status?.toUpperCase() === 'UNREAD')?.length
+
     return (
         <Bar>
             <div>
@@ -73,7 +76,7 @@ const NavBar = () => {
             <div className="right-opt">
                 <span className="notif">
                     <img src="/assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
-                    <span></span>
+                    <span>{unreadNotifCount}</span>
                      {showNotifDropdown && <div className="dropdown notif-dropdown">
                          <div className="notif-head">Notifications</div>
                          <hr/>
@@ -83,6 +86,7 @@ const NavBar = () => {
                          <hr/>
                          <Link to="/notifications" className="notif-more">View all notifications </Link>
                     </div> }
+                    {showNotifDropdown && <div className="invisible-overlay"  onClick={() => handleDropdownClick('notif')} ></div>}
                 </span>
                 <span className="pic">
                     <img src={`${resources.DICE_BEAR_USER}${user.profile.firstName + ' ' + user.profile.lastName + user.meta.customerId}.svg`} alt="pic" onClick={()=>handleDropdownClick('profile')}/>
