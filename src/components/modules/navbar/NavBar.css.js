@@ -61,8 +61,13 @@ const Bar = styled.div.attrs(props => ({
                 color: #A3A3A3;
             }
             span {
-                width: 10px;
-                height: 10px;
+                min-width: 20px;
+                min-height: 20px;
+                padding: 5px;
+                color: white;
+                text-align: center;
+                font-size: 14px;
+                font-weight: bolder;
                 background: #CF0921;
                 border-radius: 50%;
                 position: relative;

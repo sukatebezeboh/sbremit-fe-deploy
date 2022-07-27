@@ -1746,3 +1746,22 @@ export const deleteRecipient = (recipientId: any, callback: Function) => {
     callback();
   })
 }
+
+export const updateUserNotifReadStatus = (notifId: string|number, callback: Function) => {
+
+  const user = store.getState().auth.user;
+
+  http.put(parseEndpointParameters(endpoints.NOTIFICATIONS, user.id), {
+    id: notifId,
+    status: 'READ'
+  })
+  .then((res: any) => {
+    if (res?.data?.status == '200') {
+      callback()
+    }
+  })
+  .catch(() => {})
+  .then(() => {
+  })
+}
+
