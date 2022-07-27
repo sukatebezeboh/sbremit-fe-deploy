@@ -16,7 +16,6 @@ const NavBar = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
     const notifs = useSelector((state: any) => state.notifications)
-
     const handleDropdownClick = (type: string) => {
         if (type === 'notif') {
             setShowNotifDropdown(prev => !prev);
@@ -29,7 +28,8 @@ const NavBar = () => {
     }
 
     const notifList = (notifs: any[]) => {
-        return notifs?.map(notif => (
+        return notifs?.map((notif: any, index: any) =>
+            index < 5 && (
             <div className={`notif-body ${notif.status.toLowerCase() }`}>
                 <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
                 <div>

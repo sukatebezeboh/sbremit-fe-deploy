@@ -66,8 +66,6 @@ const Notifications = () => {
                     ))
                 }
             </div>
-
-
         </div>
     </Body>
   )

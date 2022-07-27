@@ -138,6 +138,7 @@ const Recipient = () => {
 
         setFilteredRecipients( filtered );
     }
+    console.log(filteredRecipients, "::") 
 
     const handleRecipientUpdate = () => {
         const recipientId =  getQueryParam('update');
@@ -176,9 +177,6 @@ const Recipient = () => {
 
     }
 
-    
-    const [ recipientHover, setRecipientHover ] = useState('')
-
     return (
         <Body>
             <NavBar />
@@ -212,12 +210,14 @@ const Recipient = () => {
                                     <span>Add recipient</span>
                                 </div>
                                 {
-                                    filteredRecipients.map((recipient: any)=>(
+                                    filteredRecipients
+                                    .filter((isTransferMethod: any) => isTransferMethod.profile.transferMethod === transfer.transferMethod)
+                                    .map((recipient: any)=>(
                                         <div key={recipient.id} onMouseLeave={() => setHoveredRecipientId(null)} className={`recipient recipient-hoverable  ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={() => handleRecipientClick(recipient)} >
                                             <div className={`recipient-dropdown-container ${selectedRecipient?.id === recipient.id && 'selected-icon'}`} onClick={() => setHoveredRecipientId(recipient.id)}>
                                                 <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
                                             </div>
-                                            { hoveredRecipientId === recipient.id && 
+                                            { hoveredRecipientId === recipient.id &&
                                             <div className='recipient-dropdown-option-container'>
                                                 <div className="icon-container">
                                                     <img className="recipient-icon-delete" src={asset('icons', 'bin.svg')} alt="" />

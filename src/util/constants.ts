@@ -13,6 +13,12 @@ export const REASONS = [
     "Other"
 ];
 
+export const BANKNAME = [
+   "GTB",
+   "UBA",
+   "Zeneth"
+];
+
 export const remittanceHandlers: any = {
    PIVOT_REMITTANCE_HANDLER: "PIVOT",
    MANUAL_REMITTANCE_HANDLER: "MANUAL"
