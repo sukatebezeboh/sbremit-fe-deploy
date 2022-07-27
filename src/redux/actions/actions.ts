@@ -1742,7 +1742,21 @@ export const deleteRecipient = (recipientId: any, callback: Function) => {
   const user = store.getState().auth.user;
   http.delete(parseEndpointParameters(endpoints.RECIPIENT, user.id, recipientId))
   .then((res) => {
-    console.log(res)
-    callback();
+    if (res.data.status === "200") {
+      callback();
+      toastAction({
+        show: true,
+        type: 'info',
+        timeout: 10000,
+        message: 'Recipient deleted',
+      })
+    } else {
+      toastAction({
+        show: true,
+        type: 'error',
+        timeout: 10000,
+        message: res.data?.error?.message || 'Could not delete recipient',
+      })
+    }
   })
 }
