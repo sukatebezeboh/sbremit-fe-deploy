@@ -108,7 +108,7 @@ const Bar = styled.div.attrs(props => ({
                 grid-template-columns: 1fr 5fr;
                 margin: 11px 30px;
                 border-bottom: 1px solid #f8f8f9;
-                height: 60px;
+                min-height: 60px;
                 img {
                     width: 40px;
                     height: 40px;
@@ -261,10 +261,8 @@ const Bar = styled.div.attrs(props => ({
             div.profile-dropdown {
                 width: 410px;
                 text-align: left;
-                
             }
             .notif {
-                
                 all: unset;
                 background: green;
                 display: block !important;
@@ -326,7 +324,7 @@ const Bar = styled.div.attrs(props => ({
                 grid-template-columns: 1fr 5fr;
                 margin: 7px 15px;
                 border-bottom: 1px solid #f8f8f9;
-                height: 60px;
+                min-height: 60px;
                 img {
                     width: 40px;
                     height: 40px;

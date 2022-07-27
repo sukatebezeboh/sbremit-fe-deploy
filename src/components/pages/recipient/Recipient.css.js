@@ -171,7 +171,10 @@ export default styled.div`
                             display: inline-block;
                             height: fit-content;
                             max-height: 30px;
+<<<<<<< HEAD
+=======
 
+>>>>>>> ffac3c20f47811a6f70cd1158140c5bab6a0caf2
                         }
 
                         .delete-txt {
@@ -214,6 +217,7 @@ export default styled.div`
                         padding: 45px 0px;
                         height: 220px;
                     }
+
                 }
 
                 .plus {
@@ -244,6 +248,10 @@ export default styled.div`
 
                         .recipient-dropdown-btn {
                             height: 80px;
+                            @media (max-width: 900px) {
+                                margin-top: 15px;
+                                height: 34px;
+                            }
                         }
                     }
                 }
@@ -372,6 +380,66 @@ export default styled.div`
                     img {
                         width: 40px;
                         height: 40px;
+                    }
+                    .recipient-dropdown-option-container {
+                        position: absolute;
+                        display: flex;
+                        gap: 5px;
+                        font-weight: bold;
+                        top: 0;
+                        right: 0;
+                        padding: 10px 10px 0px;
+                        width: 100%;
+                        background: #fff;
+                        box-shadow: 0px 5px 5px 1px rgb(0 0 0 / 20%);
+                        border-radius: 8px 8px 0px 0px;
+                        cursor: pointer;
+
+                        &:hover {
+                            background: red;
+                            color: white ;
+                        }
+                        .icon-container {
+                            display: inline-block;
+                            height: fit-content;
+                            max-height: 30px;
+
+                        }
+
+                        .delete-txt {
+                            margin-top: 2px;
+                        }
+
+                        .recipient-icon-delete {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
+                    .selected-icon .recipient-dropdown-option-container {
+                        position: absolute;
+                        display: flex;
+                        gap: 5px;
+                        font-weight: bold;
+                        top: 0;
+                        right: 0;
+                        padding: 10px;
+                        width: 100%;
+                        background: #fff;
+                        box-shadow: 2px 10px 8px 10px rgba(0, 0, 0, 0.2);
+
+                        .icon-container {
+                            display: inline-block;
+                        }
+
+                        .delete-txt {
+                            margin-top: 2px;
+                        }
+
+                        .recipient-icon-delete {
+                            width: 20px;
+                            height: 20px;
+                        }
                     }
                 }
             }
