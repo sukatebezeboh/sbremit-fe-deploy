@@ -499,7 +499,7 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                 {
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'remitly', 'transferFee'), status: 'neutral', format: 'rate' })
                 }
-            ], 
+            ],
         ]
     }
 }
@@ -507,7 +507,6 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
 export const getCountryMomoData = (countryServicesData: any) => {
     const cameroonMomoHeadings =  Object.keys(countryServicesData?.fees?.[0] || {})?.map((headerTxt: any) => ({content: headerTxt}))
     const cameroonMomoData =  Object.values(countryServicesData?.fees || [])?.map((data: any) => (Object.values(data).map((dataValue: any) => ({content: dataValue}))))
-    
 
     const mobileMoneyRateTableData: {heading: TableCell[][], rows: TableCell[][]} = {
         heading: [
@@ -519,4 +518,3 @@ export const getCountryMomoData = (countryServicesData: any) => {
 
     return mobileMoneyRateTableData;
 }
-

@@ -24,8 +24,6 @@ const Support = () => {
         setOpenPanels( [...new Set([...openPanels, panelId])] )
     }
 
-    
-
     return (
         <Body>
             <NavHeader page={''} />
