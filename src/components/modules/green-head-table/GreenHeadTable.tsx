@@ -1,4 +1,3 @@
-import { getExchangeRateTableData } from 'components/pages/landing-page/LandingPage.helper'
 import React, { FC } from 'react'
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from '../table/ITable'
 import Table from '../table/Table'
