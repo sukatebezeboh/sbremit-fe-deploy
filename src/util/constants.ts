@@ -737,7 +737,7 @@ export const countriesAndCodes: readonly CountryType[] = [
      "countryCode":"KE",
      "name":"Kenya",
      "phoneCode":"254",
-     "countryCodeAlt":"KEN"
+     "countryCodeAlt":"KEN",
   },
   {
      "countryCode":"KG",
@@ -1720,3 +1720,38 @@ export const countriesTransferMethodAvailability: any = {
        cash_pickup: false
    }
 };
+
+
+export const countriesAndCurrency = [
+   {
+      "countryCode":"UG",
+      "name":"Uganda",
+      "countryCodeAlt":"UGA",
+      "countryCurrency":"UGX",
+   },
+   {
+      "countryCode":"KE",
+      "name":"Kenya",
+      "countryCodeAlt":"KEN",
+      "countryCurrency":"KES",
+   },
+   {
+      "countryCode":"NG",
+      "name":"Nigeria",
+      "countryCodeAlt":"NGA",
+      "countryCurrency":"NGN",
+   },
+   {
+      "countryCode":"CM",
+      "name":"Cameroon",
+      "phoneCode":"237",
+      "countryCodeAlt":"CMR",
+      "countryCurrency":"XAF",
+   },
+   {
+      "countryCode":"TZ",
+      "name":"Tanzania",
+      "countryCodeAlt":"TZA",
+      "countryCurrency":"TZN",
+   },
+]

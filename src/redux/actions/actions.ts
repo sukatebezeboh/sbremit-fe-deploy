@@ -1778,4 +1778,3 @@ export const updateUserNotifReadStatus = (notifId: string|number, callback: Func
   .then(() => {
   })
 }
-

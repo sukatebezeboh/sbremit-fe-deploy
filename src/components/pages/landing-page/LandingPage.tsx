@@ -427,10 +427,10 @@ const LandingPage = () => {
                             <div className="listing">
                                 <div className="listing-inner">
                                     <div className="img-container">
-                                        <img 
+                                        <img
                                             src={asset('flags', listing.flag)} 
                                             srcSet={`${asset('flags', listing.flag)} 2x`} 
-                                            alt={listing.name} 
+                                            alt={listing.name}
                                             loading="lazy" />
                                     </div>
 
