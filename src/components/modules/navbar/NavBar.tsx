@@ -5,7 +5,7 @@ import { asset, convertDateString } from '../../../util/util';
 import Bar from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
-import { fetchUserNotifications, signOutAction, updateUserNotifReadStatus } from '../../../redux/actions/actions';
+import { changeCountryCurencyToCountryName, fetchUserNotifications, signOutAction, updateUserNotifReadStatus } from '../../../redux/actions/actions';
 import { countriesAndCurrency, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 
@@ -16,6 +16,7 @@ const NavBar = () => {
     const user = useSelector((state: any)=> state.auth.user)
     const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
     const notifs = useSelector((state: any) => state.notifications)
+    const getAllAltCountryCode = countriesAndCurrency.map((currency: any) => currency.countryCurrency)
     const handleDropdownClick = (type: string) => {
         if (type === 'notif') {
             setShowNotifDropdown(prev => !prev);
@@ -26,15 +27,6 @@ const NavBar = () => {
             setShowProfileDropdown(prev => !prev);
         }
     }
-    const getAllAltCountryCode = countriesAndCurrency.map((currency: any) => currency.countryCurrency)
-
-    const changeCountryCurencyToCountryName = ( str: any, arr: any ) => {
-        const checkString = countriesAndCurrency.filter((currency: any) => currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0])
-        const getCountryCurrency= checkString?.[0]?.countryCurrency
-        const getCountryName = checkString?.[0]?.name
-        return str.replace(getCountryCurrency, getCountryName)
-    }
-
     const notifList = (notifs: any[]) => {
         return notifs?.map((notif: any, index: any) =>
             notif.status === 'UNREAD' && (
@@ -71,11 +63,6 @@ const NavBar = () => {
     return (
         <Bar>
             <div>
-                {/* <span className="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span> */}
                 <span className="logo">
                     <Link to={user ? paths.DASHBOARD : paths.LANDING}> <img src="/assets/main-logo.svg" alt="logo"/> </Link>
                 </span>
