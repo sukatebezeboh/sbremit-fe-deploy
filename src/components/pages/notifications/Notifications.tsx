@@ -1,7 +1,7 @@
 import NavBar from 'components/modules/navbar/NavBar'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { fetchUserNotifications, updateUserNotifReadStatus } from 'redux/actions/actions';
+import { changeCountryCurencyToCountryName, fetchUserNotifications, updateUserNotifReadStatus } from 'redux/actions/actions';
 import { transfer } from 'redux/reducers/transfer';
 import styled from 'styled-components'
 import { countriesAndCodes, countriesAndCurrency } from 'util/constants';
@@ -61,19 +61,11 @@ const Body = styled.div`
 const Notifications = () => {
     const user = useSelector((state: any) => state.auth.user);
     const notifs = useSelector((state: any) => state.notifications)
+    const getAllAltCountryCode = countriesAndCurrency.map((currency: any) => currency.countryCurrency)
 
     useEffect(() => {
         fetchUserNotifications();
     }, [])
-
-    const getAllAltCountryCode = countriesAndCurrency.map((currency: any) => currency.countryCurrency)
-
-    const changeCountryCurencyToCountryName = ( str: any, arr: any ) => {
-        const checkString = countriesAndCurrency.filter((currency: any) => currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0])
-        const getCountryCurrency= checkString?.[0]?.countryCurrency
-        const getCountryName = checkString?.[0]?.name
-        return str.replace(getCountryCurrency, getCountryName)
-    }
 
   return (
     <Body>
@@ -93,7 +85,6 @@ const Notifications = () => {
                 {
                     notifs?.map((notif: any) => (
                         <div className={`notif-body ${notif.status.toLowerCase() }`}>
-                            {/* <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/> */}
                             <div onClick={() => updateUserNotifReadStatus(notif.id, () => fetchUserNotifications(10))} className={`message-container ${notif.status === 'READ' && 'grey-out'}`}>
                                 <div className="notif-date" > {convertDateString(notif.dateCreated)} </div>
                                 <div className="notif-message">{notif.type === 'GLOBAL_NEWS' ? changeCountryCurencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
