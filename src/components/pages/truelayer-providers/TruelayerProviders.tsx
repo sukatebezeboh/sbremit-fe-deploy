@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import { Redirect, useHistory } from 'react-router-dom';
+import {useEffect, useState} from 'react'
+import { useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
@@ -9,11 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { cancelTransfer, fetchTruelayerProviders, getTransactionDetails, initiateTruelayerPayment, toastAction } from '../../../redux/actions/actions';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
-import http from '../../../util/http';
-import { formatCurrency, getQueryParam, parseEndpointParameters } from '../../../util/util';
-import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
-import axios from 'axios';
-import endpoints from '../../../util/endpoints';
+import { getQueryParam } from '../../../util/util';
 
 const Body = styled.div`
     .page-content {
@@ -231,15 +227,15 @@ const TruelayerProviders = () => {
         <Body>
             {openConfirmModal ? 
             <ConfirmModal 
-            message="Are you sure you want to cancel this transfer?"
-            onSave={{
-                label: 'Yes, cancel',
-                fn: ()=>handleCancel()
-            }}
-            onCancel={{
-                label: "No, don't cancel",
-                fn: () => setOpenConfirmModal(false)
-            }}
+                message="Are you sure you want to cancel this transfer?"
+                onSave={{
+                    label: 'Yes, cancel',
+                    fn: ()=>handleCancel()
+                }}
+                onCancel={{
+                    label: "No, don't cancel",
+                    fn: () => setOpenConfirmModal(false)
+                }}
             /> : <></>}
             <NavBar />
             <ProgressBar point={4} />
@@ -253,7 +249,7 @@ const TruelayerProviders = () => {
                     <div className="box-container-inner">
 
                       { tProviders.map((provider: any) => (
-                        <div className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-green"}`} onClick={()=>setSelected(provider)}>
+                        <div key={provider.provider_id} className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-green"}`} onClick={()=>setSelected(provider)}>
                             <div className="radio-card-inner">
                                 <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
                                 <div className="provider-name">

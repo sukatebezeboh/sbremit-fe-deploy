@@ -29,7 +29,7 @@ export const paths = {
     PAYMENT_METHOD: "/payment-method",
     CARD_PAYMENT: "/card-payment",
     CREATE_TRANSFER: "/create-transfer",
-    TRANSFER_COMPLETE: "/transfer-complete",
+    TRANSFER_COMPLETE: "/transfer-complete/:transferId?",
     TRUELAYER_PROVIDERS: "/truelayer-providers",
     REFERRALS: "/referrals",
     REGISTER_COUNTRY: "/country/register",
