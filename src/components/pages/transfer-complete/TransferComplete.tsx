@@ -41,7 +41,7 @@ const TransferComplete = () => {
                             { 
                                 transfer?.meta?.paymentGatewayUsed === 'TRUELAYER' &&
                                 <p className='green-txt'>
-                                    Your transfer payment status might take a couple of minutes to update
+                                    Please note, it may take up to 3 minutes for the status of your transaction to be updated.
                                 </p>
                             }
                         </div>
