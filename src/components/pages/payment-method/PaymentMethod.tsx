@@ -392,7 +392,7 @@ const PaymentMethod = () => {
                 {
                     slug: 'truelayer',
                     method: 'Direct bank transfer',
-                    provider: 'TrueLayer - (Takes a couple of minutes to update transfer status)'
+                    provider: 'TrueLayer'
                 },
                 {
                     slug: 'card',
