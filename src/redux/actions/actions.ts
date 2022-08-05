@@ -41,7 +41,7 @@ import {
 } from '../../util/util'
 import http from '../../util/http'
 import { themeNames } from '../../components/modules/toast-factory/themes'
-import { constants } from '../../util/constants'
+import { constants, countriesAndCurrency } from '../../util/constants'
 
 const user = store.getState().auth.user;
 const serviceProvider =  env.X_SERVICE_PROVIDER;
@@ -1777,4 +1777,11 @@ export const updateUserNotifReadStatus = (notifId: string|number, callback: Func
   .catch(() => {})
   .then(() => {
   })
+}
+
+export const changeCountryCurencyToCountryName = ( str: any, arr: any ) => {
+  const checkString = countriesAndCurrency.filter((currency: any) => currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0])
+  const getCountryCurrency= checkString?.[0]?.countryCurrency
+  const getCountryName = checkString?.[0]?.name
+  return str.replace(getCountryCurrency, getCountryName)
 }
