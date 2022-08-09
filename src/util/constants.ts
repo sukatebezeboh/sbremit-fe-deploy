@@ -1606,6 +1606,8 @@ export const constants = {
     UGANDA_AIRTEL_SERVICE_RATE_INDEX: 5,
     TANZANIA_MPESA_SERVICE_RATE_INDEX: 4,
 
+    REMITTANCE_COUNTRIES_CODES: [ 'CM', 'UG', 'KE', 'TZ' ],
+
     SIGNUP_COUNTRIES: {
         "AT": "Austria",
         "BE": "Belgium",

@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { CookieService } from 'services/CookieService';
+import { constants } from 'util/constants';
 import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, setNewQuoteWithoutAuth, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
@@ -308,9 +309,9 @@ const GetQuote = () => {
     }, [])
 
     const continueSending = () => {
-        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
+        if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
             handleContinue()
-        } else{
+        } else {
             setOpenComingSoonModal(true)
         }
     }

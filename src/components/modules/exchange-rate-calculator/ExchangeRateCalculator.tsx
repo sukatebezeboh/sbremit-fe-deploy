@@ -53,9 +53,9 @@ const ExchangeRateCalculator = ({
     }, [])
 
     const continueSending = () => {
-        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
+        if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
             setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-        } else{
+        } else {
             setOpenComingSoonModal(true)
         }
     }
@@ -191,12 +191,8 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            {/* <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} toSendCountry={countryName}/>} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} /> */}
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                // if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
-                //     return setOpenCurrencyPairDowntimeNotif(true)
-                // }
                 continueSending()
             }} >Start sending money</button>
         </div>
