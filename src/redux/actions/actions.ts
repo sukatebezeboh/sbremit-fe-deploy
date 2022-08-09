@@ -633,7 +633,7 @@ export const getTransactionDetails = (callback?: Function, id?: any) => {
     })
 }
 
-export const getUserTransactions = () => {
+export const getUserTransactions = (callback?: Function) => {
   const user = store.getState().auth.user
   const transfer = store.getState().transfer
 
@@ -654,6 +654,36 @@ export const getUserTransactions = () => {
         const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
         const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
+        callback?.()
+    })
+    .catch((err) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
+
+export const getUserTransactionsPaginated = (limit: number, offset: number, callback: Function) => {
+  const user = store.getState().auth.user
+  const transfer = store.getState().transfer
+
+    store.dispatch({type: LOADING, payload: true})
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id) + `?limit=${limit}&offset=${offset}&order=id%20DESC`)
+    .then(res=>{
+        let transactions: any[] = res.data.data?.sort((a: any, b: any)=>{
+            if (a.dateCreated < b.dateCreated) {
+                return 1
+            }
+            if (a.dateCreated > b.dateCreated) {
+                return -1
+            }
+            return 0
+        })
+        const paginatedTransactions = genPaginationHashTable(transactions, 10);
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_CANCELLED.toLowerCase()), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
+        callback()
     })
     .catch((err) => {})
     .then(() => {
@@ -1556,9 +1586,10 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
             }
           },
         })
+        finalCallback?.()
       } else {
         toastAction({
-          name: "account-locked-notice",
+          name: "set-transfer-quote-failed-notice",
           show: true,
           type: 'error',
           timeout: 60000,
@@ -1570,7 +1601,6 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
     .catch(() => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
-      finalCallback?.()
     })
 }
 

@@ -125,7 +125,7 @@ export const translateTransactionStatus = (status: string) => {
         payment_suspended: "Payment suspended"
     }
 
-    return verboseStatus[status]
+    return verboseStatus[status] || status?.replaceAll('_', ' ')
 }
 
 

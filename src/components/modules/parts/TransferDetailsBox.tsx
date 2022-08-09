@@ -148,6 +148,10 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
         return texts[selectedMethod];
     }
 
+    const transferPaymentMade  = () =>  {
+        return isTransaction && (transaction?.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || transaction?.meta?.paymentGatewayUsed)
+    }
+
     return (
         <Div className="">
             <div className="transfer-details part">
@@ -192,6 +196,13 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
                         <div className="left">They get <small> {getInclusiveText(parseWithUnderscores(transferMethod))} </small> </div>
                         <div className="right uppercase"><b>{receiveAmount} {receiveCurrency}</b></div>
                     </div>
+                    { 
+                        transferPaymentMade() && 
+                        <div className="row">
+                            <div className="left">Payment Gateway Used</div>
+                            <div className="right">{transaction?.meta?.paymentGatewayUsed}</div>
+                        </div>
+                    }
                     <div className="row">
                         <div className="left">Total to pay</div>
                         <div className="right uppercase"><b className="green-txt">{totalToPay} {sendCurrency}</b></div>

@@ -162,9 +162,9 @@ const ExchangeRateInputWrapper = (props: any) =>{
 
     const propsBundle = {data, max, inputRef, setCountriesDropDownOpen, countriesDropDown: countriesDropDownOpen, handleXInputChange, setChangedInput, countries, handleCountrySelection }
 
-       return (
-            <LayoutComponent {...propsBundle} />
-        )
+    return (
+        <LayoutComponent {...propsBundle} />
+    )
 }
 
 export default ExchangeRateInputWrapper;

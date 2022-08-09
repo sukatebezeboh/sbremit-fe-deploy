@@ -6,7 +6,7 @@ import { RecipientBankTransferBankTransferValidator, RecipientBankTransferMicrof
 import FormButton from '../form-button/FormButton';
 import PageHeading from '../page-heading/PageHeading';
 import { useDispatch, useSelector } from 'react-redux';
-import { BANKNAME, countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
+import { BANK_NAMES, countriesAndCodes, REASONS, remittanceHandlers, transferMethodsInWords } from '../../../util/constants';
 import { isObjectNotEmpty } from '../../../util/util';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
 import PhoneNumberInput from '../parts/PhoneNumberInput';
@@ -98,7 +98,7 @@ function NewRecipientModal(props: any) {
         }
     }
 
-    const isAccountNoStandAlone = (): boolean => {
+    const isPivotRecipientAccount = (): boolean => {
         return (transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ');
     }
 
@@ -132,7 +132,7 @@ function NewRecipientModal(props: any) {
                 }
                 <Formik
                     initialValues={{...initialValues}}
-                    validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, isAccountNoStandAlone(), () => {} )}
+                    validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, isPivotRecipientAccount(), () => {} )}
                     onSubmit={values => {
                         const newValue = {
                             ...values,
@@ -283,12 +283,12 @@ function NewRecipientModal(props: any) {
                                         <div className={(touched.bankName && errors.bankName) ? 'form-error': ''}>
                                             <div> Beneficiary Bank Name<i>*</i></div>
                                             {
-                                                !isAccountNoStandAlone()
+                                                !isPivotRecipientAccount()
                                                 ?   <Field type="text" name="bankName" placeholder="" />
                                                 :   <Field as="select"  name='bankName' value={bankValue || initialValues.bankName} onInput={(e: any) => handleBankChange(e)}>
                                                         <option value="">Select</option>
                                                         {
-                                                            BANKNAME.map((name: string) => (
+                                                            BANK_NAMES.map((name: string) => (
                                                                 <option value={name}>{name}</option>
                                                                 )
                                                             )
@@ -310,14 +310,14 @@ function NewRecipientModal(props: any) {
                                             <div>Recipient Account Number<i>*</i>
                                                 <span className="red-txt">
                                                     {
-                                                        !isAccountNoStandAlone()
+                                                        !isPivotRecipientAccount()
                                                         ? (errors.bankCode || errors.branchCode || errors.accountNumber || errors.key)
                                                         : (errors.accountNumberStandAlone)
                                                     }
                                                 </span>
                                             </div>
                                             {
-                                                !isAccountNoStandAlone() &&
+                                                !isPivotRecipientAccount() &&
                                                 <span>
                                                     <Field as="select" name="countryCode">
                                                         <option value="CM12">CM21</option>
@@ -328,16 +328,16 @@ function NewRecipientModal(props: any) {
                                             }
 
                                             <Field type="text"
-                                                className={`account-number ${isAccountNoStandAlone() && 'show-account-number'}`}
+                                                className={`account-number ${isPivotRecipientAccount() && 'show-account-number'}`}
                                                 name={
-                                                    isAccountNoStandAlone()
+                                                    isPivotRecipientAccount()
                                                     ? "accountNumberStandAlone"
                                                     : "accountNumber"
                                                 }
                                                 placeholder="Account no"
                                             />
                                             {
-                                                !isAccountNoStandAlone() &&
+                                                !isPivotRecipientAccount() &&
                                                 <Field type="text" className="key" name="key" placeholder="key" />
                                             }
                                         </div>

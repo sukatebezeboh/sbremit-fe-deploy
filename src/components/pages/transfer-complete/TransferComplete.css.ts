@@ -38,7 +38,7 @@ export default styled.div`
             font: normal normal normal 18px/30px Montserrat;
             color: #A3A3A3;
             margin-top: 20px;
-            margin-bottom: 70px;
+            margin-bottom: 30px;
             padding: 10px 30px;
         }
         .download {
@@ -104,7 +104,7 @@ export default styled.div`
                 width: 80%;
                 margin: auto;
                 font: normal normal normal 13px/20px Montserrat;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 
             }
             .download {

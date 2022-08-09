@@ -191,12 +191,12 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} toSendCountry={countryName}/>} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} />
+            {/* <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} toSendCountry={countryName}/>} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} /> */}
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
-                    return setOpenCurrencyPairDowntimeNotif(true)
-                }
+                // if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
+                //     return setOpenCurrencyPairDowntimeNotif(true)
+                // }
                 continueSending()
             }} >Start sending money</button>
         </div>
