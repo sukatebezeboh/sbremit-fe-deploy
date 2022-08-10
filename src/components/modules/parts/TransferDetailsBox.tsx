@@ -200,7 +200,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
                         transferPaymentMade() && 
                         <div className="row">
                             <div className="left">Payment Gateway Used</div>
-                            <div className="right">{transaction?.meta?.paymentGatewayUsed}</div>
+                            <div className="right capitalize">{transaction?.meta?.paymentGatewayUsed}</div>
                         </div>
                     }
                     <div className="row">

@@ -151,7 +151,7 @@ const VerificationMethod = ({setMethod, method}:IVerificationMethod) => {
     const isVerificationSelectionEnabled = false
     const allowedRegions: any = {
         "IDENTITY" : {
-            "allowed": ["gb"],
+            "allowed": ["gb", "se", "no", "dk", "ch"],
             "exempted": []
         },
         "DOCUMENT": {
