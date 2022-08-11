@@ -178,7 +178,7 @@ function NewRecipientModal(props: any) {
                                     <div className={(touched.mobile && errors.mobile) ? 'form-error': ''}>
 
                                         <div className="modified-tel-input">
-                                            <div>Phone number<i>*</i></div>
+                                            <div>Phone number <i> {transfer.transferMethod === "mobile_money" ? '*' : '(optional)'}</i></div>
                                             <PhoneNumberInput
                                                 Input={Field}
                                                 Select={Field}

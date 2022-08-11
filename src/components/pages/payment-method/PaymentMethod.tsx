@@ -7,7 +7,7 @@ import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, getTransactionDetails, toastAction, verifyPivotRecipientAccount, verifyPivotRecipientReference } from '../../../redux/actions/actions';
+import { cancelTransfer, confirmTransfer, getRecipient, getRecipients, getTransactionDetails, toastAction, verifyPivotRecipientAccount, verifyPivotRecipientReference } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import http from '../../../util/http';
@@ -70,12 +70,13 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         autoSelectPaymentMethod()
+        transaction && getRecipient(transaction?.recipientId)
+
         if ( transaction && transaction.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING ) {
             toastAction({
                 show: true,
                 type: "warning",
                 timeout: 60000,
-                defaultThemeName: themeNames.CLEAR_MAMBA,
                 message: "You cannot make a payment for a transfer that's not pending!"
             })
             return history.push(paths.TRANSFER_METHOD)

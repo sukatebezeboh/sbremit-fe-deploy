@@ -46,9 +46,9 @@ const ExchangeRateCalculator = ({
     const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
     const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
     const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
-    const countryName = countriesAndCodes.find((_country: any) => _country.countryCode === transfer.toReceive.countryCode)?.name
     const appValueCountries = useSelector((state: any) => state.appValues.countries);
-
+    const countryName = appValueCountries[transfer.toReceive.countryCode]
+    
     useEffect(() => {
         getSpreads()
     }, [])
@@ -204,7 +204,7 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
+            <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
                 continueSending()
             }} >Start sending money</button>
