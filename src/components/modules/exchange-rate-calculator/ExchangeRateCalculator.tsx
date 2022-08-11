@@ -47,6 +47,7 @@ const ExchangeRateCalculator = ({
     const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
     const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
     const countryName = countriesAndCodes.find((_country: any) => _country.countryCode === transfer.toReceive.countryCode)?.name
+    const appValueCountries = useSelector((state: any) => state.appValues.countries);
 
     useEffect(() => {
         getSpreads()
@@ -59,7 +60,20 @@ const ExchangeRateCalculator = ({
             setOpenComingSoonModal(true)
         }
     }
-    
+
+    const getPayInContries = (user: any) => {
+        if (!user) return payInCountries;
+        let countryName = appValueCountries[user?.profile?.location_country?.toUpperCase()] 
+        let countryCurrency = payInCountries[countryName];
+        if (!payInCountries[countryName]) {
+            countryName = 'European Union';
+            countryCurrency = 'EUR'
+        }
+
+
+        return {[countryName]: countryCurrency}
+    }
+
   return (
     <Container className="exchange-rate-calculator">
         <div className="calculator-inner">
@@ -87,7 +101,10 @@ const ExchangeRateCalculator = ({
                 Enter an amount to send
             </div>
             {
-                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selectedTransferMethod !== constants.MOBILE_MONEY ? max : undefined , countries: payInCountries})
+                console.log('Countries:::', payInCountries, user, appValueCountries)
+            }
+            {
+                ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selectedTransferMethod !== constants.MOBILE_MONEY ? max : undefined , countries: getPayInContries(user)})
             }
             <div className="timeline">
                 <div className="timeline-inner">
@@ -114,8 +131,6 @@ const ExchangeRateCalculator = ({
 
                                 <div className="point-text">
                                     <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selectedTransferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span>
-
-                                    {/* Mobile Operator <span className="green-txt">Cash Out Fee</span> from: <span className="green-txt"> 0 GBP</span> */}
                                 </div>
                             </div>
                         }
@@ -179,9 +194,7 @@ const ExchangeRateCalculator = ({
             <div className="extras">
                 <div className="extras-inner">
                     <div className="promo-side">
-                        {/* <input type="text" placeholder='Apply promo code' className="promo-code" /> */}
                         <PromoCodeField className="new-landing-page-promo-code-field" transfer={transfer} />
-
                     </div>
                     <div className="toggle-side">
                         <div className="toggle">
@@ -191,12 +204,8 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            {/* <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} toSendCountry={countryName}/>} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} /> */}
             <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
             <button className="send-btn" onClick={()=> {
-                // if (isCurrencyPairDowntimeUp(transfer.toSend.currency, transfer.toReceive.currency)) {
-                //     return setOpenCurrencyPairDowntimeNotif(true)
-                // }
                 continueSending()
             }} >Start sending money</button>
         </div>

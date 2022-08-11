@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { getNewQuote } from '../../../redux/actions/actions';
@@ -127,12 +127,18 @@ const ExchangeRateInputWrapper = (props: any) =>{
     const appValues = useSelector((state: any) => state.appValues)
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const userDefaultCountry = Object.keys(countries)[0];
+    useEffect(() => {
+        if (userDefaultCountry && data.isSend) {
+            handleCountrySelection(userDefaultCountry);
+        }
+    }, [userDefaultCountry])
+
     const handleCountrySelection = (country: string) => {
-        console.log(country)
+        if (!country) return;
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
         const countryKey =  Object.keys(countriesList).find(key => countriesList[key] === country);
-        console.log(countryKey)
         if (data.isSend) {
             dispatch({
                 type: TRANSFER,
