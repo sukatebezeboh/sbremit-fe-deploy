@@ -54,9 +54,9 @@ const ExchangeRateCalculator = ({
     }, [])
 
     const continueSending = () => {
-        if (toReceive.countryCode === 'CM' || toReceive.countryCode === 'UG' || toReceive.countryCode === 'KE' || toReceive.countryCode === 'TZ') {
+        if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
             setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-        } else{
+        } else {
             setOpenComingSoonModal(true)
         }
     }

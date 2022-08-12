@@ -34,8 +34,8 @@ export const transfer = (state: any = initialTransferState, {type, payload}: IAc
         case RESET_TRANSFER: {
             return {
                 ...state,
-                toSend: {value: "", currency: 'GBP', image: "UK", total: "0", isSend: true},
-                toReceive: {value: `${0}`, currency: 'XAF', image: "CM"},
+                toSend: {value: "", currency: 'GBP', image: "GB", countryCode: 'GB', total: "0", isSend: true},
+                toReceive: {value: `${0}`, currency: 'XAF', image: "CM", countryCode: 'CM'},
                 transferMethod: "mobile_money",
                 serviceFee: 0,
                 promo: undefined,
