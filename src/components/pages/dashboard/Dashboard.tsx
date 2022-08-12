@@ -93,7 +93,7 @@ const Dashboard = () => {
         }
 
         const toReceive = {
-            value: data.destinationAmount,
+            value: '',
             currency: data.destinationCurrency,
             image: data.destinationCurrency
         }

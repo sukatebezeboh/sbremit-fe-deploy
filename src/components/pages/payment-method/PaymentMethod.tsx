@@ -30,7 +30,11 @@ const PaymentMethod = () => {
     const transferId = getQueryParam('t');
     const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
-    const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([]);
+    const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([{
+        slug: 'card',
+        method: 'Card payment',
+        provider: 'Trust payment'
+    }]);
 
     const dispatch = useDispatch()
 
@@ -117,6 +121,8 @@ const PaymentMethod = () => {
                     provider: 'Trust payment'
                 }
             ])
+
+            
             // setSelected('card')
         } else if ( (transaction?.originCurrency === "CAD" || transaction?.originCurrency === "EUR") ) {
             setSelected('card')
