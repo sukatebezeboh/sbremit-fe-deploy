@@ -45,7 +45,6 @@ const LandingPage = () => {
     const payInCountries = appValues.payInCountries;
     const payOutCountries = appValues.payOutCountries;
 
-    console.log(appValues)
 
     const dispatch = useDispatch()
 

@@ -24,15 +24,23 @@ export default styled.div`
 
         .payment-options-card {
             background: #fff;
-            padding: 15px;
+            padding: 20px 15px 15px;
             display: inline-grid;
             grid-template-columns: 0fr 1fr;
             margin: 10px 10px 50px;
             min-width: 200px;
             cursor: pointer;
             box-shadow: 1px 1px 3px grey;
-            border-radius: 2px;
-
+            border-radius: 5px;
+            &.selected-pm-green {
+                color: white;
+                background: #007B5D;
+                .method-container {
+                    .label {
+                        color: white;
+                    }
+                }
+            }
             .inp-container {
                 display: block;
                 position: relative;
@@ -56,12 +64,13 @@ export default styled.div`
 
                 .checkmark {
                     position: absolute;
-                    top: 0;
+                    top: 4px;
                     left: 0;
-                    height: 14px;
-                    width: 14px;
-                    background-color: #cfcfcf;
+                    height: 21px;
+                    width: 21px;
+                    /* background-color: #cfcfcf; */
                     border-radius: 50%;
+                    border: 2px solid #FCD20F;
                 }
 
                 .container:hover input ~ .checkmark {
@@ -83,24 +92,38 @@ export default styled.div`
                 }
 
                 .checkmark:after {
-                    top: 4px;
-                    left: 4px;
-                    width: 6px;
-                    height: 6px;
+                    top: 2px;
+                    left: 2px;
+                    width: 13px;
+                    height: 13px;
                     border-radius: 50%;
-                    background: white;
+                    background: #FCD20F;
                 }
 
             }
 
             .method-container {
-
+                min-width: 250px;
                 .title {
                     font-size: 18px;
+                    font-weight: bold;
                 }
                 .provider {
                     font-size: 12px;
+                    color: #bbbbbb;
+                    margin-top: 10px;
                 }
+                .label {
+                    display: grid;
+                    grid-template-columns: 1fr 0fr;
+                    font-weight: bold;
+                    margin-top: 20px;
+                    color: #007B5D;
+                    img {
+                        width: 50px;
+                    }
+                }
+
             }
         }
 

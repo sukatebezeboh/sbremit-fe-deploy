@@ -1,7 +1,7 @@
 import NavBar from 'components/modules/navbar/NavBar'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { changeCountryCurencyToCountryName, fetchUserNotifications, updateUserNotifReadStatus } from 'redux/actions/actions';
+import { changeCountryCurrencyToCountryName, fetchUserNotifications, updateUserNotifReadStatus } from 'redux/actions/actions';
 import { countriesAndCurrency } from 'util/constants';
 import { convertDateString } from '../../../util/util';
 import Body from './Notifications.css'
@@ -34,7 +34,7 @@ const Notifications = () => {
                         <div className={`notif-body ${notif.status.toLowerCase() }`}>
                             <div onClick={() => updateUserNotifReadStatus(notif.id, () => fetchUserNotifications(10))} className={`message-container ${notif.status === 'READ' && 'grey-out'}`}>
                                 <div className="notif-date" > {convertDateString(notif.dateCreated)} </div>
-                                <div className="notif-message">{notif.type === 'GLOBAL_NEWS' ? changeCountryCurencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
+                                <div className="notif-message">{notif.type === 'GLOBAL_NEWS' ? changeCountryCurrencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
                                 <div className="btn-container">{notif.status === 'UNREAD' && 'Mark as read'}</div>
                             </div>
                         </div>

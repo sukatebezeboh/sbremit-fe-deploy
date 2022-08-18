@@ -154,8 +154,6 @@ function NewRecipientModal(props: any) {
                             return(
                             <Form>
                                 <FormikFormObserver callback={(newValues: any, context: any) => {
-                                    console.log(errors, "::")
-                                    console.log(touched, "::touched")
                                     updateVerifyStep(newValues)
                                     transfer.toReceive.countryCode === 'UG'
                                     && String(newValues.mobile).substring(0, 2) === '70'

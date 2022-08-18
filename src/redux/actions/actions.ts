@@ -1805,9 +1805,31 @@ export const updateUserNotifReadStatus = (notifId: string|number, callback: Func
   })
 }
 
-export const changeCountryCurencyToCountryName = ( str: any, arr: any ) => {
+export const changeCountryCurrencyToCountryName = ( str: any, arr: any ) => {
   const checkString = countriesAndCurrency.filter((currency: any) => currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0])
   const getCountryCurrency= checkString?.[0]?.countryCurrency
   const getCountryName = checkString?.[0]?.name
   return str.replace(getCountryCurrency, getCountryName)
+}
+
+export const initiateInteracTransferPayment = (transferId: number) => {
+  store.dispatch({
+    type: LOADING,
+    payload: 'Establishing secure connection with Interac. This may take a few seconds...',
+  })
+  http.post(parseEndpointParameters(endpoints.INTERAC_PAYMENT), {
+    transferId
+  })  
+  .then((res: any) => {
+      if (res?.data?.status == '200') {
+        window.location.href = res?.data?.data?.redirectUrl 
+      }
+  })
+  .catch(() => {})
+  .then(() => {
+    store.dispatch({
+      type: LOADING,
+      payload: false,
+    })
+  })
 }

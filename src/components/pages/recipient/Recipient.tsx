@@ -138,8 +138,7 @@ const Recipient = () => {
 
         setFilteredRecipients( filtered );
     }
-    console.log(filteredRecipients, "::") 
-
+    
     const handleRecipientUpdate = () => {
         const recipientId =  getQueryParam('update');
         if (!recipientId) return;

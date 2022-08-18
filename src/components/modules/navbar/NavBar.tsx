@@ -5,7 +5,7 @@ import { asset, convertDateString } from '../../../util/util';
 import Bar from './NavBar.css';
 import PageHeading from '../page-heading/PageHeading'
 import { useSelector } from 'react-redux';
-import { changeCountryCurencyToCountryName, fetchUserNotifications, signOutAction, updateUserNotifReadStatus } from '../../../redux/actions/actions';
+import { changeCountryCurrencyToCountryName, fetchUserNotifications, signOutAction, updateUserNotifReadStatus } from '../../../redux/actions/actions';
 import { countriesAndCurrency, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
 
@@ -34,7 +34,7 @@ const NavBar = () => {
             <div onClick={() => updateUserNotifReadStatus(notif.id, () => fetchUserNotifications(10))} className={`notif-body is-link ${notif.status.toLowerCase() }`}>
                 <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/>
                 <div>
-                    <div> {notif.type === 'GLOBAL_NEWS' ? changeCountryCurencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
+                    <div> {notif.type === 'GLOBAL_NEWS' ? changeCountryCurrencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
                     <div> {convertDateString(notif.dateCreated)} </div>
                 </div>
             </div>
