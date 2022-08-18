@@ -1,18 +1,16 @@
 import React, {useEffect} from 'react';
 import { Redirect, Route, Switch, useHistory, withRouter } from 'react-router-dom';
-import {useIdleTimer} from 'react-idle-timer/dist/modern';
 import ReactGA from 'react-ga';
 import ReactPixel from 'react-facebook-pixel';
 
 import './App.css';
 import {Routing, IRoute} from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
-import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast, signOutAction } from './redux/actions/actions';
+import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
 import { AppFooter } from './components/modules/app-footer/AppFooter';
-import UpcomingCountries from './components/modules/upcoming-countries/UpcomingCountries';
 import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget';
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
 

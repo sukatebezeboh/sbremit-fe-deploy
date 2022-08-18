@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Footer from './AppFooter.css'
 import { subscribe } from '../../../redux/actions/actions'
 import { paths } from '../../../util/paths'
@@ -9,7 +9,6 @@ import { asset } from '../../../util/util'
 
 
 export const AppFooter = () => {
-  const history = useHistory()
   const [subscribeValue, setSubscribeValue] = useState<{ email: string }>({
     email: '',
   })
@@ -109,9 +108,9 @@ export const AppFooter = () => {
               <div className="search-area">
                   <div className="title">Stay tuned for latest from SB Remit</div>
                   <div className="search-box">
-                      <input type="text" className='search-input' placeholder='Enter your email' name="" id="" />
+                      <input type="text" className='search-input' placeholder='Enter your email' name="" id="" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubscribeValue({email: e.target.value})} />
 
-                      <button className="search-btn">Submit</button>
+                      <button className="search-btn" onClick={handleSubscribeClick} >Submit</button>
                   </div>
               </div>
           </div>

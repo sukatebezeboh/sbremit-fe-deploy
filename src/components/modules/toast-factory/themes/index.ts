@@ -1,8 +1,7 @@
 import React from "react"
-import { JsxElement } from "typescript"
-import CenterPrompt from "./CenterPrompt"
-import ClearMamba from "./ClearMamba"
-import SlimPeaker from "./SlimPeaker"
+import CenterPrompt from "./center-prompt/CenterPrompt"
+import ClearMamba from "./clear-mamba/ClearMamba"
+import SlimPeaker from "./slim-peaker/SlimPeaker"
 
 interface IToastThemes {
     [x: string]: React.FC

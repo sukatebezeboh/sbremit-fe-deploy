@@ -1,4 +1,4 @@
-import FancyToggle from 'components/modules/parts/FancyToggle'
+import FancyToggle from 'components/modules/fancy-toggle/FancyToggle'
 import React from 'react'
 import { asset } from '../../../util/util'
 import Body from './TempLanding.css'

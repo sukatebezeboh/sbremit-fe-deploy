@@ -3,7 +3,6 @@ import {useHistory} from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { Field, Form, Formik } from 'formik'
 import { resetPasswordAction } from '../../../redux/actions/actions';
-import { ResetEmailValidator } from '../../../util/form-validators';
 import ButtonLoader from '../../modules/button-loader/ButtonLoader'
 import {NewAuthLayout, RememberPassword, FormWrapper} from '../../modules/new-auth-layout/NewAuthLayout'
 import { paths } from 'util/paths';

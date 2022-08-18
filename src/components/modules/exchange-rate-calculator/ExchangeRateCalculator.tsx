@@ -1,20 +1,17 @@
 import _env from 'env';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Container from './ExchangeRateCalculator.css'
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { paths } from 'util/paths';
-import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer, getSpreads, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
+import { getSpreads, setNewQuoteWithoutAuth } from '../../../redux/actions/actions';
 import { CookieService } from '../../../services/CookieService';
-import { constants, countriesAndCodes, countriesTransferMethodAvailability } from '../../../util/constants';
-import { formatCurrency, isCurrencyPairDowntimeUp } from '../../../util/util';
-import LandingPageExchangeRateInput from '../exchange-rate-input/LandingPageExchangeRateInput';
-import FancyToggle from '../parts/FancyToggle';
+import { constants, countriesTransferMethodAvailability } from '../../../util/constants';
+import { formatCurrency } from '../../../util/util';
+import FancyToggle from '../fancy-toggle/FancyToggle';
 import PromoCodeField from '../promo-code-field/PromoCodeField';
 import Modal from '../modal/Modal'
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries'
-import CurrencyPairDowntimeNotif from '../currency-pair-downtime/CurrencyPairDowntime';
-import { appValues } from 'redux/reducers/app';
 
 const ExchangeRateCalculator = ({
     page,
@@ -44,7 +41,6 @@ const ExchangeRateCalculator = ({
 
     const history = useHistory()
     const [openComingSoonModal, setOpenComingSoonModal] = useState(false)
-    const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
     const transferMethodAvailability = countriesTransferMethodAvailability[transfer.toReceive.countryCode];
     const appValueCountries = useSelector((state: any) => state.appValues.countries);
     const countryName = appValueCountries[transfer.toReceive.countryCode]
@@ -101,9 +97,6 @@ const ExchangeRateCalculator = ({
                 Enter an amount to send
             </div>
             {
-                console.log('Countries:::', payInCountries, user, appValueCountries)
-            }
-            {
                 ExchangeRateInput({data: toSend, changedInput, setChangedInput: () => setChangedInput('toSend'), handleXInputChange,  max: selectedTransferMethod !== constants.MOBILE_MONEY ? max : undefined , countries: getPayInContries(user)})
             }
             <div className="timeline">
@@ -130,7 +123,7 @@ const ExchangeRateCalculator = ({
                                 </div>
 
                                 <div className="point-text">
-                                    <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selectedTransferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span>
+                                    <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selectedTransferMethod)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && (isAcceptablePromoValue(promo) || !allowOperatorFee)) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span>
                                 </div>
                             </div>
                         }

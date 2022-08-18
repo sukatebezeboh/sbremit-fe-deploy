@@ -1,10 +1,6 @@
-import React from 'react';
+import styled from "styled-components";
 
-
-import styled from 'styled-components';
-import { JsxElement } from 'typescript';
-
-const Theme = styled.div`
+export default styled.div`
 /* padding-top: 100px; */
 .container{
     width: 400px;
@@ -122,20 +118,3 @@ const Theme = styled.div`
 }
 
 `
-const SlimPeaker: React.FC<{}> = ({config}: any) => {
-  return <Theme>
-            <div className={`container container-${config?.type} ${config?.show ? 'animate-in': '' } ${((config?.show && config?.readyToClose) ? 'animate-out': '')}`}>
-                <div className="icon">
-                </div>
-                <div className="content">
-                    <div className="head">{config?.title || ""}</div>
-                    <div className="body" dangerouslySetInnerHTML={{__html: config?.message || "Success"}} ></div>
-                </div>
-                <div className="close" onClick={config.close}>
-                    <button>x</button>
-                </div>
-            </div>
-        </Theme>;
-};
-
-export default SlimPeaker;

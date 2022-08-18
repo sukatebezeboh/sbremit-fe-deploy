@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { paths } from '../../../util/paths';
 import { asset, convertDateString, formatCurrency, getValueFromArray } from '../../../util/util';
@@ -16,7 +16,6 @@ const TransactionDetail = (props: any) => {
     const {openTDModal, handleOpenTDModal, handleShowPlus, data, handleResend, isResending} = props;
     const [openMobileTimeline, handleOpenMobileTimeline] = useState(false);
     const recipients = useSelector((state: any) => state.recipients.recipients);
-    const transfer = useSelector((state: any) => state.transfer);
     const history = useHistory();
     const showMobileModal = (bool: boolean) => {
         handleOpenMobileTimeline(bool)
@@ -28,8 +27,6 @@ const TransactionDetail = (props: any) => {
     const transferPaymentMade  = () =>  {
        return data.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || data.meta.paymentCompleted
     }
-
-    const referralDiscountValue = data?.meta?.referralDiscount;
 
 
     return (
@@ -57,13 +54,6 @@ const TransactionDetail = (props: any) => {
                             <img src={asset('icons', 'export.svg')} alt="export"/>
                             <div> Download <span className="mobile-hide"></span></div>
                         </a>}
-                        {/* <div className={`cancel ${data.status?.toLowerCase() === "cancelled" ? "disable" : ""}`} onClick={() => cancelTransfer(() => {
-                            getUserTransactions();
-                            handleOpenTDModal(false)
-                        }, data.id)}>
-                            <img src={asset('icons', 'cancel.svg')} alt="cancel"/>
-                            <div>Cancel</div>
-                        </div> */}
                         <div className="resend" onClick={() => handleResend(data, recipient)}>
                             <img className={isResending ? "is-resending" : ""} src={asset('icons', 'reload.svg')} alt="reload"/>
                             <div>Resend</div>

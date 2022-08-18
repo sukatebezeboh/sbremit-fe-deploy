@@ -1,5 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { resources } from '../../../util/constants'
 import { settings } from '../../../util/settings'
 
@@ -33,7 +32,7 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     const ruleIdentifier3 = "STR-3";
     const ruleIdentifier4 = "STR-4";
     const ruleIdentifier5 = "STR-5";
-    const ruleIdentifier6 = "STR-6";
+    // const ruleIdentifier6 = "STR-6";
     const ruleIdentifier7 = "STR-7";
     const ruleIdentifier8 = "STR-8";
     const ruleIdentifier9 = "STR-9";

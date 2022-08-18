@@ -1,11 +1,10 @@
 import { TableCell } from "components/modules/table/ITable"
 import ComparisonCheckmark from "./parts/ComparisonCheckmark"
 import CheapestBtn from "./parts/CheapestBtn"
-import React, { createElement, useState } from "react"
+import React from "react"
 import { asset, getValueFromArray, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
 import { constants } from "util/constants"
-import store from "redux/store"
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
     heading: [

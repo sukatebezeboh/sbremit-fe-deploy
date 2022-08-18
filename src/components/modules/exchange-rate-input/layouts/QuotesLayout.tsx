@@ -1,5 +1,4 @@
 import React from 'react'
-import { transfer } from 'redux/reducers/transfer'
 import styled from 'styled-components'
 import { formatCurrencyWithoutFloats } from 'util/util'
 

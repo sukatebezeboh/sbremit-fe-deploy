@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
-import { getServiceRateValue, getTransactionDetails, getTransferMethodById } from '../../../redux/actions/actions';
-import { TRANSFER } from '../../../redux/actionTypes';
+import { getTransactionDetails, getTransferMethodById } from '../../../redux/actions/actions';
 import { constants, transferMethodsInWords } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getInclusiveText, getMoneyValue, getQueryParam, parseWithUnderscores } from '../../../util/util';
+import { formatCurrency, getInclusiveText, parseWithUnderscores } from '../../../util/util';
 
 const Div = styled.div`
     .transfer-details {

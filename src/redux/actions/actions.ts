@@ -12,7 +12,6 @@ import {
   NOTIFICATIONS,
   RECIPIENT,
   RECIPIENTS,
-  REDIRECT,
   REMOVE_FROM_STACKED_TOASTS,
   RESET_TRANSFER,
   SIGN_IN,
@@ -20,7 +19,6 @@ import {
   SUBMITTING,
   TOAST,
   TRANSFER,
-  TRANSFER_QUOTE,
 } from '../actionTypes'
 import config from '../../env'
 import endpoints from '../../util/endpoints'
@@ -31,7 +29,6 @@ import { AppService } from '../../services/AppService'
 import { paths } from '../../util/paths'
 import {
   formatCurrency,
-  generateRandomString,
   genPaginationHashTable,
   getQueryParam,
   isPhoneNumber,
@@ -1403,7 +1400,6 @@ export const updateTransferRecipient = (
   transferId: any,
 ) => {
   store.dispatch({ type: LOADING, payload: true })
-  const userId = store.getState().auth.user?.id
   const recipient = store.getState().recipients.recipient
 
   http

@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { transfer } from 'redux/reducers/transfer';
 import styled from 'styled-components';
 import { paths } from '../../../util/paths';    
 

@@ -1,12 +1,11 @@
-import { replace } from 'formik';
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { checkForVerificationStatusToast, checkSkip, getRecipients, getTransactionDetails, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
+import { Link, useHistory } from 'react-router-dom';
+import { checkForVerificationStatusToast, checkSkip, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getUserDefaultCurrency, getValueFromArray, replaceUnderscores, translateTransactionStatus } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getUserDefaultCurrency, getValueFromArray, translateTransactionStatus } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';

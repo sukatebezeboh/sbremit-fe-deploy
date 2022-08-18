@@ -1,13 +1,11 @@
-import React from 'react'
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import {asset} from '../../../util/util';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import style from './UserProfile.css'
 import { useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
 import { resources } from '../../../util/constants';
-import http from '../../../util/http';
 require('dotenv').config();
 
 const Body = style();

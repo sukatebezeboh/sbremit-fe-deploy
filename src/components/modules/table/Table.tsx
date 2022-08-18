@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { generateRandomString } from '../../../util/util'
 import { ITable, RESPONSIVE_TYPE_COLLAPSE_ALL } from './ITable'
 import styled from 'styled-components'

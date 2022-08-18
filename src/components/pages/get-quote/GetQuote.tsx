@@ -1,17 +1,14 @@
-import CurrencyPairDowntimeNotif from 'components/modules/currency-pair-downtime/CurrencyPairDowntime';
 import ExchangeRateCalculator from 'components/modules/exchange-rate-calculator/ExchangeRateCalculator';
 import Modal from 'components/modules/modal/Modal';
 import UpcomingCountries from 'components/modules/upcoming-countries/UpcomingCountries';
-import _env from 'env';
 import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { CookieService } from 'services/CookieService';
 import { constants } from 'util/constants';
-import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, setNewQuoteWithoutAuth, toastAction, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler, isCurrencyPairDowntimeUp } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -25,7 +22,6 @@ const GetQuote = () => {
     const user = useSelector((state: any) => state.auth.user);
     const promo = transfer.promo
     const [promoText, setPromoText] = useState("")
-    const [openCurrencyPairDowntimeNotif, setOpenCurrencyPairDowntimeNotif] = useState(false)
 
     const conversionRate = transfer.conversionRate;
     const toSend = transfer.toSend;

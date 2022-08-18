@@ -191,6 +191,7 @@ const style = (page) => styled.div`
             width: auto !important;
             height: auto !important;
             -webkit-transform: scale(1.5);
+            transform: scale(1.5);
             outline: none;
         }
         label {
@@ -207,6 +208,7 @@ const style = (page) => styled.div`
                 width: auto !important;
                 height: auto !important;
                 -webkit-transform: scale(1.5);
+                transform: scale(1.5);
             }
             label {
                 margin-left: 10px;

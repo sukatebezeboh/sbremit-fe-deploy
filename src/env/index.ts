@@ -14,7 +14,6 @@ const env = (config: string) => {
     _env = { ...common, ...envs[config]}   
 
 }
-// const processEnv = process.env.NODE_ENV == 'production' && window.location.href.includes('netlify') ? 'staging' : process.env.NODE_ENV;
 
 env(process.env.REACT_APP_ENV || 'development');
 

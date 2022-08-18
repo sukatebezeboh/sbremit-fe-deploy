@@ -1,21 +1,18 @@
-import React, {useEffect, useMemo, useState} from 'react'
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import {useEffect, useMemo, useState} from 'react'
+import { Link, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
-import RadioButton from '../../modules/parts/RadioButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, confirmTransfer, getRecipient, getRecipients, getTransactionDetails, toastAction, verifyPivotRecipientAccount, verifyPivotRecipientReference } from '../../../redux/actions/actions';
+import { cancelTransfer, getRecipient, getTransactionDetails, toastAction, verifyPivotRecipientAccount } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
-import http from '../../../util/http';
 import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 import { constants, remittanceHandlers } from '../../../util/constants';
 import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
-import { themeNames } from 'components/modules/toast-factory/themes';
 import  Body from './PaymentMethod.css'
 
 const PaymentMethod = () => {
@@ -28,7 +25,7 @@ const PaymentMethod = () => {
     const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
-    const [redirectToCardPaymentProvider, setRedirectToCardPaymentProvider] = useState(false);
+    const [, setRedirectToCardPaymentProvider] = useState(false);
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
     const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([{
         slug: 'card',

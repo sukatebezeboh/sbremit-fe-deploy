@@ -7,7 +7,7 @@ export const SignUpValidator = Yup.object().shape({
     username: Yup.string().trim()
       .test('test-username', 'Enter Valid Phone/Email', 
         (value) => {
-          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([\+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
           const phoneRegex = /^\+?\d{7,}$/;
           let isValidEmail = value ? emailRegex.test(value) : false;
@@ -24,7 +24,7 @@ export const SignInValidator = Yup.object().shape({
     username: Yup.string().trim()
       .test('test-username', 'Enter Valid Phone/Email', 
         (value) => {
-          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([\+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
           const phoneRegex = /^\+?\d{7,}$/;
           let isValidEmail = value ? emailRegex.test(value) : false;
