@@ -2,16 +2,16 @@ import {useEffect, useMemo, useState} from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, getRecipient, getTransactionDetails, initiateInteracTransferPayment, toastAction, verifyPivotRecipientAccount } from '../../../redux/actions/actions';
+import { cancelTransfer, getRecipient, getTransactionDetails, initiateInteracTransferPayment, toastAction, updateTransferWithPaymentGatewayCharge } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import { asset, formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
-import { constants, remittanceHandlers } from '../../../util/constants';
+import { constants } from '../../../util/constants';
 import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
 import  Body from './PaymentMethod.css'
 
@@ -25,7 +25,6 @@ const PaymentMethod = () => {
     const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
-    const [, setRedirectToCardPaymentProvider] = useState(false);
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
     const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([{
         slug: 'trust-payment',
@@ -47,14 +46,11 @@ const PaymentMethod = () => {
             })
             return
         }
-        if (selected==='trust-payment'){
-            // history.push(paths.CARD_PAYMENT)
-            setRedirectToCardPaymentProvider(true)
-        }
-        else if (selected==="bank_transfer") {
+        if (selected === 'trust-payment'){}
+        else if (selected === "bank_transfer") {
             history.push(paths.CREATE_TRANSFER + '?t=' + transferId)
         }
-        else if (selected==="truelayer") {
+        else if (selected === "truelayer") {
             history.push(paths.TRUELAYER_PROVIDERS + '?t=' + transferId)
         }
         else if (selected === "interac") {
@@ -75,6 +71,9 @@ const PaymentMethod = () => {
 
     useEffect(() => {
         autoSelectPaymentMethod()
+    }, [transaction?.id])
+
+    useEffect(() => {
         transaction && getRecipient(transaction?.recipientId)
 
         if ( transaction && transaction.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING ) {
@@ -89,12 +88,12 @@ const PaymentMethod = () => {
     }, [transaction])
 
     useEffect(() => {
-        if ( recipient?.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
-            verifyPivotRecipientAccount({
-                mobile: recipient?.mobile,
-                mobileMoneyProvider: recipient?.mobileMoneyProvider
-            }, () => history.push(paths.RECIPIENT + "?t=" + transferId))
-        }
+        // if ( recipient?.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
+        //     verifyPivotRecipientAccount({
+        //         mobile: recipient?.mobile,
+        //         mobileMoneyProvider: recipient?.mobileMoneyProvider
+        //     }, () => history.push(paths.RECIPIENT + "?t=" + transferId))
+        // }
     }, [recipient])
 
     const autoSelectPaymentMethod = () => {
@@ -109,7 +108,7 @@ const PaymentMethod = () => {
             history.push(paths.VERIFICATION)
         }
         if (transaction?.originCurrency === 'GBP') {
-            setSelected('truelayer')
+            selectPaymentMethod('truelayer')
             setPaymentMethodOptions([
                 {
                     slug: 'truelayer',
@@ -124,10 +123,9 @@ const PaymentMethod = () => {
                     label: '0.99 GBP'
                 }
             ])
-            // setSelected('trust-payment')
         }
         else if ( transaction?.originCurrency === "CAD"  ) {
-            setSelected('interac')
+            selectPaymentMethod('interac')
             setPaymentMethodOptions([
                 {
                     slug: 'interac',
@@ -144,39 +142,56 @@ const PaymentMethod = () => {
             ])
         }
         else if ( (transaction?.originCurrency === "EUR") ) {
-            setSelected('trust-payment')
+            selectPaymentMethod('trust-payment')
         } else {
-            setSelected('bank_transfer')
+
+            selectPaymentMethod('bank_transfer')
         }
+    }
+
+    const selectPaymentMethod = (paymentGateway: string) => {
+        setSelected(paymentGateway)
+        updateTransferWithPaymentGatewayCharge(transferId, paymentGateway)
+    }
+
+    const getTotalToPay = () => {
+        console.log( transaction?.meta, transaction?.meta?.paymentGatewayCharge )
+        return getMoneyValue(`${transaction?.meta?.totalToPay}`) + +transaction?.meta?.paymentGatewayCharge;
     }
 
     return (
         <Body>
+
             {
-            openConfirmModal === 'forCancel' ?
-            <ConfirmModal
-                message="Are you sure you want to cancel this transfer?"
-                onSave={{
-                    label: 'Yes, cancel',
-                    fn: ()=>handleCancel()
-                }}
-                onCancel={{
-                    label: "No, don't cancel",
-                    fn: () => setOpenConfirmModal(null)
-                }}
-            /> :
-            openConfirmModal === 'forProceed' ?
-            <ConfirmModal
-                message="Are you sure you want to procced?"
-                onSave={{
-                    label: 'Yes, proceed',
-                    fn: ()=>handleProceed(transfer)
-                }}
-                onCancel={{
-                    label: "No, not yet",
-                    fn: () => setOpenConfirmModal(null)
-                }}
-            /> : <></>}
+                openConfirmModal === 'forCancel' &&
+                <ConfirmModal
+                    message="Are you sure you want to cancel this transfer?"
+                    onSave={{
+                        label: 'Yes, cancel',
+                        fn: () => handleCancel()
+                    }}
+                    onCancel={{
+                        label: "No, don't cancel",
+                        fn: () => setOpenConfirmModal(null)
+                    }}
+                /> 
+            }
+
+            {
+                openConfirmModal === 'forProceed' &&
+                <ConfirmModal
+                    message="Are you sure you want to procced?"
+                    onSave={{
+                        label: 'Yes, proceed',
+                        fn: ()=>handleProceed(transfer)
+                    }}
+                    onCancel={{
+                        label: "No, not yet",
+                        fn: () => setOpenConfirmModal(null)
+                    }}
+                />
+            }
+
             <NavBar />
             <ProgressBar point={4} />
 
@@ -190,7 +205,7 @@ const PaymentMethod = () => {
                         {
                             paymentMethodOptions.map((paymentMethod: any) => (
                                 <label htmlFor={paymentMethod.method}>
-                                    <div className={`payment-options-card ${paymentMethod.slug === selected && "selected-pm-green"}`} onClick={() => setSelected(paymentMethod.slug)}>
+                                    <div className={`payment-options-card ${paymentMethod.slug === selected && "selected-pm-green"}`} onClick={() => selectPaymentMethod(paymentMethod.slug)}>
                                         <div className="inp-container">
                                             <input type="radio" name="payment-option" id={paymentMethod.method} checked={paymentMethod.slug === selected} value={paymentMethod.method} />
                                             <span className="checkmark"></span>
@@ -235,9 +250,9 @@ const PaymentMethod = () => {
                 </div>
                 <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
                  {
-                    selected==='trust-payment' ?
+                    selected === 'trust-payment' ?
                     <PaymentRedirect 
-                        mainamount = {getMoneyValue(transaction?.meta?.totalToPay)} 
+                        mainamount = {getTotalToPay()} 
                         currencyiso3a = {transaction?.originCurrency} 
                         transactionId={transaction?.meta?.transactionId} 
                         transferId={transferId} 

@@ -1833,3 +1833,21 @@ export const initiateInteracTransferPayment = (transferId: number) => {
     })
   })
 }
+
+export const updateTransferWithPaymentGatewayCharge = (transferId: string, paymentGateway: string) => {
+  const transfer = store.getState().transfer
+
+  http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
+    paymentGateway
+  })
+  .then((res: any) => {
+    if (res?.data?.status == 200 ) {
+      store.dispatch({
+        type: TRANSFER,
+        payload: { ...transfer, transactionDetails: { ...res.data.data } },
+      })      
+    }
+  })
+  .catch(() => {})
+  .then(() => {})
+}

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Redirect, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import RecipientDetailsBox from '../../modules/parts/RecipientDetailsBox';
 import { useDispatch, useSelector } from 'react-redux';

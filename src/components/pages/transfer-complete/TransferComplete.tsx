@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import SuccessIcon from '../../modules/success-icon/SuccessIcon';
 import { getQueryParam, isCurrencyPairDowntimeUp } from '../../../util/util';

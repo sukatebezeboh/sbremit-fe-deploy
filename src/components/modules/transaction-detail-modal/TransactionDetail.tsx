@@ -7,7 +7,7 @@ import PageHeading from '../page-heading/PageHeading';
 import Receipt from '../receipt/Receipt';
 import { constants } from '../../../util/constants';
 import Modal from './TransactionDetail.css'
-import TransferDetailsBox from '../parts/TransferDetailsBox';
+import TransferDetailsBox from '../transfer-details-box/TransferDetailsBox';
 import RecipientDetailsBox from '../parts/RecipientDetailsBox';
 
 const ref: any = React.createRef()

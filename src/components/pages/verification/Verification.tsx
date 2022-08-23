@@ -17,7 +17,7 @@ import { userVerificationValidator } from "../../../util/form-validators";
 import { paths } from "../../../util/paths";
 import NavBar from "../../modules/navbar/NavBar";
 import PageHeading from "../../modules/page-heading/PageHeading";
-import TransferDetailsBox from "../../modules/parts/TransferDetailsBox";
+import TransferDetailsBox from "../../modules/transfer-details-box/TransferDetailsBox";
 import ProgressBar from "../../modules/progress-bar/ProgressBar";
 import VerificationMethod from "../../modules/verification-method/VerificationMethod";
 

@@ -9,7 +9,7 @@ import { asset, getQueryParam, isUserFirstTransaction, replaceUnderscores, userH
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import Body from './Recipient.css';
 

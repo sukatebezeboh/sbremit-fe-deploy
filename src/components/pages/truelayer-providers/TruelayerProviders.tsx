@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import { useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import { paths } from '../../../util/paths';
 import { cancelTransfer, fetchTruelayerProviders, getTransactionDetails, initiateTruelayerPayment, toastAction } from '../../../redux/actions/actions';

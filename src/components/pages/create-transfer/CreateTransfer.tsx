@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import { useSelector } from 'react-redux';
 import { getRecipient, getTransactionDetails, initiatePayment } from '../../../redux/actions/actions';
 import { paths } from '../../../util/paths';
