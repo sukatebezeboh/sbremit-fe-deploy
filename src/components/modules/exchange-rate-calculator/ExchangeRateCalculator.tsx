@@ -191,7 +191,7 @@ const ExchangeRateCalculator = ({
                 </div>
             </div>
 
-            <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
+            {/* <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} /> */}
             <button className="send-btn" onClick={()=> {
                 continueSending()
             }} >Start sending money</button>
