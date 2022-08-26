@@ -11,7 +11,7 @@ import { constants } from 'util/constants';
 import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, setNewQuoteWithoutAuth, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler, isCurrencyPairDowntimeUp } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler, isCurrencyPairDowntimeUp, getCountriesFiltered } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -335,7 +335,7 @@ const GetQuote = () => {
         toReceive,
         getTransferFeeText,
         setAllowOperatorFee,
-        payOutCountries,
+        payOutCountries: getCountriesFiltered(payOutCountries),
         user,
         userReferralDiscount,
         ExchangeRateInput: QuoteExchangeRateInput
