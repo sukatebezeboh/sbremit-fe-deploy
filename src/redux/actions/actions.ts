@@ -771,6 +771,8 @@ export const setNewQuoteWithoutAuth = (
 }
 
 export const setNewQuote = (base: string, target: string, finalCallback?: Function) => {
+  store.dispatch({ type: LOADING, payload: true })
+
   const payload: { base: string; target: string; meta?: any } = {
     base,
     target,
@@ -793,6 +795,9 @@ export const setNewQuote = (base: string, target: string, finalCallback?: Functi
       }
     })
     .catch((error) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
 }
 
 export const checkSkip = (callback: Function) => {
@@ -1589,8 +1594,11 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
           show: true,
           type: 'error',
           timeout: 60000,
-          defaultThemeName: themeNames.CLEAR_MAMBA,
+          defaultThemeName: themeNames.CENTER_PROMPT,
           message: res?.data?.error?.message,
+          extraBtnText: "Contact us",
+          extraBtnHandler: () => window.location.replace(paths.CONTACT),
+          extraBtnClass: 'verif-toast-failed-extra-btn-class'
         })
       }
     })
@@ -1815,7 +1823,7 @@ export const changeCountryCurrencyToCountryName = ( str: any, arr: any ) => {
 export const initiateInteracTransferPayment = (transferId: number) => {
   store.dispatch({
     type: LOADING,
-    payload: 'Establishing secure connection with Interac. This may take a few seconds...',
+    payload: 'Establishing secure connection with Interac®. This may take a few seconds...',
   })
   http.post(parseEndpointParameters(endpoints.INTERAC_PAYMENT), {
     transferId

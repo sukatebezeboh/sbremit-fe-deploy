@@ -50,7 +50,7 @@ const LandingPage = () => {
 
     const [selected, setSelected] = useState(transfer.transferMethod || "mobile_money");
     const allowOperatorFee = transfer.allowOperatorFee;
-    const max  = getMax(selected);
+    const max  = getMax(selected,  toReceive?.countryCode);
 
     const [mobileNavOpen, setMobileNavOpen] = useState(false)
 

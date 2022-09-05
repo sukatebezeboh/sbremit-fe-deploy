@@ -183,7 +183,7 @@ const Recipient = () => {
             <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} recipientData={recipientDataForUpdate} />
 
             {transferDetailsModalOpen && (<div className="timeline-modal-container desktop-hide">
-                <div className="overlay" onClick={()=>setTransferDetailsModalOpen(false)}></div>
+                <div className="overlay" onClick={() => setTransferDetailsModalOpen(false)}></div>
                 <div className="timeline-modal">
                     <TransferDetailsBox transferId={paramTransferId} />
                 </div>

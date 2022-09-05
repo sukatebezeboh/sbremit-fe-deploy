@@ -1629,6 +1629,7 @@ export const constants = {
         "LU": "Luxembourg",
         "MT": "Malta",
         "NL": "Netherlands",
+        "NO": "Norway",
         "PL": "Poland",
         "PT": "Portugal",
         "RO": "Romania",
@@ -1636,6 +1637,7 @@ export const constants = {
         "SI": "Slovenia",
         "ES": "Spain",
         "SE": "Sweden",
+        "CH": "Switzerland",
         "GB": "United Kingdom",
     },
 

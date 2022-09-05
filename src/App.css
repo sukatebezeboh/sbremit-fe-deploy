@@ -377,6 +377,10 @@ button:disabled{
     border: 1px solid #CF0921!important;
 }
 
+.border-thick {
+    border-width: 5px!important;
+}
+
 .capitalize {
     text-transform: capitalize!important;
 }

@@ -9,11 +9,12 @@ import { paths } from '../../../util/paths';
 import { cancelTransfer, getRecipient, getTransactionDetails, initiateInteracTransferPayment, toastAction, updateTransferWithPaymentGatewayCharge } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
-import { asset, formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
+import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import PaymentRedirect from '../../modules/Trust-payments/PaymentRedirect';
 import { constants } from '../../../util/constants';
 import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
 import  Body from './PaymentMethod.css'
+import PaymentOption from './payment-option/PaymentOption';
 
 const PaymentMethod = () => {
     const history = useHistory();
@@ -112,9 +113,10 @@ const PaymentMethod = () => {
             setPaymentMethodOptions([
                 {
                     slug: 'truelayer',
-                    method: 'Direct bank transfer',
+                    method: 'Instant bank transfer',
                     provider: 'TrueLayer',
-                    label: '0.00 GBP'
+                    label: '0.00 GBP',
+                    isRecommended: true
                 },
                 {
                     slug: 'trust-payment',
@@ -129,9 +131,10 @@ const PaymentMethod = () => {
             setPaymentMethodOptions([
                 {
                     slug: 'interac',
-                    method: 'Direct bank transfer',
-                    provider: 'Interac',
-                    label: '0.00 CAD (Free)'
+                    method: 'Instant bank transfer',
+                    provider: 'Interac®',
+                    label: '0.00 CAD (Free)',
+                    isRecommended: true
                 },
                 {
                     slug: 'trust-payment',
@@ -204,28 +207,12 @@ const PaymentMethod = () => {
                     <div>
                         {
                             paymentMethodOptions.map((paymentMethod: any) => (
-                                <label htmlFor={paymentMethod.method}>
-                                    <div className={`payment-options-card ${paymentMethod.slug === selected && "selected-pm-green"}`} onClick={() => selectPaymentMethod(paymentMethod.slug)}>
-                                        <div className="inp-container">
-                                            <input type="radio" name="payment-option" id={paymentMethod.method} checked={paymentMethod.slug === selected} value={paymentMethod.method} />
-                                            <span className="checkmark"></span>
-                                        </div>
-                                        <div className="method-container">
-                                            <div className="title">
-                                                {paymentMethod.method}
-                                            </div>
-                                            <div className="provider">
-                                                Powered by <span>{paymentMethod.provider}</span>
-                                            </div>
-                                            <div className="label">
-                                                <span>{paymentMethod.label}</span>
-                                                <span>
-                                                    <img src={asset('logos', `${paymentMethod.slug}.png`)} alt="" />
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
+                                <PaymentOption 
+                                    key={paymentMethod.slug}
+                                    paymentMethod={paymentMethod}
+                                    isSelected={paymentMethod.slug === selected}
+                                    selectPaymentMethod={selectPaymentMethod}
+                                />
                             ))
                         }
                             <div>

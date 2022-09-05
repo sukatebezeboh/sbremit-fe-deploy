@@ -171,10 +171,6 @@ export default styled.div`
                             display: inline-block;
                             height: fit-content;
                             max-height: 30px;
-<<<<<<< HEAD
-=======
-
->>>>>>> ffac3c20f47811a6f70cd1158140c5bab6a0caf2
                         }
 
                         .delete-txt {

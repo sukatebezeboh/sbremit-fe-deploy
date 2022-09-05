@@ -10,6 +10,7 @@ import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import { getQueryParam } from '../../../util/util';
 
 import Body from './TruelayerProviders.css'
+import RadioCardWrapper from 'components/modules/radio-card-wrapper/RadioCardWrapper';
 
 const TruelayerProviders = () => {
     const history = useHistory();
@@ -68,14 +69,24 @@ const TruelayerProviders = () => {
                     <div className="box-container-inner">
 
                       { tProviders.map((provider: any) => (
-                        <div key={provider.provider_id} className={`radio-card ${ selected?.provider_id === provider.provider_id && "selected-border-green"}`} onClick={()=>setSelected(provider)}>
-                            <div className="radio-card-inner">
-                                <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
-                                <div className="provider-name">
-                                    {provider.display_name}
+                            <RadioCardWrapper
+                                clickHandler={()=>setSelected(provider)}
+                                name={'truelayer-provider'}
+                                id={provider.provider_id}
+                                key={provider.provider_id}
+                                isChecked={selected?.provider_id === provider.provider_id}
+                                selectedConfig={{
+                                    className: 'selected-border-green border-thick'
+                                }}
+                                value={provider.provider_id}
+                            >
+                                <div className="radio-card-inner">
+                                    <img className="provider-icon" src={provider.logo_url} alt={provider.provider_id} />
+                                    <div className="provider-name">
+                                        {provider.display_name}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </RadioCardWrapper>
                       ))  }
 
                     </div>

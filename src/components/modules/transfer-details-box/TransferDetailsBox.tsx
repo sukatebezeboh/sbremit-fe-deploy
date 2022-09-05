@@ -52,7 +52,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
         return texts[selectedMethod];
     }
 
-    const transferPaymentMade  = () =>  {
+    const transferPaymentMade = () =>  {
         return isTransaction && (transaction?.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || transaction?.meta?.paymentGatewayUsed)
     }
 

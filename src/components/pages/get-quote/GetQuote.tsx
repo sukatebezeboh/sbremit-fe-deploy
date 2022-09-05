@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { constants } from 'util/constants';
+import { settings } from 'util/settings';
 import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
@@ -35,7 +36,7 @@ const GetQuote = () => {
     const transferMethod = transfer.transferMethod
     const [changedInput, setChangedInput]: any = useState(null);
     const allowOperatorFee = transfer.allowOperatorFee; 
-    const max  = getMax(transferMethod);
+    const max  = getMax(transferMethod, toReceive?.countryCode);
 
     const userReferralDiscount = getUserReferralDiscount(user, appValues);
 
@@ -243,7 +244,7 @@ const GetQuote = () => {
     }
 
     const handleContinue = () => {
-        if ( Number(toSend.total) <= 0) {
+        if ( Number(toSend.total) <=  settings.MINIMUN_TRANSFERRABLE_ORIGIN_AMOUNT ) {
             toastAction({
                 name: "no-value-sent",
                 show: true,

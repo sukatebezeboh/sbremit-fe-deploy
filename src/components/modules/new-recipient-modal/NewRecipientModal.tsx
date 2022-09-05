@@ -81,7 +81,7 @@ function NewRecipientModal(props: any) {
 
     useEffect(() => {
         if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
-            setShowVerifyStep(true)
+            // setShowVerifyStep(true)
         }
     }, [])
 
@@ -94,7 +94,7 @@ function NewRecipientModal(props: any) {
 
     const updateVerifyStep = (values: any) => {
         if ( transfer.remittanceHandler === remittanceHandlers.PIVOT_REMITTANCE_HANDLER ) {
-            setShowVerifyStep(true)
+            // setShowVerifyStep(true)
         }
     }
 

@@ -40,7 +40,7 @@ export default styled.div`
         div {
             &.box-container-inner {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 250px));
+                grid-template-columns: repeat(auto-fit, minmax(190px, 195px));
                 grid-gap: 15px;
             }
             .radio-card {
@@ -49,9 +49,10 @@ export default styled.div`
                 background: #FFF;
                 margin-bottom: 30px;
                 box-shadow: 0px 10px 12px #CCCCCC80;
-                border-radius: 15px;
+                border-radius: 8px;
                 padding: 25px;
                 max-height: 200px;
+                min-height: 150px;
                 text-align: center;
                 .radio-card-inner {
                     display: grid;
@@ -156,7 +157,8 @@ export default styled.div`
             .radio-card {
                 padding: 15px;
                 grid-template-columns: 1fr;
-                min-height: fit-content;
+                min-height: 100px;
+                font-size: small;
                 border-radius: 8px;
                 .rc-head {
                     font: normal normal 600 15px Montserrat;

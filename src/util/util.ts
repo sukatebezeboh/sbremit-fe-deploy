@@ -145,8 +145,14 @@ export const sortObjectByProperties = (object: any) => {
     return sortedObject;
 }
 
-export const getMax = (transferMethod: string) => {
-    return settings[ (transferMethod + '_MAX').toUpperCase() ]
+export const getMax = (transferMethod: string, destinationCountryCode = "") => {
+    const services = store.getState().appValues.services;
+    const service = services?.data?.find((service: any) => {
+        return service?.name?.toLowerCase() === replaceUnderscores(transferMethod) 
+        && (service?.country?.toLowerCase() === destinationCountryCode?.toLowerCase() || !service?.country) 
+    })
+
+    return service?.meta?.transferLimitMax || settings[ (transferMethod + '_MAX').toUpperCase() ]
 }
 
 export const secondsToHms = (value : any) => {
