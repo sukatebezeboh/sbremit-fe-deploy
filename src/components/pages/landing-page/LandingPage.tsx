@@ -7,7 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { getCompetitorRates, getQuoteService, getServiceRate, getServiceRateValue, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMax, getRemittanceHandler, scrollTo } from '../../../util/util';
+import { asset, formatCurrency, getMax, getCountriesFiltered, getRemittanceHandler, scrollTo } from '../../../util/util';
 import { constants } from '../../../util/constants';
 import LandingPageExchangeRateInput from 'components/modules/exchange-rate-input/LandingPageExchangeRateInput';
 import { RESPONSIVE_TYPE_COLLAPSE_ALL } from 'components/modules/table/ITable';
@@ -271,7 +271,7 @@ const LandingPage = () => {
         toReceive,
         getTransferFeeText,
         setAllowOperatorFee,
-        payOutCountries,
+        payOutCountries: getCountriesFiltered(payOutCountries),
         ExchangeRateInput: LandingPageExchangeRateInput
     }
 

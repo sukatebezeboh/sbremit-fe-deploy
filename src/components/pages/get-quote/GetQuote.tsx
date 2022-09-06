@@ -9,7 +9,7 @@ import { settings } from 'util/settings';
 import { getQuoteService, getServiceRate, getServiceRateValue, getSpreads, setNewQuote, toastAction, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler } from '../../../util/util';
+import { formatCurrency, getMax, getUserReferralDiscount, getRemittanceHandler, isCurrencyPairDowntimeUp, getCountriesFiltered } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -332,7 +332,7 @@ const GetQuote = () => {
         toReceive,
         getTransferFeeText,
         setAllowOperatorFee,
-        payOutCountries,
+        payOutCountries: getCountriesFiltered(payOutCountries),
         user,
         userReferralDiscount,
         ExchangeRateInput: QuoteExchangeRateInput
@@ -349,7 +349,8 @@ const GetQuote = () => {
                 <div className="box">
                     <ExchangeRateCalculator {...calculatorProps} />
                 </div>
-                <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountry={appValues?.countries[toReceive.countryCode]} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} />
+                {/* <Modal component={() => <CurrencyPairDowntimeNotif toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} handleContinue={continueSending} setClose={() => setOpenCurrencyPairDowntimeNotif(false)} />} open={openCurrencyPairDowntimeNotif} setOpen={setOpenCurrencyPairDowntimeNotif} /> */}
+                {/* <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} destinationCountryCode={toReceive.countryCode} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} /> */}
                 <div className="btns">
                     <span>Cancel</span>
                     <button className="send-btn" onClick={()=> {

@@ -388,4 +388,15 @@ export const isCurrencyPairDowntimeUp = (baseCurrency: string, targetCurrency: s
     return Boolean(Number(spread?.downtimeStatus));
 }
 
- 
+export const getCountriesFiltered = (payOutCountries: any) => {
+    const countries: any = {};
+    const allowed: any = ['Cameroon', 'Kenya', 'Tanzania', 'Uganda'];
+
+    Object.keys(payOutCountries).forEach((c: any) => {
+        if (allowed.find((a: string ) => a === c)) {
+            countries[c] = payOutCountries[c]
+        }
+    })
+
+    return countries;
+}
