@@ -103,7 +103,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
                     </div>
 
                     {
-                        Boolean(paymentGatewayCharge) &&
+                        Boolean(Number(paymentGatewayCharge)) &&
                         <div className="row">
                             <div className="left">Payment Gateway Charge</div>
                             <div className="right uppercase"> {paymentGatewayCharge} {sendCurrency}</div>

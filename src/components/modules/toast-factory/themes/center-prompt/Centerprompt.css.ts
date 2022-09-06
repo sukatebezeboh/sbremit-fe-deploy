@@ -1,7 +1,14 @@
 import styled from "styled-components";
 
 export default styled.div`
-
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 150vh;
+    background: #00000094;
+    top: 0;
+    left: 0;
+}
 .container {
     position: fixed;
     left: 50% ;

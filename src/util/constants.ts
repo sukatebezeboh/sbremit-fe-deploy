@@ -1641,7 +1641,7 @@ export const constants = {
         "GB": "United Kingdom",
     },
 
-    COUNTRIES_PHONE_CODES: countriesAndCodes
+    COUNTRIES_PHONE_CODES: countriesAndCodes,
 }
 
 export const transferMethodsInWords: any = {

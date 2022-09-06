@@ -126,18 +126,13 @@ export const signInAction = (data: any, history: any) => {
           res.headers['x-service-provider'],
           30,
         )
-        axios
-          .get(
-            config.API_HOST +
-              parseEndpointParameters(endpoints.USER, res.data.data.id),
-          )
-          .then((response) => {
-            CookieService.put('user', JSON.stringify(response.data.data))
-            store.dispatch({
-              type: AUTH,
-              payload: { isAuthenticated: true, user: response.data.data },
-            })
-          })
+
+        CookieService.put('user', JSON.stringify(res.data.data))
+        store.dispatch({
+          type: AUTH,
+          payload: { isAuthenticated: true, user: res.data.data },
+        })
+
       } else {
         const errorMessage = res.data.error.message;
         if ( errorMessage.indexOf('not confirm') !== -1 ) {
@@ -152,7 +147,21 @@ export const signInAction = (data: any, history: any) => {
               extraBtnHandler: () => isPhoneNumber(data.username) ? history.push(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
               extraBtnClass: 'verif-toast-failed-extra-btn-class'
             })
-        } else {
+        } 
+        else if ( errorMessage.indexOf('blocked') !== -1 || errorMessage.indexOf('inactive') !== -1 ) {
+          stackNewToast({
+            name: "user-blocked-notice",
+            show: true,
+            type: 'error',
+            timeout: -1,
+            defaultThemeName: themeNames.CENTER_PROMPT,
+            message: res?.data?.error?.message,
+            extraBtnText: "Contact us",
+            extraBtnHandler: () => window.location.replace(paths.CONTACT),
+            extraBtnClass: 'verif-toast-failed-extra-btn-class'
+          })
+        } 
+        else {
           toastAction({
             show: true,
             type: 'error',
@@ -277,6 +286,11 @@ export const signOutAction = (ignoreRequest = false) => {
 
 const runningTimeouts: any[] = []
 export const toastAction = (toastConfig: any) => {
+
+  if (toastConfig.timeout === -1) {
+    return store.dispatch({ type: TOAST, payload: { ...toastConfig } })
+  }
+
   runningTimeouts.forEach((t) => {
     return clearTimeout(t)
   })
@@ -1086,7 +1100,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
             name: "name-change-account-lock",
             show: true,
             type: 'info',
-            timeout: 10000,
+            timeout: -1,
             defaultThemeName: themeNames.CENTER_PROMPT,
             title: "Change request received",
             message: `<div style="color: grey; padding-top: 5px;">An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change</div>`,
@@ -1545,9 +1559,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
         setStateCallback(res.data.data)
       }
     })
-    .catch((err) => {
-      ;
-    })
+    .catch((err) => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
@@ -1589,11 +1601,11 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
         })
         finalCallback?.()
       } else {
-        toastAction({
+        stackNewToast({
           name: "set-transfer-quote-failed-notice",
           show: true,
           type: 'error',
-          timeout: 60000,
+          timeout: -1,
           defaultThemeName: themeNames.CENTER_PROMPT,
           message: res?.data?.error?.message,
           extraBtnText: "Contact us",
@@ -1633,7 +1645,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
             name: "confirm-momo-recipient-mismatch",
             show: true,
             type: 'warning',
-            timeout: 5000,
+            timeout: -1,
             defaultThemeName: themeNames.CENTER_PROMPT,
             title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
             message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
@@ -1655,7 +1667,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           name: "confirm-momo-recipient-mismatch",
           show: true,
           type: 'warning',
-          timeout: 5000,
+          timeout: -1,
           defaultThemeName: themeNames.CENTER_PROMPT,
           title: `The recipient details were not received`,
           message: "<div style='color: grey;'>Please provide a valid mobile number</div>",
@@ -1664,9 +1676,6 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           },
           closeBtnText: "Make corrections",
         })
-
-        
-
       }
   })
   .catch(() => {})
@@ -1859,3 +1868,5 @@ export const updateTransferWithPaymentGatewayCharge = (transferId: string, payme
   .catch(() => {})
   .then(() => {})
 }
+
+

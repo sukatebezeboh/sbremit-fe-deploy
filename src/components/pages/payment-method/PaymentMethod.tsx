@@ -6,7 +6,7 @@ import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetai
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { paths } from '../../../util/paths';
-import { cancelTransfer, getRecipient, getTransactionDetails, initiateInteracTransferPayment, toastAction, updateTransferWithPaymentGatewayCharge } from '../../../redux/actions/actions';
+import { cancelTransfer, getRecipient, getTransactionDetails, initiateInteracTransferPayment, stackNewToast, toastAction, unstackNewToast, updateTransferWithPaymentGatewayCharge } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { ConfirmModal } from '../../modules/confirm-modal/ConfirmModal';
 import { formatCurrency, getMoneyValue, getQueryParam, isUserFirstTransaction, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
@@ -15,6 +15,8 @@ import { constants } from '../../../util/constants';
 import RecipientDetailsBox from 'components/modules/parts/RecipientDetailsBox';
 import  Body from './PaymentMethod.css'
 import PaymentOption from './payment-option/PaymentOption';
+import { PAYMENT_GATEWAYS } from './PaymentMethod.helper';
+import { themeNames } from 'components/modules/toast-factory/themes';
 
 const PaymentMethod = () => {
     const history = useHistory();
@@ -27,12 +29,7 @@ const PaymentMethod = () => {
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
-    const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([{
-        slug: 'trust-payment',
-        method: 'Pay with card',
-        provider: 'Trust payment',
-        label: '0.00'
-    }]);
+    const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([PAYMENT_GATEWAYS['trust-payment']]);
 
     const dispatch = useDispatch()
 
@@ -111,48 +108,44 @@ const PaymentMethod = () => {
         if (transaction?.originCurrency === 'GBP') {
             selectPaymentMethod('truelayer')
             setPaymentMethodOptions([
-                {
-                    slug: 'truelayer',
-                    method: 'Instant bank transfer',
-                    provider: 'TrueLayer',
-                    label: '0.00 GBP',
-                    isRecommended: true
-                },
-                {
-                    slug: 'trust-payment',
-                    method: 'Pay with card',
-                    provider: 'Trust payment',
-                    label: '0.99 GBP'
-                }
+                PAYMENT_GATEWAYS['truelayer'],
+                PAYMENT_GATEWAYS['trust-payment']
             ])
         }
         else if ( transaction?.originCurrency === "CAD"  ) {
             selectPaymentMethod('interac')
             setPaymentMethodOptions([
-                {
-                    slug: 'interac',
-                    method: 'Instant bank transfer',
-                    provider: 'Interac®',
-                    label: '0.00 CAD (Free)',
-                    isRecommended: true
-                },
-                {
-                    slug: 'trust-payment',
-                    method: 'Pay with card',
-                    provider: 'Trust payment',
-                    label: '0.99 CAD'
-                }
+                PAYMENT_GATEWAYS['interac'],
+                PAYMENT_GATEWAYS['trust-payment']
             ])
         }
         else if ( (transaction?.originCurrency === "EUR") ) {
             selectPaymentMethod('trust-payment')
         } else {
-
             selectPaymentMethod('bank_transfer')
         }
     }
 
-    const selectPaymentMethod = (paymentGateway: string) => {
+    type TSelectPaymentMethod = 'interac' | 'trust-payment' | 'truelayer' | 'bank_transfer';
+    const selectPaymentMethod = (paymentGateway: TSelectPaymentMethod) => {
+        if ( 
+            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit &&
+            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit < transaction?.originAmount
+        ) {
+            stackNewToast({
+                name: "exceeded-max-for-payment-gateway-notice",
+                show: true,
+                type: 'error',
+                timeout: -1,
+                defaultThemeName: themeNames.CENTER_PROMPT,
+                message: `To continue to pay with <div class="capitalize">${PAYMENT_GATEWAYS[paymentGateway]?.provider}</div>, please send an amount below ${PAYMENT_GATEWAYS[paymentGateway]?.maxLimit}${transaction?.originCurrency} or use a different payment method`,
+                closeBtnText: "Make corrections",
+                close: () => history.push(paths.GET_QUOTE),
+                extraBtnText: "Use a different payment method",
+                extraBtnHandler: () => unstackNewToast({name: "exceeded-max-for-payment-gateway-notice"}),
+                extraBtnClass: 'verif-toast-failed-extra-btn-class'
+            })
+        }
         setSelected(paymentGateway)
         updateTransferWithPaymentGatewayCharge(transferId, paymentGateway)
     }
@@ -212,6 +205,7 @@ const PaymentMethod = () => {
                                     paymentMethod={paymentMethod}
                                     isSelected={paymentMethod.slug === selected}
                                     selectPaymentMethod={selectPaymentMethod}
+                                    label={paymentMethod.label(transaction?.meta?.destinationCountryCode)}
                                 />
                             ))
                         }

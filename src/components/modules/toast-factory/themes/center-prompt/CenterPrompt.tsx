@@ -11,6 +11,7 @@ const CenterPrompt: React.FC = ({config}: any) => {
         info: 'info.png'
     }
   const Content = <Theme>
+            <div className="overlay"></div>
             <div className={`container container-${config?.type} ${config?.show ? 'animate-in-from-top': '' } ${((config?.show && config?.readyToClose) ? 'animate-out-to-top': '')}`}>
                 <div className="close-icon" onClick={config.close}> <span>&times;</span>  </div>
                 <div className="icon-image"><img src={asset('icons', icons[config.type])} alt="icon" /></div>

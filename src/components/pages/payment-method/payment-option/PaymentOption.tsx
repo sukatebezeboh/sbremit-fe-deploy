@@ -3,7 +3,7 @@ import { asset } from '../../../../util/util'
 import { IPaymentOption } from './IPaymentOption'
 import Label from './PaymentOption.css'
 
-const PaymentOption = ({ paymentMethod, isSelected, selectPaymentMethod }: IPaymentOption) => {
+const PaymentOption = ({ paymentMethod, isSelected, selectPaymentMethod, label }: IPaymentOption) => {
 
   return (
     <Label htmlFor={paymentMethod.method}>
@@ -20,7 +20,7 @@ const PaymentOption = ({ paymentMethod, isSelected, selectPaymentMethod }: IPaym
                     Powered by <span>{paymentMethod.provider}</span>
                 </div>
                 <div className="label">
-                    <span>{paymentMethod.label}</span>
+                    <span>{label}</span>
                     <span>
                         <img src={asset('logos', `${paymentMethod.slug}.png`)} alt="" />
                     </span>
