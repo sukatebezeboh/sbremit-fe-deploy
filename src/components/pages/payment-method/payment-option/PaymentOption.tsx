@@ -17,7 +17,7 @@ const PaymentOption = ({ paymentMethod, isSelected, selectPaymentMethod, label }
                     {paymentMethod.method}
                 </div>
                 <div className="provider">
-                    Powered by <span>{paymentMethod.provider}</span>
+                    Powered by <span><i>{paymentMethod.provider}</i></span>
                 </div>
                 <div className="label">
                     <span>{label}</span>

@@ -84,7 +84,26 @@ const Support = () => {
                     <div className={`content ${isPanelOpen(1) || " collapsed"}`}>
                         <div className="body">
                             <h3>Kenya</h3>
-                            <div className="details">No Data Yet</div>
+                            <div className="details">
+                                <div className="compare" id="compare">
+                                    <div className="section-inner">
+                                        <h2 className="heading">MPESA</h2>
+                                        <div className="table">
+                                            <Table
+                                                rows = {getCountryMomoData(servicesData?.[constants.KENYA_MPESA_SERVICE_RATE_INDEX]).rows}
+                                                headings={getCountryMomoData(servicesData?.[constants.KENYA_MPESA_SERVICE_RATE_INDEX]).heading}
+                                                config={{
+                                                    customClassName: 'landing-page-table landing-page-compare-features-table',
+                                                    cellSpacing: 0,
+                                                    cellPadding: 0,
+                                                    responsiveType: RESPONSIVE_TYPE_COLLAPSE_ALL,
+                                                    targetHeadingLineForMobileResponsiveness: 1
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="open">

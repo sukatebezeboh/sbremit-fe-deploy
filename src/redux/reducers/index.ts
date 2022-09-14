@@ -33,5 +33,5 @@ export default combineReducers({
   transfer,
   notifications,
   confirmDialog,
-  exchange
+  exchange,
 })

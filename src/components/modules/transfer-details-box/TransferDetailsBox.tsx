@@ -1,3 +1,4 @@
+import { PAYMENT_GATEWAYS } from 'components/pages/payment-method/PaymentMethod.helper';
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -114,7 +115,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
                         transferPaymentMade() && 
                         <div className="row">
                             <div className="left">Payment Gateway Used</div>
-                            <div className="right capitalize">{transaction?.meta?.paymentGatewayUsed?.toLowerCase()}</div>
+                            <div className="right capitalize italicize">{PAYMENT_GATEWAYS[transaction?.meta?.paymentGatewayUsed?.toLowerCase()]?.provider || transaction?.meta?.paymentGatewayUsed?.toLowerCase()}</div>
                         </div>
                     }
 

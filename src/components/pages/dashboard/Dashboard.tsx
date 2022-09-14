@@ -126,7 +126,6 @@ const Dashboard = () => {
         return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.meta.expired
     }
 
-
     return (
         <Body>
             <NavBar />

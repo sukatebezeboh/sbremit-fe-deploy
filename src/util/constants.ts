@@ -1605,6 +1605,7 @@ export const constants = {
     UGANDA_MTN_SERVICE_RATE_INDEX: 3,
     UGANDA_AIRTEL_SERVICE_RATE_INDEX: 5,
     TANZANIA_MPESA_SERVICE_RATE_INDEX: 4,
+    KENYA_MPESA_SERVICE_RATE_INDEX: 6,
 
     REMITTANCE_COUNTRIES_CODES: [ 'CM', 'UG', 'KE', 'TZ' ],
 
@@ -1648,6 +1649,10 @@ export const transferMethodsInWords: any = {
    1: "Mobile money",
    2: "Bank transfer",
    3: "Cash pickup",
+   4: "Mobile money",
+   5: "Mobile money",
+   6: "Mobile money",
+   7: "Mobile money",
    mobile_money: "Mobile money",
    bank_transfer: "Bank transfer",
    cash_pickup: "Cash pickup"

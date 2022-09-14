@@ -5,7 +5,7 @@ import { deleteRecipient, getRecipients, getUserTransactions, refreshUserDetails
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getQueryParam, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
+import { asset, getMax, getQueryParam, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
@@ -67,7 +67,7 @@ const Recipient = () => {
             history.replace(paths.GET_QUOTE)
             return
         }
-        const mobileMoneyMax = 500000;
+        const mobileMoneyMax = getMax(transferMethod,  toReceive?.countryCode);
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > mobileMoneyMax) {
             history.replace(paths.GET_QUOTE)
             toastAction({
@@ -75,7 +75,7 @@ const Recipient = () => {
                 type: "warning",
                 timeout: 10000,
                 title: "Exceeded maximum!",
-                message: `The maximum transferable amount (inclusive of charges) for Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
+                message: `The maximum transferable amount (inclusive of charges) for ${replaceUnderscores(transferMethod)} is ${mobileMoneyMax} ${toReceive.currency} for Mobile Money`
             })
             return
         }

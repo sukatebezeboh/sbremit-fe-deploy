@@ -8,11 +8,11 @@ export const PAYMENT_GATEWAYS: {[x: string]: any} = {
     },
     'interac': {
         slug: 'interac',
-        method: 'Instant bank transfer',
+        method: 'Instant Transfer',
         provider: 'Interac®',
         label: (destinationCountryCode?: string) => '0.00 CAD (Free)',
         isRecommended: true,
-        maxLimit: 30000
+        maxLimit: 3000
     },
     'trust-payment': {
         slug: 'trust-payment',

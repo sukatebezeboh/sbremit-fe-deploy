@@ -111,11 +111,10 @@ export const RecipientBankTransferBankTransferValidator = (accountNoIsStandAlone
     delete shape.bankName;
     delete shape.bankCode;
     delete shape.accountNumber;
-    shape['accountNumberStandAlone'] = Yup.string().required();
+    shape['accountNumberStandAlone'] = Yup.string().required('Account number is required');
   }
 
   return Yup.object().shape(shape)
-
 };
 
 export const RecipientBankTransferMicrofinanceTransferValidator = Yup.object().shape({

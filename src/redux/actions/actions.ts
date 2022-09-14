@@ -1851,7 +1851,7 @@ export const initiateInteracTransferPayment = (transferId: number) => {
   })
 }
 
-export const updateTransferWithPaymentGatewayCharge = (transferId: string, paymentGateway: string) => {
+export const updateTransferWithPaymentGatewayCharge = (transferId: string, paymentGateway: string, callback?: Function  ) => {
   const transfer = store.getState().transfer
 
   http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
@@ -1862,7 +1862,8 @@ export const updateTransferWithPaymentGatewayCharge = (transferId: string, payme
       store.dispatch({
         type: TRANSFER,
         payload: { ...transfer, transactionDetails: { ...res.data.data } },
-      })      
+      })  
+      callback?.()
     }
   })
   .catch(() => {})

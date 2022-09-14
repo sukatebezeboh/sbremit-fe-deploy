@@ -126,11 +126,19 @@ const PaymentMethod = () => {
         }
     }
 
-    type TSelectPaymentMethod = 'interac' | 'trust-payment' | 'truelayer' | 'bank_transfer';
-    const selectPaymentMethod = (paymentGateway: TSelectPaymentMethod) => {
-        if ( 
-            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit &&
-            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit < transaction?.originAmount
+    type TPaymentMethods = 'interac' | 'trust-payment' | 'truelayer' | 'bank_transfer';
+    const selectPaymentMethod = (paymentGateway: TPaymentMethods) => {
+        setSelected(paymentGateway)
+        updateTransferWithPaymentGatewayCharge(transferId, paymentGateway, () => verifyPaymentMethodMaxLimit(paymentGateway))
+    }
+
+    const getTotalToPay = () => {
+        return getMoneyValue(`${transaction?.meta?.totalToPay}`) + +transaction?.meta?.paymentGatewayCharge;
+    }
+
+    const verifyPaymentMethodMaxLimit = (paymentGateway: TPaymentMethods) => {
+        if (PAYMENT_GATEWAYS[paymentGateway]?.maxLimit &&
+            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit < getTotalToPay()
         ) {
             stackNewToast({
                 name: "exceeded-max-for-payment-gateway-notice",
@@ -138,21 +146,17 @@ const PaymentMethod = () => {
                 type: 'error',
                 timeout: -1,
                 defaultThemeName: themeNames.CENTER_PROMPT,
-                message: `To continue to pay with <div class="capitalize">${PAYMENT_GATEWAYS[paymentGateway]?.provider}</div>, please send an amount below ${PAYMENT_GATEWAYS[paymentGateway]?.maxLimit}${transaction?.originCurrency} or use a different payment method`,
-                closeBtnText: "Make corrections",
-                close: () => history.push(paths.GET_QUOTE),
-                extraBtnText: "Use a different payment method",
+                message: `To continue to pay with <span class="capitalize italicize">${PAYMENT_GATEWAYS[paymentGateway]?.provider}</span>, please send an amount below ${PAYMENT_GATEWAYS[paymentGateway]?.maxLimit}${transaction?.originCurrency} or use a different payment method`,
+                close: () => {
+                    unstackNewToast({name: "exceeded-max-for-payment-gateway-notice"})
+                    history.push(paths.GET_QUOTE)
+                },
+                closeBtnText: "Use a different payment method",
+                extraBtnText: "Make corrections",
                 extraBtnHandler: () => unstackNewToast({name: "exceeded-max-for-payment-gateway-notice"}),
                 extraBtnClass: 'verif-toast-failed-extra-btn-class'
             })
         }
-        setSelected(paymentGateway)
-        updateTransferWithPaymentGatewayCharge(transferId, paymentGateway)
-    }
-
-    const getTotalToPay = () => {
-        console.log( transaction?.meta, transaction?.meta?.paymentGatewayCharge )
-        return getMoneyValue(`${transaction?.meta?.totalToPay}`) + +transaction?.meta?.paymentGatewayCharge;
     }
 
     return (
