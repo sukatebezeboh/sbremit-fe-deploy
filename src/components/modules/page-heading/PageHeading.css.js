@@ -16,6 +16,7 @@ const style = (back) => styled.div`
             font: normal normal 600 25px/40px Montserrat;
             color: #424242;
             z-index: +2;
+            margin: 0;
         }
         >.subheading {
             font: normal normal normal 20px/30px Montserrat;

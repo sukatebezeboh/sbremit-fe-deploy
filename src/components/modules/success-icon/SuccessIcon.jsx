@@ -39,6 +39,7 @@ class SuccessIcon extends Component {
         c.lineCap = "round";
         loopOneInterval = setInterval(this.loopOne, 1);
     }
+    
     loopOne = () => {
         c.beginPath();
         i += 0.01;

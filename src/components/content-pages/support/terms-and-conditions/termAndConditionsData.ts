@@ -646,7 +646,7 @@ export const termAndConditionsData = [
         title: "Comparison disclaimer",
         content: [
             {
-                text: [`We base our price comparisons on data we’ve taken from other providers’websites, on specific times of the day. This is not done on a daily basis.Some providers don’t make their fee and exchange rates publicly available. Inthose cases, we use their service for money transfer - just as if we werecustomers - right until the point of paying. We do this multiple times, and weenter different amounts of money.The comparison table shows how much it costs a customer to send moneyinternationally, in different currencies using each of the providers we’ve listed.The tables also show how we compared to other providers in terms of NoTransfer fee, provide mobile money option, bank transfer, cash pickup, cardlesswithdrawal and mobile top-up.`]
+                text: [`We base our price comparisons on data we’ve taken from other providers’websites, on specific times of the day. This is not done on a daily basis.Some providers don’t make their fee and exchange rates publicly available. Inthose cases, we use their service for money transfer - just as if we werecustomers - right until the point of paying. We do this multiple times, and weenter different amounts of money.The comparison table shows how much it costs a customer to send moneyinternationally, in different currencies using each of the providers we’ve listed.The tables also show how we compared to other providers in terms of NoTransfer fee, provide mobile money option, bank transfer, cash pickup, cardless withdrawal and mobile top-up.`]
             },
             {
                 text: {

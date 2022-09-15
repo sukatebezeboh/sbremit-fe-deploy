@@ -39,6 +39,7 @@ import RegisterCountry from 'components/pages/register-country/RegisterCountry';
 import Notifications from 'components/pages/notifications/Notifications';
 import InviteBusinessUser from 'components/pages/invite-business-user/InviteBusinessUser';
 import MobileMoneyRate from 'components/content-pages/support/mobile-money-rate/MobileMoneyRate';
+import TransferStatus from '../components/pages/transfer-status/TransferStatus';
 
 
 export interface IRoute {
@@ -258,6 +259,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.TRANSFER_COMPLETE,
         component: TransferComplete,
+        protected: true
+    },
+    {
+        path: paths.TRANSFER_STATUS,
+        component: TransferStatus,
         protected: true
     },
     {

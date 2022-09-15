@@ -94,11 +94,18 @@ const TruelayerProviders = () => {
                         <TransferDetailsBox transferId={transferId} />
                     </div>
                 </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
-                 {
-                    <span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </span>
-                }
-                </div>
+                <div className="btns">
+                    <div className="disclaimer italicize">
+                        By continuing you are permitting TrueLayer to initiate a payment from your bank account. You also agree to our <a href="https://truelayer.com/enduser_tos/" target="_blank" rel="noreferrer">End User Terms of Service</a> and <a href="https://truelayer.com/privacy/" target="_blank" rel="noreferrer">Privacy Policy</a>
+                    </div>
+                    <div className="btns-right">
+                        <span onClick={()=>setOpenConfirmModal(true)}>Cancel transfer</span> 
+                        {
+                            <span> <button onClick={()=>handleProceed()}>Proceed to payment</button> </span>
+                        }
+                        </div>                        
+                    </div>
+
             </div>
         </Body>
     )

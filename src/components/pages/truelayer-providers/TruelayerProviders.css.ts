@@ -17,6 +17,16 @@ export default styled.div`
     .btns {
         text-align: right;
         margin: 65px 0px;
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 10%;
+        .disclaimer {
+            text-align: left;
+            a {
+                text-decoration: underline;
+                color: #007B5D;
+            }
+        }
         span {
             display: inline-block;
             margin-right: 50px;
@@ -101,6 +111,7 @@ export default styled.div`
     .btns {
         margin-top: -70px;
         padding: 0px 5%;
+        grid-template-columns: auto;
         button {
             width: 100%;
             height: 40px;
