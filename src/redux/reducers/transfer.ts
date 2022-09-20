@@ -39,7 +39,9 @@ export const transfer = (state: any = initialTransferState, {type, payload}: IAc
                 transferMethod: "mobile_money",
                 serviceFee: 0,
                 promo: undefined,
-                currentTransferQuote: {}
+                currentTransferQuote: {},
+                transactionDetails: undefined,
+                remittanceHandler: "MANUAL",
             }
         }
         case TRANSFER_QUOTE: {
