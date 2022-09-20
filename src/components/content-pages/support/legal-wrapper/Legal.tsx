@@ -7,6 +7,7 @@ import PrivacyPolicy from '../privacy-policy/PrivacyPolicy';
 import {Switch, Route} from 'react-router-dom';
 
 import Wrapper from './Legal.css'
+import CookiePolicy from '../cookie-policy/CookiePolicy';
 
 const Legal = () => {
     const [navList, setNavList] = useState([])
@@ -22,6 +23,7 @@ const Legal = () => {
                         <Switch>
                             <Route path={'/support/legal/privacy'} render={() => <PrivacyPolicy setNavLink={setNavList} />} exact />
                             <Route path={'/support/legal/terms'} render={() => <TermsAndConditions setNavLink={setNavList} />} exact />
+                            <Route path={'/support/legal/cookie'} render={() => <CookiePolicy setNavLink={setNavList} />} exact />
                         </Switch>
                     </div>
                     <AppFooter />

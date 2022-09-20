@@ -32,7 +32,7 @@ const TempLanding = () => {
             active: false
         },
         {
-            name: "Equitorial Guinea",
+            name: "Equatorial Guinea",
             flag: 'CM.png',
             active: false
         },

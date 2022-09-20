@@ -4,8 +4,9 @@ import Footer from './AppFooter.css'
 import { subscribe } from '../../../redux/actions/actions'
 import { paths } from '../../../util/paths'
 import { asset } from '../../../util/util'
-
-
+import FooterStickyBanner from '../footer-sticky-banner/FooterStickyBanner'
+import CookieNotice from '../cookie-notice/CookieNotice'
+import { CookieService } from 'services/CookieService'
 
 
 export const AppFooter = () => {
@@ -13,12 +14,22 @@ export const AppFooter = () => {
     email: '',
   })
 
+  const [showCookieNotice, setShowCookieNotice] = useState(() => !CookieService.get('cookie-notice'))
+
   const handleSubscribeClick = () => {
     if (subscribeValue.email) subscribe(subscribeValue)
   }
 
+
+
   return (
     <Footer>
+        { 
+            showCookieNotice && 
+            <FooterStickyBanner>
+                <CookieNotice close = { () => setShowCookieNotice(false) } />
+            </FooterStickyBanner>
+        }
       <div className="footer-inner">
           <div className="logo-line">
               <div className="sb-logo">
@@ -88,6 +99,9 @@ export const AppFooter = () => {
                           </li>
                           <li>
                               <Link to={paths.TERMS}>Terms & Conditions</Link>
+                          </li>
+                          <li>
+                              <Link to={paths.COOKIE_POLICY}>Cookie Policy</Link>
                           </li>
                       </ul>
                   </div>

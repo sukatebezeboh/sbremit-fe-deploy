@@ -297,7 +297,7 @@ export const supportedCountriesListing = [
         active: false
     },
     {
-        name: "Equitorial Guinea",
+        name: "Equatorial Guinea",
         flag: 'GQ.png',
         active: false
     },

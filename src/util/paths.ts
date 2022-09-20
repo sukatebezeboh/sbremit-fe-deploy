@@ -39,6 +39,7 @@ export const paths = {
 
     LEGAL: "/support/legal",
     PRIVACY_POLICY: "/support/legal/privacy",
+    COOKIE_POLICY: "/support/legal/cookie",
     TERMS: "/support/legal/terms",
     SUPPORT: "/support",
     ABOUT: "/content/about",

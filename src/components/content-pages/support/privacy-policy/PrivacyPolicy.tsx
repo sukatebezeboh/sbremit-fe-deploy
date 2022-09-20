@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PageHeading from '../../../modules/page-heading/PageHeading';
+import { generateLegalPageContent } from '../legal-wrapper/Legal.helper';
 import Div from './PrivacyPolicy.css';
 import { data } from './PrivacyPolicy.helper';
 
@@ -14,55 +15,7 @@ const PrivacyPolicy = (props: {setNavLink: Function}) => {
         setNavLink(list)
         
     }, [])
-    const generateContent = (content: any, numbering: string|number) => {
 
-        return (<div>
-
-            {
-                content.map((c: any, index: number )=> {
-                    return (
-                        <div className="content-body">
-                            <div className="numbering">
-                                
-                            </div>
-                            <div className="paragraphs">
-                                {
-                                    c.type === "list" ?
-                                    (
-                                        c.text.constructor === Object ?
-                                            <ul> 
-                                                {
-                                                    (Object.keys(c.text).map(key => {
-                                                        return <li>
-                                                                    <div className="key">{key}</div>
-                                                                    <div className="value">{c.text[key]}</div>
-                                                            </li>
-                                                    }))
-                                                }
-                                            </ul> :
-                                            <ul>
-                                                {
-                                                    (c.text).map((text: any) => {
-                                                        return <li>{text}</li>
-                                                    })
-                                                }
-                                            </ul>
-                                    )
-                                    :
-                                    c.text.map((text: any) => (
-                                        <p>{text}</p>
-                                    ))
-                                }
-                                {
-                                    c.subcontent ? generateContent(c.subcontent, numbering + '.' + (index + 1)) : ""
-                                }
-                            </div>
-                        </div>
-                    )
-                })
-            }
-        </div>)
-    }
     return (
         <Div>
             <PageHeading heading="Privacy Policy" subheading="Statement disclosing how SBremit gathers, uses, discloses, and manages your data" back="/content/support" />
@@ -80,7 +33,7 @@ const PrivacyPolicy = (props: {setNavLink: Function}) => {
                             </div>
                             <div className="data-content">
                                 {
-                                    generateContent(datum.content, index + 1)
+                                    generateLegalPageContent(datum.content, index + 1)
                                 }
                             </div>
                         </div>

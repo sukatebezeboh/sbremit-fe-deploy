@@ -76,10 +76,6 @@ export const Routing: IRoute[] = [
         footerless: true
     },
     {
-        path: paths.NOT_FOUND,
-        component: NotFound,
-    },
-    {
         path: paths.LEGAL,
         component: Legal,
         protected: false,
@@ -176,6 +172,11 @@ export const Routing: IRoute[] = [
         component: PasswordReset,
         protected: false
     },
+    // {
+    //     path: '/',
+    //     component: NotFound,
+    //     exact: false
+    // },
     {
         path: paths.DASHBOARD,
         component: Dashboard,
@@ -275,6 +276,10 @@ export const Routing: IRoute[] = [
         path: paths.INVITE_BUSINESS_USER,
         component: InviteBusinessUser,
         protected: true
+    },
+    {
+        path: paths.NOT_FOUND,
+        component: NotFound,
+        exact: false
     }
-
 ]
