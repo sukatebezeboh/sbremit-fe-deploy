@@ -1000,10 +1000,12 @@ export const getTransferMethodIds = () => {
   const transfer = store.getState().transfer
   const services = store.getState().appValues.services
   const mobileMoneyId = services?.data?.find((service:any) => service.name.toLowerCase() === "mobile money" && service.country === transfer?.toReceive?.countryCode)?.id || '1'
+  const bankTransferId = services?.data?.find((service:any) => service.name.toLowerCase() === "bank transfer" && service.country === transfer?.toSend?.countryCode)?.id || '2'
+  const cashPickupId = services?.data?.find((service:any) => service.name.toLowerCase() === "cash pickup" && service.country === transfer?.toSend?.countryCode)?.id || '3'
   return {
     mobile_money: mobileMoneyId,
-    bank_transfer: '2',
-    cash_pickup: '3',
+    bank_transfer: bankTransferId,
+    cash_pickup: cashPickupId,
   }
 }
 
