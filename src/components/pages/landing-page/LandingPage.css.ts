@@ -942,7 +942,7 @@ export default styled.div`
                     @media only screen and (max-width: 900px) {
                         width: 90%;
                     }
-                    img.happy-customer { 
+                    img.happy-customer, video.happy-customer { 
                         width: 100%;
                         height: 100%;
                     }
