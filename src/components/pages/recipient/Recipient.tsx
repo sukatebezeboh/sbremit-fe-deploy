@@ -67,7 +67,7 @@ const Recipient = () => {
             history.replace(paths.GET_QUOTE)
             return
         }
-        const mobileMoneyMax = getMax(transferMethod,  toReceive?.countryCode);
+        const mobileMoneyMax = getMax(transferMethod,  toReceive?.countryCode, toSend?.countryCode);
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > mobileMoneyMax) {
             history.replace(paths.GET_QUOTE)
             toastAction({

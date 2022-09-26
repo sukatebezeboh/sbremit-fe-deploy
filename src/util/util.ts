@@ -145,12 +145,20 @@ export const sortObjectByProperties = (object: any) => {
     return sortedObject;
 }
 
-export const getMax = (transferMethod: string, destinationCountryCode = "") => {
+export const getMax = (transferMethod: string, destinationCountryCode = "", originCountryCode = "") => {
     const services = store.getState().appValues.services;
     const service = services?.data?.find((service: any) => {
         return service?.name?.toLowerCase() === replaceUnderscores(transferMethod) 
-        && (service?.country?.toLowerCase() === destinationCountryCode?.toLowerCase() || !service?.country) 
-    })
+        && (
+            service?.country?.toLowerCase() === destinationCountryCode?.toLowerCase() || 
+            service?.country?.toLowerCase() === originCountryCode?.toLowerCase()
+        )
+    }) || services?.data?.find((service: any) => {
+        return service?.name?.toLowerCase() === replaceUnderscores(transferMethod) 
+        && (!service?.country)
+    });
+
+    console.log({service, transferMethod, destinationCountryCode, originCountryCode})
 
     return service?.meta?.transferLimitMax || settings[ (transferMethod + '_MAX').toUpperCase() ]
 }

@@ -126,7 +126,7 @@ const QuotesLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesD
             </div>
             <div  className="flg-drp">
                 {
-                    max && <span className={`float-right max-div ${(max && Number(data?.total) > max) ? 'red-txt' : ''}`}> {(max && data?.total > max) ?  <span className="max-value"> Maximum {formatCurrencyWithoutFloats(max)} {data?.currency} allowed at a time </span> : '' } </span>
+                    max && <span className={`float-right max-div ${(max && Number(data?.total) > Number(max)) ? 'red-txt' : ''}`}> {(max && Number(data?.total) > Number(max)) ?  <span className="max-value"> Maximum {formatCurrencyWithoutFloats(max)} {data?.currency} allowed at a time </span> : '' } </span>
                 }
                 <img onClick={() => setCountriesDropDownOpen(!countriesDropDown)} src={`/assets/flags/${data?.image}.png`} alt={data?.currency}/>
                 <span onClick={() => setCountriesDropDownOpen(!countriesDropDown)} className="data-c">{data?.currency}</span>

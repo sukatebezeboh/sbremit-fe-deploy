@@ -36,7 +36,7 @@ const GetQuote = () => {
     const transferMethod = transfer.transferMethod
     const [changedInput, setChangedInput]: any = useState(null);
     const allowOperatorFee = transfer.allowOperatorFee; 
-    const max  = getMax(transferMethod, toReceive?.countryCode);
+    const max  = getMax(transferMethod, toReceive?.countryCode, toSend?.countryCode);
 
     const userReferralDiscount = getUserReferralDiscount(user, appValues);
 
