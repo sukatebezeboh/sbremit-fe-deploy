@@ -158,8 +158,6 @@ export const getMax = (transferMethod: string, destinationCountryCode = "", orig
         && (!service?.country)
     });
 
-    console.log({service, transferMethod, destinationCountryCode, originCountryCode})
-
     return service?.meta?.transferLimitMax || settings[ (transferMethod + '_MAX').toUpperCase() ]
 }
 
