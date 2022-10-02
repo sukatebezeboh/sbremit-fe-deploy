@@ -46,5 +46,5 @@ export const paths = {
     CONTACT: "/content/contact",
     MOBILE_MONEY_RATE: "/mobile-money-rate",
 
-    NOT_FOUND : "/404",
+    NOT_FOUND : "*",
 }

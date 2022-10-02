@@ -280,6 +280,7 @@ export const Routing: IRoute[] = [
     {
         path: paths.NOT_FOUND,
         component: NotFound,
-        exact: false
+        exact: false,
+        protected: false
     }
 ]

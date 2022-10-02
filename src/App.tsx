@@ -13,6 +13,7 @@ import AppLoader from './components/modules/app-loader/AppLoader';
 import { AppFooter } from './components/modules/app-footer/AppFooter';
 import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget';
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
+import SignIn from 'components/pages/sign-in/SignIn';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
@@ -54,22 +55,36 @@ function App() {
         {
             Routing.map((route: IRoute, i: number) => (
               route.protected ?
+                  
                   (
                     isAuthenticated === undefined ?
                     <AppLoader show={true} />
                     :
                     (
-                        !isAuthenticated ?
-                        (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
-                        :
+                        // !isAuthenticated ?
+                        // // (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
+                        // <></>
+                        // :
                         (
                                 <Route path={route.path} render={(()=>(
 
                                         <React.Fragment>
 
-                                            <route.component key={i} />
-                                            {
-                                              route.footerless ? <></> :  <AppFooter/>
+                                            { 
+                                            isAuthenticated ? 
+                                            <>                                            
+                                              <route.component key={i} /> 
+                                              {
+                                                route.footerless ? <></> :  <AppFooter/>
+                                              }
+                                            </>
+
+                                            : 
+                                            <>
+                                             <SignIn />
+                                             <AppFooter/>
+                                            </>
+                                           
                                             }
 
                                         </React.Fragment>
@@ -80,18 +95,19 @@ function App() {
                   )
               :
               (
-
-                    <Route path={route.path} render={(()=>(
-                                  <React.Fragment>
-
-                                        <route.component {...route.props} />
-                                        {
-                                          route.footerless ? <></> :  <AppFooter/>
-                                        }
-
-                                  </React.Fragment>
-
-                    ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
+                    <Route 
+                      path={route.path} 
+                      render={(()=>(
+                          <React.Fragment>
+                                <route.component {...route.props} />
+                                {
+                                  route.footerless ? <></> :  <AppFooter/>
+                                }
+                          </React.Fragment>
+                      ))}  
+                      key={route.path+i} 
+                      exact={(route.exact===false) ? false : true}
+                    />
               )
             ))
         }

@@ -113,10 +113,10 @@ const PaymentMethod = () => {
             ])
         }
         else if ( transaction?.originCurrency === "CAD"  ) {
-            selectPaymentMethod('interac')
+            selectPaymentMethod('trust-payment')
             setPaymentMethodOptions([
+                PAYMENT_GATEWAYS['trust-payment'],
                 PAYMENT_GATEWAYS['interac'],
-                PAYMENT_GATEWAYS['trust-payment']
             ])
         }
         else if ( (transaction?.originCurrency === "EUR") ) {
@@ -209,7 +209,7 @@ const PaymentMethod = () => {
                                     paymentMethod={paymentMethod}
                                     isSelected={paymentMethod.slug === selected}
                                     selectPaymentMethod={selectPaymentMethod}
-                                    label={paymentMethod.label(transaction?.meta?.destinationCountryCode)}
+                                    label={paymentMethod.label(transaction)}
                                 />
                             ))
                         }
