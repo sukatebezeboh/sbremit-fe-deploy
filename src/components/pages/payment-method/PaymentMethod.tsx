@@ -107,6 +107,7 @@ const PaymentMethod = () => {
         }
         if (transaction?.originCurrency === 'GBP') {
             selectPaymentMethod('truelayer')
+            PAYMENT_GATEWAYS['trust-payment'].isRecommended = false
             setPaymentMethodOptions([
                 PAYMENT_GATEWAYS['truelayer'],
                 PAYMENT_GATEWAYS['trust-payment']
