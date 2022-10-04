@@ -715,10 +715,10 @@ const LandingPage = () => {
 
                 <div className="image-container">
                     {/* <img src={asset('images', 'happy-customer-1.png')} className="happy-customer" alt="happy-customer" /> */}
-                    <video className="happy-customer" poster="http://images.fineartamerica.com/images-medium-large/starry-night-alex-ruiz.jpg" controls>
-                        <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4" />
+                    {/* <video className="happy-customer" poster="http://images.fineartamerica.com/images-medium-large/starry-night-alex-ruiz.jpg" controls> */}
+                        {/* <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4" /> */}
                         {/* <source src="movie.ogg" type="video/ogg" /> */}
-                    </video>
+                    {/* </video> */}
                     <img src={asset('icons', 'white-round-arrow-right.svg')} alt="arrow" className='next-icon' />
                 </div>
 
