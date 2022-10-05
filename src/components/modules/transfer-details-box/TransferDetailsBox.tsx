@@ -27,8 +27,8 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
     const receiveCurrency = isTransaction ? transaction?.destinationCurrency : transferQuote?.destinationCurrency;
     const promoCode = isTransaction ? transaction?.meta?.promoCode : transferQuote?.meta?.promoCode;
     const referralDiscountValue = isTransaction ? transaction?.meta?.referralDiscount : transferQuote?.meta?.referralDiscount;
-    const paymentGatewayCharge = isTransaction ? transaction?.meta?.paymentGatewayCharge : null;
-    const totalToPay = isTransaction ? +transaction?.meta?.totalToPay + +paymentGatewayCharge : formatCurrency(`${Number(transferQuote?.totalToPay)}`);
+    const paymentGatewayCharge = isTransaction ? formatCurrency(`${+transaction?.meta?.paymentGatewayCharge}`) : 0;
+    const totalToPay = isTransaction ? formatCurrency(`${+transaction?.meta?.totalToPay + +paymentGatewayCharge}`) : formatCurrency(`${Number(transferQuote?.totalToPay)}`);
 
     useEffect(() => {
         if ( transferId ) {
