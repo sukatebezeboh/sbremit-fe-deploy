@@ -14,7 +14,7 @@ const ExchangeRateInputWrapper = (props: any) =>{
 
     const userDefaultCountry = Object.keys(countries)[0];
     useEffect(() => {
-        if (userDefaultCountry && data.isSend) {
+        if (user && userDefaultCountry && data.isSend) {
             handleCountrySelection(userDefaultCountry, (user && data.currency !== transfer.toSend.currency));
         }
     }, [userDefaultCountry, transfer.toSend.currency])
