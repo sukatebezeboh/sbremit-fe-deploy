@@ -58,7 +58,8 @@ const NavBar = () => {
         }
       })
 
-    const unreadNotifCount = notifs?.filter((notif: any) => notif?.status?.toUpperCase() === 'UNREAD')?.length
+    const _unreadNotifCount = notifs?.filter((notif: any) => notif?.status?.toUpperCase() === 'UNREAD')?.length
+    const unreadNotifCount = _unreadNotifCount > 9 ? '9+' : _unreadNotifCount
 
     return (
         <Bar>
@@ -71,7 +72,7 @@ const NavBar = () => {
             <div className="right-opt">
                 <span className="notif">
                     <img src="/assets/icons/bell.svg" alt="notifications" onClick={()=>handleDropdownClick('notif')} />
-                    <span>{unreadNotifCount}</span>
+                    { unreadNotifCount ? <span>{unreadNotifCount}</span> : <></> }
                      {showNotifDropdown && <div className="dropdown notif-dropdown">
                          <div className="notif-head">Notifications</div>
                          <hr/>
@@ -108,12 +109,8 @@ const NavBar = () => {
                                 <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
                          </div>
                          <div className="notif-option">
-                                <div> <img src={asset('icons', 'download-file.svg')} alt="Marketting permissions"/> </div>
-                                <div><Link to={paths.MARKETING_PERMISSION}>Marketing permissions</Link></div>
-                         </div>
-                         <div className="notif-option">
                                 <div> <img src={asset('icons', 'settings.svg')} alt="settings"/> </div>
-                                <div>Settings</div>
+                                <div><Link to={paths.USER_SETTINGS}>Settings</Link></div>
                          </div>
                          <div className="notif-option">
                                 <div> <img src={asset('icons', 'referral.png')} alt="referrals"/> </div>

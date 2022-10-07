@@ -13,6 +13,7 @@ import { CookieService } from '../../../services/CookieService';
 import FancyToggle from '../../modules/fancy-toggle/FancyToggle';
 import { constants } from '../../../util/constants';
 import config from '../../../env';
+import { addTrackers } from 'react-ga';
 
 const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
 const Body = style(bg);
@@ -53,6 +54,7 @@ const LandingPage = (props: any) => {
 
 
     const setAllowOperatorFee = (allow: boolean) => {
+        alert(allow)
         dispatch({
             type: TRANSFER,
             payload: {
@@ -356,7 +358,7 @@ const LandingPage = (props: any) => {
 
                     </form>
                     <div className="toggle">
-                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
+                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} onChange={(e) => setAllowOperatorFee(Boolean(e.target.value))} />
                     </div>
                         <PromoCodeField transfer={transfer} />
                         <button onClick={()=>{

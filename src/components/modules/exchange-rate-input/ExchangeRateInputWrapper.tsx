@@ -8,17 +8,18 @@ const ExchangeRateInputWrapper = (props: any) =>{
     const [countriesDropDownOpen, setCountriesDropDownOpen] = useState(false);
     const dispatch = useDispatch();
     const transfer = useSelector((state: any) => state.transfer)
+    const user = useSelector((state: any) => state.auth.user)
     const appValues = useSelector((state: any) => state.appValues)
     const inputRef = useRef<HTMLInputElement>(null);
 
     const userDefaultCountry = Object.keys(countries)[0];
     useEffect(() => {
         if (userDefaultCountry && data.isSend) {
-            handleCountrySelection(userDefaultCountry);
+            handleCountrySelection(userDefaultCountry, (user && data.currency !== transfer.toSend.currency));
         }
-    }, [userDefaultCountry])
+    }, [userDefaultCountry, transfer.toSend.currency])
 
-    const handleCountrySelection = (country: string) => {
+    const handleCountrySelection = (country: string, updateQuote = true) => {
         if (!country) return;
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
@@ -42,7 +43,7 @@ const ExchangeRateInputWrapper = (props: any) =>{
             })
         }
         setCountriesDropDownOpen(false)
-        getNewQuote();
+        updateQuote && getNewQuote();
         triggerInputChange()
     }
 

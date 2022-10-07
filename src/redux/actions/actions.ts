@@ -887,13 +887,9 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
               data.rate = 655.96;
           }
           store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
-          store.dispatch({type: LOADING, payload: false})
       }
     }).catch(()=>{
         store.dispatch({type: LOADING, payload: false})
-    })
-    .catch(() => {
-      store.dispatch({ type: LOADING, payload: false })
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -1144,9 +1140,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
 
   const executeSettingsEdit = () => {
     http
-    .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), {
-      settings: { ...values },
-    })
+    .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), values)
     .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
@@ -1161,7 +1155,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
           type: AUTH,
           payload: { ...store.getState().auth, user: res.data.data },
         })
-        callback?.()
+        callback?.(res.data.data)
       } else {
         toastAction({
           show: true,

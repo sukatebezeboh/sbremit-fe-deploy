@@ -31,7 +31,7 @@ import Contact from '../components/content-pages/contact/Contact';
 import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
 import NotFound from '../components/pages/not-found/NotFound';
 import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
-import marketingPermission from "components/pages/marketing-permission/MarketingPermission";
+import UserSettings from "components/pages/user-settings/UserSettings";
 import Referrals from 'components/pages/referrals/Referrals';
 import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
 import LandingPage from 'components/pages/landing-page/LandingPage';
@@ -172,11 +172,6 @@ export const Routing: IRoute[] = [
         component: PasswordReset,
         protected: false
     },
-    // {
-    //     path: '/',
-    //     component: NotFound,
-    //     exact: false
-    // },
     {
         path: paths.DASHBOARD,
         component: Dashboard,
@@ -188,8 +183,8 @@ export const Routing: IRoute[] = [
         protected: true
     },
     {
-        path: paths.MARKETING_PERMISSION,
-        component: marketingPermission,
+        path: paths.USER_SETTINGS,
+        component: UserSettings,
         protected: true
     },
     {

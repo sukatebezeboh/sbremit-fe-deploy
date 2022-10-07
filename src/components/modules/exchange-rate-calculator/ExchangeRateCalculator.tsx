@@ -191,7 +191,7 @@ const ExchangeRateCalculator = ({
                     </div>
                     <div className="toggle-side">
                         <div className="toggle">
-                            <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
+                            <FancyToggle label="Include operator fee" isActive={allowOperatorFee} onChange={(e) => setAllowOperatorFee(Boolean(e.target.checked))} />
                         </div>
                     </div>
                 </div>

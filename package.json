@@ -17,6 +17,9 @@
     "dotenv": "^8.2.0",
     "env-cmd": "^10.1.0",
     "formik": "^2.2.6",
+    "jquery": "^3.6.1",
+    "owl.carousel": "^2.3.4",
+    "plyr": "^3.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-facebook-pixel": "^1.0.4",
@@ -67,6 +70,7 @@
   },
   "proxy": "http://localhost:80/",
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^18.0.5",
     "@types/react-redux": "^7.1.16",

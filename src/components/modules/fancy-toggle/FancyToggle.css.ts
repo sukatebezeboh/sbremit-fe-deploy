@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export default styled.div`
+display: inline-block;
 .filter__item {
     padding: 5px 15px;
     width: fit-content;
@@ -14,6 +15,11 @@ export default styled.div`
     transition: background 0.2s ease-in-out;
     border: 1px solid lightgray;
     border-radius: 15px;
+    position: relative;
+
+    &.is-disabled {
+        opacity: 0.4;
+    }
 }
 .filter__item_is-active {
     background: #047b5d2b;
@@ -67,32 +73,39 @@ pointer-events: none;
 user-select: none;
 }
 .input_toggle .input__label {
-width: 35px;
-height: 18px;
-box-sizing: border-box;
-position: relative;
-border-radius: 100px;
-transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
-border: 2px solid lightgray;
-background: lightgray;
+    width: 35px;
+    height: 18px;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 100px;
+    transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
+    border: 2px solid lightgray;
+    background: lightgray;
 }
 .input_toggle .input__label::before {
-content: "";
-position: absolute;
-top: calc(50% - 12px / 2);
-left: 2px;
-width: 12px;
-height: 12px;
-display: block;
-flex-shrink: 0;
-border-radius: 50%;
-background: white;
-transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    top: calc(50% - 12px / 2);
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    display: block;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: white;
+    transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 .input_toggle .input__source {
-display: none;
-opacity: 0;
-visibility: hidden;
+    /* display: none; */
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+    display: inline-block;
+    z-index: 1;
+    /* visibility: hidden; */
 }
 .input_toggle .input__source:checked ~ .input__label::before {
     transform: translateX(calc(100% + 4px));

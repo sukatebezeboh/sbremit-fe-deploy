@@ -5,6 +5,7 @@ import React from "react"
 import { asset, getValueFromArray, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
 import { constants } from "util/constants"
+import { IOwlCarouselItem } from "components/modules/owl-carousel/OwlCarousel.helper"
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
     heading: [
@@ -517,3 +518,15 @@ export const getCountryMomoData = (countryServicesData: any) => {
 
     return mobileMoneyRateTableData;
 }
+
+export const customerFeedbackVideoItems: IOwlCarouselItem[] = [
+    {
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058975/sbremit/VID-20220220-WA0012_yy0kkc.mp4'
+    },
+    {
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058974/sbremit/VID-20220326-WA0025_ntwq7f.mp4'
+    },
+    {
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058972/sbremit/VID-20220326-WA0029_ug976w.mp4'
+    }
+]

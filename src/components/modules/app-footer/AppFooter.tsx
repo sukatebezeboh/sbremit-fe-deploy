@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from './AppFooter.css'
-import { subscribe } from '../../../redux/actions/actions'
+import { editUserSettingsAction, subscribe } from '../../../redux/actions/actions'
 import { paths } from '../../../util/paths'
 import { asset } from '../../../util/util'
 import FooterStickyBanner from '../footer-sticky-banner/FooterStickyBanner'
 import CookieNotice from '../cookie-notice/CookieNotice'
 import { CookieService } from 'services/CookieService'
+import { useSelector } from 'react-redux'
 
 
 export const AppFooter = () => {
+    const user = useSelector((state: any) => state.auth.user);
+
   const [subscribeValue, setSubscribeValue] = useState<{ email: string }>({
     email: '',
   })
@@ -21,6 +24,11 @@ export const AppFooter = () => {
   }
 
 
+  const handleUnsubscribeClick = () => {
+    editUserSettingsAction({
+        marketingPermissions: false
+    });
+  }
 
   return (
     <Footer>
@@ -126,6 +134,7 @@ export const AppFooter = () => {
 
                       <button className="search-btn" onClick={handleSubscribeClick} >Submit</button>
                   </div>
+                  {user && user.settings.marketingPermissions && <span className='underline unsubscribe-text' onClick={() => handleUnsubscribeClick()}>Unsubscribe</span>}
               </div>
           </div>
 

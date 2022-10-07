@@ -219,7 +219,7 @@ const TempLanding = () => {
                                                 </div>
                                                 <div className="toggle-side">
                                                     <div className="toggle">
-                                                        <FancyToggle label="Include operator fee" isActive={true} setIsActive={() => {}} />
+                                                        <FancyToggle label="Include operator fee" isActive={true} />
                                                     </div>
                                                 </div>
                                             </div>
