@@ -1848,9 +1848,14 @@ export const initiateInteracTransferPayment = (transferId: number) => {
 }
 
 export const getClientIp = async () => {
-  const res = await axios.get('https://api.ipify.org?format=json')
-  console.log({res})
-  return res?.data?.ip;
+  try {
+    const res = await axios.get('https://api.ipify.org?format=json')
+    console.log({res})
+    return res?.data?.ip;    
+  } catch(e) {
+    return null
+  }
+
 }
 
 export const updateTransferWithPaymentGatewayCharge = async (transferId: string, paymentGateway: string, callback?: Function  ) => {
