@@ -1847,11 +1847,18 @@ export const initiateInteracTransferPayment = (transferId: number) => {
   })
 }
 
-export const updateTransferWithPaymentGatewayCharge = (transferId: string, paymentGateway: string, callback?: Function  ) => {
-  const transfer = store.getState().transfer
+export const getClientIp = async () => {
+  const res = await axios.get('https://api.ipify.org?format=json')
+  console.log({res})
+  return res?.data?.ip;
+}
 
+export const updateTransferWithPaymentGatewayCharge = async (transferId: string, paymentGateway: string, callback?: Function  ) => {
+  const transfer = store.getState().transfer
+  const clientIp = await getClientIp()
   http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
-    paymentGateway
+    paymentGateway,
+    clientIp
   })
   .then((res: any) => {
     if (res?.data?.status == 200 ) {

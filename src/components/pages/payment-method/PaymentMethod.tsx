@@ -138,7 +138,8 @@ const PaymentMethod = () => {
     }
 
     const verifyPaymentMethodMaxLimit = (paymentGateway: TPaymentMethods) => {
-        if (PAYMENT_GATEWAYS[paymentGateway]?.maxLimit &&
+        if (
+            PAYMENT_GATEWAYS[paymentGateway]?.maxLimit &&
             PAYMENT_GATEWAYS[paymentGateway]?.maxLimit < getTotalToPay()
         ) {
             stackNewToast({
