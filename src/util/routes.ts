@@ -40,6 +40,7 @@ import Notifications from 'components/pages/notifications/Notifications';
 import InviteBusinessUser from 'components/pages/invite-business-user/InviteBusinessUser';
 import MobileMoneyRate from 'components/content-pages/support/mobile-money-rate/MobileMoneyRate';
 import TransferStatus from '../components/pages/transfer-status/TransferStatus';
+import TrustPaymentForMobile from 'components/pages/Trust-payment-for-mobile/TrustPaymentForMobile';
 
 
 export interface IRoute {
@@ -266,6 +267,11 @@ export const Routing: IRoute[] = [
         path: paths.TRUELAYER_PROVIDERS,
         component: TruelayerProviders,
         protected: true
+    },
+    {
+        path: paths.TRUSTPAYMENT_FOR_MOBILE,
+        component: TrustPaymentForMobile,
+        protected: false
     },
     {
         path: paths.INVITE_BUSINESS_USER,

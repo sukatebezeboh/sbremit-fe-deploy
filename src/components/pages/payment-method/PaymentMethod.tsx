@@ -161,6 +161,26 @@ const PaymentMethod = () => {
         }
     }
 
+    // <PaymentRedirect 
+    //                     mainamount = {getTotalToPay()} 
+    //                     currencyiso3a = {transaction?.originCurrency} 
+    //                     transactionId={transaction?.meta?.transactionId}
+    //                     transferId={transferId} 
+    //                 />
+
+    // console.log({mainamount: getTotalToPay(), currencyiso3a: transaction?.originCurrency, transferId: transferId, transactionId:transaction?.meta?.transactionId})
+
+     // http://localhost:3000/trustPayment-for-mobile?currencyiso3a=CAD&mainamount=123.05&transactionId=10031102112201&transferId=1189
+
+    /**
+    currencyiso3a: "CAD"
+    mainamount: 123.05
+    transactionId: "10031102112201"
+    transferId: "1189"
+
+    process.env.REACT_APP_TRUST_SITE_PASSWORD
+     */
+
     return (
         <Body>
 
