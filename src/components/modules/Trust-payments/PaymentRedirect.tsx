@@ -18,6 +18,12 @@ interface IPaymentRedirect {
 const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
     const [ utcDateTime, setUtcDateTime ] = useState(getDateTimeNowInYYYY_MM_DD__HH_MM_SS())
 
+    console.log({
+        amount: typeof mainamount,
+        transactionId: typeof transactionId,
+        transferId: typeof transferId,
+    })
+
     useEffect(() => {
         getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer(setUtcDateTime);
     }, [])

@@ -4,15 +4,15 @@ import { settings } from '../../../util/settings'
 
 import sjcl from 'sjcl';
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from 'redux/actions/actions';
-import { getQueryParam } from '../../../util/util';
+import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS, getQueryParam } from '../../../util/util';
 import AppLoader from 'components/modules/app-loader/AppLoader';
 require('dotenv').config();
 
 const TrustPaymentForMobile = () => {
-  const [ utcDateTime, setUtcDateTime ] = useState(null)
+  const [ utcDateTime, setUtcDateTime ] = useState(getDateTimeNowInYYYY_MM_DD__HH_MM_SS())
   const stprofile = 'default',
-    currencyiso3a = getQueryParam('currencyiso3a'),
-    mainamount = getQueryParam('mainamount'),
+    currencyiso3a = getQueryParam('currency'),
+    mainamount = getQueryParam('amount'),
     transactionId = getQueryParam('transactionId'),
     transferId = getQueryParam('transferId')
 
@@ -97,7 +97,8 @@ const TrustPaymentForMobile = () => {
                 <input type="hidden" name="sitesecuritytimestamp" value={siteSecurityTimestamp} />
                 <input type="hidden" name="version" value={version} />
 
-                <button type="submit" value="Pay" ref={submitButton}> Proceed to payment </button>
+                <button type="submit" value="Pay" ref={submitButton}></button>
+                {/* <button type="submit" value="Pay" ref={submitButton}> Proceed to payment </button> */}
             </form>
         </span>
     )
