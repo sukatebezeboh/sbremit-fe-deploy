@@ -1,32 +1,38 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { resources } from '../../../util/constants'
 import { settings } from '../../../util/settings'
 
 import sjcl from 'sjcl';
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from 'redux/actions/actions';
-import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from '../../../util/util';
+import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS, getQueryParam } from '../../../util/util';
+import AppLoader from 'components/modules/app-loader/AppLoader';
 require('dotenv').config();
 
-interface IPaymentRedirect {
-    stprofile?: string,
-    currencyiso3a: string,
-    mainamount: number,
-    transactionId: string,
-    transferId: string
-}
-
-const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, transactionId, transferId }: IPaymentRedirect) => {
-    const [ utcDateTime, setUtcDateTime ] = useState(getDateTimeNowInYYYY_MM_DD__HH_MM_SS())
-
-    console.log({
-        amount: typeof mainamount,
-        transactionId: typeof transactionId,
-        transferId: typeof transferId,
-    })
+const TrustPaymentForMobile = () => {
+  const [ utcDateTime, setUtcDateTime ] = useState(getDateTimeNowInYYYY_MM_DD__HH_MM_SS())
+  const stprofile = 'default',
+    currencyiso3a = getQueryParam('currency'),
+    mainamount = getQueryParam('amount'),
+    transactionId = getQueryParam('transactionId'),
+    transferId = getQueryParam('transferId')
 
     useEffect(() => {
         getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer(setUtcDateTime);
     }, [])
+
+    const submitButton = useRef<any>(null)
+
+    useEffect(() => {
+      if(submitButton?.current?.click){
+        console.log(submitButton?.current?.click())
+      }
+      
+    }, [submitButton?.current?.click])
+    
+
+    if(!utcDateTime){
+      return <AppLoader />
+    }
 
     const stdefaultprofile = 'st_paymentcardonly'
     const orderReference = transactionId;
@@ -91,10 +97,11 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
                 <input type="hidden" name="sitesecuritytimestamp" value={siteSecurityTimestamp} />
                 <input type="hidden" name="version" value={version} />
 
-                <button type="submit" value="Pay"> Proceed to payment </button>
+                <button type="submit" value="Pay" ref={submitButton}></button>
+                {/* <button type="submit" value="Pay" ref={submitButton}> Proceed to payment </button> */}
             </form>
         </span>
     )
 }
 
-export default PaymentRedirect
+export default TrustPaymentForMobile
