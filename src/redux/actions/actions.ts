@@ -47,7 +47,10 @@ export const checkAuth = () => {
   const session = CookieService.get(env.SESSION_KEY)
   const user = CookieService.get('user')
   const sessionId = CookieService.get(env.SESSION_ID)
-  const serviceProvider = env.X_SERVICE_PROVIDER
+  const serviceProvider = env.X_SERVICE_PROVIDER;
+
+  const queryParamToken = getQueryParam('t');
+  const queryParamUsername = getQueryParam('u');
 
   if (session && user) {
     store.dispatch({
@@ -61,7 +64,13 @@ export const checkAuth = () => {
       sessionId,
       serviceProvider,
     }
-  } else {
+  } else if (queryParamToken && queryParamUsername) {
+    signInWithToken({
+      username: queryParamUsername,
+      token: queryParamToken
+    })
+  }
+  else {
     store.dispatch({
       type: AUTH,
       payload: { isAuthenticated: false, user: undefined },
@@ -111,71 +120,104 @@ export const signInAction = (data: any, history: any) => {
       },
     )
     .then((res: any) => {
-      if (res.data.status === '200') {
-        toastAction({
-          show: true,
-          type: 'success',
-          timeout: 5000,
-          message: `Welcome, ${res.data.data.profile.firstName}`,
-        })
-
-        CookieService.put(env.SESSION_KEY, res.headers['x-auth-token'])
-        CookieService.put(env.SESSION_ID, res.headers['x-service-user-name'])
-        CookieService.put(
-          'X-SERVICE_PROVIDER',
-          res.headers['x-service-provider'],
-          30,
-        )
-
-        CookieService.put('user', JSON.stringify(res.data.data))
-        store.dispatch({
-          type: AUTH,
-          payload: { isAuthenticated: true, user: res.data.data },
-        })
-
-      } else {
-        const errorMessage = res.data.error.message;
-        if ( errorMessage.indexOf('not confirm') !== -1 ) {
-            toastAction({
-              show: true,
-              type: 'error',
-              timeout: 20000,
-              defaultThemeName: themeNames.CLEAR_MAMBA,
-              title: errorMessage,
-              message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
-              extraBtnText: isPhoneNumber(data.username) ? "Activate my account" : "Resend activation mail",
-              extraBtnHandler: () => isPhoneNumber(data.username) ? history.push(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
-              extraBtnClass: 'verif-toast-failed-extra-btn-class'
-            })
-        } 
-        else if ( errorMessage.indexOf('blocked') !== -1 || errorMessage.indexOf('inactive') !== -1 ) {
-          stackNewToast({
-            name: "user-blocked-notice",
-            show: true,
-            type: 'error',
-            timeout: -1,
-            defaultThemeName: themeNames.CENTER_PROMPT,
-            message: res?.data?.error?.message,
-            extraBtnText: "Contact us",
-            extraBtnHandler: () => window.location.replace(paths.CONTACT),
-            extraBtnClass: 'verif-toast-failed-extra-btn-class'
-          })
-        } 
-        else {
-          toastAction({
-            show: true,
-            type: 'error',
-            timeout: 10000,
-            message: `${errorMessage}`,
-          })
-        }
-
-      }
+      handleSignInResponse(res, data)
     })
     .catch((err) => {})
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: '' })
     })
+}
+
+const handleSignInResponse = (res: any, data: any) => {
+  if (res.data.status === '200') {
+    toastAction({
+      show: true,
+      type: 'success',
+      timeout: 5000,
+      message: `Welcome, ${res.data.data.profile.firstName}`,
+    })
+
+    CookieService.put(env.SESSION_KEY, res.headers['x-auth-token'])
+    CookieService.put(env.SESSION_ID, res.headers['x-service-user-name'])
+    CookieService.put(
+      'X-SERVICE_PROVIDER',
+      res.headers['x-service-provider'],
+      30,
+    )
+
+    CookieService.put('user', JSON.stringify(res.data.data))
+    store.dispatch({
+      type: AUTH,
+      payload: { isAuthenticated: true, user: res.data.data },
+    })
+
+  } else {
+    const errorMessage = res.data.error.message;
+    if ( errorMessage.indexOf('not confirm') !== -1 ) {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 20000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: errorMessage,
+          message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
+          extraBtnText: isPhoneNumber(data.username) ? "Activate my account" : "Resend activation mail",
+          extraBtnHandler: () => isPhoneNumber(data.username) ? window.location.replace(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
+          extraBtnClass: 'verif-toast-failed-extra-btn-class'
+        })
+    } 
+    else if ( errorMessage.indexOf('blocked') !== -1 || errorMessage.indexOf('inactive') !== -1 ) {
+      stackNewToast({
+        name: "user-blocked-notice",
+        show: true,
+        type: 'error',
+        timeout: -1,
+        defaultThemeName: themeNames.CENTER_PROMPT,
+        message: res?.data?.error?.message,
+        extraBtnText: "Contact us",
+        extraBtnHandler: () => window.location.replace(paths.CONTACT),
+        extraBtnClass: 'verif-toast-failed-extra-btn-class'
+      })
+    } 
+    else {
+      toastAction({
+        show: true,
+        type: 'error',
+        timeout: 10000,
+        message: `${errorMessage}`,
+      })
+    }
+
+    store.dispatch({
+      type: AUTH,
+      payload: { isAuthenticated: false, user: undefined },
+    })
+
+  }
+}
+export const signInWithToken = (data: any) => {
+  store.dispatch({ type: LOADING, payload: true })
+  axios
+    .post(
+      config.API_HOST + endpoints.INSTANT_SESSION,
+      { ...data },
+      {
+        headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+      },
+    )
+    .then((res: any) => {
+      handleSignInResponse(res, data)
+    })
+    .catch((err) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
+
+export const createTokenAuth = () => {
+  http.put(endpoints.INSTANT_SESSION, {})
+  .then(data => console.log(data))
+  .catch(err => console.log(err))
 }
 
 export const resendActivation = (username: string) => {

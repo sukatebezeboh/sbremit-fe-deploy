@@ -3,12 +3,17 @@ import { toastAction } from "redux/actions/actions";
 import store from "redux/store";
 import { constants, currencySymbols, remittanceHandlers, remittanceHandlersTransferCriteria } from "./constants";
 import { settings } from "./settings";
+require('dotenv').config();
 
 export const asset = (folder: string, name: string) => {
     if (folder === 'flags') {
         return `https://flagcdn.com/h240/${name?.toLowerCase()?.replace(/\.([a-z]{3,4})$/, '')}.png`
     }
     return `/assets/${folder}/${name}`;
+}
+
+export const isProductionEnv = () => {
+    return process.env.REACT_APP_ENV === 'production';
 }
 
 export const getQueryParam = (key: string): string => {
