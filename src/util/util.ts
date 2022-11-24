@@ -91,7 +91,7 @@ export const isObjectNotEmpty = (object: any) => Boolean(Object.keys(object || {
 
 
 export const replaceUnderscores = (method: string) => {
-    return method?.replace('_', ' ');
+    return method?.replaceAll('_', ' ');
 }
 
 export const parseWithUnderscores = (method: string) => {
@@ -366,7 +366,7 @@ const resolveRemittanceCriteriaMatch = ( handlerCriteria: any, prop: any, transf
     throw new Error('No check in remittance resolver for provided datatype of property,' + prop + ' in handler criteria')
 }
 
-export const getRemittanceHandler = (transfer: any): ('PIVOT'|'MANUAL') => {
+export const getRemittanceHandler = (transfer: any): ('AZA'|'PIVOT'|'MANUAL') => {
     for ( const handlerCriteria of remittanceHandlersTransferCriteria) {
         let handlerMatch = true;
         for (const prop in handlerCriteria ) {
@@ -401,7 +401,7 @@ export const isCurrencyPairDowntimeUp = (baseCurrency: string, targetCurrency: s
 
 export const getCountriesFiltered = (payOutCountries: any) => {
     const countries: any = {};
-    const allowed: any = ['Cameroon', 'Kenya', 'Tanzania', 'Uganda'];
+    const allowed: any = ['Cameroon', 'Kenya', 'Tanzania', 'Uganda', 'Nigeria', 'Ghana', 'South Africa'];
 
     Object.keys(payOutCountries).forEach((c: any) => {
         if (allowed.find((a: string ) => a === c)) {

@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { checkForVerificationStatusToast, checkSkip, createTokenAuth, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
+import { checkForVerificationStatusToast, checkSkip, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -12,7 +12,6 @@ import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
 import TransactionDetail from '../../modules/transaction-detail-modal/TransactionDetail';
 import TransferExpiryCountDown from '../../modules/transfer-expiry-countdown/TransferExpiryCountDown';
 import style from './Dashboard.css';
-
 
 const Body = style();
 

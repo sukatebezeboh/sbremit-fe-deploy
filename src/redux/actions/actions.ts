@@ -1416,7 +1416,7 @@ export const fetchUserNotifications = (limit?: number) => {
 }
 
 export const getPromo = async (code: string) => {
-  const res = await axios.get(
+  const res = await http.get(
     parseEndpointParameters(config.API_HOST + endpoints.PROMO, code),
     {
       headers: { 'X-SERVICE-PROVIDER': serviceProvider },
@@ -1919,5 +1919,3 @@ export const updateTransferWithPaymentGatewayCharge = async (transferId: string,
   .catch(() => {})
   .then(() => {})
 }
-
-

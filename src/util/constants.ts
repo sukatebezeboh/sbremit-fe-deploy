@@ -44,6 +44,7 @@ export const BANK_NAMES = [
    "UNITED BANK FOR AFRICA UGANDA",
 ];
 export const remittanceHandlers: any = {
+   AZA_REMITTANCE_HANDLER: "AZA",
    PIVOT_REMITTANCE_HANDLER: "PIVOT",
    MANUAL_REMITTANCE_HANDLER: "MANUAL"
 }
@@ -56,6 +57,27 @@ export const remittanceHandlersTransferCriteria: any[] = [
          currency: [ "KES", "UGX", "TZS" ]
       },
       transferMethod: "mobile_money",
+   },
+   {
+      handler: remittanceHandlers.AZA_REMITTANCE_HANDLER,
+      toReceive: {
+         currency: [ "NGN", "GHS", "XOF", "XAF", "GNF", "KES", "UGX" ]
+      },
+      transferMethod: "mobile_money",
+   },
+   {
+      handler: remittanceHandlers.AZA_REMITTANCE_HANDLER,
+      toReceive: {
+         currency: [ "NGN", "GHS", "XOF", "XAF", "ZAR", "KES" ]
+      },
+      transferMethod: "bank_transfer",
+   },
+   {
+      handler: remittanceHandlers.AZA_REMITTANCE_HANDLER,
+      toReceive: {
+         currency: [ "GHS", "ZAR" ]
+      },
+      transferMethod: "cash_pickup",
    }
 ]
 
@@ -1611,7 +1633,7 @@ export const constants = {
     TANZANIA_MPESA_SERVICE_RATE_INDEX: 4,
     KENYA_MPESA_SERVICE_RATE_INDEX: 6,
 
-    REMITTANCE_COUNTRIES_CODES: [ 'CM', 'UG', 'KE', 'TZ' ],
+    REMITTANCE_COUNTRIES_CODES: [ 'CM', 'UG', 'KE', 'TZ', 'NG' ],
 
     SIGNUP_COUNTRIES: {
         "AT": "Austria",

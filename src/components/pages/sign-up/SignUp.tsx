@@ -80,7 +80,7 @@ const SignUp = () => {
     username: '',
     password: '',
     mobile: '',
-    checked: true,
+    checked: false,
     referral: getQueryParam('referral') ?? ''
   }
 
@@ -110,7 +110,7 @@ const SignUp = () => {
       const newValues = {
         ...newValue,
         settings: {
-          marketingPermission: values.checked.length > 0 && values.checked[0] === 'checked' ? true : false,
+          marketingPermission: !values.checked,
         }
       }
 
@@ -351,9 +351,9 @@ const { touched, errors, values } = formik;
                   </div>
 
                   <div className="marketing-permission-box">
-                    <input onChange={formik.handleChange} value={values.checked} type="checkbox" name="checked" />
+                    <input onChange={formik.handleChange} checked={values.checked} value={values.checked} type="checkbox" name="checked" />
                     <label>
-                      By ticking this box, you wish to be contacted for marketing information purposes or for any special offer
+                      By ticking this box, you do not wish to be contacted for marketing information purposes or any special offer
                     </label>
                   </div>
 
