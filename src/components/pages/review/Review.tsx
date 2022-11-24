@@ -35,7 +35,7 @@ const Review = () => {
     
     const isRecipientValid = () => {
         if (transfer.transferMethod === "bank_transfer") {
-            if (!Boolean(recipient?.profile?.bankName) || !Boolean(recipient?.profile?.accountNumber)) {
+            if (!Boolean(recipient?.profile?.accountNumber)) {
                 toastAction({
                     show: true,
                     type: "warning",
