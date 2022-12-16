@@ -145,7 +145,8 @@ function NewRecipientModal(props: any) {
 
                 {
                     isAzaRemittanceHandler() && getAzaRecipientConfig() ? 
-                    <AzaRecipientForm fields={getAzaRecipientConfig().fields} paymentMethodType={getAzaRecipientConfig().paymentMethodType} /> :
+                    <AzaRecipientForm fields={getAzaRecipientConfig().fields} paymentMethodType={getAzaRecipientConfig().paymentMethodType} successCallbacks={{openModal, selectRecipient}}  /> 
+                    :
                     <Formik
                     initialValues={{...initialValues}}
                     validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, isPivotRecipientAccount(), () => {} )}

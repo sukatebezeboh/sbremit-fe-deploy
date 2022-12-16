@@ -3,7 +3,23 @@ import { Formik, useFormik } from 'formik'
 import React, { FC } from 'react'
 import { createRecipient } from 'redux/actions/actions'
 import { replaceUnderscores } from '../../../../util/util'
+import styled from 'styled-components'
 
+const Div = styled.div`
+    
+    button {
+        background: #FCD20F;
+        border-radius: 4px;
+        width: 200px;
+        height: 48px;
+        text-align: center;
+        font: normal normal normal 16px/19px Montserrat;
+        color: #424242;
+        border: none;
+        outline: none;
+        margin: 30px auto;
+    }
+`
 interface IAzaRecipientForm {
     fields: any,
     paymentMethodType: string,
@@ -25,7 +41,7 @@ const AzaRecipientForm: FC<IAzaRecipientForm> = ({ fields, paymentMethodType, su
     })
 
     return (
-        <div className="form form-container">
+        <Div className="form form-container">
             <form onSubmit={formHandler.handleSubmit}>
                 {
                     Object.entries(fields).map(([key, field]: any) => {
@@ -50,9 +66,9 @@ const AzaRecipientForm: FC<IAzaRecipientForm> = ({ fields, paymentMethodType, su
                     })
                 }
 
-                <FormButton label='Create recipient' formName="AzaRecipientForm"/>
+                <FormButton style={{backgroundColor: "#007b5d", "color": "white"}} label='Create recipient' formName="AzaRecipientForm"/>
             </form>
-        </div>
+        </Div>
     )
 }
 

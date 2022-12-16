@@ -50,11 +50,11 @@ const ExchangeRateCalculator = ({
     }, [])
 
     const continueSending = () => {
-        if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
+        // if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
             setNewQuoteWithoutAuth(toSend.currency, toReceive.currency, () => history.push(CookieService.get('X-SERVICE_PROVIDER') === _env.X_SERVICE_PROVIDER ? paths.SIGN_IN : paths.SIGN_UP));
-        } else {
-            setOpenComingSoonModal(true)
-        }
+        // } else {
+        //     setOpenComingSoonModal(true)
+        // }
     }
 
     const getPayInContries = (user: any) => {
