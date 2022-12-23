@@ -14,6 +14,7 @@ import { AppFooter } from './components/modules/app-footer/AppFooter';
 import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget';
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
 import SignIn from 'components/pages/sign-in/SignIn';
+import { isProductionEnv } from './util/util';
 
 function App() {
   const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
