@@ -176,7 +176,6 @@ const GetQuote = () => {
 
     const setTotalValue = () => {
         let total = Number(toSend.value) + Number(serviceFee) - Number(userReferralDiscount?.value);
-
         if (
             promo
             && isAcceptablePromoValue(promo)

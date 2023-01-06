@@ -246,7 +246,7 @@ export const getUserReferralDiscount = (user: any, appValues: any) => {
     const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
     let discount = Number(user?.referral?.useCount || 0) * Number(referralSettings?.data?.referrerDiscountValue);
 
-    if ( user?.referral?.newUserBonusActive ) {
+    if ( Number(user?.referral?.newUserBonusActive) ) {
         discount += (Number(referralSettings?.data?.referredUserDiscountValue))
     }
 
