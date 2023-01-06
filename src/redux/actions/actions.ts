@@ -79,9 +79,12 @@ export const checkAuth = () => {
   }
 }
 
-export const signUpAction = (data: any) => {
+export const signUpAction = async (data: any) => {
   const serviceProvider = env.X_SERVICE_PROVIDER
   store.dispatch({ type: SUBMITTING, payload: SIGN_UP })
+  if ( !data.clientIp ) {
+    data.clientIp = await getClientIp()
+  }
   axios
     .post(
       config.API_HOST + endpoints.SIGN_UP,
@@ -1889,10 +1892,10 @@ export const initiateInteracTransferPayment = (transferId: number) => {
   })
 }
 
-export const getClientIp = async () => {
+export const getClientIp = async (callback?:Function) => {
   try {
     const res = await axios.get('https://api.ipify.org?format=json')
-    console.log({res})
+    callback?.(res?.data?.ip)
     return res?.data?.ip;    
   } catch(e) {
     return null
