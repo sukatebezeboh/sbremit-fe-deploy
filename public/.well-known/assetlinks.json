@@ -1,0 +1,10 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : {
+            "namespace": "android_app",
+            "package_name": "com.sbremit",
+            "sha256_cert_fingerprints": [ "3E:70:E4:39:2B:41:45:15:25:92:24:D0:2D:F3:1A:02:82:37:5B:30:7B:7F:C4:9E:CC:69:17:14:19:45:BA:FE"] 
+        }
+    }
+]
