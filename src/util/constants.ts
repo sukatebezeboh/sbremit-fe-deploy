@@ -60,13 +60,13 @@ export const remittanceHandlersTransferCriteria: any[] = [
 ]
 
 export const maxTransfersUnverified: any = {
-  GBP: 800,
-  CAD: 1000,
-  EUR: 800,
-  DKK: 6000,
-  NOK: 9000,
-  SEK: 9000,
-  CHF: 800
+  GBP: 50,
+  CAD: 75,
+  EUR: 50,
+  DKK: 200,
+  NOK: 300,
+  SEK: 300,
+  CHF: 50
 }
 
 export const currencySymbols: any = {
