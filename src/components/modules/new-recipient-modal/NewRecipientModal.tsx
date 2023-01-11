@@ -155,13 +155,13 @@ function NewRecipientModal(props: any) {
                             <Form>
                                 <FormikFormObserver callback={(newValues: any, context: any) => {
                                     updateVerifyStep(newValues)
-                                    transfer.toReceive.countryCode === 'UG'
-                                    && String(newValues.mobile).substring(0, 2) === '70'
-                                    ? setMobileProvider('AIRTEL')
-                                    : transfer.toReceive.countryCode === 'UG'
-                                    && String(newValues.mobile).substring(0, 2) === '77'
-                                    ? setMobileProvider('MTN')
-                                    : setMobileProvider('')
+                                    // transfer.toReceive.countryCode === 'UG'
+                                    // && String(newValues.mobile).substring(0, 2) === '70'
+                                    // ? setMobileProvider('AIRTEL')
+                                    // : transfer.toReceive.countryCode === 'UG'
+                                    // && String(newValues.mobile).substring(0, 2) === '77'
+                                    // ? setMobileProvider('MTN')
+                                    // : setMobileProvider('')
 
                                 }} />
                                 <div className="form grid-col-1-1 grid-gap-3">
@@ -229,11 +229,7 @@ function NewRecipientModal(props: any) {
                                         <div>Mobile money provider</div>
                                         <Field as="select" name='mobileMoneyProvider' id="mobileMoneyProvider">
                                             {
-                                                transfer.toReceive.countryCode === 'UG'
-                                                ? [mobileProvider].map((provider: any) => {
-                                                    return <option value={provider}>{provider}</option>
-                                                })
-                                                : ['MTN', 'AIRTEL', 'MPESA'].map((provider: any) => {
+                                                ['MTN', 'AIRTEL', 'MPESA'].map((provider: any) => {
                                                     return <option value={provider}>{provider}</option>
                                                 })
                                             }
