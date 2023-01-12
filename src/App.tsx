@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import ReactPixel from 'react-facebook-pixel';
 
 import './App.css';
-import {Routing, IRoute} from './util/routes'
+import { Routing, IRoute } from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
 import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast } from './redux/actions/actions';
 import { paths } from './util/paths';
@@ -17,9 +17,9 @@ import SignIn from 'components/pages/sign-in/SignIn';
 import { isProductionEnv } from './util/util';
 
 function App() {
-  const isAuthenticated = useSelector((state: any)=> state.auth.isAuthenticated)
-  const showAppLoader = useSelector((state: any)=>state.loading);
-  const confirmDialog = useSelector((state: any)=>state.confirmDialog);
+  const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
+  const showAppLoader = useSelector((state: any) => state.loading);
+  const confirmDialog = useSelector((state: any) => state.confirmDialog);
 
   const history = useHistory();
 
@@ -28,9 +28,9 @@ function App() {
 
   const RouteChangeTracker = ({ history }: any) => {
     history.listen((location: any, action: any) => {
-        ReactGA.set({ page: location.pathname });
-        ReactGA.pageview(location.pathname);
-        ReactPixel.pageView(); 
+      ReactGA.set({ page: location.pathname });
+      ReactGA.pageview(location.pathname);
+      ReactPixel.pageView();
     });
     return <div></div>;
   };
@@ -48,69 +48,69 @@ function App() {
   return (
     <React.Fragment>
       <ToastFactory />
-      <AppLoader show={showAppLoader}/>
+      <AppLoader show={showAppLoader} />
       {confirmDialog.open ? <ConfirmDialog /> : <></>}
       <FloatingWhatsAppWidget />
       <ReactPageTracker />
       <Switch>
         {
-            Routing.map((route: IRoute, i: number) => (
-              route.protected ?
-                  
+          Routing.map((route: IRoute, i: number) => (
+            route.protected ?
+
+              (
+                isAuthenticated === undefined ?
+                  <AppLoader show={true} />
+                  :
                   (
-                    isAuthenticated === undefined ?
-                    <AppLoader show={true} />
-                    :
+                    // !isAuthenticated ?
+                    // // (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
+                    // <></>
+                    // :
                     (
-                        // !isAuthenticated ?
-                        // // (<Redirect key={i+paths.SIGN_IN} to={paths.SIGN_IN} />)
-                        // <></>
-                        // :
-                        (
-                                <Route path={route.path} render={(()=>(
+                      <Route path={route.path} render={(() => (
 
-                                        <React.Fragment>
+                        <React.Fragment>
 
-                                            { 
-                                            isAuthenticated ? 
-                                            <>                                            
-                                              <route.component key={i} /> 
-                                              {
-                                                route.footerless ? <></> :  <AppFooter/>
-                                              }
-                                            </>
+                          {
+                            isAuthenticated ?
+                              <Suspense fallback={<AppLoader show={true} />}>
+                                <route.component key={i} />
+                                {
+                                  route.footerless ? <></> : <AppFooter />
+                                }
+                              </Suspense>
 
-                                            : 
-                                            <>
-                                             <SignIn />
-                                             <AppFooter/>
-                                            </>
-                                           
-                                            }
+                              :
+                              <Suspense fallback={<AppLoader show={true} />}>
+                                <SignIn />
+                                <AppFooter />
+                              </Suspense>
 
-                                        </React.Fragment>
+                          }
 
-                                ))}  key={route.path+i} exact={(route.exact===false) ? false : true}/>
-                        )
+                        </React.Fragment>
+
+                      ))} key={route.path + i} exact={(route.exact === false) ? false : true} />
                     )
                   )
+              )
               :
               (
-                    <Route 
-                      path={route.path} 
-                      render={(()=>(
-                          <React.Fragment>
-                                <route.component {...route.props} />
-                                {
-                                  route.footerless ? <></> :  <AppFooter/>
-                                }
-                          </React.Fragment>
-                      ))}  
-                      key={route.path+i} 
-                      exact={(route.exact===false) ? false : true}
-                    />
+                <Route
+                  path={route.path}
+                  render={(() => (
+                    <Suspense fallback={<AppLoader show={true} />}>
+                      <route.component {...route.props} />
+                      {
+                        route.footerless ? <></> : <AppFooter />
+                      }
+                    </Suspense>
+                  ))}
+                  key={route.path + i}
+                  exact={(route.exact === false) ? false : true}
+                />
               )
-            ))
+          ))
         }
       </Switch>
 

@@ -1,51 +1,53 @@
-import SignUp from '../components/pages/sign-up/SignUp';
-import SignIn from '../components/pages/sign-in/SignIn';
-import ForgetPassword from '../components/pages/forget-password/ForgetPassword';
-import PasswordEmailReset from '../components/pages/password-email-reset/PasswordEmailReset';
-import EmailLinkSent from '../components/pages/email-link-sent/EmailLinkSent';
-import PasswordSMSReset from '../components/pages/password-sms-reset/PasswordSMSReset';
-import ResetSmsCode from '../components/pages/reset-sms-code/ResetSmsCode'
-import ResetPassword from '../components/pages/reset-password/ResetPassword';
-import PasswordResetComplete from '../components/pages/password-reset-complete/PasswordResetComplete';
-import AccountConfirmation from '../components/email-templates/account-confirmation/AccountConfirmation';
-import PasswordReset from '../components/email-templates/password-reset/PasswordReset';
-import Dashboard from '../components/pages/dashboard/Dashboard';
-import UserProfile from '../components/pages/user-profile/UserProfile';
-import ChangePassword from '../components/pages/change-password/ChangePassword';
-import TransferMethod from '../components/pages/transfer-method/TransferMethod';
-import GetQuote from '../components/pages/get-quote/GetQuote';
-import Verification from '../components/pages/verification/Verification';
-import Recipient from '../components/pages/recipient/Recipient';
-import RecipientDetails from '../components/pages/recipient-details/RecipientDetails';
-import Review from '../components/pages/review/Review';
-import PaymentMethod from '../components/pages/payment-method/PaymentMethod';
-import CardPayment from '../components/pages/card-payment/CardPayment';
-import CreateTransfer from '../components/pages/create-transfer/CreateTransfer';
-import TransferComplete from '../components/pages/transfer-complete/TransferComplete';
+import { Suspense, lazy, LazyExoticComponent } from 'react';
 import { paths } from './paths';
-import EditProfile from '../components/pages/edit-profile/EditProfile';
-import Legal from '../components/content-pages/support/legal-wrapper/Legal';
-import About from '../components/content-pages/about/About';
-import Support from '../components/content-pages/support/support/Support';
-import Contact from '../components/content-pages/contact/Contact';
-import ConfirmAccount from '../components/pages/confirm-account/ConfirmAccount';
-import NotFound from '../components/pages/not-found/NotFound';
-import TruelayerProviders from '../components/pages/truelayer-providers/TruelayerProviders';
-import UserSettings from "components/pages/user-settings/UserSettings";
-import Referrals from 'components/pages/referrals/Referrals';
-import AccountConfirmationSMSCode from 'components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode';
-import LandingPage from 'components/pages/landing-page/LandingPage';
-import RegisterCountry from 'components/pages/register-country/RegisterCountry';
-import Notifications from 'components/pages/notifications/Notifications';
-import InviteBusinessUser from 'components/pages/invite-business-user/InviteBusinessUser';
-import MobileMoneyRate from 'components/content-pages/support/mobile-money-rate/MobileMoneyRate';
-import TransferStatus from '../components/pages/transfer-status/TransferStatus';
-import TrustPaymentForMobile from 'components/pages/Trust-payment-for-mobile/TrustPaymentForMobile';
+
+const SignUp = lazy(() => import('../components/pages/sign-up/SignUp'));
+const SignIn = lazy(() => import('../components/pages/sign-in/SignIn'));
+const ForgetPassword = lazy(() => import('../components/pages/forget-password/ForgetPassword'));
+const PasswordEmailReset = lazy(() => import('../components/pages/password-email-reset/PasswordEmailReset'));
+const EmailLinkSent = lazy(() => import('../components/pages/email-link-sent/EmailLinkSent'));
+const PasswordSMSReset = lazy(() => import('../components/pages/password-sms-reset/PasswordSMSReset'));
+const ResetSmsCode = lazy(() => import('../components/pages/reset-sms-code/ResetSmsCode'))
+const ResetPassword = lazy(() => import('../components/pages/reset-password/ResetPassword'));
+const PasswordResetComplete = lazy(() => import('../components/pages/password-reset-complete/PasswordResetComplete'));
+const AccountConfirmation = lazy(() => import('../components/email-templates/account-confirmation/AccountConfirmation'));
+const PasswordReset = lazy(() => import('../components/email-templates/password-reset/PasswordReset'));
+const Dashboard = lazy(() => import('../components/pages/dashboard/Dashboard'));
+const UserProfile = lazy(() => import('../components/pages/user-profile/UserProfile'));
+const ChangePassword = lazy(() => import('../components/pages/change-password/ChangePassword'));
+const TransferMethod = lazy(() => import('../components/pages/transfer-method/TransferMethod'));
+const GetQuote = lazy(() => import('../components/pages/get-quote/GetQuote'));
+const Verification = lazy(() => import('../components/pages/verification/Verification'));
+const Recipient = lazy(() => import('../components/pages/recipient/Recipient'));
+const RecipientDetails = lazy(() => import('../components/pages/recipient-details/RecipientDetails'));
+const Review = lazy(() => import('../components/pages/review/Review'));
+const PaymentMethod = lazy(() => import('../components/pages/payment-method/PaymentMethod'));
+const CardPayment = lazy(() => import('../components/pages/card-payment/CardPayment'));
+const CreateTransfer = lazy(() => import('../components/pages/create-transfer/CreateTransfer'));
+const TransferComplete = lazy(() => import('../components/pages/transfer-complete/TransferComplete'));
+const EditProfile = lazy(() => import('../components/pages/edit-profile/EditProfile'));
+const Legal = lazy(() => import('../components/content-pages/support/legal-wrapper/Legal'));
+const About = lazy(() => import('../components/content-pages/about/About'));
+const Support = lazy(() => import('../components/content-pages/support/support/Support'));
+const Contact = lazy(() => import('../components/content-pages/contact/Contact'));
+const ConfirmAccount = lazy(() => import('../components/pages/confirm-account/ConfirmAccount'));
+const NotFound = lazy(() => import('../components/pages/not-found/NotFound'));
+const TruelayerProviders = lazy(() => import('../components/pages/truelayer-providers/TruelayerProviders'));
+const UserSettings = lazy(() => import('../components/pages/user-settings/UserSettings'));
+const Referrals = lazy(() => import('../components/pages/referrals/Referrals'));
+const AccountConfirmationSMSCode = lazy(() => import('../components/pages/account-confirmation-sms-code/AccountConfirmationSmsCode'));
+const LandingPage = lazy(() => import('../components/pages/landing-page/LandingPage'));
+const RegisterCountry = lazy(() => import('../components/pages/register-country/RegisterCountry'));
+const Notifications = lazy(() => import('../components/pages/notifications/Notifications'));
+const InviteBusinessUser = lazy(() => import('../components/pages/invite-business-user/InviteBusinessUser'));
+const MobileMoneyRate = lazy(() => import('../components/content-pages/support/mobile-money-rate/MobileMoneyRate'));
+const TransferStatus = lazy(() => import('../components/pages/transfer-status/TransferStatus'));
+const TrustPaymentForMobile = lazy(() => import('../components/pages/Trust-payment-for-mobile/TrustPaymentForMobile'));
 
 
 export interface IRoute {
     path: string,
-    component: (props: any) => JSX.Element,
+    component: ((props: any) => JSX.Element) | LazyExoticComponent<(props: any) => JSX.Element>,
     protected?: boolean,
     props?: any,
     exact?: boolean,
