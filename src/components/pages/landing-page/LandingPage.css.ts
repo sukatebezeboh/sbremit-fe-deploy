@@ -274,6 +274,10 @@ export default styled.div`
                                 width: 200px;
                                 display: inline-block;
                                 margin-right: 20px;
+                                background: white;
+                                box-shadow: 1px 0px 1px 10px #007B5D inset;
+                                -webkit-box-shadow: 1px 0px 1px 10px #007B5D inset;
+                                -moz-box-shadow: 1px 0px 1px 10px #007B5D inset;
                                 img {
                                     width: 100%;
                                 }
