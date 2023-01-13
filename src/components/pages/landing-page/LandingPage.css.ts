@@ -269,6 +269,15 @@ export default styled.div`
                             }
                         }
 
+
+                        .app-logo-link {
+                                width: 200px;
+                                display: inline-block;
+                                margin-right: 20px;
+                                img {
+                                    width: 100%;
+                                }
+                            }
                         .hero-fca-container {
                             @media only screen and (max-width: 900px) {
                                 position: absolute;
@@ -276,6 +285,7 @@ export default styled.div`
                                 left: 0;
                                 width: 100%;
                             }
+
                             .hero-fca {
                                 margin-top: 70px;
                                 padding: 13px 16px;

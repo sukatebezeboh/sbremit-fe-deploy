@@ -22,6 +22,13 @@ const getRecipientCreateValidationSchema = ( transferMethod: string, isAccountNo
     }[transferMethod] ?? RecipientValidator;
 }
 
+const mobileMoneyProviderByCurrency: any = {
+    'UGX': ['Airtel', 'MTN'],
+    'KES': ['MPESA', 'Airtel'],
+    'TZS': ['Safaricom', 'Vodafone'],
+    'DEFAULT': ['Airtel', 'MTN', 'MPESA', 'Safaricom', 'Vodafone']
+}
+
 function NewRecipientModal(props: any) {
     const {modalOpen, openModal, selectRecipient, recipientData} = props;
     const dispatch = useDispatch()
@@ -229,7 +236,7 @@ function NewRecipientModal(props: any) {
                                         <div>Mobile money provider</div>
                                         <Field as="select" name='mobileMoneyProvider' id="mobileMoneyProvider">
                                             {
-                                                ['MTN', 'AIRTEL', 'MPESA'].map((provider: any) => {
+                                                (mobileMoneyProviderByCurrency[transfer.currentTransferQuote.destinationCurrency] || mobileMoneyProviderByCurrency['DEFAULT']).map((provider: any) => {
                                                     return <option value={provider}>{provider}</option>
                                                 })
                                             }
