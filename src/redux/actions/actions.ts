@@ -1419,8 +1419,8 @@ export const fetchUserNotifications = (limit?: number) => {
 }
 
 export const getPromo = async (code: string) => {
-  const res = await axios.get(
-    parseEndpointParameters(config.API_HOST + endpoints.PROMO, code),
+  const res = await http.get(
+    parseEndpointParameters(endpoints.PROMO, code),
     {
       headers: { 'X-SERVICE-PROVIDER': serviceProvider },
     },
