@@ -258,7 +258,7 @@ export const Routing: IRoute[] = [
     {
         path: paths.TRANSFER_COMPLETE,
         component: TransferComplete,
-        protected: true
+        protected: false
     },
     {
         path: paths.TRANSFER_STATUS,
