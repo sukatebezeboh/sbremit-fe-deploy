@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
+import { deleteRecipient, getRecipients, getUserTransactions, refreshUserDetails, toastAction, updateTransferRecipient } from '../../../redux/actions/actions';
 import { RECIPIENT } from '../../../redux/actionTypes';
 import { maxTransfersUnverified, remittanceHandlers, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, getQueryParam, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
+import { asset, getMax, getQueryParam, isUserFirstTransaction, replaceUnderscores, userHasReachedFinalVerificationStage, userIsVerified } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import NewRecipientModal from '../../modules/new-recipient-modal/NewRecipientModal';
 import PageHeading from '../../modules/page-heading/PageHeading';
-import TransferDetailsBox from '../../modules/parts/TransferDetailsBox';
+import TransferDetailsBox from '../../modules/transfer-details-box/TransferDetailsBox';
 import ProgressBar from '../../modules/progress-bar/ProgressBar';
 import Body from './Recipient.css';
 
@@ -29,6 +29,8 @@ const Recipient = () => {
     const [selectedRecipient, setSelectedRecipient] = useState(recipient)
     const [filteredRecipients, setFilteredRecipients] = useState(recipients);
     const [recipientDataForUpdate, setRecipientDataForUpdate] = useState({})
+    const [hoveredRecipientId, setHoveredRecipientId] = useState(null)
+
     useEffect(() => {
         getRecipients();
         getUserTransactions();
@@ -65,7 +67,7 @@ const Recipient = () => {
             history.replace(paths.GET_QUOTE)
             return
         }
-        const mobileMoneyMax = 500000;
+        const mobileMoneyMax = getMax(transferMethod,  toReceive?.countryCode, toSend?.countryCode);
         if (transferMethod === "mobile_money" && (Number(toReceive.total)) > mobileMoneyMax) {
             history.replace(paths.GET_QUOTE)
             toastAction({
@@ -73,7 +75,7 @@ const Recipient = () => {
                 type: "warning",
                 timeout: 10000,
                 title: "Exceeded maximum!",
-                message: `The maximum transferable amount (inclusive of charges) for Mobile Money is ${mobileMoneyMax}XAF for Mobile Money`
+                message: `The maximum transferable amount (inclusive of charges) for ${replaceUnderscores(transferMethod)} is ${mobileMoneyMax} ${toReceive.currency} for Mobile Money`
             })
             return
         }
@@ -136,7 +138,7 @@ const Recipient = () => {
 
         setFilteredRecipients( filtered );
     }
-
+    
     const handleRecipientUpdate = () => {
         const recipientId =  getQueryParam('update');
         if (!recipientId) return;
@@ -167,6 +169,13 @@ const Recipient = () => {
 
         updateTransferRecipient(()=>history.push(paths.PAYMENT_METHOD + "?t=" + paramTransferId), paramTransferId);
     }
+
+    const handleRecipientDelete  = (recipientId: string|number) => {
+
+        deleteRecipient(recipientId, () => getRecipients())
+
+    }
+
     return (
         <Body>
             <NavBar />
@@ -174,7 +183,7 @@ const Recipient = () => {
             <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} recipientData={recipientDataForUpdate} />
 
             {transferDetailsModalOpen && (<div className="timeline-modal-container desktop-hide">
-                <div className="overlay" onClick={()=>setTransferDetailsModalOpen(false)}></div>
+                <div className="overlay" onClick={() => setTransferDetailsModalOpen(false)}></div>
                 <div className="timeline-modal">
                     <TransferDetailsBox transferId={paramTransferId} />
                 </div>
@@ -200,8 +209,20 @@ const Recipient = () => {
                                     <span>Add recipient</span>
                                 </div>
                                 {
-                                    filteredRecipients.map((recipient: any, i: number)=>(
-                                        <div key={i} className={`recipient ${selectedRecipient?.id == recipient.id && 'selected-border'}`} onClick={()=>handleRecipientClick(recipient)}>
+                                    filteredRecipients
+                                    .filter((isTransferMethod: any) => isTransferMethod.profile.transferMethod === transfer.transferMethod)
+                                    .map((recipient: any)=>(
+                                        <div key={recipient.id} onMouseLeave={() => setHoveredRecipientId(null)} className={`recipient recipient-hoverable  ${selectedRecipient?.id === recipient.id && 'selected-border'}`} onClick={() => handleRecipientClick(recipient)} >
+                                            <div className={`recipient-dropdown-container ${selectedRecipient?.id === recipient.id && 'selected-icon'}`} onClick={() => setHoveredRecipientId(recipient.id)}>
+                                                <img className="recipient-dropdown-btn" src={asset('icons', 'three-dots.svg')} alt="dots" />
+                                            </div>
+                                            { hoveredRecipientId === recipient.id &&
+                                            <div className='recipient-dropdown-option-container'>
+                                                <div className="icon-container">
+                                                    <img className="recipient-icon-delete" src={asset('icons', 'bin.svg')} alt="" />
+                                                </div>
+                                                <div className="delete-txt" onClick={() => handleRecipientDelete(recipient.id)}>Delete</div>
+                                            </div>}
                                             <div><img src={`${resources.DICE_BEAR_RECIPIENT}${recipient.firstName + ' ' + recipient.lastName + recipient.id }.svg`} alt="user"/></div>
                                             <div>
                                                 <div>{recipient.firstName + ' ' + recipient.lastName}</div>
@@ -209,7 +230,6 @@ const Recipient = () => {
                                                 {recipient.profile.mobileMoneyProvider && <small className="capitalize d-block recipient-transfer-method" >{(recipient.profile.mobileMoneyProvider)}</small>}
                                             </div>
                                         </div>
-
                                     ))
                                 }
                             </div>

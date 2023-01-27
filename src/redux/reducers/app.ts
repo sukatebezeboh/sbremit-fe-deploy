@@ -1,5 +1,4 @@
 import { IAction } from ".";
-import { AppService } from "../../services/AppService";
 import { SUBMITTING, TOAST, REDIRECT, APP_VALUES, LOADING, NOTIFICATIONS, CREATE_ACCOUNT_SUCCESS, CREATE_ACCOUNT_ERROR, ADD_TO_STACKED_TOASTS, REMOVE_FROM_STACKED_TOASTS, CONFIRM } from "../actionTypes";
 
 const initialSubmittingState = "";

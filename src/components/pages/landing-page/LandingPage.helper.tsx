@@ -1,11 +1,11 @@
 import { TableCell } from "components/modules/table/ITable"
 import ComparisonCheckmark from "./parts/ComparisonCheckmark"
 import CheapestBtn from "./parts/CheapestBtn"
-import React, { createElement, useState } from "react"
+import React from "react"
 import { asset, getValueFromArray, scrollTo } from "../../../util/util"
 import XComparisonTextStack from "./parts/XComparisonTextStack"
 import { constants } from "util/constants"
-
+import { IOwlCarouselItem } from "components/modules/owl-carousel/OwlCarousel.helper"
 
 export const featureCompareTableData: {heading: TableCell[][], rows: TableCell[][]} = {
     heading: [
@@ -298,7 +298,7 @@ export const supportedCountriesListing = [
         active: false
     },
     {
-        name: "Equitorial Guinea",
+        name: "Equatorial Guinea",
         flag: 'GQ.png',
         active: false
     },
@@ -499,34 +499,34 @@ export const getExchangeRateTableData = (ratesData: any): {heading: TableCell[][
                 {
                     content: XComparisonTextStack({ content1: getFromRateData(ratesData, 'remitly', 'transferFee'), status: 'neutral', format: 'rate' })
                 }
-            ], 
+            ],
         ]
     }
 }
 
+export const getCountryMomoData = (countryServicesData: any) => {
+    const cameroonMomoHeadings =  Object.keys(countryServicesData?.fees?.[0] || {})?.map((headerTxt: any) => ({content: headerTxt}))
+    const cameroonMomoData =  Object.values(countryServicesData?.fees || [])?.map((data: any) => (Object.values(data).map((dataValue: any) => ({content: dataValue}))))
 
-    
+    const mobileMoneyRateTableData: {heading: TableCell[][], rows: TableCell[][]} = {
+        heading: [
+            [],
+            cameroonMomoHeadings
+        ],
+        rows: cameroonMomoData
+    }
 
-export const slideContents = [
+    return mobileMoneyRateTableData;
+}
+
+export const customerFeedbackVideoItems: IOwlCarouselItem[] = [
     {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058975/sbremit/VID-20220220-WA0012_yy0kkc.mp4'
     },
     {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058974/sbremit/VID-20220326-WA0025_ntwq7f.mp4'
     },
     {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
-    {
-        caption: "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-    },
+        src: 'https://res.cloudinary.com/codennerd/video/upload/v1665058972/sbremit/VID-20220326-WA0029_ug976w.mp4'
+    }
 ]

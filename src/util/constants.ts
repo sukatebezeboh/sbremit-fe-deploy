@@ -13,6 +13,36 @@ export const REASONS = [
     "Other"
 ];
 
+export const BANK_NAMES = [
+   "ABC CAPITAL BANK LIMITED",
+   "EAST AFRICAN DEVELOPMENT BANK",
+   "BANK OF AFRICA-UGANDA LTD",
+   "BANK OF BARODA UGANDA LIMITED",
+   "ABSA BANK OF UGANDA LTD",
+   "BANK OF INDIA UGANDA LTD",
+   "CAIRO INTERNATIONAL BANK LTD",
+   "COMMERCIAL BANK OF AFRICA UGANDA",
+   "CENTENARY RURAL DEVELOPMENT BANK",
+   "CITIBANK UGANDA LIMITED",
+   "DFCU BANK LIMITED",
+   "DIAMOND TRUST BANK UGANDA",
+   "ECOBANK UGANDA",
+   "EQUITY BANK UGANDA LTD",
+   "EXIM BANK UGANDA LIMITED",
+   "FINANCE TRUST BANK LTD",
+   "GUARANTY TRUST BANK UGANDA",
+   "HOUSING FINANCE BANK LTD",
+   "KCB BANK UGANDA LIMITED",
+   "NC BANK UGANDA LIMITED",
+   "OPPORTUNITY BANK UGANDA",
+   "ORIENT BANK LIMITED",
+   "STANBIC BANK UGANDA",
+   "STANDARD CHARTERED BANK UGANDA",
+   "TOP FINANCE BANK LIMITED",
+   "TROPICAL BANK LTD",
+   "POSTBANK UGANDA LIMITED",
+   "UNITED BANK FOR AFRICA UGANDA",
+];
 export const remittanceHandlers: any = {
    PIVOT_REMITTANCE_HANDLER: "PIVOT",
    MANUAL_REMITTANCE_HANDLER: "MANUAL"
@@ -23,16 +53,20 @@ export const remittanceHandlersTransferCriteria: any[] = [
    {
       handler: remittanceHandlers.PIVOT_REMITTANCE_HANDLER,
       toReceive: {
-         currency: [ "KES", "UGX" ]
+         currency: [ "KES", "UGX", "TZS" ]
       },
       transferMethod: "mobile_money",
    }
 ]
 
 export const maxTransfersUnverified: any = {
-  GBP: 800,
-  CAD: Number.MAX_SAFE_INTEGER,
-  EUR: Number.MAX_SAFE_INTEGER
+  GBP: 50,
+  CAD: 75,
+  EUR: 50,
+  DKK: 200,
+  NOK: 300,
+  SEK: 300,
+  CHF: 50
 }
 
 export const currencySymbols: any = {
@@ -48,7 +82,7 @@ export interface CountryType {
   countryCodeAlt: string;
 }
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
-export const countriesAndCodes: readonly CountryType[] = [
+export const countriesAndCodes: CountryType[] = [
   {
      "countryCode":"AD",
      "name":"Andorra",
@@ -731,7 +765,7 @@ export const countriesAndCodes: readonly CountryType[] = [
      "countryCode":"KE",
      "name":"Kenya",
      "phoneCode":"254",
-     "countryCodeAlt":"KEN"
+     "countryCodeAlt":"KEN",
   },
   {
      "countryCode":"KG",
@@ -1571,44 +1605,58 @@ export const constants = {
     COMPETITOR_RATES_TARGET_CURRENCY: "XAF",
     COMPETITOR_RATES_COMPARE_AMOUNT: 100,
 
+    CAMEROON_MTN_SERVICE_RATE_INDEX: 0,
+    UGANDA_MTN_SERVICE_RATE_INDEX: 3,
+    UGANDA_AIRTEL_SERVICE_RATE_INDEX: 5,
+    TANZANIA_MPESA_SERVICE_RATE_INDEX: 4,
+    KENYA_MPESA_SERVICE_RATE_INDEX: 6,
+
+    REMITTANCE_COUNTRIES_CODES: [ 'CM', 'UG', 'KE', 'TZ' ],
+
     SIGNUP_COUNTRIES: {
-        "AT": "Austria",
+      //   "AT": "Austria",
         "BE": "Belgium",
-        "BG": "Bulgaria",
+      //   "BG": "Bulgaria",
         "CA": "Canada",
-        "HR": "Croatia",
-        "CY": "Cyprus",
-        "CZ": "Czech Republic",
+      //   "HR": "Croatia",
+      //   "CY": "Cyprus",
+      //   "CZ": "Czech Republic",
         "DK": "Denmark",
-        "EE": "Estonia",
+      //   "EE": "Estonia",
         "FI": "Finland",
         "FR": "France",
         "DE": "Germany",
-        "GR": "Greece",
-        "HU": "Hungary",
-        "IE": "Ireland",
+      //   "GR": "Greece",
+      //   "HU": "Hungary",
+      //   "IE": "Ireland",
         "IT": "Italy",
-        "LT": "Lithuania",
-        "LU": "Luxembourg",
-        "MT": "Malta",
+      //   "LT": "Lithuania",
+      //   "LU": "Luxembourg",
+      //   "MT": "Malta",
         "NL": "Netherlands",
-        "PL": "Poland",
-        "PT": "Portugal",
-        "RO": "Romania",
-        "SK": "Slovakia",
-        "SI": "Slovenia",
+        "NO": "Norway",
+      //   "PL": "Poland",
+      //   "PT": "Portugal",
+      //   "RO": "Romania",
+      //   "SK": "Slovakia",
+      //   "SI": "Slovenia",
         "ES": "Spain",
         "SE": "Sweden",
+        "CH": "Switzerland",
         "GB": "United Kingdom",
     },
 
-    COUNTRIES_PHONE_CODES: countriesAndCodes
+    COUNTRIES_PHONE_CODES: countriesAndCodes.sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0 ),
 }
 
 export const transferMethodsInWords: any = {
    1: "Mobile money",
    2: "Bank transfer",
    3: "Cash pickup",
+   4: "Mobile money",
+   5: "Mobile money",
+   6: "Mobile money",
+   7: "Mobile money",
    mobile_money: "Mobile money",
    bank_transfer: "Bank transfer",
    cash_pickup: "Cash pickup"
@@ -1709,3 +1757,38 @@ export const countriesTransferMethodAvailability: any = {
        cash_pickup: false
    }
 };
+
+
+export const countriesAndCurrency = [
+   {
+      "countryCode":"UG",
+      "name":"Uganda",
+      "countryCodeAlt":"UGA",
+      "countryCurrency":"UGX",
+   },
+   {
+      "countryCode":"KE",
+      "name":"Kenya",
+      "countryCodeAlt":"KEN",
+      "countryCurrency":"KES",
+   },
+   {
+      "countryCode":"NG",
+      "name":"Nigeria",
+      "countryCodeAlt":"NGA",
+      "countryCurrency":"NGN",
+   },
+   {
+      "countryCode":"CM",
+      "name":"Cameroon",
+      "phoneCode":"237",
+      "countryCodeAlt":"CMR",
+      "countryCurrency":"XAF",
+   },
+   {
+      "countryCode":"TZ",
+      "name":"Tanzania",
+      "countryCodeAlt":"TZA",
+      "countryCurrency":"TZN",
+   },
+]

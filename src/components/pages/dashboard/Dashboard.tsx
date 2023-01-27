@@ -1,12 +1,11 @@
-import { replace } from 'formik';
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { checkForVerificationStatusToast, checkSkip, getRecipients, getTransactionDetails, getUserTransactions, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
+import { Link, useHistory } from 'react-router-dom';
+import { checkForVerificationStatusToast, checkSkip, createTokenAuth, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
-import { asset, convertDateString, formatCurrency, getUserDefaultCurrency, getValueFromArray, replaceUnderscores, translateTransactionStatus } from '../../../util/util';
+import { asset, convertDateString, formatCurrency, getUserDefaultCurrency, getValueFromArray, translateTransactionStatus } from '../../../util/util';
 import NavBar from '../../modules/navbar/NavBar';
 import PageHeading from '../../modules/page-heading/PageHeading';
 import RoundFloatingPlus from '../../modules/parts/RoundFloatingPlus';
@@ -26,6 +25,7 @@ const Dashboard = () => {
     const [selectedFilter, setSelectedFilter] = useState("");
     const history = useHistory();
     const [isResending, setIsResending] = useState(false);
+    const [transfersLoading, setTransfersLoading] = useState(true);
     const appValues = useSelector((state: any) => state.appValues)
     const referralSettings = getValueFromArray('settings', 'name', appValues?.values?.data || []);
     const user = useSelector((state: any) => state.auth.user);
@@ -33,7 +33,10 @@ const Dashboard = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         checkSkip(() => history.push(paths.RECIPIENT));
-        getUserTransactions();
+        getUserTransactionsPaginated(10, 0, () => {
+            setTransfersLoading(true)
+            getUserTransactions(() => setTransfersLoading(false))
+        });
         getRecipients();
         refreshUserDetails((user: any) => checkForVerificationStatusToast(user, history));
     }, [])
@@ -89,7 +92,7 @@ const Dashboard = () => {
         }
 
         const toReceive = {
-            value: data.destinationAmount,
+            value: '',
             currency: data.destinationCurrency,
             image: data.destinationCurrency
         }
@@ -123,7 +126,6 @@ const Dashboard = () => {
         return transaction.status?.toLowerCase() === constants.TRANSFER_STATUS_PENDING?.toLowerCase() || transaction.meta.expired
     }
 
-
     return (
         <Body>
             <NavBar />
@@ -143,15 +145,15 @@ const Dashboard = () => {
                 </div>
                 <div className="transactions">
                     <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_COMPLETE.toLowerCase() ? "selected-border-green" : ''}>
-                        <div className="green-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())}</div>
+                        <div className="green-txt">{ transfersLoading ? '...' : getTransactionStatusCount(constants.TRANSFER_STATUS_COMPLETE.toLowerCase())}</div>
                         <div>Complete Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_PENDING.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_PENDING.toLowerCase() ? "selected-border-yellow" : ''}>
-                        <div className="yellow-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_PENDING.toLowerCase())}</div>
+                        <div className="yellow-txt">{transfersLoading ? '...' : getTransactionStatusCount(constants.TRANSFER_STATUS_PENDING.toLowerCase())}</div>
                         <div>Pending Transactions</div>
                     </div>
                     <div onClick={()=>_setSelectedFilter(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())} className={selectedFilter === constants.TRANSFER_STATUS_CANCELLED.toLowerCase() ? "selected-border-red" : ''}>
-                        <div className="red-txt">{getTransactionStatusCount(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())}</div>
+                        <div className="red-txt">{transfersLoading ? '...' : getTransactionStatusCount(constants.TRANSFER_STATUS_CANCELLED.toLowerCase())}</div>
                         <div>Cancelled Transactions</div>
                     </div>
                     <Link to={user?.meta?.accountType === "business" ?  paths.INVITE_BUSINESS_USER : paths.TRANSFER_METHOD }>

@@ -152,7 +152,7 @@ const LandingPageLayout = ({data, max, inputRef, setCountriesDropDownOpen, count
         </div>
         <div className="message-block">
             {
-                max && <span className={`max-div ${(max && Number(data?.total) > max) ? 'red-txt' : ''}`}> {(max && data?.total > max) ?  <span className="max-value"> Maximum {formatCurrencyWithoutFloats(max)} {data?.currency} allowed at a time </span> : '' } </span>
+                max && <span className={`max-div ${(max && Number(data?.total) > Number(max)) ? 'red-txt' : ''}`}> {(max && Number(data?.total) > Number(max)) ?  <span className="max-value"> Maximum {formatCurrencyWithoutFloats(max)} {data?.currency} allowed at a time </span> : '' } </span>
             }
         </div>
     </Field>

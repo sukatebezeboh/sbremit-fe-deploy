@@ -1,6 +1,7 @@
 const endpoints = {
     SIGN_UP: '/users/registration',
     SESSION: '/session',
+    INSTANT_SESSION: '/session/instant',
     SIGN_OUT: '/sign-out',
     VALUES: '/values',
     VALUE: '/value',
@@ -15,7 +16,7 @@ const endpoints = {
     CREATE_TRANSFER: '/user/$_1/transfer',
     UPDATE_TRANSFER: '/user/transfer/$_1',
     GET_TRANSFER: '/user/$_1/transfer/$_2',
-    GET_TRANSFERS: '/user/$_1/transfers?businessId=49',
+    GET_TRANSFERS: '/user/$_1/transfers',
     QUOTE_SERVICE: '/exchange/$_1/$_2',
     GET_QUOTE: '/quote/$_1',
     GET_SERVICES: '/transfer/services',
@@ -36,7 +37,9 @@ const endpoints = {
     TRANSFER_QUOTE: '/transfer/quote',
     VERIFY_PIVOT_REFERENCE: '/pivot/payment/validate',
     INVITE_BUSINESS_USERS: '/business/invite',
-    UTC_DATE_TIME_UTIL: '/time/utc'
+    UTC_DATE_TIME_UTIL: '/time/utc',
+    EXCHANGE_RATE_SPREADS: '/rate/spreads',
+    INTERAC_PAYMENT: '/payments/interac'
 }
 
 export default endpoints;

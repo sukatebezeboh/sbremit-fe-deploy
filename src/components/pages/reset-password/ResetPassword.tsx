@@ -1,5 +1,4 @@
 import React from 'react'
-import {useHistory} from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { Field, Form, Formik } from 'formik'
 import { resetPasswordAction } from '../../../redux/actions/actions';
@@ -9,9 +8,8 @@ import {NewAuthLayout, RememberPassword, FormWrapper} from '../../modules/new-au
 import { paths } from 'util/paths';
 
 const ResetPassword = () => {
-  const history = useHistory();
   const isSubmitting = useSelector((state: any) => state.submitting)
-  const toComplete = (email: string) => history.push(`${paths.EMAIL_LINK_SENT}?email=${email}`)
+  // const toComplete = (email: string) => history.push(`${paths.EMAIL_LINK_SENT}?email=${email}`)
   return (
     <NewAuthLayout
       header='ResetPassword'

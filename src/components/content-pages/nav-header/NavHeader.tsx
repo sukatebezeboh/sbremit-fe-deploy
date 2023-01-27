@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { asset } from '../../../util/util';
 import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo';
 import { Link, useHistory } from 'react-router-dom';

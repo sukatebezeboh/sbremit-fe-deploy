@@ -39,6 +39,15 @@ background: #007B5D;
         }
     }
 
+    .unsubscribe-text {
+        text-decoration: underline;
+        font-style: italic;
+        color: white;
+        cursor: pointer;
+        display: inline-block;
+        padding: 10px 0;
+    }
+
     .copyright-line { 
         padding-bottom: 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.25);

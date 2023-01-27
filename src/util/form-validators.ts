@@ -7,7 +7,7 @@ export const SignUpValidator = Yup.object().shape({
     username: Yup.string().trim()
       .test('test-username', 'Enter Valid Phone/Email', 
         (value) => {
-          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([\+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
           const phoneRegex = /^\+?\d{7,}$/;
           let isValidEmail = value ? emailRegex.test(value) : false;
@@ -24,7 +24,7 @@ export const SignInValidator = Yup.object().shape({
     username: Yup.string().trim()
       .test('test-username', 'Enter Valid Phone/Email', 
         (value) => {
-          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([\+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+          const emailRegex = /^([a-zA-Z0-9_\\.-]+)([+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 
           const phoneRegex = /^\+?\d{7,}$/;
           let isValidEmail = value ? emailRegex.test(value) : false;
@@ -72,7 +72,29 @@ export const RecipientValidator = Yup.object().shape({
     firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-      return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
+      return phoneCode == '237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
+    }),
+    phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
+    confirmPhoneCode: Yup.string().required("Required").oneOf([Yup.ref('phoneCode')], 'Phone codes does not match'),
+    confirmMobile: Yup.string().required("Required").oneOf([Yup.ref('mobile')], 'Numbers do not match, please update'),
+    email: Yup.string().email("Enter valid email"),
+    state: Yup.string().min(3, "Too short").max(25, "Too long"),
+    reason: Yup.string(),
+    bankName: Yup.string().required("Required"),
+    bankCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The bank code provided is not correct. A sample bank code looks like:10005').required("bank code is required"),
+    branchCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The branch code provided is not correct. A sample branch code looks like:00001').required("branch code is required"),
+    accountNumber: Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890').required("account number is required"),
+    accountNumberStandAlone: Yup.string().matches(/^(\s)*(CM)[0-9]{2}(\s)*[0-9]{5}(\s)*[0-9]{5}(\s)*[0-9]{11}(\s)*[0-9]{2}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:CM12 10005 00001 01234567890 12').required("account number is required"),
+    recipientAccountNumber: Yup.string().required("The account number is required"),
+    accountBranch: Yup.string().required("The account branch is required"),
+ });
+
+export const RecipientBankTransferBankTransferValidator = (accountNoIsStandAlone: boolean) => {
+  const shape: any = {
+    firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+    lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
+    mobile: Yup.string().when(['phoneCode'], (phoneCode, schema) =>  {
+      return phoneCode == '237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
     }),
     phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
     email: Yup.string().email("Enter valid email"),
@@ -81,34 +103,25 @@ export const RecipientValidator = Yup.object().shape({
     bankName: Yup.string().required("Required"),
     bankCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The bank code provided is not correct. A sample bank code looks like:10005').required("bank code is required"),
     branchCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The branch code provided is not correct. A sample branch code looks like:00001').required("branch code is required"),
-    accountNumber: Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890').required("account number is required"),
-    recipientAccountNumber: Yup.string().required("The account number is required"),
-    accountBranch: Yup.string().required("The account branch is required"),
-    key: Yup.string().matches(/^(\s)*[0-9]{2}(\s)*$/, 'The key code provided is not correct. A sample key code  looks like:12').required("Key is required"),
- });
+    accountNumber:  Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890').required("account number is required"),
+  }
 
- export const RecipientBankTransferBankTransferValidator = Yup.object().shape({
-  firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
-  lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
-  mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-    return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
-  }),
-  phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
-  email: Yup.string().email("Enter valid email"),
-  state: Yup.string().min(3, "Too short").max(25, "Too long"),
-  reason: Yup.string(),
-  bankName: Yup.string().required("Required"),
-  bankCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The bank code provided is not correct. A sample bank code looks like:10005').required("bank code is required"),
-  branchCode: Yup.string().matches(/^(\s)*[0-9]{5}(\s)*$/, 'The branch code provided is not correct. A sample branch code looks like:00001').required("branch code is required"),
-  accountNumber: Yup.string().matches(/^(\s)*[0-9]{11}(\s)*$/, 'The account number provided is not correct. A sample account number looks like:01234567890').required("account number is required"),
-  key: Yup.string().matches(/^(\s)*[0-9]{2}(\s)*$/, 'The key code provided is not correct. A sample key code  looks like:12').required("Key is required"),
-});
+  if (accountNoIsStandAlone) {
+    delete shape.branchCode;
+    delete shape.bankName;
+    delete shape.bankCode;
+    delete shape.accountNumber;
+    shape['accountNumberStandAlone'] = Yup.string().required('Account number is required');
+  }
+
+  return Yup.object().shape(shape)
+};
 
 export const RecipientBankTransferMicrofinanceTransferValidator = Yup.object().shape({
   firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-    return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
+    return phoneCode == '237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
   }),
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
   email: Yup.string().email("Enter valid email"),
@@ -123,7 +136,7 @@ export const RecipientCashPickupValidator = Yup.object().shape({
   firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-    return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
+    return phoneCode == '237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
   }),
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
   email: Yup.string().email("Enter valid email"),
@@ -135,9 +148,9 @@ export const RecipientCashPickupValidator = Yup.object().shape({
 export const RecipientMobileMoneyValidator = Yup.object().shape({
   firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
-  // mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
   mobile: Yup.string().required("Required").when(['phoneCode'], (phoneCode, schema) =>  {
-    return phoneCode === '+237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits')
+    console.log('phoneCode', phoneCode)
+    return phoneCode == '237' ? schema.matches(/^\d{9}$/, 'phone number should be 9 digits') : schema.matches(/^\d{7,15}$/, 'should be between 7 and 15 digits +')
   }),
   phoneCode: Yup.string().min(1, "Too short").max(5, "Too long").required("Required"),
   confirmPhoneCode: Yup.string().required("Required").oneOf([Yup.ref('phoneCode')], 'Phone codes does not match'),

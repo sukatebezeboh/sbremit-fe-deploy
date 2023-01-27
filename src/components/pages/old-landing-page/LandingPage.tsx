@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuote, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
+import { getQuoteService, getServiceRate, getServiceRateValue, setNewQuoteWithoutAuth, updateAppValues } from '../../../redux/actions/actions';
 import { TRANSFER } from '../../../redux/actionTypes';
 import { paths } from '../../../util/paths';
-import { asset, formatCurrency, getMax, getMoneyValue, useResizeObserver } from '../../../util/util';
-import { AppFooter } from '../../modules/app-footer/AppFooter';
+import { formatCurrency, getMax, useResizeObserver } from '../../../util/util';
 import QuoteExchangeRateInput from '../../modules/exchange-rate-input/QuoteExchangeRateInput';
-import SBRemitLogo from "../../modules/sbremit-landing-logo/SBRemitLandingLogo";
 import { style } from "./LandingPage.css";
 import NavHeader from '../../content-pages/nav-header/NavHeader';
 import PromoCodeField from '../../modules/promo-code-field/PromoCodeField';
 import { CookieService } from '../../../services/CookieService';
-import FancyToggle from '../../modules/parts/FancyToggle';
+import FancyToggle from '../../modules/fancy-toggle/FancyToggle';
 import { constants } from '../../../util/constants';
 import config from '../../../env';
+import { addTrackers } from 'react-ga';
 
 const bg = window.location.pathname.indexOf('/en') !== -1 ? `/assets/bg/${'en'}-bg.png` :  window.location.pathname.indexOf('/ca') !== -1 ? `/assets/bg/${'ca'}-bg.png` : undefined;
 const Body = style(bg);
@@ -55,6 +54,7 @@ const LandingPage = (props: any) => {
 
 
     const setAllowOperatorFee = (allow: boolean) => {
+        alert(allow)
         dispatch({
             type: TRANSFER,
             payload: {
@@ -334,7 +334,7 @@ const LandingPage = (props: any) => {
                                 {Boolean(Number(transfer.serviceFee)) && <div className={`timeline timeline-2`}> 
                                     <span><i><img src="./assets/icons/plus.svg" alt=""/></i> 
 
-                                       <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && isAcceptablePromoValue(promo) || !allowOperatorFee) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> 
+                                       <span className={`${allowOperatorFee ? "" : "strikethrough"}`}> <div style={{display: 'inline'}} dangerouslySetInnerHTML={{__html: getTransferFeeText(selected)}}></div> <span className={`deep-green ${(promo?.type === "FREE_OPERATOR_FEE"  && (isAcceptablePromoValue(promo) || !allowOperatorFee)) ? "strikethrough" : ""}`}>{transfer.serviceFee} {toSend.currency}</span></span> 
                                        
                                        </span>
                                 </div>}
@@ -358,7 +358,7 @@ const LandingPage = (props: any) => {
 
                     </form>
                     <div className="toggle">
-                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} setIsActive={() => setAllowOperatorFee(!allowOperatorFee)} />
+                        <FancyToggle label="Include operator fee" isActive={allowOperatorFee} onChange={(e) => setAllowOperatorFee(Boolean(e.target.value))} />
                     </div>
                         <PromoCodeField transfer={transfer} />
                         <button onClick={()=>{

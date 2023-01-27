@@ -4,6 +4,7 @@ import Body from './Support.css'
 import NavHeader from '../../nav-header/NavHeader';
 import { Link, useHistory } from 'react-router-dom';
 import { paths } from '../../../../util/paths';
+import { faqs } from './Support.helper';
 
 
 const Support = () => {
@@ -15,9 +16,9 @@ const Support = () => {
 
     const togglePanel = (panelId: number) => {
         isPanelOpen(panelId) ?
-        setOpenPanels( openPanels.filter((p: number)=> p !== panelId) )
-        :
-        setOpenPanels( [...new Set([...openPanels, panelId])] )
+            setOpenPanels(openPanels.filter((p: number) => p !== panelId))
+            :
+            setOpenPanels([...new Set([...openPanels, panelId])])
     }
 
     const history = useHistory()
@@ -101,10 +102,10 @@ const Support = () => {
                             <h5>How do I set up a transfer?</h5>
                             <div className="details">
                                 <p>
-                                    Setting up a transfer is easy, and can be done in a few simple steps. 
+                                    Setting up a transfer is easy, and can be done in a few simple steps.
                                 </p>
                                 <p>
-                                    To start, key in the amount you want to send to obtain a quote and choose a delivery method. Then login or sign-up if you don’t already have an account. Enter the recipient details and pay for the transfer with either a debit or credit card or a bank transfer. 
+                                    To start, key in the amount you want to send to obtain a quote and choose a delivery method. Then login or sign-up if you don’t already have an account. Enter the recipient details and pay for the transfer with either a debit or credit card or a bank transfer.
                                 </p>
                                 <p>
                                     Your transfer will then be processed and delivered to your recipient. The delivery time of your transfer may vary depending on the country you are sending to, the delivery method you choose and how you pay for the transfer. You can find more information about delivery times here.
@@ -139,10 +140,10 @@ const Support = () => {
                             <h5>How long will my transfer take?</h5>
                             <div className="details">
                                 <p>
-                                    On average, a transfer with SB Remit takes up to 10 minutes by mobile money wallet and cash pick-up, with bank transfer taking up to one working day. The delivery time of your transfer may vary depending on the country you are sending to, the delivery method you choose and how you pay for the transfer. 
+                                    On average, a transfer with SB Remit takes up to 10 minutes by mobile money wallet and cash pick-up, with bank transfer taking up to one working day. The delivery time of your transfer may vary depending on the country you are sending to, the delivery method you choose and how you pay for the transfer.
                                 </p>
                                 <p>
-                                    If you pay with faster payment in the UK, it can take up to two hours for your payment to reach SB Remit’s account. For other European countries, it can take up to 2 workings days. Once we have received your payment, we will immediately process your transfer and notify you via email and push notification. Payments done by card are a much faster option, as they only take a few minutes to reach our account. 
+                                    If you pay with faster payment in the UK, it can take up to two hours for your payment to reach SB Remit’s account. For other European countries, it can take up to 2 workings days. Once we have received your payment, we will immediately process your transfer and notify you via email and push notification. Payments done by card are a much faster option, as they only take a few minutes to reach our account.
                                 </p>
                                 <p className="note">
                                     Please note that sometimes transfers can take a little bit longer if additional documents are required or if you send money over the weekend or on public holidays.
@@ -176,8 +177,8 @@ const Support = () => {
                             <h5>How can I pay for my transfer?</h5>
                             <div className="details">
                                 <p>
-                                    You can easily pay for your transfer with either a debit/credit card or a bank transfer. Please note that the maximum amount for card payments is 20,000 GBP/24,000 EUR. If you are paying with a bank transfer, you can send the money to SB Remit’s bank account using the following details: 
-                                    
+                                    You can easily pay for your transfer with either a debit/credit card or a bank transfer. Please note that the maximum amount for card payments is 20,000 GBP/24,000 EUR. If you are paying with a bank transfer, you can send the money to SB Remit’s bank account using the following details:
+
                                     <ul>
                                         <li><div className="key">GBP:</div> <div className="value"></div> </li>
                                         <li><div className="key">Bank name:</div> <div className="value"></div> </li>
@@ -285,7 +286,7 @@ const Support = () => {
                             <h5>How do I cancel my SB Remit transfer?</h5>
                             <div className="details">
                                 <p>
-                                    While we do our best to fulfil cancellation requests, please note that it’s not always possible to do so, particularly if the transfer has reached your recipient or their receiving bank. If you wish to request a cancellation, please contact SB Remit’s customer service through the number on their website.<br/> Alternatively, using the SB Remit website;                                
+                                    While we do our best to fulfil cancellation requests, please note that it’s not always possible to do so, particularly if the transfer has reached your recipient or their receiving bank. If you wish to request a cancellation, please contact SB Remit’s customer service through the number on their website.<br /> Alternatively, using the SB Remit website;
                                 </p>
                                 <div className="bullet-point">
                                     Navigate to the <a className="default-link" href={paths.LANDING}>www.sbremit.com</a>  support centre
@@ -298,10 +299,10 @@ const Support = () => {
                                 </div>
                                 <br />
                                 <p>
-                                Our team will then review your request and let you know if cancellation is possible. If successful, the cancellation process takes 24 hours. A refund will then be initiated. 
+                                    Our team will then review your request and let you know if cancellation is possible. If successful, the cancellation process takes 24 hours. A refund will then be initiated.
                                 </p>
                                 <p>
-                                Refunds take up to five working days, depending on the speed of your bank. Card payments are refunded within 48 hours, though this can take longer during bank holidays and weekends.
+                                    Refunds take up to five working days, depending on the speed of your bank. Card payments are refunded within 48 hours, though this can take longer during bank holidays and weekends.
                                 </p>
                                 <p className="helpful">
                                     Was this article helpful?
@@ -362,7 +363,7 @@ const Support = () => {
                             <h5>Why does the status say “Transfer completed”, but the money isn’t in my recipient’s account?</h5>
                             <div className="details">
                                 <p>
-                                    When you see the status <span className="green-txt">“transfer completed”</span> , it means that we’ve handed over the money to your recipient’s bank. Most banks credit the money to the receiving account quite quickly, but some take up to 24 hours. Your recipient will need to contact their bank for further information. <br/> Occasionally the receiving bank rejects the transfer after we’ve handed over the money. This usually happens if there is a mistake in the bank details the sender entered. We will contact you as soon as we are notified about the rejection by the receiving bank. This can take several business days, depending on the speed of the bank.
+                                    When you see the status <span className="green-txt">“transfer completed”</span> , it means that we’ve handed over the money to your recipient’s bank. Most banks credit the money to the receiving account quite quickly, but some take up to 24 hours. Your recipient will need to contact their bank for further information. <br /> Occasionally the receiving bank rejects the transfer after we’ve handed over the money. This usually happens if there is a mistake in the bank details the sender entered. We will contact you as soon as we are notified about the rejection by the receiving bank. This can take several business days, depending on the speed of the bank.
                                 </p>
                                 <p className="note">
                                     If your transfer has not been delivered within three business days and you have not heard from us, please contact us via our customer service.
@@ -384,7 +385,44 @@ const Support = () => {
                             </div>
                         </div>
                     </div>
-               
+
+                    {
+                        faqs.map((faq, i) => (
+                            <div className={`content ${isPanelOpen(i + 8) || " collapsed"}`}>
+                                <div className="open">
+                                    <img onClick={() => togglePanel(i + 8)} src={asset('icons', `${isPanelOpen(i + 8) ? "minus-close.svg" : "plus-open.svg"}`)} alt="close" />
+                                </div>
+
+                                <div className="body">
+                                    <h5> {faq.title} </h5>
+                                    <div className="details">
+                                        {
+                                            faq.paragraphs.map(paragraph => (
+                                                <p>
+                                                    {paragraph}
+                                                </p>
+                                            ))
+                                        }
+
+                                        <p className="helpful">
+                                            Was this article helpful?
+                                        </p>
+                                        <div className="vote">
+                                            <div className="opt">
+                                                <img src={asset('icons', 'positive-vote.svg')} alt="vote" />
+                                                <div>Yes</div>
+                                            </div>
+
+                                            <div className="opt">
+                                                <img src={asset('icons', 'positive-vote.svg')} alt="vote" />
+                                                <div>No</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
 
                 </section>
 

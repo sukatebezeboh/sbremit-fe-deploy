@@ -1,25 +1,43 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Footer from './AppFooter.css'
-import { subscribe } from '../../../redux/actions/actions'
+import { editUserSettingsAction, subscribe } from '../../../redux/actions/actions'
 import { paths } from '../../../util/paths'
 import { asset } from '../../../util/util'
-
-
+import FooterStickyBanner from '../footer-sticky-banner/FooterStickyBanner'
+import CookieNotice from '../cookie-notice/CookieNotice'
+import { CookieService } from 'services/CookieService'
+import { useSelector } from 'react-redux'
 
 
 export const AppFooter = () => {
-  const history = useHistory()
+    const user = useSelector((state: any) => state.auth.user);
+
   const [subscribeValue, setSubscribeValue] = useState<{ email: string }>({
     email: '',
   })
+
+  const [showCookieNotice, setShowCookieNotice] = useState(() => !CookieService.get('cookie-notice'))
 
   const handleSubscribeClick = () => {
     if (subscribeValue.email) subscribe(subscribeValue)
   }
 
+
+  const handleUnsubscribeClick = () => {
+    editUserSettingsAction({
+        marketingPermissions: false
+    });
+  }
+
   return (
     <Footer>
+        { 
+            showCookieNotice && 
+            <FooterStickyBanner>
+                <CookieNotice close = { () => setShowCookieNotice(false) } />
+            </FooterStickyBanner>
+        }
       <div className="footer-inner">
           <div className="logo-line">
               <div className="sb-logo">
@@ -90,6 +108,9 @@ export const AppFooter = () => {
                           <li>
                               <Link to={paths.TERMS}>Terms & Conditions</Link>
                           </li>
+                          <li>
+                              <Link to={paths.COOKIE_POLICY}>Cookie Policy</Link>
+                          </li>
                       </ul>
                   </div>
 
@@ -109,10 +130,11 @@ export const AppFooter = () => {
               <div className="search-area">
                   <div className="title">Stay tuned for latest from SB Remit</div>
                   <div className="search-box">
-                      <input type="text" className='search-input' placeholder='Enter your email' name="" id="" />
+                      <input type="text" className='search-input' placeholder='Enter your email' name="" id="" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubscribeValue({email: e.target.value})} />
 
-                      <button className="search-btn">Submit</button>
+                      <button className="search-btn" onClick={handleSubscribeClick} >Submit</button>
                   </div>
+                  {user && user.settings.marketingPermissions && <span className='underline unsubscribe-text' onClick={() => handleUnsubscribeClick()}>Unsubscribe</span>}
               </div>
           </div>
 

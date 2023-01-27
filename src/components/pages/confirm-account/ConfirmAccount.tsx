@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { confirmAccountEmail } from '../../../redux/actions/actions'
-import { paths } from '../../../util/paths';
 
 const ConfirmAccount = () => {
     const history = useHistory();

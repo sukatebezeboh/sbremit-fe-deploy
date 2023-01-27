@@ -1,13 +1,11 @@
 import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import { themeNames } from "components/modules/toast-factory/themes";
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
 import { GeoapifyGeocoderAutocomplete, GeoapifyContext } from '@geoapify/react-geocoder-autocomplete';
 import {
-  changePasswordAction,
   editProfileAction,
   toastAction,
 } from "../../../redux/actions/actions";
@@ -17,7 +15,6 @@ import {
   months,
 } from "../../../util/constants";
 import {
-  ChangePasswordValidator,
   EditProfileValidator,
 } from "../../../util/form-validators";
 import { paths } from "../../../util/paths";
@@ -33,14 +30,6 @@ const EditProfile = () => {
     (state: any) => state.appValues.countries,
   );
 
-  const [pwNewIcon, setPwNewIcon] = useState("show");
-  const [newPasswordType, setNewPasswordType] =
-    useState("password");
-
-  const [pwOldIcon, setPwOldIcon] = useState("show");
-  const [oldPasswordType, setOldPasswordType] =
-    useState("password");
-
   const [addressOne, setAddressOne] = useState<any>("");
   const [addressTwo, setAddressTwo] = useState<any>("");
 
@@ -54,23 +43,6 @@ const EditProfile = () => {
     setAddress(address, addressKey);
   };
 
-  const handleNewPasswordClick = () => {
-    setNewPasswordType((prevValue) => {
-      return prevValue === "password" ? "text" : "password";
-    });
-    setPwNewIcon((prevValue) => {
-      return prevValue === "show" ? "hide" : "show";
-    });
-  };
-
-  const handleOldPasswordClick = () => {
-    setOldPasswordType((prevValue) => {
-      return prevValue === "password" ? "text" : "password";
-    });
-    setPwOldIcon((prevValue) => {
-      return prevValue === "show" ? "hide" : "show";
-    });
-  };
 
   const handleDOBClick = () => {
 
@@ -143,7 +115,6 @@ const EditProfile = () => {
           validationSchema={EditProfileValidator}
           onSubmit={(values) => {
             const {address1, ...valuesWithOutAddress1} = values;
-            const {address2, ...valuesWithOutAddress2} = values;
 
             let newValues = valuesWithOutAddress1;
 

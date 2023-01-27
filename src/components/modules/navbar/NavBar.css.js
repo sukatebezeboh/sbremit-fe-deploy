@@ -61,8 +61,13 @@ const Bar = styled.div.attrs(props => ({
                 color: #A3A3A3;
             }
             span {
-                width: 10px;
-                height: 10px;
+                min-width: 20px;
+                min-height: 20px;
+                padding: 5px;
+                color: white;
+                text-align: center;
+                font-size: 14px;
+                font-weight: bolder;
                 background: #CF0921;
                 border-radius: 50%;
                 position: relative;
@@ -108,7 +113,7 @@ const Bar = styled.div.attrs(props => ({
                 grid-template-columns: 1fr 5fr;
                 margin: 11px 30px;
                 border-bottom: 1px solid #f8f8f9;
-                height: 60px;
+                min-height: 60px;
                 img {
                     width: 40px;
                     height: 40px;
@@ -261,10 +266,8 @@ const Bar = styled.div.attrs(props => ({
             div.profile-dropdown {
                 width: 410px;
                 text-align: left;
-                
             }
             .notif {
-                
                 all: unset;
                 background: green;
                 display: block !important;
@@ -326,7 +329,7 @@ const Bar = styled.div.attrs(props => ({
                 grid-template-columns: 1fr 5fr;
                 margin: 7px 15px;
                 border-bottom: 1px solid #f8f8f9;
-                height: 60px;
+                min-height: 60px;
                 img {
                     width: 40px;
                     height: 40px;

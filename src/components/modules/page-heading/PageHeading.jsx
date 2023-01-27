@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { asset } from "../../../util/util";
 import style from "./PageHeading.css";
 
@@ -13,7 +13,7 @@ const PageHeading = (props) => {
         <Div className="page-heading">
             {<img className={back ? 'back mobile-back is-link' : 'mobile-back is-link'} src={asset('icons', 'prev.svg')} alt="back" onClick={callBack ?? (() => history.push(back || '/dashboard'))}/>}
             <div>
-                <div className="heading">{heading}</div>
+                <h1 className="heading">{heading}</h1>
                 <div className={"subheading "+ (mobileHide==="subheading" ? "mobile-hide" : "")}>{subheading}</div>
             </div>
         </Div>

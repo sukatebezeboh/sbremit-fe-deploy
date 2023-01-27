@@ -20,25 +20,25 @@ export class AppService {
     }
 
     static async getValues () {
+        AppService.checkExpiry()
         const values = localStorage.getItem('VALUES');
 
-        AppService.checkExpiry()
         if(values){
             return JSON.parse(values)
         }
         else{
             const res = await axios.get(config.API_HOST + endpoints.VALUES)
             localStorage.setItem('VALUES', JSON.stringify(res.data))
-            localStorage.setItem('EXPIRY', AppService.getExpiryTimestamp().toString())
+            // localStorage.setItem('EXPIRY', AppService.getExpiryTimestamp().toString())
 
             return res.data
         }
     }
 
     static async getServices () {
+        AppService.checkExpiry()
         const values = localStorage.getItem('SERVICES');
 
-        AppService.checkExpiry()
 
         if(values){
             return JSON.parse(values)

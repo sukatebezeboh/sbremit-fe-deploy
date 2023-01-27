@@ -1,45 +1,14 @@
 import NavBar from 'components/modules/navbar/NavBar'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { fetchUserNotifications } from 'redux/actions/actions';
-import styled from 'styled-components'
+import { changeCountryCurrencyToCountryName, fetchUserNotifications, updateUserNotifReadStatus } from 'redux/actions/actions';
+import { countriesAndCurrency } from 'util/constants';
 import { convertDateString } from '../../../util/util';
-import { resources } from '../../../util/constants';
+import Body from './Notifications.css'
 
-const Body = styled.div`
-
-    .page-content {
-        .notifications {
-            .notif-body {
-                padding: 10px;
-                background-color: white;
-                margin: 10px auto;
-                border: 1px solid lightgrey;
-                .message-container {
-                    display: grid;
-                    grid-template-columns: 0fr 1fr;
-                    gap: 10px;
-                    .notif-message {
-                        font-size: 16px;
-                        padding-bottom: 10px;
-                    }
-
-                    .notif-date {
-                        font-weight: lighter;
-                        font-size: 12px;
-                        /* white-space: nowrap; */
-                        min-width: 120px;
-                    }
-                }
-
-            }
-        }
-    }
-
-`
 const Notifications = () => {
-    const user = useSelector((state: any) => state.auth.user);
     const notifs = useSelector((state: any) => state.notifications)
+    const getAllAltCountryCode = countriesAndCurrency.map((currency: any) => currency.countryCurrency)
 
     useEffect(() => {
         fetchUserNotifications();
@@ -50,24 +19,28 @@ const Notifications = () => {
         <NavBar />
 
         <div className="page-content">
-            <h2>Notifications</h2>
-
+            <div className="notif-header">
+                <div>
+                    <h2>Notifications</h2>
+                </div>
+                <div className="mark-all-btn">
+                    <button onClick={() => updateUserNotifReadStatus('*', () => fetchUserNotifications(10))}>Mark all</button>
+                </div>
+            </div>
 
             <div className="notifications">
                 {
                     notifs?.map((notif: any) => (
                         <div className={`notif-body ${notif.status.toLowerCase() }`}>
-                            {/* <img src={`${resources.DICE_BEAR_USER}${user.meta.customerId}.svg`} alt="pic"/> */}
-                            <div className='message-container'>
+                            <div onClick={() => updateUserNotifReadStatus(notif.id, () => fetchUserNotifications(10))} className={`message-container ${notif.status === 'READ' && 'grey-out'}`}>
                                 <div className="notif-date" > {convertDateString(notif.dateCreated)} </div>
-                                <div className="notif-message"> {notif.meta.message} <b>  </b></div>
+                                <div className="notif-message">{notif.type === 'GLOBAL_NEWS' ? changeCountryCurrencyToCountryName(notif.meta.message, getAllAltCountryCode) : notif.meta.message}</div>
+                                <div className="btn-container">{notif.status === 'UNREAD' && 'Mark as read'}</div>
                             </div>
                         </div>
                     ))
                 }
             </div>
-
-
         </div>
     </Body>
   )

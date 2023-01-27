@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
-import {Link, useHistory} from 'react-router-dom';
+import { useHistory} from 'react-router-dom';
 import { useSelector } from 'react-redux'
-import styled from 'styled-components';
 import OtpInput from 'react-otp-input';
 import { getQueryParam } from '../../../util/util'
 import { paths } from 'util/paths';
-import { resendActivation, resetPasswordAction } from '../../../redux/actions/actions';
+import { resendActivation } from '../../../redux/actions/actions';
 import {NewAuthLayout, RememberPassword, AuthButton} from '../../modules/new-auth-layout/NewAuthLayout'
+import { StyledArea, StyledText } from './AccountConfirmationSmsCode.css';
 
 const AccountConfirmationSMSCode = () => {
   const phone = getQueryParam('phone')
@@ -14,7 +14,7 @@ const AccountConfirmationSMSCode = () => {
   const [OTP, setOTP] = useState('');
   const isSubmitting = useSelector((state: any) => state.submitting)
 
-  const handleSendLink = (phone: string) => history.push(`${paths.SMS_CODE_SENT}?phone=${phone}`)
+  // const handleSendLink = (phone: string) => history.push(`${paths.SMS_CODE_SENT}?phone=${phone}`)
   
   const toConfirmAccount = () => {
       if(OTP.length === 6) {
@@ -22,7 +22,7 @@ const AccountConfirmationSMSCode = () => {
       }
   }
 
-  const resendCode = () => resetPasswordAction({username: phone, type: 'sms'}, "email", handleSendLink)
+  // const resendCode = () => resetPasswordAction({username: phone, type: 'sms'}, "email", handleSendLink)
   return (
     <NewAuthLayout
       header='Enter code sent to:'
@@ -51,26 +51,3 @@ const AccountConfirmationSMSCode = () => {
 
 export default AccountConfirmationSMSCode;
 
-const StyledArea = styled.div`
-  /* border: 2px solid red; */
-  a{
-    color: #007B5D;
-    text-decoration: underline;
-  }
-  p{
-    font-size: 24px;
-    color: #424242;
-    font-weight: medium;
-    text-align: center;
-  }
-`;
-
-const StyledText = styled.p`
-  color: #424242;
-  font-size: 18px;
-  i{
-    color: #007B5D;
-    font-size: 18px;
-    font-style: normal;
-  }
-`;

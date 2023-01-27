@@ -7,11 +7,11 @@ import {
   CONFIRM,
   CREATE_ACCOUNT_ERROR,
   CREATE_ACCOUNT_SUCCESS,
+  EXCHANGE_SPREADS,
   LOADING,
   NOTIFICATIONS,
   RECIPIENT,
   RECIPIENTS,
-  REDIRECT,
   REMOVE_FROM_STACKED_TOASTS,
   RESET_TRANSFER,
   SIGN_IN,
@@ -19,7 +19,6 @@ import {
   SUBMITTING,
   TOAST,
   TRANSFER,
-  TRANSFER_QUOTE,
 } from '../actionTypes'
 import config from '../../env'
 import endpoints from '../../util/endpoints'
@@ -30,7 +29,6 @@ import { AppService } from '../../services/AppService'
 import { paths } from '../../util/paths'
 import {
   formatCurrency,
-  generateRandomString,
   genPaginationHashTable,
   getQueryParam,
   isPhoneNumber,
@@ -40,7 +38,7 @@ import {
 } from '../../util/util'
 import http from '../../util/http'
 import { themeNames } from '../../components/modules/toast-factory/themes'
-import { constants } from '../../util/constants'
+import { constants, countriesAndCurrency } from '../../util/constants'
 
 const user = store.getState().auth.user;
 const serviceProvider =  env.X_SERVICE_PROVIDER;
@@ -49,7 +47,10 @@ export const checkAuth = () => {
   const session = CookieService.get(env.SESSION_KEY)
   const user = CookieService.get('user')
   const sessionId = CookieService.get(env.SESSION_ID)
-  const serviceProvider = env.X_SERVICE_PROVIDER
+  const serviceProvider = env.X_SERVICE_PROVIDER;
+
+  const queryParamToken = getQueryParam('t');
+  const queryParamUsername = getQueryParam('u');
 
   if (session && user) {
     store.dispatch({
@@ -63,7 +64,13 @@ export const checkAuth = () => {
       sessionId,
       serviceProvider,
     }
-  } else {
+  } else if (queryParamToken && queryParamUsername) {
+    signInWithToken({
+      username: queryParamUsername,
+      token: queryParamToken
+    })
+  }
+  else {
     store.dispatch({
       type: AUTH,
       payload: { isAuthenticated: false, user: undefined },
@@ -72,9 +79,12 @@ export const checkAuth = () => {
   }
 }
 
-export const signUpAction = (data: any) => {
+export const signUpAction = async (data: any) => {
   const serviceProvider = env.X_SERVICE_PROVIDER
   store.dispatch({ type: SUBMITTING, payload: SIGN_UP })
+  if ( !data.clientIp ) {
+    data.clientIp = await getClientIp()
+  }
   axios
     .post(
       config.API_HOST + endpoints.SIGN_UP,
@@ -113,62 +123,104 @@ export const signInAction = (data: any, history: any) => {
       },
     )
     .then((res: any) => {
-      if (res.data.status === '200') {
-        toastAction({
-          show: true,
-          type: 'success',
-          timeout: 5000,
-          message: `Welcome, ${res.data.data.profile.firstName}`,
-        })
-
-        CookieService.put(env.SESSION_KEY, res.headers['x-auth-token'])
-        CookieService.put(env.SESSION_ID, res.headers['x-service-user-name'])
-        CookieService.put(
-          'X-SERVICE_PROVIDER',
-          res.headers['x-service-provider'],
-          30,
-        )
-        axios
-          .get(
-            config.API_HOST +
-              parseEndpointParameters(endpoints.USER, res.data.data.id),
-          )
-          .then((response) => {
-            CookieService.put('user', JSON.stringify(response.data.data))
-            store.dispatch({
-              type: AUTH,
-              payload: { isAuthenticated: true, user: response.data.data },
-            })
-          })
-      } else {
-        const errorMessage = res.data.error.message;
-        if ( errorMessage.indexOf('not confirm') !== -1 ) {
-            toastAction({
-              show: true,
-              type: 'error',
-              timeout: 20000,
-              defaultThemeName: themeNames.CLEAR_MAMBA,
-              title: errorMessage,
-              message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
-              extraBtnText: isPhoneNumber(data.username) ? "Activate my account" : "Resend activation mail",
-              extraBtnHandler: () => isPhoneNumber(data.username) ? history.push(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
-              extraBtnClass: 'verif-toast-failed-extra-btn-class'
-            })
-        } else {
-          toastAction({
-            show: true,
-            type: 'error',
-            timeout: 10000,
-            message: `${errorMessage}`,
-          })
-        }
-
-      }
+      handleSignInResponse(res, data)
     })
     .catch((err) => {})
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: '' })
     })
+}
+
+const handleSignInResponse = (res: any, data: any) => {
+  if (res.data.status === '200') {
+    toastAction({
+      show: true,
+      type: 'success',
+      timeout: 5000,
+      message: `Welcome, ${res.data.data.profile.firstName}`,
+    })
+
+    CookieService.put(env.SESSION_KEY, res.headers['x-auth-token'])
+    CookieService.put(env.SESSION_ID, res.headers['x-service-user-name'])
+    CookieService.put(
+      'X-SERVICE_PROVIDER',
+      res.headers['x-service-provider'],
+      30,
+    )
+
+    CookieService.put('user', JSON.stringify(res.data.data))
+    store.dispatch({
+      type: AUTH,
+      payload: { isAuthenticated: true, user: res.data.data },
+    })
+
+  } else {
+    const errorMessage = res.data.error.message;
+    if ( errorMessage.indexOf('not confirm') !== -1 ) {
+        toastAction({
+          show: true,
+          type: 'error',
+          timeout: 20000,
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: errorMessage,
+          message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
+          extraBtnText: isPhoneNumber(data.username) ? "Activate my account" : "Resend activation mail",
+          extraBtnHandler: () => isPhoneNumber(data.username) ? window.location.replace(`${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(data.username)}`) : resendActivation(data.username),
+          extraBtnClass: 'verif-toast-failed-extra-btn-class'
+        })
+    } 
+    else if ( errorMessage.indexOf('blocked') !== -1 || errorMessage.indexOf('inactive') !== -1 ) {
+      stackNewToast({
+        name: "user-blocked-notice",
+        show: true,
+        type: 'error',
+        timeout: -1,
+        defaultThemeName: themeNames.CENTER_PROMPT,
+        message: res?.data?.error?.message,
+        extraBtnText: "Contact us",
+        extraBtnHandler: () => window.location.replace(paths.CONTACT),
+        extraBtnClass: 'verif-toast-failed-extra-btn-class'
+      })
+    } 
+    else {
+      toastAction({
+        show: true,
+        type: 'error',
+        timeout: 10000,
+        message: `${errorMessage}`,
+      })
+    }
+
+    store.dispatch({
+      type: AUTH,
+      payload: { isAuthenticated: false, user: undefined },
+    })
+
+  }
+}
+export const signInWithToken = (data: any) => {
+  store.dispatch({ type: LOADING, payload: true })
+  axios
+    .post(
+      config.API_HOST + endpoints.INSTANT_SESSION,
+      { ...data },
+      {
+        headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+      },
+    )
+    .then((res: any) => {
+      handleSignInResponse(res, data)
+    })
+    .catch((err) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
+
+export const createTokenAuth = () => {
+  http.put(endpoints.INSTANT_SESSION, {})
+  .then(data => console.log(data))
+  .catch(err => console.log(err))
 }
 
 export const resendActivation = (username: string) => {
@@ -279,6 +331,11 @@ export const signOutAction = (ignoreRequest = false) => {
 
 const runningTimeouts: any[] = []
 export const toastAction = (toastConfig: any) => {
+
+  if (toastConfig.timeout === -1) {
+    return store.dispatch({ type: TOAST, payload: { ...toastConfig } })
+  }
+
   runningTimeouts.forEach((t) => {
     return clearTimeout(t)
   })
@@ -632,7 +689,7 @@ export const getTransactionDetails = (callback?: Function, id?: any) => {
     })
 }
 
-export const getUserTransactions = () => {
+export const getUserTransactions = (callback?: Function) => {
   const user = store.getState().auth.user
   const transfer = store.getState().transfer
 
@@ -653,6 +710,36 @@ export const getUserTransactions = () => {
         const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
         const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
         store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
+        callback?.()
+    })
+    .catch((err) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
+}
+
+export const getUserTransactionsPaginated = (limit: number, offset: number, callback: Function) => {
+  const user = store.getState().auth.user
+  const transfer = store.getState().transfer
+
+    store.dispatch({type: LOADING, payload: true})
+    http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id) + `?limit=${limit}&offset=${offset}&order=id%20DESC`)
+    .then(res=>{
+        let transactions: any[] = res.data.data?.sort((a: any, b: any)=>{
+            if (a.dateCreated < b.dateCreated) {
+                return 1
+            }
+            if (a.dateCreated > b.dateCreated) {
+                return -1
+            }
+            return 0
+        })
+        const paginatedTransactions = genPaginationHashTable(transactions, 10);
+        const paginatedCancelledTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_CANCELLED.toLowerCase()), 10)
+        const paginatedCompletedTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_COMPLETE.toLowerCase()), 10)
+        const paginatedPendingTransactions = genPaginationHashTable(transactions.filter(t=>t.status?.toLowerCase()=== constants.TRANSFER_STATUS_PENDING.toLowerCase()), 10)
+        store.dispatch({type: TRANSFER, payload: {...transfer, transactions, paginatedTransactions, paginatedCompletedTransactions, paginatedCancelledTransactions, paginatedPendingTransactions} })
+        callback()
     })
     .catch((err) => {})
     .then(() => {
@@ -737,10 +824,14 @@ export const setNewQuoteWithoutAuth = (
     })
     .catch((error) => {
       store.dispatch({ type: LOADING, payload: false })
+    }).then(() => {
+      store.dispatch({ type: LOADING, payload: false })
     })
 }
 
 export const setNewQuote = (base: string, target: string, finalCallback?: Function) => {
+  store.dispatch({ type: LOADING, payload: true })
+
   const payload: { base: string; target: string; meta?: any } = {
     base,
     target,
@@ -763,6 +854,9 @@ export const setNewQuote = (base: string, target: string, finalCallback?: Functi
       }
     })
     .catch((error) => {})
+    .then(() => {
+      store.dispatch({ type: LOADING, payload: false })
+    })
 }
 
 export const checkSkip = (callback: Function) => {
@@ -834,17 +928,13 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     .then(res => {
       if(res.data.status === "200"){
           const data = res.data.data;
-          if (data?.base?.toUpperCase() === "EUR") {
+          if (data?.base?.toUpperCase() === "EUR" && data?.target?.toUpperCase() === "XAF" ) {
               data.rate = 655.96;
           }
           store.dispatch({type: TRANSFER, payload: {...transfer, conversionRate: {...data}}})
-          store.dispatch({type: LOADING, payload: false})
       }
     }).catch(()=>{
         store.dispatch({type: LOADING, payload: false})
-    })
-    .catch(() => {
-      store.dispatch({ type: LOADING, payload: false })
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
@@ -899,6 +989,7 @@ export const getServiceRate = (
   return Number(serviceFee) || 0
 }
 
+
 export const getServiceRateValue = (
   toReceiveValue: string | number,
   transferMethod: string,
@@ -950,10 +1041,12 @@ export const getTransferMethodIds = () => {
   const transfer = store.getState().transfer
   const services = store.getState().appValues.services
   const mobileMoneyId = services?.data?.find((service:any) => service.name.toLowerCase() === "mobile money" && service.country === transfer?.toReceive?.countryCode)?.id || '1'
+  const bankTransferId = services?.data?.find((service:any) => service.name.toLowerCase() === "bank transfer" && service.country === transfer?.toSend?.countryCode)?.id || '2'
+  const cashPickupId = services?.data?.find((service:any) => service.name.toLowerCase() === "cash pickup" && service.country === transfer?.toSend?.countryCode)?.id || '3'
   return {
     mobile_money: mobileMoneyId,
-    bank_transfer: '2',
-    cash_pickup: '3',
+    bank_transfer: bankTransferId,
+    cash_pickup: cashPickupId,
   }
 }
 
@@ -1050,7 +1143,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
             name: "name-change-account-lock",
             show: true,
             type: 'info',
-            timeout: 10000,
+            timeout: -1,
             defaultThemeName: themeNames.CENTER_PROMPT,
             title: "Change request received",
             message: `<div style="color: grey; padding-top: 5px;">An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change</div>`,
@@ -1092,9 +1185,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
 
   const executeSettingsEdit = () => {
     http
-    .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), {
-      settings: { ...values },
-    })
+    .put(parseEndpointParameters(endpoints.USER_SETTINGS, userId), values)
     .then((res: any) => {
       store.dispatch({ type: LOADING, payload: false })
       if (res.data.status === '200') {
@@ -1109,7 +1200,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
           type: AUTH,
           payload: { ...store.getState().auth, user: res.data.data },
         })
-        callback?.()
+        callback?.(res.data.data)
       } else {
         toastAction({
           show: true,
@@ -1328,8 +1419,8 @@ export const fetchUserNotifications = (limit?: number) => {
 }
 
 export const getPromo = async (code: string) => {
-  const res = await axios.get(
-    parseEndpointParameters(config.API_HOST + endpoints.PROMO, code),
+  const res = await http.get(
+    parseEndpointParameters(endpoints.PROMO, code),
     {
       headers: { 'X-SERVICE-PROVIDER': serviceProvider },
     },
@@ -1369,7 +1460,6 @@ export const updateTransferRecipient = (
   transferId: any,
 ) => {
   store.dispatch({ type: LOADING, payload: true })
-  const userId = store.getState().auth.user?.id
   const recipient = store.getState().recipients.recipient
 
   http
@@ -1510,9 +1600,7 @@ export const getCompetitorRates = ({baseCurrency, targetCurrency, sendAmount} : 
         setStateCallback(res.data.data)
       }
     })
-    .catch((err) => {
-      console.log(err);
-    })
+    .catch((err) => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
     })
@@ -1552,21 +1640,24 @@ export const setNewTransferQuote = (exchangeRateQuoteId: any, finalCallback?: Fu
             }
           },
         })
+        finalCallback?.()
       } else {
-        toastAction({
-          name: "account-locked-notice",
+        stackNewToast({
+          name: "set-transfer-quote-failed-notice",
           show: true,
           type: 'error',
-          timeout: 60000,
-          defaultThemeName: themeNames.CLEAR_MAMBA,
+          timeout: -1,
+          defaultThemeName: themeNames.CENTER_PROMPT,
           message: res?.data?.error?.message,
+          extraBtnText: "Contact us",
+          extraBtnHandler: () => window.location.replace(paths.CONTACT),
+          extraBtnClass: 'verif-toast-failed-extra-btn-class'
         })
       }
     })
     .catch(() => {})
     .then(() => {
       store.dispatch({ type: LOADING, payload: false })
-      finalCallback?.()
     })
 }
 
@@ -1578,7 +1669,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
     customerAccountNumber: payload.phoneCode + payload.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
         const customerName = res?.data?.data?.customerName?.trim()?.toLowerCase()
         if ( customerName.includes(`${payload.firstName}`.toLowerCase()) && customerName.includes(`${payload.lastName}`.toLowerCase())  ) {
@@ -1595,7 +1686,7 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
             name: "confirm-momo-recipient-mismatch",
             show: true,
             type: 'warning',
-            timeout: 5000,
+            timeout: -1,
             defaultThemeName: themeNames.CENTER_PROMPT,
             title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
             message: "<div style='color: grey;'>Would you like to proceed anyway?</div>",
@@ -1617,18 +1708,15 @@ export const verifyPivotRecipientReference = (payload: any, successCallback = ()
           name: "confirm-momo-recipient-mismatch",
           show: true,
           type: 'warning',
-          timeout: 5000,
+          timeout: -1,
           defaultThemeName: themeNames.CENTER_PROMPT,
           title: `The recipient details were not received`,
-          message: "<div style='color: grey;'>Please provide a valid MoMo number</div>",
+          message: "<div style='color: grey;'>Please provide a valid mobile number</div>",
           close: () => {
             unstackNewToast({name: "confirm-momo-recipient-mismatch"})
           },
           closeBtnText: "Make corrections",
         })
-
-        
-
       }
   })
   .catch(() => {})
@@ -1645,7 +1733,7 @@ export const verifyPivotRecipientAccount = (payload: any, callback = () => {}) =
     customerAccountNumber: payload?.mobile
   })
   .then(res => {
-      console.log(res)
+      
       if (res.data?.data?.responseCode === "SUCCESS") {
           toastAction({
             show: true,
@@ -1706,7 +1794,7 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:
   .then(res=> {
       if (res?.data?.status == "200" ) {
         const utcDateTime = res?.data?.data?.utc_time
-        setUtcDateTime?.(utcDateTime)        
+        setUtcDateTime?.(utcDateTime)
       }
   }).catch(() => {
 
@@ -1715,3 +1803,124 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (setUtcDateTime?:
     store.dispatch({ type: LOADING, payload: false })
   })
 }
+
+export const getSpreads = () => {
+  store.dispatch({type: LOADING, payload: true})
+
+  axios.get(parseEndpointParameters(config.API_HOST + endpoints.EXCHANGE_RATE_SPREADS), {
+    headers: { 'X-SERVICE-PROVIDER': serviceProvider },
+  })
+  .then(res => {
+      if (res.data.status === "200") {
+          store.dispatch({type: EXCHANGE_SPREADS, payload: [...res.data.data ] })
+      }
+  })
+  .catch(err=>{})
+  .then(()=>{
+      store.dispatch({type: LOADING, payload: false})
+  })
+}
+
+
+export const deleteRecipient = (recipientId: any, callback: Function) => {
+  const user = store.getState().auth.user;
+  http.delete(parseEndpointParameters(endpoints.RECIPIENT, user.id, recipientId))
+  .then((res) => {
+    if (res.data.status === "200") {
+      callback();
+      toastAction({
+        show: true,
+        type: 'info',
+        timeout: 10000,
+        message: 'Recipient deleted',
+      })
+    } else {
+      toastAction({
+        show: true,
+        type: 'error',
+        timeout: 10000,
+        message: res.data?.error?.message || 'Could not delete recipient',
+      })
+    }
+  })
+}
+
+export const updateUserNotifReadStatus = (notifId: string|number, callback: Function) => {
+
+  const user = store.getState().auth.user;
+
+  http.put(parseEndpointParameters(endpoints.NOTIFICATIONS, user.id), {
+    id: notifId,
+    status: 'READ'
+  })
+  .then((res: any) => {
+    if (res?.data?.status == '200') {
+      callback()
+    }
+  })
+  .catch(() => {})
+  .then(() => {
+  })
+}
+
+export const changeCountryCurrencyToCountryName = ( str: any, arr: any ) => {
+  const checkString = countriesAndCurrency.filter((currency: any) => currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0])
+  const getCountryCurrency= checkString?.[0]?.countryCurrency
+  const getCountryName = checkString?.[0]?.name
+  return str.replace(getCountryCurrency, getCountryName)
+}
+
+export const initiateInteracTransferPayment = (transferId: number) => {
+  store.dispatch({
+    type: LOADING,
+    payload: 'Establishing secure connection with Interac®. This may take a few seconds...',
+  })
+  http.post(parseEndpointParameters(endpoints.INTERAC_PAYMENT), {
+    transferId
+  })  
+  .then((res: any) => {
+      if (res?.data?.status == '200') {
+        window.location.href = res?.data?.data?.redirectUrl 
+      }
+  })
+  .catch(() => {})
+  .then(() => {
+    store.dispatch({
+      type: LOADING,
+      payload: false,
+    })
+  })
+}
+
+export const getClientIp = async (callback?:Function) => {
+  try {
+    const res = await axios.get('https://api.ipify.org?format=json')
+    callback?.(res?.data?.ip)
+    return res?.data?.ip;    
+  } catch(e) {
+    return null
+  }
+
+}
+
+export const updateTransferWithPaymentGatewayCharge = async (transferId: string, paymentGateway: string, callback?: Function  ) => {
+  const transfer = store.getState().transfer
+  const clientIp = await getClientIp()
+  http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
+    paymentGateway,
+    clientIp
+  })
+  .then((res: any) => {
+    if (res?.data?.status == 200 ) {
+      store.dispatch({
+        type: TRANSFER,
+        payload: { ...transfer, transactionDetails: { ...res.data.data } },
+      })  
+      callback?.()
+    }
+  })
+  .catch(() => {})
+  .then(() => {})
+}
+
+

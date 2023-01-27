@@ -12,7 +12,7 @@ const http = axios.create({
 
 http.interceptors.request.use((config: any) => {
     const authData = checkAuth();
-    if(!authData.isAuthenticated) return false;
+    if(!authData?.isAuthenticated) return false;
     
     config.transformRequest = [
         (data: any, headers: any) => {

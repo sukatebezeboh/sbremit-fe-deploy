@@ -1,0 +1,19 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": ["U36SFRXXLT.com.sbremit"],
+                "components": [
+                    {
+                        "/": "*",
+                        "comment": "Matches any URLs"
+                    },
+                    {
+                        "/": "/payments/interac",
+                        "exclude": true
+                    }
+                ]
+            }
+        ]
+    }
+}

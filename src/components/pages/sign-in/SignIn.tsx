@@ -33,8 +33,6 @@ const SignIn = () => {
     })
   }
 
-  const handleForgotPassword: Function = (): void => setShowModal(true)
-  const handleSignIn: Function = (): void => history.push('/dashboard')
 
   const initialValues: any = {
     username: '',

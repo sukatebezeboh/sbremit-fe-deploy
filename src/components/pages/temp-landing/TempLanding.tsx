@@ -1,4 +1,4 @@
-import FancyToggle from 'components/modules/parts/FancyToggle'
+import FancyToggle from 'components/modules/fancy-toggle/FancyToggle'
 import React from 'react'
 import { asset } from '../../../util/util'
 import Body from './TempLanding.css'
@@ -32,7 +32,7 @@ const TempLanding = () => {
             active: false
         },
         {
-            name: "Equitorial Guinea",
+            name: "Equatorial Guinea",
             flag: 'CM.png',
             active: false
         },
@@ -219,7 +219,7 @@ const TempLanding = () => {
                                                 </div>
                                                 <div className="toggle-side">
                                                     <div className="toggle">
-                                                        <FancyToggle label="Include operator fee" isActive={true} setIsActive={() => {}} />
+                                                        <FancyToggle label="Include operator fee" isActive={true} />
                                                     </div>
                                                 </div>
                                             </div>

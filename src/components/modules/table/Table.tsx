@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { generateRandomString } from '../../../util/util'
 import { ITable, RESPONSIVE_TYPE_COLLAPSE_ALL } from './ITable'
 import styled from 'styled-components'
@@ -34,7 +34,6 @@ const StyledTable = styled.table`
                     font-weight: 600;
                     display: block;
                 }
-                
                 .content-wrapper {
                     text-align: right;
                     width: fit-content;
@@ -82,7 +81,7 @@ const Table = ({headings, rows, name = generateRandomString(), config = {} }: IT
                                     <div className="content-wrapper">
                                         {
                                             cell.content
-                                        }                             
+                                        }
                                     </div>
 
                                 </td>
