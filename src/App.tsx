@@ -1,12 +1,12 @@
 import React, { Suspense, useEffect } from 'react';
-import { Redirect, Route, Switch, useHistory, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useLocation, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import ReactPixel from 'react-facebook-pixel';
 
 import './App.css';
 import { Routing, IRoute } from './util/routes'
 import ToastFactory from './components/modules/toast-factory/ToastFactory';
-import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast } from './redux/actions/actions';
+import { checkAuth, appValuesAction, refreshUserDetails, checkForVerificationStatusToast, signOutAction } from './redux/actions/actions';
 import { paths } from './util/paths';
 import { useSelector } from 'react-redux';
 import AppLoader from './components/modules/app-loader/AppLoader';
@@ -15,6 +15,8 @@ import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widge
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
 import SignIn from 'components/pages/sign-in/SignIn';
 import { isProductionEnv } from './util/util';
+import endpoints from 'util/endpoints';
+import http from 'util/http';
 
 function App() {
   const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
@@ -22,6 +24,7 @@ function App() {
   const confirmDialog = useSelector((state: any) => state.confirmDialog);
 
   const history = useHistory();
+  const location = useLocation();
 
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
   ReactPixel.init('664533234865734');
@@ -44,6 +47,23 @@ function App() {
   useEffect(() => {
     refreshUserDetails((user: any) => checkForVerificationStatusToast(user, history));
   }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    http.get(endpoints.SESSION)
+      .then((res) => {
+        if (parseInt(res.data.status) !== 200) {
+          signOutAction();
+        }
+      })
+      .catch((err) => {
+        signOutAction();
+      })
+  }, [location.pathname]);
+
 
   return (
     <React.Fragment>
