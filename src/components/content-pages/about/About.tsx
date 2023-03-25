@@ -287,17 +287,24 @@ const About = () => {
             </div>
 
             <div className="mission-vision">
+            <div className="mv mission">
+                    <div className="heading">Who We Are</div>
+                    <div className="body">
+                        We are a payment and credit facilitator trading under Sukate &amp; Bezeboh Ltd.
+                    </div>
+                </div>
+
                 <div className="mv mission">
                     <div className="heading">Our Mission</div>
                     <div className="body">
-                        Our mission is to build a platform that will serve as a primary provider of money remittance and payment services.
+                        To build a digital finance ecosystem that will handle end to end payments and use machine learning &amp; AI to advance financial inclusiveness in Africa.
                     </div>
                 </div>
 
                 <div className="mv vision">
                     <div className="heading">Our Vision</div>
                     <div className="body">
-                        We provide a platform for individuals and businesses to conveniently transfer money. With an initial focus on Africa, our company transforms the way money is transferred and our vision is to build a money transfer platform that will enable businesses and individuals to pay for goods and service and transfer money all around the world.
+                        Provide a platform for communities to alleviate poverty in their home countries by granting micro credit to operators of the informal sector.
                     </div>
                 </div>
             </div>
