@@ -52,7 +52,8 @@ function App() {
     http.get(endpoints.SESSION)
       .then((res) => {
         console.log("Session Validated", res);
-        if (res.data.status !== 200) {
+        if (res.data.status != "200") {
+          console.log("app signout 1")
           signOutAction();
         }
       })

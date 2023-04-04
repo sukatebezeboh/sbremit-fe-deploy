@@ -22,7 +22,7 @@ import FormButton from "../../modules/form-button/FormButton";
 import NavBar from "../../modules/navbar/NavBar";
 import PageHeading from "../../modules/page-heading/PageHeading";
 import style from "./EditProfile.css";
-import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput';
+// import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput';
 
 const Body = style();
 
@@ -65,6 +65,17 @@ const EditProfile = () => {
     location_country: "gb",
     ...user?.profile,
   };
+
+  const userCountry = user?.profile?.location_country || "GB"
+
+  // console.log("user?.profile", user?.profile)//user?.profile?.location_country:"GB"
+
+
+/*
+location_country
+mobile
+phoneCode
+*/
 
   const postprocessHook = (feature: any) => {
     return feature.properties.address_line1;
@@ -202,7 +213,7 @@ const EditProfile = () => {
                           </div>
 
 
-                      <PhoneNumberInput
+                          {/* <PhoneNumberInput
                             Input={Field}
                             Select={Field}
                             isControlledComp={false}
@@ -217,13 +228,20 @@ const EditProfile = () => {
                             showBorder={true}
                             isNotCopy={true}
                             isNotPaste={true}
-                      />
-                          {/* <Field
-                            name="mobile"
-                            type="text"
-                            className="phone-no"
-                            placeholder="e.g 07967885952"
                           /> */}
+                          <div className="phone-container">
+                            <img
+                              src={`https://flagcdn.com/h24/${userCountry?.toLowerCase()}.png`}
+                              alt={userCountry + 'flag'}
+                            />
+                            <p>{user?.profile?.phoneCode}</p>
+                            <Field
+                              name="mobile"
+                              type="text"
+                              className="phone-no"
+                              placeholder="e.g 07967885952"
+                            />
+                          </div>
 
 
                           {/* <Field
@@ -456,7 +474,7 @@ const EditProfile = () => {
                           </div>
                         )}
                       </div>
-                      <div
+                      {/* <div
                         className={`state-input-div ${touched.location_country &&
                           errors.location_country
                           ? "form-error"
@@ -486,7 +504,7 @@ const EditProfile = () => {
                               {errors.location_country}
                             </div>
                           )}
-                      </div>
+                      </div> */}
                       <div
                         className={
                           touched.zip && errors.zip

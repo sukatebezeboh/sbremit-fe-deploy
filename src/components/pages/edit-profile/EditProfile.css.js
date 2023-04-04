@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const style = () => styled.div`
+
     .box {
         padding: 100px 5px;
         display: grid;
@@ -138,6 +139,9 @@ const style = () => styled.div`
                     .month-select {
                         padding-left: 3px !important;
                         background-position-x: 100% !important;
+                    }
+                    input.phone-no {
+                        margin-bottom: 0;
                     }
                     /* input.phone-no {
                         position: relative;
@@ -300,13 +304,28 @@ const style = () => styled.div`
         }
     }
 
+    .phone-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid #7FBCAD;
+        margin-bottom: 20px;
+        padding-left: 16px;
+        border-radius: 4px;
+        img{
+            height: 24px;
+            width: 36px;
+        }
+        p{
+            margin: 0 12px;
+        }
+    }
+
 @media only screen and (max-width: 900px) {
     background: #FFFFFF;
     padding: 1px 0px;
     min-height: 100vh;
-    input.phone-no {
-        margin-left: 21% !important;
-    }
+    
     .phone-country-select {
         background-position-x: 16% !important;
     }
