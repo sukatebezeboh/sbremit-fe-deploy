@@ -1652,7 +1652,7 @@ export const constants = {
         "DE": "Germany",
       //   "GR": "Greece",
       //   "HU": "Hungary",
-      //   "IE": "Ireland",
+        "IE": "Ireland",
         "IT": "Italy",
       //   "LT": "Lithuania",
       //   "LU": "Luxembourg",

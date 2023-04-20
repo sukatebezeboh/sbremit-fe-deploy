@@ -116,14 +116,27 @@ export default styled.div`
             overflow: hidden;
           }
         }
-        input.phone-no {
-          position: relative;
-          top: 51px;
-          width: 70%;
-          height: 44px;
-          margin-left: 28%;
-          border: 2px solid transparent;
-          background: #fff;
+        div.phone-box{
+          border: 1px solid #7fbcad;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 30px;
+          img{
+            height: 24px;
+            width: 36px;
+            margin:0 8px;
+          }
+          input{
+            width: 50%;
+            margin-bottom: 0;
+            flex: 1;
+            margin-left: 8px;
+            border-top: 0;
+            border-bottom: 0;
+          }
+
         }
         div.mobile-head {
           margin-bottom: -44px;
@@ -268,13 +281,6 @@ export default styled.div`
               height: 30px !important;
               font: normal normal normal 14px/18px
                 Montserrat;
-            }
-            input.phone-no {
-              top: 32px;
-              height: 25px !important;
-              margin-left: 25%;
-              width: 74%;
-              padding-left: 5px;
             }
             select {
               /* padding: 10px 50%; */
