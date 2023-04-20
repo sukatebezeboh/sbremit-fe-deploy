@@ -187,7 +187,7 @@ const Verification = () => {
                             placeholder="e.g 07967885952"
                           />
                           <Field
-                            className="green-txt"
+                            className="green-txt phone-code-adjust"
                             as="select"
                             name="phoneCode"
                             id="">
@@ -195,7 +195,6 @@ const Verification = () => {
                               (country) => (
                                 <option
                                   value={country.phoneCode}>
-                                  {country.phoneCode} -
                                   {country.name}
                                 </option>
                               ),

@@ -313,6 +313,7 @@ export const copyToClipBoard = (text: string) => {
   });
 };
 
+
 export const getPercentage = (
   needle: number | string,
   haystack: number | string,
@@ -335,6 +336,9 @@ export const useResizeObserver = (initial: any) => {
       }
     }).observe(document.querySelector("html") as Element);
   }, []);
+    //if ( Number(user?.referral?.newUserBonusActive) ) {
+    //    discount += (Number(referralSettings?.data?.referredUserDiscountValue))
+    //}
 
   return [screenType];
 };

@@ -111,6 +111,10 @@ export default styled.div`
           background-position-y: 10px;
           padding: 0px;
           padding-left: 75px;
+          &.phone-code-adjust {
+            line-height: 10;
+            overflow: hidden;
+          }
         }
         input.phone-no {
           position: relative;
@@ -149,7 +153,7 @@ export default styled.div`
 
         select + .phone-code-value {
           left: 15px;
-          top: -38px;
+          top: -63px;
           box-shadow: none;
         }
         > div:nth-child(3) {

@@ -140,7 +140,7 @@ const ExchangeRateCalculator = ({
                         </div>
 
                         {
-                            Boolean(Number(user?.referral?.useCount) || user?.referral?.newUserBonusActive) &&
+                            Boolean(Number(user?.referral?.useCount) || Number(user?.referral?.newUserBonusActive)) &&
                             <div className="transactional-points">
                                 <div className="point-icon">
                                     -

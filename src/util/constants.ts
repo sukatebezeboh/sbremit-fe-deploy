@@ -82,14 +82,15 @@ export const remittanceHandlersTransferCriteria: any[] = [
 ];
 
 export const maxTransfersUnverified: any = {
-  GBP: 800,
-  CAD: 1000,
-  EUR: 800,
-  DKK: 6000,
-  NOK: 9000,
-  SEK: 9000,
-  CHF: 800,
-};
+
+  GBP: 50,
+  CAD: 75,
+  EUR: 50,
+  DKK: 200,
+  NOK: 300,
+  SEK: 300,
+  CHF: 50
+}
 
 export const currencySymbols: any = {
   GBP: "£",
@@ -104,7 +105,7 @@ export interface CountryType {
   countryCodeAlt: string;
 }
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
-export const countriesAndCodes: readonly CountryType[] = [
+export const countriesAndCodes: CountryType[] = [
   {
     countryCode: "AD",
     name: "Andorra",
@@ -1636,41 +1637,41 @@ export const constants = {
 
   REMITTANCE_COUNTRIES_CODES: ["CM", "UG", "KE", "TZ", "NG", "GH", "CI"],
 
-  SIGNUP_COUNTRIES: {
-    AT: "Austria",
-    BE: "Belgium",
-    BG: "Bulgaria",
-    CA: "Canada",
-    HR: "Croatia",
-    CY: "Cyprus",
-    CZ: "Czech Republic",
-    DK: "Denmark",
-    EE: "Estonia",
-    FI: "Finland",
-    FR: "France",
-    DE: "Germany",
-    GR: "Greece",
-    HU: "Hungary",
-    IE: "Ireland",
-    IT: "Italy",
-    LT: "Lithuania",
-    LU: "Luxembourg",
-    MT: "Malta",
-    NL: "Netherlands",
-    NO: "Norway",
-    PL: "Poland",
-    PT: "Portugal",
-    RO: "Romania",
-    SK: "Slovakia",
-    SI: "Slovenia",
-    ES: "Spain",
-    SE: "Sweden",
-    CH: "Switzerland",
-    GB: "United Kingdom",
-  },
+    SIGNUP_COUNTRIES: {
+      //   "AT": "Austria",
+        "BE": "Belgium",
+      //   "BG": "Bulgaria",
+        "CA": "Canada",
+      //   "HR": "Croatia",
+      //   "CY": "Cyprus",
+      //   "CZ": "Czech Republic",
+        "DK": "Denmark",
+      //   "EE": "Estonia",
+        "FI": "Finland",
+        "FR": "France",
+        "DE": "Germany",
+      //   "GR": "Greece",
+      //   "HU": "Hungary",
+      //   "IE": "Ireland",
+        "IT": "Italy",
+      //   "LT": "Lithuania",
+      //   "LU": "Luxembourg",
+      //   "MT": "Malta",
+        "NL": "Netherlands",
+        "NO": "Norway",
+      //   "PL": "Poland",
+      //   "PT": "Portugal",
+      //   "RO": "Romania",
+      //   "SK": "Slovakia",
+      //   "SI": "Slovenia",
+        "ES": "Spain",
+        "SE": "Sweden",
+        "CH": "Switzerland",
+        "GB": "United Kingdom",
+    },
 
-  COUNTRIES_PHONE_CODES: countriesAndCodes,
-};
+    COUNTRIES_PHONE_CODES: countriesAndCodes.sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0 ),
+}
 
 export const transferMethodsInWords: any = {
   1: "Mobile money",

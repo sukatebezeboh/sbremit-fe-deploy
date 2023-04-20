@@ -48,7 +48,7 @@ const Field = styled.div`
     }
 `
 
-const PromoCodeField = ({transfer, className}: any) => {
+const PromoCodeField = ({ transfer, className }: any) => {
     const textInput: any = useRef(null);
 
     const [img, setImg] = useState<null | 'check-mark' | 'crossed' | 'rolling-loader-black'>(null)
@@ -67,7 +67,7 @@ const PromoCodeField = ({transfer, className}: any) => {
         setImg('rolling-loader-black');
         const coupon = await getPromo(value);
         const validatedPromo = validatePromo(coupon, user, transfer);
-        setImg( validatedPromo ? 'check-mark' : 'crossed');
+        setImg(validatedPromo ? 'check-mark' : 'crossed');
 
         dispatch({ type: TRANSFER, payload: { ...transfer, promo: validatedPromo } })
     }
@@ -92,9 +92,9 @@ const PromoCodeField = ({transfer, className}: any) => {
         <Field className={className}>
             <div className="coupon">
                 <input ref={textInput} id="promo-field" type="text" className="promo-code" name="promo-code" placeholder={promo ? promo.code : "Got a promo code? Get a discount"} onChange={(e) => handleCouponChange(e.target.value)} />
-                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />} 
+                {img && <img className="check-mark" src={asset('icons', `${img}.svg`)} alt="check" />}
                 <div className="message-block">
-                    { promo &&  <span className='green-txt'> Value <b className="green-txt">: {getPromoValue(promo)} </b>  - (Valid for {promo?.settings?.currenciesValid ?? "all" } currencies) </span>}
+                    {promo && <span className='green-txt'> Value <b className="green-txt">: {getPromoValue(promo)} </b>  - (Valid for {promo?.settings?.currenciesValid ?? "all"} currencies) </span>}
                 </div>
             </div>
         </Field>
