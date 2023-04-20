@@ -1922,5 +1922,3 @@ export const updateTransferWithPaymentGatewayCharge = async (transferId: string,
   .catch(() => {})
   .then(() => {})
 }
-
-

@@ -116,7 +116,7 @@ const Field = styled.div`
         }
 `
 const QuotesLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }: any) => {
-
+    console.log({countries})
   return (
     <Field key={data?.currency +'-field-'+ window.location.pathname}>
         <div className={`x-input ${(max && data?.total > max) ? 'selected-border-re' : ''}`}>

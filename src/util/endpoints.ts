@@ -39,7 +39,8 @@ const endpoints = {
     INVITE_BUSINESS_USERS: '/business/invite',
     UTC_DATE_TIME_UTIL: '/time/utc',
     EXCHANGE_RATE_SPREADS: '/rate/spreads',
-    INTERAC_PAYMENT: '/payments/interac'
+    INTERAC_PAYMENT: '/payments/interac',
+    CREATE_PUSH_NOTIFICATION_TOKEN: '/user/notifications/push'
 }
 
 export default endpoints;

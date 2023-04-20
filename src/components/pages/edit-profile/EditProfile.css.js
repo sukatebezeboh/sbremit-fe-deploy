@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const style = () => styled.div`
+
     .box {
         padding: 100px 5px;
         display: grid;
@@ -105,7 +106,7 @@ const style = () => styled.div`
                             padding: 17px 5px;
                         }
                     }
-                    input, select{
+                    input, select:not(.phone-code) {
                         margin-bottom: 5px;
                         width: 100%;
                         height: 48px;
@@ -120,7 +121,7 @@ const style = () => styled.div`
                             color: #A3A3A3;
                         }
                     }
-                    select{
+                    select:not(.phone-code){
                         -webkit-appearance: none;
                         -moz-appearance: none;
                         background: transparent;
@@ -140,6 +141,9 @@ const style = () => styled.div`
                         background-position-x: 100% !important;
                     }
                     input.phone-no {
+                        margin-bottom: 0;
+                    }
+                    /* input.phone-no {
                         position: relative;
                         top: 51px;
                         width: 65%;
@@ -148,21 +152,21 @@ const style = () => styled.div`
                         border: 2px solid transparent;
                         background: #fff;
                         padding: 0 !important;
-                    }
-                    .phone-country-select {
+                    } */
+                    /* .phone-country-select {
                         background-position-x: 26%;
                         background-position-y: 12px;
-                    }
-                    div.mobile-head {
+                    } */
+                    /* div.mobile-head {
                         margin-bottom: -44px;
-                    }
+                    } */
                     .dob {
                         margin-top: 6px;
                         input {
                             padding: 9px;
                         }
                     }
-                    select+img, select+.phone-code-value{
+                    select+img{
                         position: relative;
                         top: -35px;
                         left: 20px;
@@ -172,11 +176,13 @@ const style = () => styled.div`
                         border-radius: 1px;
                         pointer-events: none;
                     }
-                    select+.phone-code-value {
+                    /* select+.phone-code-value {
                         left: 15px;
                         top: -38px;
                         box-shadow: none;
-                    }
+                    } */
+
+        
                     >div:nth-child(3){
                         margin-top: 0px;
                     }
@@ -298,13 +304,28 @@ const style = () => styled.div`
         }
     }
 
+    .phone-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid #7FBCAD;
+        margin-bottom: 20px;
+        padding-left: 16px;
+        border-radius: 4px;
+        img{
+            height: 24px;
+            width: 36px;
+        }
+        p{
+            margin: 0 12px;
+        }
+    }
+
 @media only screen and (max-width: 900px) {
     background: #FFFFFF;
     padding: 1px 0px;
     min-height: 100vh;
-    input.phone-no {
-        margin-left: 21% !important;
-    }
+    
     .phone-country-select {
         background-position-x: 16% !important;
     }

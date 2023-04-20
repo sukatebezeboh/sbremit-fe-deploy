@@ -15,8 +15,8 @@ import FloatingWhatsAppWidget from './components/modules/floating-whatsapp-widge
 import { ConfirmDialog } from 'components/modules/confirm-dialog/ConfirmDialog';
 import SignIn from 'components/pages/sign-in/SignIn';
 import { isProductionEnv } from './util/util';
+import http from'util/http';
 import endpoints from 'util/endpoints';
-import http from 'util/http';
 
 function App() {
   const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
@@ -63,7 +63,6 @@ function App() {
         signOutAction();
       })
   }, [location.pathname]);
-
 
   return (
     <React.Fragment>
