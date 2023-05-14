@@ -345,14 +345,14 @@ export default styled.div`
 
                         .hero-text {
                             font-weight: 400;
-                            font-size: 24px;
+                            font-size: 20px;
                             line-height: 40px;
                             letter-spacing: -0.01em;
                             color: #FFFFFF;
-                            width: 70%;
+                            width: 85%;
                             @media only screen and (max-width: 900px) {
                                 margin: auto;
-                                font-size: 16px;
+                                font-size: 14px;
                             }
                         }
 

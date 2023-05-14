@@ -700,8 +700,17 @@ const LandingPage = () => {
                   A Money Transfer Solution You Can Trust
                 </h2>
                 <p className="hero-text">
-                  A low cost means of sending money which is fast, secure and
-                  reliable with multiple delivery options
+                  SB Remit provides a low-cost, hassle-free way to send money to
+                  Africa from the UK and Canada. Our money transfer solution is
+                  quick, secure, and reliable - you won’t have to worry about
+                  hidden fees or poor exchange rates again.
+                </p>
+
+                <p className="hero-text">
+                  Whether you have relatives in Uganda or want to invest in real
+                  estate in Kenya, SB Remit can help you ensure your money
+                  reaches its destination safely, using a money transfer method
+                  that suits you and your recipient.
                 </p>
 
                 <div className="app-logos">
@@ -753,7 +762,7 @@ const LandingPage = () => {
           <h2 className="heading">
             Transferring money to Africa? We remit to:
           </h2>
-          <div className="subheading">We transfer from UK and Canada to:</div>
+          {/* <div className="subheading">We transfer from UK and Canada to:</div> */}
 
           <div className="listings">
             {supportedCountriesListing.map((listing: any) => (
@@ -789,10 +798,14 @@ const LandingPage = () => {
           <img src={asset("images", "dotted-globe.svg")} alt="countries-map" />
         </div>
         <div className="register-interest">
-          We are constantly adding more countries to the list.{" "}
+          Our initial focus is on money transfers from the UK and Canada to the
+          African countries listed above, but we are always adding more
+          countries to the list. If you want to send to or receive money from a
+          country that is not currently listed,{" "}
           <span className="register-interest-link green-txt">
             <Link to={paths.REGISTER_COUNTRY}>Register your interest</Link>
-          </span>
+          </span>{" "}
+          today and we will see what we can do.
         </div>
       </section>
 
@@ -924,11 +937,11 @@ const LandingPage = () => {
                 </div>
                 <div className="text-side">
                   <div className="title">
-                    <h4>Customer friendly</h4>
+                    <h4>Customer-friendly</h4>
                   </div>
                   <div className="text">
-                    Customer friendly experience that is completely transparent
-                    at all transfer steps.
+                    Customer-friendly experience that is completely transparent
+                    at every stage of the money transfer process.
                   </div>
                 </div>
               </div>
@@ -955,7 +968,7 @@ const LandingPage = () => {
               <div className="text-down">
                 <div className="step-title step-number">Step 1</div>
                 <div className="step-title">Signup or sign in</div>
-                <div className="steps">
+                {/* <div className="steps">
                   <div className="step">
                     <div className="numbering">1.</div>
                     <div className="instruction">Excellent exchange rate</div>
@@ -970,7 +983,7 @@ const LandingPage = () => {
                       Amount recipients receives
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -984,12 +997,12 @@ const LandingPage = () => {
               <div className="text-down">
                 <div className="step-title step-number">Step 2</div>
                 <div className="step-title">Add a recipient</div>
-                <div className="steps">
+                {/* <div className="steps">
                   <div className="step">
                     <div className="numbering">1.</div>
                     <div className="instruction">Add recipient</div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -1003,7 +1016,7 @@ const LandingPage = () => {
               <div className="text-down">
                 <div className="step-title step-number">Step 3</div>
                 <div className="step-title">Review Transaction</div>
-                <div className="steps">
+                {/* <div className="steps">
                   <div className="step">
                     <div className="numbering">1.</div>
                     <div className="instruction">Excellent exchange rate</div>
@@ -1018,7 +1031,7 @@ const LandingPage = () => {
                       Amount recipients receives
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -1032,7 +1045,7 @@ const LandingPage = () => {
               <div className="text-down">
                 <div className="step-title step-number">Step 4</div>
                 <div className="step-title">Transfer successful</div>
-                <div className="steps">
+                {/* <div className="steps">
                   <div className="step">
                     <div className="numbering">1.</div>
                     <div className="instruction">Excellent exchange rate</div>
@@ -1047,7 +1060,7 @@ const LandingPage = () => {
                       Amount recipients receives
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -1056,7 +1069,7 @@ const LandingPage = () => {
 
       <section className="compare" id="compare">
         <div className="section-inner">
-          <h2 className="heading">Compare exchange rates</h2>
+          <h3 className="heading">Compare exchange rates</h3>
 
           {/* <div className="btn-div">
                     <button className="compare-btn">
@@ -1087,7 +1100,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <h2 className="heading">How we compare with others</h2>
+          <h3 className="heading">How we compare with others</h3>
 
           <div className="table">
             <Table
@@ -1126,7 +1139,7 @@ const LandingPage = () => {
 
       <section className="happy-customers" id="happy-customers">
         <div className="section-inner">
-          <h2 className="heading">What our customers are saying</h2>
+          <h3 className="heading">What our customers are saying</h3>
 
           <div className="image-container">
             {/* <img src={asset('images', 'happy-customer-1.png')} className="happy-customer" alt="happy-customer" /> */}
