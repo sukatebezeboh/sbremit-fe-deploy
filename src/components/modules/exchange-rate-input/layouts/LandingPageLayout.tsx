@@ -110,17 +110,21 @@ const Field = styled.div`
 
 const LandingPageLayout = ({data, max, inputRef, setCountriesDropDownOpen, countriesDropDown, handleXInputChange, setChangedInput, countries, handleCountrySelection }: any) => {
   const transfer = useSelector((state: any)=>state.transfer);
+  console.log(data.value);
 
   return (
 
     <Field className="exchange-rate-input">
         <div className="text">
+            
             {data?.isSend ? 'YOU SEND': 'THEY GET'}
         </div>
 
         <div className="input-container">
             <div className="input-wrapper">
-                <input type="text" placeholder='0.00' className="exchange"  autoComplete='off' ref={inputRef} name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} value={(data.isSend ? (data?.value || "") : Math.round(data?.value)) || ""} onChange={(e) => {handleXInputChange(e, data); setChangedInput(); }} />
+                <input type="text" placeholder='0.00' className="exchange"  autoComplete='off' ref={inputRef} name={data?.currency +'_'+ window.location.href} key={data?.currency +'_'+ window.location.href} 
+                value={(data.isSend ? (data?.value || "") : Math.round(data?.value)) || ""} 
+                onChange={(e) => {handleXInputChange(e, data); setChangedInput(); }} />
                 <img src={asset('icons', 'rate-up-arrow.svg')} alt="" className="arrow" />
             </div>
             <div className="currency-selector-wrapper">

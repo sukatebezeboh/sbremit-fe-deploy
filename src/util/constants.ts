@@ -1600,6 +1600,7 @@ export const constants = {
   HOME: "home",
   ABOUT: "about",
   SUPPORT: "support",
+  BLOG: "blog",
   CONTACT: "contact",
   MOBILE_MONEY: "mobile_money",
   BANK_TRANSFER: "bank_transfer",

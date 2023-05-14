@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { checkForVerificationStatusToast, checkSkip, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, toastAction } from '../../../redux/actions/actions';
+import { checkForVerificationStatusToast, checkSkip, getRecipients, getUserTransactions, getUserTransactionsPaginated, refreshUserDetails, resetTransferData, toastAction } from '../../../redux/actions/actions';
 import { RECIPIENT, TRANSFER } from '../../../redux/actionTypes';
 import { constants, resources } from '../../../util/constants';
 import { paths } from '../../../util/paths';
@@ -38,6 +38,7 @@ const Dashboard = () => {
         });
         getRecipients();
         refreshUserDetails((user: any) => checkForVerificationStatusToast(user, history));
+        resetTransferData();
     }, [])
 
     const _setSelectedFilter = (status: string) => {

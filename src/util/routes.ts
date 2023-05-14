@@ -28,6 +28,12 @@ const TransferComplete = lazy(() => import('../components/pages/transfer-complet
 const EditProfile = lazy(() => import('../components/pages/edit-profile/EditProfile'));
 const Legal = lazy(() => import('../components/content-pages/support/legal-wrapper/Legal'));
 const About = lazy(() => import('../components/content-pages/about/About'));
+const Tutorial = lazy(() => import('../components/content-pages/about/tutorial-pages/tutorial/Tutorial'));
+const Cameroon = lazy(() => import('../components/content-pages/about/tutorial-pages/cameroon/Cameroon'));
+const Kenya = lazy(() => import('../components/content-pages/about/tutorial-pages/kenya/Kenya'));
+const Uganda = lazy(() => import('../components/content-pages/about/tutorial-pages/uganda/Uganda'));
+const Tanzania = lazy(() => import('../components/content-pages/about/tutorial-pages/tanzania/Tanzania'));
+// const Blog = lazy(() => import('../components/content-pages/blog/Blog'));
 const Support = lazy(() => import('../components/content-pages/support/support/Support'));
 const Contact = lazy(() => import('../components/content-pages/contact/Contact'));
 const ConfirmAccount = lazy(() => import('../components/pages/confirm-account/ConfirmAccount'));
@@ -85,6 +91,13 @@ export const Routing: IRoute[] = [
         exact: false,
         footerless: true
     },
+    // {
+    //     path: paths.BLOG,
+    //     component: Blog,
+    //     protected: false,
+    //     exact: true,
+    //     footerless: false
+    // },
     {
         path: paths.SUPPORT,
         component: Support,
@@ -94,6 +107,41 @@ export const Routing: IRoute[] = [
     {
         path: paths.ABOUT,
         component: About,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.TUTORIALS,
+        component: Tutorial,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.CAMEROON,
+        component: Cameroon,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.KENYA,
+        component: Kenya,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.UGANDA,
+        component: Uganda,
+        protected: false,
+        exact: true,
+        footerless: false
+    },
+    {
+        path: paths.TANZANIA,
+        component: Tanzania,
         protected: false,
         exact: true,
         footerless: false

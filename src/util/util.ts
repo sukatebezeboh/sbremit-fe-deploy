@@ -11,7 +11,9 @@ import { settings } from "./settings";
 require("dotenv").config();
 
 export const asset = (folder: string, name: string) => {
-  if (folder === "flags") {
+  if (name === "cameroon-flag.png") {
+    return `/assets/${folder}/${name}`;
+  } else if (folder === "flags") {
     return `https://flagcdn.com/h240/${name
       ?.toLowerCase()
       ?.replace(/\.([a-z]{3,4})$/, "")}.png`;
@@ -313,7 +315,6 @@ export const copyToClipBoard = (text: string) => {
   });
 };
 
-
 export const getPercentage = (
   needle: number | string,
   haystack: number | string,
@@ -336,9 +337,9 @@ export const useResizeObserver = (initial: any) => {
       }
     }).observe(document.querySelector("html") as Element);
   }, []);
-    //if ( Number(user?.referral?.newUserBonusActive) ) {
-    //    discount += (Number(referralSettings?.data?.referredUserDiscountValue))
-    //}
+  //if ( Number(user?.referral?.newUserBonusActive) ) {
+  //    discount += (Number(referralSettings?.data?.referredUserDiscountValue))
+  //}
 
   return [screenType];
 };
@@ -513,7 +514,7 @@ export const getCountriesFiltered = (payOutCountries: any) => {
     // "Niger",
     "Senegal",
     "Togo",
-    "Guinea" 
+    "Guinea",
   ];
 
   Object.keys(payOutCountries).forEach((c: any) => {
