@@ -305,11 +305,11 @@ const GetQuote = () => {
     }, [])
 
     const continueSending = () => {
-        if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
+        // if (constants.REMITTANCE_COUNTRIES_CODES.includes(toReceive?.countryCode)) {
             handleContinue()
-        } else {
-            setOpenComingSoonModal(true)
-        }
+        // } else {
+        //     setOpenComingSoonModal(true)
+        // }
     }
 
     const calculatorProps = {

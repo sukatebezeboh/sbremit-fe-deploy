@@ -11,6 +11,8 @@ import { isObjectNotEmpty } from '../../../util/util';
 import FormikFormObserver from '../formik-form-observer/FormikFormObserver';
 import PhoneNumberInput from '../parts/PhoneNumberInput';
 import Div from './NewRecipientMethod.css'
+import AzaRecipientForm from './aza-recipient-form/AzaRecipientForm';
+import { azaRecipientConfigs } from 'components/pages/recipient/Recipient.helper';
 
 const getRecipientCreateValidationSchema = ( transferMethod: string, isAccountNoStandAlone: boolean, onChangeCallback?:Function ) => {
     onChangeCallback?.();
@@ -109,6 +111,16 @@ function NewRecipientModal(props: any) {
         return (transfer.toReceive.countryCode === 'UG' || transfer.toReceive.countryCode === 'KE' || transfer.toReceive.countryCode === 'TZ');
     }
 
+    const isAzaRemittanceHandler = () => {
+        return transfer.remittanceHandler === remittanceHandlers.AZA_REMITTANCE_HANDLER;
+    }
+
+    const getAzaRecipientConfig = () => {
+        if (isAzaRemittanceHandler()) {
+            return azaRecipientConfigs[transfer?.toReceive?.currency?.toUpperCase()]?.[transfer?.transferMethod?.toLowerCase()]
+        }
+    }
+
     return (
         modalOpen && <Div>
             <div className="overlay">
@@ -137,7 +149,12 @@ function NewRecipientModal(props: any) {
                         </div>
                     )
                 }
-                <Formik
+
+                {
+                    isAzaRemittanceHandler() && getAzaRecipientConfig() ? 
+                    <AzaRecipientForm fields={getAzaRecipientConfig().fields} paymentMethodType={getAzaRecipientConfig().paymentMethodType} successCallbacks={{openModal, selectRecipient}}  /> 
+                    :
+                    <Formik
                     initialValues={{...initialValues}}
                     validationSchema={getRecipientCreateValidationSchema(`${transfer?.transferMethod}${transfer?.transferMethod === "bank_transfer" ? "_"+modeTransfer : ''}`, isPivotRecipientAccount(), () => {} )}
                     onSubmit={values => {
@@ -379,6 +396,8 @@ function NewRecipientModal(props: any) {
                         )}
                     }
                 </Formik>
+                }
+
             </div>
 
              {/* MOBILE NR MODAL */}

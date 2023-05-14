@@ -44,6 +44,12 @@ export const paths = {
     TERMS: "/support/legal/terms",
     SUPPORT: "/support",
     ABOUT: "/content/about",
+    // BLOG: "/content/blog",
+    TUTORIALS: "/content/about/tutorials",
+    CAMEROON: "/content/about/cameroon",
+    KENYA: "/content/about/kenya",
+    UGANDA: "/content/about/uganda",
+    TANZANIA: "/content/about/tanzania",
     CONTACT: "/content/contact",
     MOBILE_MONEY_RATE: "/mobile-money-rate",
 

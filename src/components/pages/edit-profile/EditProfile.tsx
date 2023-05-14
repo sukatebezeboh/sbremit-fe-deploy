@@ -22,6 +22,7 @@ import FormButton from "../../modules/form-button/FormButton";
 import NavBar from "../../modules/navbar/NavBar";
 import PageHeading from "../../modules/page-heading/PageHeading";
 import style from "./EditProfile.css";
+// import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput';
 
 const Body = style();
 
@@ -65,6 +66,17 @@ const EditProfile = () => {
     ...user?.profile,
   };
 
+  const userCountry = user?.profile?.location_country || "GB"
+
+  // console.log("user?.profile", user?.profile)//user?.profile?.location_country:"GB"
+
+
+/*
+location_country
+mobile
+phoneCode
+*/
+
   const postprocessHook = (feature: any) => {
     return feature.properties.address_line1;
   }
@@ -91,7 +103,7 @@ const EditProfile = () => {
     return value;
   }
 
-  const onSuggectionChange = (value: any) =>{
+  const onSuggectionChange = (value: any) => {
     return value;
   }
 
@@ -114,16 +126,16 @@ const EditProfile = () => {
           initialValues={{ ...initialValues }}
           validationSchema={EditProfileValidator}
           onSubmit={(values) => {
-            const {address1, ...valuesWithOutAddress1} = values;
+            const { address1, ...valuesWithOutAddress1 } = values;
 
             let newValues = valuesWithOutAddress1;
 
-            if(addressOne){
-              newValues = {...newValues, address1: addressOne};
+            if (addressOne) {
+              newValues = { ...newValues, address1: addressOne };
             }
 
-            if(addressTwo){
-              newValues = {...newValues, address2: addressTwo};
+            if (addressTwo) {
+              newValues = { ...newValues, address2: addressTwo };
             }
 
             editProfileAction(newValues, () =>
@@ -146,7 +158,7 @@ const EditProfile = () => {
                         <div
                           className={
                             touched.firstName &&
-                            errors.firstName
+                              errors.firstName
                               ? "form-error"
                               : ""
                           }>
@@ -169,7 +181,7 @@ const EditProfile = () => {
                         <div
                           className={
                             touched.lastName &&
-                            errors.lastName
+                              errors.lastName
                               ? "form-error"
                               : ""
                           }>
@@ -189,7 +201,7 @@ const EditProfile = () => {
                             )}
                         </div>
                       </div>
-                      <div className="grid-col-1-1 grid-gap-3 m-grid-1">
+
                         <div
                           className={
                             touched.mobile && errors.mobile
@@ -199,13 +211,40 @@ const EditProfile = () => {
                           <div className="mobile-head">
                             Mobile<i>*</i>
                           </div>
-                          <Field
+
+
+                          {/* <PhoneNumberInput
+                            Input={Field}
+                            Select={Field}
+                            isControlledComp={false}
+                            phoneCodeExternalProps={{
+                              as: 'select',
+                              required: true,
+                            }}
+                            phoneCodeName="phoneCode"
+                            countries={constants.COUNTRIES_PHONE_CODES}
                             name="mobile"
-                            type="text"
-                            className="phone-no"
                             placeholder="e.g 07967885952"
-                          />
-                          <Field
+                            showBorder={true}
+                            isNotCopy={true}
+                            isNotPaste={true}
+                          /> */}
+                          <div className="phone-container">
+                            <img
+                              src={`https://flagcdn.com/h24/${userCountry?.toLowerCase()}.png`}
+                              alt={userCountry + 'flag'}
+                            />
+                            <p>{user?.profile?.phoneCode}</p>
+                            <Field
+                              name="mobile"
+                              type="text"
+                              className="phone-no"
+                              placeholder="e.g 07967885952"
+                            />
+                          </div>
+
+
+                          {/* <Field
                             as="select"
                             className="phone-country-select"
                             name="phoneCode"
@@ -214,17 +253,14 @@ const EditProfile = () => {
                               (country) => (
                                 <option
                                   value={country.phoneCode}>
-                                  {country.phoneCode} - 
+                                  {country.phoneCode} -
                                   {country.name}
                                 </option>
                               ),
                             )}
-                          </Field>
+                          </Field> */}
                           {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
-                          <b className="green-txt phone-code-value">
-                            {" "}
-                            {values.phoneCode}{" "}
-                          </b>
+                          
                           {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
                         </div>
 
@@ -232,9 +268,9 @@ const EditProfile = () => {
                           onClick={handleDOBClick}
                           className={
                             (touched.day && errors.day) ||
-                            (touched.month &&
-                              errors.month) ||
-                            (touched.year && errors.year)
+                              (touched.month &&
+                                errors.month) ||
+                              (touched.year && errors.year)
                               ? "form-error m-grid-span-1-3"
                               : "m-grid-span-1-3"
                           }>
@@ -272,7 +308,7 @@ const EditProfile = () => {
                                 placeholder="month"
                                 value={
                                   Object.values(months)[
-                                    Number(values.month) - 1
+                                  Number(values.month) - 1
                                   ]
                                 }>
                                 {Object.entries(months).map(
@@ -298,7 +334,6 @@ const EditProfile = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
                       <div
                         className={
                           touched.gender && errors.gender
@@ -359,14 +394,14 @@ const EditProfile = () => {
                       <div
                         className={
                           touched.address1 &&
-                          errors.address1
+                            errors.address1
                             ? "form-error"
                             : ""
                         }>
                         <div>
                           Address line 1<i>*</i>
                         </div>
-                        <GeoapifyContext apiKey={process.env.REACT_APP_GEOPIFY_API_KEY}  name="address1">
+                        <GeoapifyContext apiKey={process.env.REACT_APP_GEOPIFY_API_KEY} name="address1">
                           <GeoapifyGeocoderAutocomplete
                             placeholder="Street name and no"
                             placeSelect={(value) => onPlaceSelect(value, setAddressOne, "address1")}
@@ -389,12 +424,12 @@ const EditProfile = () => {
                       <div
                         className={
                           touched.address2 &&
-                          errors.address2
+                            errors.address2
                             ? "form-error"
                             : ""
                         }>
                         <div>Address line 2</div>
-                        <GeoapifyContext apiKey={process.env.REACT_APP_GEOPIFY_API_KEY}  name="address2">
+                        <GeoapifyContext apiKey={process.env.REACT_APP_GEOPIFY_API_KEY} name="address2">
                           <GeoapifyGeocoderAutocomplete
                             placeholder="Apartment, suite, unit, building, floor"
                             placeSelect={(value) => onPlaceSelect(value, setAddressTwo, "address2")}
@@ -414,11 +449,10 @@ const EditProfile = () => {
                           )}
                       </div>
                       <div
-                        className={`city-town-div ${
-                          touched.city && errors.city
-                            ? "form-error"
-                            : ""
-                        }`}>
+                        className={`city-town-div ${touched.city && errors.city
+                          ? "form-error"
+                          : ""
+                          }`}>
                         <div>City / Town</div>
                         <Field name="city" type="text" />
                         {touched.city && errors.city && (
@@ -428,11 +462,10 @@ const EditProfile = () => {
                         )}
                       </div>
                       <div
-                        className={`state-input-div ${
-                          touched.state && errors.state
-                            ? "form-error"
-                            : ""
-                        }`}>
+                        className={`state-input-div ${touched.state && errors.state
+                          ? "form-error"
+                          : ""
+                          }`}>
                         <div>State</div>
                         <Field name="state" type="text" />
                         {touched.state && errors.state && (
@@ -441,13 +474,12 @@ const EditProfile = () => {
                           </div>
                         )}
                       </div>
-                      <div
-                        className={`state-input-div ${
-                          touched.location_country &&
+                      {/* <div
+                        className={`state-input-div ${touched.location_country &&
                           errors.location_country
-                            ? "form-error"
-                            : ""
-                        }`}>
+                          ? "form-error"
+                          : ""
+                          }`}>
                         <div>Location Country</div>
                         <Field
                           name="location_country"
@@ -472,7 +504,7 @@ const EditProfile = () => {
                               {errors.location_country}
                             </div>
                           )}
-                      </div>
+                      </div> */}
                       <div
                         className={
                           touched.zip && errors.zip

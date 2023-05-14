@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { FormEventHandler, useEffect, useState } from 'react'
 import { resources } from '../../../util/constants'
 import { settings } from '../../../util/settings'
 
 import sjcl from 'sjcl';
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from 'redux/actions/actions';
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from '../../../util/util';
+import endpoints from 'util/endpoints';
+import http from 'util/http';
 require('dotenv').config();
 
 interface IPaymentRedirect {
@@ -27,6 +29,12 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
     useEffect(() => {
         getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer(setUtcDateTime);
     }, [])
+
+    const continueToPayment = (e: any): any => {
+        e.target.mainamount.value = mainamount;
+        e.target.currencyiso3a.value = currencyiso3a;
+        return true;
+    }
 
     const stdefaultprofile = 'st_paymentcardonly'
     const orderReference = transactionId;
@@ -68,7 +76,7 @@ const PaymentRedirect = ({stprofile = 'default', currencyiso3a, mainamount, tran
 
     return (
         <span>
-            <form method="POST" action={resources.TRUST_PAYMENT_URL}  >
+            <form method="POST" action={resources.TRUST_PAYMENT_URL} onSubmit={(e) => continueToPayment(e)} >
                 <input type="hidden" name="sitereference" value={settings.TRUST_PAYMENT_SITE_REFERENCE} />
                 <input type="hidden" name="stprofile" value={stprofile} />
                 <input type="hidden" name="stdefaultprofile" value={stdefaultprofile} />

@@ -1,5 +1,52 @@
 import styled from "styled-components";
 
+export const SuccessfulTransaction = styled.main`
+  background-color: white;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+justify-content: center;
+align-items: center;
+  .success{
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    /* margin-top: 160px; */
+    background-color: #dcdcdc;
+    padding: 50px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    h2{
+        text-transform: capitalize;
+        margin: 15px 0px;
+        font-weight: 700;
+        font-size: 24px;
+        color: #3E947F;
+    }
+    p{
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 25px;
+        color: #424242;
+    }
+    @media screen and (max-width:500px) {
+        max-width: 320px;
+        h2{
+            font-size: 18px;
+            font-weight: 700;
+        }
+        p {
+            font-size: 12px;
+        }
+    }
+  }
+`;
+
 export default styled.div`
 .page-content {
     margin-top: 0px;

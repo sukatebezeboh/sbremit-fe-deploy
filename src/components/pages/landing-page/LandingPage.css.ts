@@ -6,16 +6,17 @@ export default styled.div`
         background: #007B5D;
         position: relative;
         overflow-x: clip;
+        width: 100%;
 
         &.mobile-nav-open {
             position: fixed;
             z-index: 1;
         }
         .main-inner {
-            width: 80%;
+            width: 100%;
             margin: auto;
             padding: 50px;
-            z-index: 1;
+            z-index: 100;
             position: relative;
             @media only screen and (max-width: 900px) {
                 width: 100%;
@@ -26,8 +27,11 @@ export default styled.div`
                 padding: 5px;
             }
             .nav {
-                display: grid;
-                grid-template-columns: 0fr 1fr 0fr;
+                //display: grid;
+                //grid-template-columns: 0fr 1fr 0fr;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
                 @media only screen and (max-width: 900px) {
                     grid-template-columns: 1fr 0fr;
                 }
@@ -58,10 +62,11 @@ export default styled.div`
                         display: none;
                     }
                     .content-links-wrapper {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr 1fr;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 30px;
                         width: fit-content;
-                        grid-gap: 30px;
                         margin: 10px auto;
                         .link {
                             font-weight: 500;
@@ -69,6 +74,57 @@ export default styled.div`
                             line-height: 20px;
                             color: #FFFFFF;
                             cursor: pointer;
+                            position: relative;
+
+                            .about-link{
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 0.5rem;
+
+                                .dropdown-icon{
+                                    font-weight: 800;
+                                    padding-top: 10%;
+                                }
+                            }
+                            .about-dropdown-links{
+                                margin-top: 1rem;
+                                display: flex;
+                                flex-direction: column;
+                                padding: 1rem;
+                                background: #3E947F;
+                                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                                position: absolute;
+                                width: fit-content;
+                                
+                                align-items: flex-start;
+                                border-radius: 5px;
+                                font-size: 16px;
+
+                                .dropdwon-link{
+                                    padding: 0.7rem 1rem;
+                                    padding-right: 4rem;
+                                    width: 100%;
+                                    text-align: left;
+                                    position: relative;
+                                    &:hover{
+                                        color: #D7D7D7;
+                                        .active-link-indicator{
+                                            position: absolute;
+                                            width: 35px;
+                                            height: 1px;
+                                            background: #D7D7D7;
+                                            bottom: 0;
+                                            margin-bottom: 5px;
+                                        }
+                                    }
+                                }
+
+                            }
+                            .hide-about-dropdown-links{
+                                display: none;
+                            }
+
                         }
                     }
                 }
@@ -153,8 +209,8 @@ export default styled.div`
                 background: #F0F5F4;
                 position: fixed;
                 left: 0;
-                height: 150vh;
-                z-index: 999999;
+                height: 100%;
+                z-index: 1000;
                 @media(max-width: 900px) {
                     top: 70px;
                 }
@@ -179,6 +235,37 @@ export default styled.div`
 
 
                                 color: #424242;
+                                width: 1000%;
+
+                                .mobile-about-link{
+                                    display:flex;
+                                    flex-direction: column;
+                                    width: 100%;
+
+                                    .mobile-about-link-text{
+                                        display:flex;
+                                        justify-content: space-between;
+                                        width: 100%;
+                                    }
+                                    .about-dropdown-links{
+                                        //border-top: 1px solid rgba(66, 66, 66, 0.17);
+                                        /* position: absolute; */
+                                        //margin: 1rem 0rem;
+                                        width: 100%;
+                                        padding-top: 1rem;
+
+                                        .dropdwon-link{
+                                            padding: 1rem 1rem;
+                                            border-top: 1px solid rgba(66, 66, 66, 0.17);
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                        }
+                                    }
+                                    .hide-about-dropdown-links{
+                                        display: none;
+                                    }
+                                }
                             }
 
                             .icon {
@@ -258,14 +345,14 @@ export default styled.div`
 
                         .hero-text {
                             font-weight: 400;
-                            font-size: 24px;
+                            font-size: 20px;
                             line-height: 40px;
                             letter-spacing: -0.01em;
                             color: #FFFFFF;
-                            width: 70%;
+                            width: 85%;
                             @media only screen and (max-width: 900px) {
                                 margin: auto;
-                                font-size: 16px;
+                                font-size: 14px;
                             }
                         }
 
@@ -379,6 +466,21 @@ export default styled.div`
                 margin: 8px auto;
             }
         }
+         h3.heading {
+            font-style: normal;
+            font-weight: 300;
+            font-size: 30px;
+            line-height: 64px;
+            color: #0A0E0D;
+            width: fit-content;
+            margin: 16px auto;
+            text-align: center;
+            @media only screen and (max-width: 900px) {
+                font-size: 28px;
+                margin: 8px auto;
+            }
+        }
+        
 
         .subheading {
             font-weight: 400;
@@ -400,7 +502,7 @@ export default styled.div`
                     padding: 25px;
                 }
                 .heading {
-
+                    text-align: center;
                 }
 
                 .subheading {
@@ -512,7 +614,7 @@ export default styled.div`
                 width: 80%;
                 margin: auto;
                 overflow: hidden;
-                z-index: 1;
+                z-index: 0;
                 position: relative;
                 @media only screen and (max-width: 900px) {
                     min-height: 140px;
@@ -535,7 +637,7 @@ export default styled.div`
                 text-align: center;
                 border-top: 1px solid lightgrey;
                 margin-top: -60px;
-                z-index: 2;
+                z-index: 0;
                 position: relative;
 
                 @media only screen and (max-width: 900px) {
@@ -622,12 +724,12 @@ export default styled.div`
 
                             .text-side {
 
-                                .title {
+                                h4 {
                                     /* font-family: 'Faro'; */
                                     font-style: normal;
                                     font-weight: 600;
                                     font-size: 24px;
-                                    line-height: 32px;
+                                    line-height: 0px;
                                     color: #5C7E75;
 
                                     @media only screen and (max-width: 900px) {
@@ -737,6 +839,7 @@ export default styled.div`
 
                 .heading {
                     margin-bottom: 35px;
+
                 }
 
                 .btn-div {

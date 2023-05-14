@@ -10,7 +10,8 @@ export const PAYMENT_GATEWAYS: {[x: string]: any} = {
         slug: 'interac',
         method: 'Instant Transfer',
         provider: 'Interac®',
-        label: (transaction: any) => `1.99% (${(1.99 * Number(transaction?.meta?.totalToPay) / 100).toFixed(2)} CAD)`,
+        // label: (transaction: any) => `1.99% (${(1.99 * Number(transaction?.meta?.totalToPay) / 100).toFixed(2)} CAD)`,
+        label: (transaction: any) => `0.00 CAD)`,
         maxLimit: 3000
     },
     'trust-payment': {

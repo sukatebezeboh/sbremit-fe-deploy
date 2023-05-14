@@ -23,13 +23,16 @@ const ExchangeRateInputWrapper = (props: any) =>{
         if (!country) return;
         const countriesList = appValues.countries;
         countriesList.EU = "European Union"
+
+        const currency = countries[country];
+        country = country.split("::")[0];
         const countryKey =  Object.keys(countriesList).find(key => countriesList[key] === country);
         if (data.isSend) {
             dispatch({
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toSend: {...data, currency: countries[country], image: countryKey, countryCode: countryKey},
+                    toSend: {...data, currency: currency, image: countryKey, countryCode: countryKey},
                 }
             })
         }
@@ -38,7 +41,7 @@ const ExchangeRateInputWrapper = (props: any) =>{
                 type: TRANSFER,
                 payload: {
                     ...transfer,
-                    toReceive: {...data, currency: countries[country], image: countryKey, countryCode: countryKey},
+                    toReceive: {...data, currency: currency, image: countryKey, countryCode: countryKey},
                 }
             })
         }
