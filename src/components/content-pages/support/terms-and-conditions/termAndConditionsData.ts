@@ -287,6 +287,26 @@ export const termAndConditionsData = [
                 text: [`Others might impose taxes, fees or charges on the Recipient, e.g. to withdraw the Payout Amount, a Service Provider may charge a withdrawal fee. We may offer you the option of sending additional funds to cover the cost of that fee. Whether you choose to pay that fee is entirely optional.`]
             },
             {
+                text: [`For business account holders, we may at our discretion and in agreement with you accept to make onward payment to your beneficiary pending settlement at an agreed date. By signing this agreement, you have agreed to settle any outstanding amount due within 24 hours of the amount becoming due.`]
+            },
+            {
+                text: [`We reserve the right to charge you a nominal administration fee of £1,000 if you do not comply with the terms of this agreement.`]
+            },
+            {
+                text: [`Without prejudice to its other rights, if payment of any invoice or outstanding amount becomes overdue, the company may:-`],
+                subcontent: [
+                    {
+                        text: [`Suspend your account and all related services`]
+                    },
+                    {
+                        text: [`Charge and recover from you a daily outstanding charge of £15 equivalence until the amount is settled in full.`]
+                    }
+                ]
+            },
+            {
+                text: [`Where unpaid invoices remain overdue and we are forced to take legal action to recover the outstanding sums, you shall be responsible for all costs and disbursements incurred by us on a full indemnity basis.`]
+            },
+            {
                 text: [`Both you and the Recipient will only act on your own behalf. You may not submit a Payment Instruction on behalf of someone else.`]
             },
             {
