@@ -4,7 +4,7 @@
         "target" : {
             "namespace": "android_app",
             "package_name": "com.sbremit",
-            "sha256_cert_fingerprints": [ "3E:70:E4:39:2B:41:45:15:25:92:24:D0:2D:F3:1A:02:82:37:5B:30:7B:7F:C4:9E:CC:69:17:14:19:45:BA:FE"] 
+            "sha256_cert_fingerprints": ["5B:98:AB:D1:97:51:50:63:A7:76:54:6A:C4:EC:6C:9B:4A:8D:CA:85:DF:98:AA:93:94:E1:B1:41:3A:45:DF:6E"] 
         }
     }
 ]
