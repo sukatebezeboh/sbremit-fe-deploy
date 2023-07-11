@@ -59,16 +59,30 @@ export const remittanceHandlersTransferCriteria: any[] = [
     transferMethod: "mobile_money",
   },
   {
+    handler: remittanceHandlers.PIVOT_REMITTANCE_HANDLER,
+    toReceive: {
+      currency: ["KES", "UGX", "TZS"],
+    },
+    transferMethod: "cash_pickup",
+  },
+  {
+    handler: remittanceHandlers.PIVOT_REMITTANCE_HANDLER,
+    toReceive: {
+      currency: ["KES", "UGX", "TZS"],
+    },
+    transferMethod: "bank_transfer",
+  },
+  {
     handler: remittanceHandlers.AZA_REMITTANCE_HANDLER,
     toReceive: {
-      currency: ["NGN", "GHS", "XOF", "XAF", "GNF", "KES", "UGX"],
+      currency: ["NGN", "GHS", "XOF", "GNF", "UGX"],
     },
     transferMethod: "mobile_money",
   },
   {
     handler: remittanceHandlers.AZA_REMITTANCE_HANDLER,
     toReceive: {
-      currency: ["NGN", "GHS", "XOF", "XAF", "ZAR", "KES", "USD"],
+      currency: ["NGN", "GHS", "XOF", "ZAR", "USD"],
     },
     transferMethod: "bank_transfer",
   },
