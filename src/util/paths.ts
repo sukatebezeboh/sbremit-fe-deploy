@@ -14,7 +14,7 @@ export const paths = {
     CONFIRM_ACCOUNT_EMAIL: "/email/confirm-account",
     CONFIRM_ACCOUNT: "/confirm-account",
     PASSWORD_RESET_EMAIL : "/email/password-reset",
-    RESET_PASSWORD: "/reset-password",
+    RESET_PASSWORD: "/reset-password/:token",
     DASHBOARD: "/dashboard",
     USER_SETTINGS: "/settings",
     PROFILE: "/profile",
