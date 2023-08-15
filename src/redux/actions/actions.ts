@@ -511,7 +511,8 @@ export const resetPasswordAction = (values: any, stage = 'email', linkTo?: any) 
         {
           password: values.password,
           confirmation: values.confirmation,
-          token: getQueryParam('token'),
+          token: window.location.pathname.replace('/reset-password/', ''),
+          // token: getQueryParam('token'),
         },
         {
           headers: { 'X-SERVICE-PROVIDER': serviceProvider },
@@ -1331,7 +1332,8 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
 }
 export const confirmAccountEmail = (redirectTo: Function) => {
   store.dispatch({ type: LOADING, payload: true })
-  const token = getQueryParam('token')
+  const token = window.location.pathname.replace('/confirm-account/', '')
+  // const token = getQueryParam('token')
   const phone = getQueryParam('phone');
   const returnRoute = getQueryParam('ret')
   if (!token) {
