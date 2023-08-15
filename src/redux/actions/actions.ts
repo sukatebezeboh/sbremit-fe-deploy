@@ -511,7 +511,8 @@ export const resetPasswordAction = (values: any, stage = 'email', linkTo?: any) 
         {
           password: values.password,
           confirmation: values.confirmation,
-          token: getQueryParam('token'),
+          token: window.location.pathname.replace('/reset-password/', ''),
+          // token: getQueryParam('token'),
         },
         {
           headers: { 'X-SERVICE-PROVIDER': serviceProvider },
