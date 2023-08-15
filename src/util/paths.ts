@@ -12,7 +12,7 @@ export const paths = {
     CONFIRM_ACCOUNT_SMS: "/sms/confirm-account",
     PASSWORD_RESET_COMPLETE: "/password-reset-complete",
     CONFIRM_ACCOUNT_EMAIL: "/email/confirm-account",
-    CONFIRM_ACCOUNT: "/confirm-account",
+    CONFIRM_ACCOUNT: "/confirm-account/:token",
     PASSWORD_RESET_EMAIL : "/email/password-reset",
     RESET_PASSWORD: "/reset-password",
     DASHBOARD: "/dashboard",
