@@ -4,6 +4,7 @@ export const SignUpValidator = Yup.object().shape({
     firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
     location_country: Yup.string().min(2, "Too short").max(2, "Too long").required("Required"),
+    dob: Yup.string().required("Required"),
     username: Yup.string().trim()
       .test('test-username', 'Enter Valid Phone/Email', 
         (value) => {

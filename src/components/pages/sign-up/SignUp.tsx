@@ -23,6 +23,12 @@ const ModalDiv = styled.div`
   }
 `
 
+const getEighteenYearsAgo = () => {
+  let now = new Date();
+  now.setFullYear(now.getFullYear() - 18);
+  return now.toLocaleDateString().split('/').reverse().join('-');
+}
+
 const SignUp = () => {
   const [passwordType, setPasswordType] = useState('password')
   const [pwIcon, setPwIcon] = useState('show')
@@ -79,6 +85,7 @@ const SignUp = () => {
     lastName: '',
     location_country: 'AD',
     username: '',
+    dob: '',
     password: '',
     mobile: '',
     checked: false,
@@ -87,7 +94,10 @@ const SignUp = () => {
 
   const handleSubmit = (values: any) => {
     values.clientIp = clientIp
-    dispatch(signUpAction(values))
+    dispatch(signUpAction({
+      ...values,
+      dob: values.dob.split('-').reverse().join('-')
+    }))
   }
 
   const handlePhoneNumberChange = (value: any, callback?: Function) => {
@@ -301,6 +311,27 @@ const { touched, errors, values } = formik;
                       )}
                     </div>
 
+                  </div>
+                  <div
+                    className={
+                      touched.dob && errors.dob ? 'form-error' : ''
+                    }
+                  >
+                    <div>
+                      Date of Birth<i>*</i>
+                    </div>
+                    <input
+                      onChange={formik.handleChange}
+                      value={values.dob}
+                      name="dob"
+                      type="date"
+                      max={getEighteenYearsAgo()}
+                    />
+                    {touched.dob && errors.dob && (
+                      <div className="form-error-message form-error-message-adjust-up">
+                        {errors.dob}
+                      </div>
+                    )}
                   </div>
                   <div
                     className={
