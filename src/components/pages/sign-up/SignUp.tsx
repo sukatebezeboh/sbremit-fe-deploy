@@ -326,11 +326,10 @@ const { touched, errors, values } = formik;
                       name="dob"
                       type="date"
                       max={getEighteenYearsAgo()}
-                      placeholder="Create your password"
                     />
-                    {touched.password && errors.password && (
+                    {touched.dob && errors.dob && (
                       <div className="form-error-message form-error-message-adjust-up">
-                        {errors.password}
+                        {errors.dob}
                       </div>
                     )}
                   </div>
