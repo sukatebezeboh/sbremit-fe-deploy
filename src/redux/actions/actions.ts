@@ -698,7 +698,7 @@ export const getUserTransactions = (callback?: Function) => {
   store.dispatch({ type: LOADING, payload: true })
   http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
     .then(res => {
-      let transactions: any[] = res.data.data?.sort((a: any, b: any) => {
+      let transactions: any[] = res.data.data?.collections?.sort((a: any, b: any) => {
         if (a.dateCreated < b.dateCreated) {
           return 1
         }
@@ -725,9 +725,9 @@ export const getUserTransactionsPaginated = (limit: number, offset: number, call
   const transfer = store.getState().transfer
 
   store.dispatch({ type: LOADING, payload: true })
-  http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id) + `?limit=${limit}&offset=${offset}&order=id%20DESC`)
+  http.get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id)) //  + `?limit=${limit}&offset=${offset}&order=id%20DESC`
     .then(res => {
-      let transactions: any[] = res.data.data?.sort((a: any, b: any) => {
+      let transactions: any[] = res.data.data?.collections?.sort((a: any, b: any) => {
         if (a.dateCreated < b.dateCreated) {
           return 1
         }
