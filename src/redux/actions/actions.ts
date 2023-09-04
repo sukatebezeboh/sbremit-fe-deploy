@@ -82,9 +82,6 @@ export const checkAuth = () => {
 export const signUpAction = async (data: any) => {
   const serviceProvider = env.X_SERVICE_PROVIDER
   store.dispatch({ type: SUBMITTING, payload: SIGN_UP })
-  if (!data.clientIp) {
-    data.clientIp = await getClientIp()
-  }
   axios
     .post(
       config.API_HOST + endpoints.SIGN_UP,
@@ -1897,23 +1894,11 @@ export const initiateInteracTransferPayment = (transferId: number) => {
     })
 }
 
-export const getClientIp = async (callback?: Function) => {
-  try {
-    const res = await axios.get('https://api.ipify.org?format=json')
-    callback?.(res?.data?.ip)
-    return res?.data?.ip;
-  } catch (e) {
-    return null
-  }
-
-}
-
 export const updateTransferWithPaymentGatewayCharge = async (transferId: string, paymentGateway: string, callback?: Function) => {
   const transfer = store.getState().transfer
-  const clientIp = await getClientIp()
   http.put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
     paymentGateway,
-    clientIp
+    clientIp: window.localStorage.getItem("IP_Address")
   })
     .then((res: any) => {
       if (res?.data?.status == 200) {
