@@ -42,6 +42,7 @@
     integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.2/plyr.css" />
+  <link rel="stylesheet" href="https://assets.complycube.com/web-sdk/v1/style.css"/>
 
   <title>SBRemit</title>
   <script type="application/ld+json">{  "@context": "https://schema.org",  "@type": "FinancialService",  "name": "SB Remit",  "image": "https://www.sbremit.com/assets//main-logo.svg",  "@id": "",  "url": "https://www.sbremit.com/",  "telephone": "03301334158",  "priceRange": "0",  "address": {    "@type": "PostalAddress",    "streetAddress": "78 Woodlands Wy.",    "addressLocality": "Leeds",    "postalCode": "LS14 2AW",    "addressCountry": "GB"  },  "geo": {    "@type": "GeoCoordinates",    "latitude": 53.83229249999999,    "longitude": -1.4492878  },  "openingHoursSpecification": [{    "@type": "OpeningHoursSpecification",    "dayOfWeek": [      "Monday",      "Tuesday",      "Wednesday",      "Thursday",      "Friday"    ],    "opens": "08:00",    "closes": "18:00"  },{    "@type": "OpeningHoursSpecification",    "dayOfWeek": "Saturday",    "opens": "09:00",    "closes": "16:00"  }] }</script>
@@ -89,8 +90,13 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   <script type="text/javascript" src="https://js.trulioo.com/latest/main.js"></script>
-  <script defer>
+  <script>
     window.TruliooClient = TruliooClient;
+  </script>
+
+  <script src="https://assets.complycube.com/web-sdk/v1/complycube.min.js"></script>
+  <script>
+    window.ComplyCube = ComplyCube;
   </script>
   <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 

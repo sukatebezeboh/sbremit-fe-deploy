@@ -107,10 +107,10 @@ const ProgressBar = (props) => {
                     </div>
                     <div className="point-labels">
                         <div className="label-1"> <div><Link to={paths.GET_QUOTE}>Get quote</Link></div></div>
-                        <div className="label-2"> <div>Verification</div> </div>
-                        <div className="label-3"> <div><Link to={point >=3 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
-                        <div className="label-4"> <div><Link to={point >=4 ? paths.REVIEW : "#"}>Review </Link></div></div>
-                        <div className="label-4"> <div><Link to={point >=3 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
+                        <div className="label-2"> <div><Link to={point >=2 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
+                        <div className="label-3"> <div><Link to={point >=3 ? paths.REVIEW : "#"}>Review </Link></div></div>
+                        <div className="label-4"> <div>Verification</div> </div>
+                        <div className="label-5"> <div><Link to={point >=5 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
                     </div>
                 </div>
         </Div>

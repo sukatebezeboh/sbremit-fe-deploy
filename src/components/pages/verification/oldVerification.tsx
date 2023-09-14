@@ -24,10 +24,6 @@ import VerificationMethod from "../../modules/verification-method/VerificationMe
 import Body from './Verification.css';
 import VerificationForm from "./VerificationForm";
 import { getQueryParam } from "util/util";
-import { ComplyCubeVerification } from "./ComplyCubeVerification";
-
-
-// INVALID VALID PENDING FAILED
 
 const Verification = () => {
   const history = useHistory();
@@ -87,14 +83,6 @@ const Verification = () => {
         history.push(paths.RECIPIENT);
     }
 
-    const subheading = method === constants.VERIFICATION_TYPE_IDENTITY
-    ? 'Enter information to verify your identity'
-    : method === constants.VERIFICATION_TYPE_DOCUMENT
-    ? 'Follow the prompts to verify your documents'
-    : 'Enter information to verify your identity'
-
-  const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
-
   return (
     <Body>
       <NavBar />
@@ -102,11 +90,18 @@ const Verification = () => {
       <div className="page-content">
         <PageHeading
           heading="Verification"
-          subheading={subheading}
+          subheading={
+            method === constants.VERIFICATION_TYPE_IDENTITY
+              ? 'Enter information to verify your identity'
+              : method === constants.VERIFICATION_TYPE_DOCUMENT
+              ? 'Follow the prompts to verify your documents'
+              : 'Enter information to verify your identity'
+          }
           back={paths.GET_QUOTE}
           callBack={() => history.push(paths.GET_QUOTE)}
         />
-        {!isFormVerified ? (
+        {method === constants.VERIFICATION_TYPE_IDENTITY || method === constants.VERIFICATION_TYPE_DOCUMENT_WITH_IDENTITY_PRECURSOR
+         ? (
           <Formik
             initialValues={{ ...initialValues }}
             validationSchema={userVerificationValidator}
@@ -120,11 +115,99 @@ const Verification = () => {
             <VerificationForm {...{ errors, touched, values, selectedCountry, setSelectedCountry }}/>
             )}
           </Formik>
-        ) : <p>Form verification Completed</p>}
-        <ComplyCubeVerification />
+        ) : method ===
+          constants.VERIFICATION_TYPE_DOCUMENT ? (
+          <>
+            <div id="trulioo-embedid"></div>
+            {showContinueButton && (
+              <div className="btns p-relative">
+                <span
+                  onClick={() =>
+                    refreshUserDetails((user: any) =>
+                      history.push(paths.GET_QUOTE),
+                    )
+                  }>
+                  Back
+                </span>{" "}
+                <button
+                  onClick={() =>
+                    refreshUserDetails((user: any) =>
+                      history.push(paths.RECIPIENT),
+                    )
+                  }>
+                  Continue
+                </button>{" "}
+              </div>
+            )}
+          </>
+        ) : (
+          <VerificationMethod
+            setMethod={setMethod}
+            method={method}
+          />
+        )}
       </div>
     </Body>
   );
 };
 
 export default Verification;
+
+// type = "WATCHLIST" "IDENTITY" "DOCUMENT"
+const config1 = {
+    "stages":[
+    "intro",
+    {
+       "name":"intro",
+       "options":{
+          "heading":"SB Remit identity verification",
+          "message":[
+             "Only UK Government issues Document Accepted",
+             "UK Passport, UK Drivers License, UK Biometrics resident permit (BRP)"
+          ],
+        //   "startButtonText":"Verify your UK identity":"Start Verification"
+       }
+    },
+    "userConsentCapture",
+    {
+       "name":"faceCapture",
+       "options":{
+          "mode":"video"
+       }
+    },
+    "completion"
+ ]}
+
+const config2 = {
+    "stages":[
+        "intro",
+        {
+           "name":"intro",
+           "options":{
+              "heading":"SB Remit identity verification",
+              "message":[
+                 "Only UK Government issues Document Accepted",
+                 "UK Passport, UK Drivers License, UK Biometrics resident permit (BRP)"
+              ],
+            //   "startButtonText":"Verify your UK identity":"Start Verification"
+           }
+        },
+        "userConsentCapture",
+        "documentCapture",
+        {
+           "name":"documentCapture",
+           "options":{
+            //   :true,
+              "documentTypes":{
+                 "passport":true,
+                 "driving_license":{"country":"GB"},
+                //  :true,
+                 "national_identity_card":{"country":"GB"},
+                //  :true,
+                 "residence_permit":{"country":"GB"}
+              }
+           }
+        },
+        "completion"
+     ]
+}
