@@ -15,15 +15,30 @@ const Review = () => {
     const history = useHistory();
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer)
+    const user = useSelector((state: any) => state.auth.user);
     const dispatch = useDispatch();
 
+
+    
     const handleConfirmClick = () => {
+        const userIsVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
         confirmTransfer(recipient, transfer, (id: string) => {
+            let pushUrl = paths.PAYMENT_METHOD + '?t=' + id
+            if(!userIsVerified){
+                pushUrl += '&unverified=true'
+                toastAction({
+                    show: true,
+                    type: "info",
+                    timeout: 15000,
+                    title: "Just a minute, please!",
+                    message: "We need to verify who you are to make this transaction"
+                })
+            }
             dispatch({
                 type: RESET_TRANSFER,
                 payload: undefined
             })
-            history.push(paths.PAYMENT_METHOD + '?t=' + id);
+            history.push(pushUrl);
         })
     }
 
@@ -54,7 +69,7 @@ const Review = () => {
         :
         <Body>
             <NavBar />
-            <ProgressBar point={3} />
+            <ProgressBar point={2} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Review" subheading="Review the details of your transfer" back={paths.RECIPIENT} />
@@ -64,7 +79,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push(paths.RECIPIENT)}>Back</span> <button onClick={()=>handleConfirmClick()}>Confirm</button> </div>
+                <div className="btns"><span onClick={()=>history.push(paths.RECIPIENT)}>Back</span> <button onClick={handleConfirmClick}>Confirm</button> </div>
             </div>
         </Body>
     )

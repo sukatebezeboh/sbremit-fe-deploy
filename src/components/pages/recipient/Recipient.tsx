@@ -105,22 +105,22 @@ const Recipient = () => {
             })
             return
         }
-        if (userIsVerified(user)) {
-        } else {
-            if (isUserFirstTransaction(user) && Number(toSend.total) < maxTransfersUnverified[toSend?.currency?.toUpperCase()]) {
-            }
-            else if (userHasReachedFinalVerificationStage(user)) {}
-            else {
-                toastAction({
-                    show: true,
-                    type: "info",
-                    timeout: 15000,
-                    title: "Just a minute, please!",
-                    message: "We need to verify who you are to make this transaction"
-                })
-                history.replace(paths.VERIFICATION)
-            }
-        }
+        // if (userIsVerified(user)) {
+        // } else {
+        //     if (isUserFirstTransaction(user) && Number(toSend.total) < maxTransfersUnverified[toSend?.currency?.toUpperCase()]) {
+        //     }
+        //     else if (userHasReachedFinalVerificationStage(user)) {}
+        //     else {
+                // toastAction({
+                //     show: true,
+                //     type: "info",
+                //     timeout: 15000,
+                //     title: "Just a minute, please!",
+                //     message: "We need to verify who you are to make this transaction"
+                // })
+                // history.replace(paths.VERIFICATION)
+        //     }
+        // }
     }
 
     useEffect(() => {
@@ -199,7 +199,7 @@ const Recipient = () => {
     return (
         <Body>
             <NavBar />
-            <ProgressBar point={2} />
+            <ProgressBar point={1} />
             <NewRecipientModal openModal={setOpenNRModal} modalOpen={openNRModal} selectRecipient={handleRecipientClick} recipientData={recipientDataForUpdate} />
 
             {transferDetailsModalOpen && (<div className="timeline-modal-container desktop-hide">

@@ -17,6 +17,7 @@ import  Body from './PaymentMethod.css'
 import PaymentOption from './payment-option/PaymentOption';
 import { PAYMENT_GATEWAYS } from './PaymentMethod.helper';
 import { themeNames } from 'components/modules/toast-factory/themes';
+import { PaymentVerificationModal } from './payment-option/PaymentVerificationModal';
 
 const PaymentMethod = () => {
     const history = useHistory();
@@ -28,8 +29,12 @@ const PaymentMethod = () => {
     const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
+    const unverified = getQueryParam('unverified');
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
     const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([PAYMENT_GATEWAYS['trust-payment']]);
+
+    console.log("transferId", transferId)
+    console.log("unverified", unverified)
 
     const dispatch = useDispatch()
 
@@ -162,96 +167,98 @@ const PaymentMethod = () => {
     }
 
     return (
-        <Body>
-
-            {
-                openConfirmModal === 'forCancel' &&
-                <ConfirmModal
-                    message="Are you sure you want to cancel this transfer?"
-                    onSave={{
-                        label: 'Yes, cancel',
-                        fn: () => handleCancel()
-                    }}
-                    onCancel={{
-                        label: "No, don't cancel",
-                        fn: () => setOpenConfirmModal(null)
-                    }}
-                /> 
-            }
-
-            {
-                openConfirmModal === 'forProceed' &&
-                <ConfirmModal
-                    message="Are you sure you want to procced?"
-                    onSave={{
-                        label: 'Yes, proceed',
-                        fn: ()=>handleProceed(transfer)
-                    }}
-                    onCancel={{
-                        label: "No, not yet",
-                        fn: () => setOpenConfirmModal(null)
-                    }}
-                />
-            }
-
-            <NavBar />
-            <ProgressBar point={4} />
-
-            <div className="page-content">
-                <div>
-                    <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
-                    <div className="green-txt desktop-hide view-td">View transfer details</div>
-                </div>
-                <div className="box-container details">
-                    <div>
-                        {
-                            paymentMethodOptions.map((paymentMethod: any) => (
-                                <PaymentOption 
-                                    key={paymentMethod.slug}
-                                    paymentMethod={paymentMethod}
-                                    isSelected={paymentMethod.slug === selected}
-                                    selectPaymentMethod={selectPaymentMethod}
-                                    label={paymentMethod.label(transaction)}
-                                />
-                            ))
-                        }
-                            <div>
-                                <div className="pls-note">Please note</div>
-                                <div className="list">
-                                    <ul>
-                                        <li>Please ensure the <span className="green-txt"> payment details</span> of your recipient are &nbsp; correct. <span className="red-txt"> Any error after this step cannot be corrected</span> <span className="green-txt"><Link to={paths.RECIPIENT + "?t=" + transferId}>Edit recipient details</Link> </span></li>
-                                        <li>If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        { 
-                            <div className="box-container details">
-                                <RecipientDetailsBox hideType="mobile-hide" green_mamba />
-                                <RecipientDetailsBox hideType="desktop-hide" />
-                            </div>
-                        }
-                    </div>
-                    <div className="mobile-hide">
-                        <TransferDetailsBox transferId={transferId} />
-                    </div>
-                </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
-                 {
-                    selected === 'trust-payment' ?
-                    <PaymentRedirect 
-                        mainamount = {getTotalToPay()} 
-                        currencyiso3a = {transaction?.originCurrency} 
-                        transactionId={transaction?.meta?.transactionId} 
-                        transferId={transferId} 
-                    />
-                    :
-                    <span> 
-                        <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> 
-                    </span>
+        <>
+            <PaymentVerificationModal />
+            <Body>
+                {
+                    openConfirmModal === 'forCancel' &&
+                    <ConfirmModal
+                        message="Are you sure you want to cancel this transfer?"
+                        onSave={{
+                            label: 'Yes, cancel',
+                            fn: () => handleCancel()
+                        }}
+                        onCancel={{
+                            label: "No, don't cancel",
+                            fn: () => setOpenConfirmModal(null)
+                        }}
+                    /> 
                 }
+
+                {
+                    openConfirmModal === 'forProceed' &&
+                    <ConfirmModal
+                        message="Are you sure you want to procced?"
+                        onSave={{
+                            label: 'Yes, proceed',
+                            fn: ()=>handleProceed(transfer)
+                        }}
+                        onCancel={{
+                            label: "No, not yet",
+                            fn: () => setOpenConfirmModal(null)
+                        }}
+                    />
+                }
+
+                <NavBar />
+                <ProgressBar point={4} />
+
+                <div className="page-content">
+                    <div>
+                        <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
+                        <div className="green-txt desktop-hide view-td">View transfer details</div>
+                    </div>
+                    <div className="box-container details">
+                        <div>
+                            {
+                                paymentMethodOptions.map((paymentMethod: any) => (
+                                    <PaymentOption 
+                                        key={paymentMethod.slug}
+                                        paymentMethod={paymentMethod}
+                                        isSelected={paymentMethod.slug === selected}
+                                        selectPaymentMethod={selectPaymentMethod}
+                                        label={paymentMethod.label(transaction)}
+                                    />
+                                ))
+                            }
+                                <div>
+                                    <div className="pls-note">Please note</div>
+                                    <div className="list">
+                                        <ul>
+                                            <li>Please ensure the <span className="green-txt"> payment details</span> of your recipient are &nbsp; correct. <span className="red-txt"> Any error after this step cannot be corrected</span> <span className="green-txt"><Link to={paths.RECIPIENT + "?t=" + transferId}>Edit recipient details</Link> </span></li>
+                                            <li>If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            { 
+                                <div className="box-container details">
+                                    <RecipientDetailsBox hideType="mobile-hide" green_mamba />
+                                    <RecipientDetailsBox hideType="desktop-hide" />
+                                </div>
+                            }
+                        </div>
+                        <div className="mobile-hide">
+                            <TransferDetailsBox transferId={transferId} />
+                        </div>
+                    </div>
+                    <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
+                    {
+                        selected === 'trust-payment' ?
+                        <PaymentRedirect 
+                            mainamount = {getTotalToPay()} 
+                            currencyiso3a = {transaction?.originCurrency} 
+                            transactionId={transaction?.meta?.transactionId} 
+                            transferId={transferId} 
+                        />
+                        :
+                        <span> 
+                            <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> 
+                        </span>
+                    }
+                    </div>
                 </div>
-            </div>
-        </Body>
+            </Body>
+        </>
     )
 }
 
