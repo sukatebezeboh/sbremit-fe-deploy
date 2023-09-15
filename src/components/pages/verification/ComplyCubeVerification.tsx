@@ -11,10 +11,20 @@ export const ComplyCubeVerification = () => {
     const user = useSelector((state: any) => state.auth.user);
     const [complyCubeToken, setComplyCubeToken] = useState('')
 
-    const idVerification = user.verifications.find((method: { type: string; }) => method.type === "IDENTITY")
+    console.log("ComplyCubeVerification - user", user.verifications)
+
+    let verificationList = []
+
+    if(user?.verifications){
+        for (const key in user.verifications){
+            verificationList.push(user.verifications[key])
+        }
+    }
+
+    const idVerification = verificationList?.find((method: { type: string; }) => method.type === "IDENTITY")
     const invalidIdVerification = idVerification && (idVerification.status === 'PENDING')
 
-    const documentVerification = user.verifications.find((method: { type: string; }) => method.type === "DOCUMENT")
+    const documentVerification = verificationList?.find((method: { type: string; }) => method.type === "DOCUMENT")
     const invalidDocumentVerification = documentVerification && (documentVerification.status === 'PENDING')
 
     const verificatiionCompleted = !invalidIdVerification && !invalidDocumentVerification
@@ -42,6 +52,7 @@ export const ComplyCubeVerification = () => {
             }
         })
     }
+
     if(invalidDocumentVerification){
         stages.push({
             name: "documentCapture",
@@ -55,6 +66,7 @@ export const ComplyCubeVerification = () => {
             },
         })
     }
+    
 
     useEffect(() => {
         if(!verificatiionCompleted){
@@ -75,10 +87,10 @@ export const ComplyCubeVerification = () => {
             token: complyCubeToken,
             stages,
             onComplete: function(data: any) {
-                // console.log("Capture complete", data)
+                console.log("Capture complete", data)
                 if(data?.documentCapture){
                     http.put('/verification-token-experience',{
-                        verficationId: documentVerification.id,
+                        verificationId: documentVerification.id,
                         verificationData: data?.documentCapture
                     })
                     .then(() => {})
@@ -86,7 +98,7 @@ export const ComplyCubeVerification = () => {
                 }
                 if(data?.faceCapture){
                     http.put('/verification-token-experience',{
-                        verficationId: idVerification.id,
+                        verificationId: idVerification.id,
                         verificationData: data?.faceCapture
                     })
                     .then(() => {})

@@ -105,6 +105,10 @@ const NavBar = () => {
                                 <div><Link to="/profile">View Profile</Link></div>
                          </div>
                          <div className="notif-option">
+                                <div> <img src={asset('icons', 'user.svg')} alt="user icon"/> </div>
+                                <div><Link to="/verification">Verification</Link></div>
+                         </div>
+                         <div className="notif-option">
                                 <div> <img src={asset('icons', 'prev.svg')} alt="dashboard"/> </div>
                                 <div><Link to={paths.DASHBOARD}>Dashboard</Link></div>
                          </div>
