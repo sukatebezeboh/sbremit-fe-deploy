@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { refreshUserDetails, toastAction } from 'redux/actions/actions';
 import http from 'util/http';
 
-// INVALID VALID PENDING FAILED
+// INVALID VALID PENDING FAILED ATTEMPTED
 
 // "phoneCode": null,
 //             "state": null,
@@ -27,7 +28,7 @@ export const ComplyCubeVerification = () => {
     const documentVerification = verificationList?.find((method: { type: string; }) => method.type === "DOCUMENT")
     const invalidDocumentVerification = documentVerification && (documentVerification.status === 'PENDING')
 
-    const verificatiionCompleted = !invalidIdVerification && !invalidDocumentVerification
+    const verificationCompleted = !invalidIdVerification && !invalidDocumentVerification
 
     const stages: any =[
     {
@@ -48,20 +49,22 @@ export const ComplyCubeVerification = () => {
         stages.push({
             name: 'faceCapture',
             options: {
-                mode: 'video'
+                mode: 'photo'
             }
         })
     }
 
+
     if(invalidDocumentVerification){
+        const documentCountry = {country: user?.profile?.location_country} // "GB"
         stages.push({
             name: "documentCapture",
             options: {
                 documentTypes: {
-                passport: {country: "GB"},
-                driving_license: {country: "GB"},
-                national_identity_card: {country: "GB"},
-                residence_permit: {country: "GB"},
+                passport: documentCountry,
+                driving_license: documentCountry,
+                national_identity_card: documentCountry,
+                residence_permit: documentCountry,
                 },
             },
         })
@@ -69,7 +72,7 @@ export const ComplyCubeVerification = () => {
     
 
     useEffect(() => {
-        if(!verificatiionCompleted){
+        if(!verificationCompleted){
             // fetch Token /verification-token-experience
             http.get('/verification-token-experience') // data.token
             .then(res => {
@@ -82,28 +85,46 @@ export const ComplyCubeVerification = () => {
     }, [])
 
     const openComplyCube = () => {
+        console.log(stages)
         const newWindow: any = window;
         const complycube = newWindow?.ComplyCube.mount({
             token: complyCubeToken,
             stages,
             onComplete: function(data: any) {
                 console.log("Capture complete", data)
+                const listOfData = []
                 if(data?.documentCapture){
-                    http.put('/verification-token-experience',{
-                        verificationId: documentVerification.id,
-                        verificationData: data?.documentCapture
-                    })
-                    .then(() => {})
-                    .catch(() => {})
+                    listOfData.push(
+                        http.put('/verification-token-experience',{
+                            verificationId: documentVerification.id,
+                            verificationData: data
+                            // verificationData: data?.documentCapture
+                        })
+                    )
                 }
                 if(data?.faceCapture){
-                    http.put('/verification-token-experience',{
-                        verificationId: idVerification.id,
-                        verificationData: data?.faceCapture
-                    })
+                    listOfData.push(
+                        http.put('/verification-token-experience',{
+                            verificationId: idVerification.id,
+                            verificationData: data
+                            // verificationData: data?.faceCapture
+                        })
+                    )
+                }
+                Promise.all(listOfData)
                     .then(() => {})
                     .catch(() => {})
-                }
+                    .finally(() => {
+                        refreshUserDetails()
+                        complycube.updateSettings({ isModalOpen: false })
+                        toastAction({
+                            show: true,
+                            type: "info",
+                            timeout: 10000,
+                            title: "Congratulations!",
+                            message: "You have Completedyour KYC"
+                        })
+                    })
                 /**
                  {
                     documentCapture: {documentId: '6501d77d9f98560008d03834', documentType: 'driving_license'}
@@ -117,7 +138,7 @@ export const ComplyCubeVerification = () => {
     }
 
 
-    if(verificatiionCompleted){
+    if(verificationCompleted){
         return <p>Identity & Document verification Completed</p>
     }
 

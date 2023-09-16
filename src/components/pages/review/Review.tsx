@@ -15,30 +15,17 @@ const Review = () => {
     const history = useHistory();
     const recipient = useSelector((state: any)=>state.recipients.recipient)
     const transfer = useSelector((state: any)=>state.transfer)
-    const user = useSelector((state: any) => state.auth.user);
     const dispatch = useDispatch();
 
 
     
     const handleConfirmClick = () => {
-        const userIsVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
         confirmTransfer(recipient, transfer, (id: string) => {
-            let pushUrl = paths.PAYMENT_METHOD + '?t=' + id
-            if(!userIsVerified){
-                pushUrl += '&unverified=true'
-                toastAction({
-                    show: true,
-                    type: "info",
-                    timeout: 15000,
-                    title: "Just a minute, please!",
-                    message: "We need to verify who you are to make this transaction"
-                })
-            }
             dispatch({
                 type: RESET_TRANSFER,
                 payload: undefined
             })
-            history.push(pushUrl);
+            history.push(paths.PAYMENT_METHOD + '?t=' + id);
         })
     }
 
