@@ -59,7 +59,7 @@ const Div = styled.div`
                 }
             }
         }
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     margin-top: 60px;
     .timeline {
         margin-bottom: 0px;

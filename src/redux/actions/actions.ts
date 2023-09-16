@@ -1226,6 +1226,7 @@ export const userVerificationAction = (values: any, callback: Function, skipVeri
     .then(res => {
       if (res.data.status === "200") {
         store.dispatch({ type: LOADING, payload: false })
+        refreshUserDetails()
         callback?.()
       }
       else {

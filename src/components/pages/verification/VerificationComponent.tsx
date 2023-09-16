@@ -54,10 +54,10 @@ export const VerificationComponent = () => {
   return (
     <Body>
         <div className="page-content">
-          <PageHeading
+          {/* <PageHeading
             heading="Verification"
             subheading={subheading}
-          />
+          /> */}
           {!isFormVerified ? (
             <Formik
               initialValues={{ ...initialValues }}

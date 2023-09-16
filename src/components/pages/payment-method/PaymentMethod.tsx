@@ -29,12 +29,12 @@ const PaymentMethod = () => {
     const transaction = transfer?.transactionDetails;
     const [openConfirmModal, setOpenConfirmModal] = useState<null | 'forCancel' | 'forProceed'>(null);
     const transferId = getQueryParam('t');
-    const unverified = getQueryParam('unverified');
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
     const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([PAYMENT_GATEWAYS['trust-payment']]);
 
+    const [showVerificationModal, setShowVerificationModal] = useState(false)
+
     console.log("transferId", transferId)
-    console.log("unverified", unverified)
 
     const dispatch = useDispatch()
 
@@ -68,6 +68,36 @@ const PaymentMethod = () => {
         cancelTransfer(() => history.push(paths.DASHBOARD))
     }
 
+    ///////////////////////// Verification Logic Start /////////////////////////
+
+    const userIsVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+    let verificationList = []
+
+    if(user?.verifications){
+        for (const key in user.verifications){
+            verificationList.push(user.verifications[key])
+        }
+    }
+
+    const idVerification = verificationList?.find((method: { type: string; }) => method.type === "IDENTITY")
+    const invalidIdVerification = idVerification && (idVerification.status === 'PENDING')
+
+    const documentVerification = verificationList?.find((method: { type: string; }) => method.type === "DOCUMENT")
+    const invalidDocumentVerification = documentVerification && (documentVerification.status === 'PENDING')
+
+    const verificationCompleted = !invalidIdVerification && !invalidDocumentVerification
+    useEffect(() => {
+        if(!userIsVerified || !verificationCompleted){
+            setShowVerificationModal(true)
+        }else {
+            setShowVerificationModal(false)
+        }
+
+    }, [userIsVerified, verificationCompleted])
+
+    ///////////////////////// Verification Logic End /////////////////////////
+    
+
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
     }, [transferId])
@@ -100,16 +130,16 @@ const PaymentMethod = () => {
     }, [recipient])
 
     const autoSelectPaymentMethod = () => {
-        if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
-            toastAction({
-                show: true,
-                type: "info",
-                timeout: 15000,
-                title: "Just a minute, please!",
-                message: "We need to verify who you are to make this transaction"
-            })
-            history.push(paths.VERIFICATION)
-        }
+        // if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
+        //     toastAction({
+        //         show: true,
+        //         type: "info",
+        //         timeout: 15000,
+        //         title: "Just a minute, please!",
+        //         message: "We need to verify who you are to make this transaction"
+        //     })
+        //     // history.push(paths.VERIFICATION)
+        // }
         if (transaction?.originCurrency === 'GBP') {
             selectPaymentMethod('truelayer')
             PAYMENT_GATEWAYS['trust-payment'].isRecommended = false
@@ -168,7 +198,7 @@ const PaymentMethod = () => {
 
     return (
         <>
-            <PaymentVerificationModal />
+            {showVerificationModal ? <PaymentVerificationModal closeModal={() => setShowVerificationModal(false)} /> : null}
             <Body>
                 {
                     openConfirmModal === 'forCancel' &&
