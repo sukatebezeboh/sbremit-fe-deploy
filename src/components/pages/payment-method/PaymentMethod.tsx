@@ -234,10 +234,14 @@ const PaymentMethod = () => {
                 <ProgressBar point={4} />
 
                 <div className="page-content">
-                    <div>
-                        <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
-                        <div className="green-txt desktop-hide view-td">View transfer details</div>
-                    </div>
+                    {
+                        !showVerificationModal && (
+                            <div>
+                                <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
+                                <div className="green-txt desktop-hide view-td">View transfer details</div>
+                            </div>
+                        )
+                    }
                     <div className="box-container details">
                         <div>
                             {

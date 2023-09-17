@@ -52,27 +52,25 @@ export const VerificationComponent = () => {
   const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
 
   return (
-    <Body>
-        <div className="page-content">
-          {/* <PageHeading
-            heading="Verification"
-            subheading={subheading}
-          /> */}
-          {!isFormVerified ? (
-            <Formik
-              initialValues={{ ...initialValues }}
-              validationSchema={userVerificationValidator}
-              onSubmit={(values) => {
-                userVerificationAction(values, () => {})
-              }}
-            >
-              {({ errors, touched, values }: any) => (
-              <VerificationForm {...{ errors, touched, values, selectedCountry, setSelectedCountry }}/>
-              )}
-            </Formik>
-          ) : <p>Form verification Completed</p>}
-          <ComplyCubeVerification />
-        </div>
-    </Body>
+    <>
+      <Body>
+          <div className="page-content">
+            {!isFormVerified ? (
+              <Formik
+                initialValues={{ ...initialValues }}
+                validationSchema={userVerificationValidator}
+                onSubmit={(values) => {
+                  userVerificationAction(values, () => {})
+                }}
+              >
+                {({ errors, touched, values }: any) => (
+                <VerificationForm {...{ errors, touched, values, selectedCountry, setSelectedCountry }}/>
+                )}
+              </Formik>
+            ) : <p>Form verification Completed</p>}
+          </div>
+      </Body>
+      <ComplyCubeVerification />
+    </>
   );
 };

@@ -12,7 +12,10 @@ export const ComplyCubeVerification = () => {
     const user = useSelector((state: any) => state.auth.user);
     const [complyCubeToken, setComplyCubeToken] = useState('')
 
-    console.log("ComplyCubeVerification - user", user.verifications)
+    const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+
+    const location_country = user?.profile?.location_country
+    const userCountry = location_country === "GB" ? "UK" : location_country
 
     let verificationList = []
 
@@ -36,10 +39,10 @@ export const ComplyCubeVerification = () => {
         options: {
         heading: "SB Remit identity verification",
         message: [
-            "Only UK Government issues Document Accepted",
-            "UK Passport, UK Drivers License, UK Biometrics resident permit (BRP)",
+            `Only ${userCountry} Government issues Document Accepted`,
+            `${userCountry} Passport, ${userCountry} Drivers License, ${userCountry} Biometrics resident permit (BRP)`,
         ],
-        startButtonText: "Verify your UK identity"
+        startButtonText: `Verify your ${userCountry} identity`
         },
     },
     "userConsentCapture",
@@ -72,6 +75,12 @@ export const ComplyCubeVerification = () => {
     
 
     useEffect(() => {
+        if(isFormVerified && !verificationCompleted && complyCubeToken){
+            openComplyCube()
+        }
+    }, [isFormVerified, verificationCompleted, complyCubeToken])
+
+    useEffect(() => {
         if(!verificationCompleted){
             // fetch Token /verification-token-experience
             http.get('/verification-token-experience') // data.token
@@ -85,7 +94,6 @@ export const ComplyCubeVerification = () => {
     }, [])
 
     const openComplyCube = () => {
-        console.log(stages)
         const newWindow: any = window;
         const complycube = newWindow?.ComplyCube.mount({
             token: complyCubeToken,
@@ -122,7 +130,7 @@ export const ComplyCubeVerification = () => {
                             type: "info",
                             timeout: 10000,
                             title: "Congratulations!",
-                            message: "You have Completedyour KYC"
+                            message: "You have Verificaion request is in progress"
                         })
                     })
                 /**
@@ -146,12 +154,5 @@ export const ComplyCubeVerification = () => {
         return null
     }
 
-    return (
-        <>
-            <div id="complycube-mount"></div>
-            <button onClick={openComplyCube}>
-                Open ComplyCube
-            </button>
-        </>
-    )
+    return <div id="complycube-mount"></div>
 }
