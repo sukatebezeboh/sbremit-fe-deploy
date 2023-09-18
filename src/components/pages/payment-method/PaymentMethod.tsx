@@ -17,6 +17,7 @@ import  Body from './PaymentMethod.css'
 import PaymentOption from './payment-option/PaymentOption';
 import { PAYMENT_GATEWAYS } from './PaymentMethod.helper';
 import { themeNames } from 'components/modules/toast-factory/themes';
+import { PaymentVerificationModal } from './payment-option/PaymentVerificationModal';
 
 const PaymentMethod = () => {
     const history = useHistory();
@@ -30,6 +31,10 @@ const PaymentMethod = () => {
     const transferId = getQueryParam('t');
     const recipient = useMemo(() => recipients.find((r:any) => r.id === transaction?.recipientId ), [recipients, transaction])
     const [ paymentMethodOptions, setPaymentMethodOptions ] = useState<any>([PAYMENT_GATEWAYS['trust-payment']]);
+
+    const [showVerificationModal, setShowVerificationModal] = useState(false)
+
+    console.log("transferId", transferId)
 
     const dispatch = useDispatch()
 
@@ -63,6 +68,36 @@ const PaymentMethod = () => {
         cancelTransfer(() => history.push(paths.DASHBOARD))
     }
 
+    ///////////////////////// Verification Logic Start /////////////////////////
+
+    const userIsVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+    let verificationList = []
+
+    if(user?.verifications){
+        for (const key in user.verifications){
+            verificationList.push(user.verifications[key])
+        }
+    }
+
+    const idVerification = verificationList?.find((method: { type: string; }) => method.type === "IDENTITY")
+    const invalidIdVerification = idVerification && (idVerification.status === 'PENDING')
+
+    const documentVerification = verificationList?.find((method: { type: string; }) => method.type === "DOCUMENT")
+    const invalidDocumentVerification = documentVerification && (documentVerification.status === 'PENDING')
+
+    const verificationCompleted = !invalidIdVerification && !invalidDocumentVerification
+    useEffect(() => {
+        if(!userIsVerified || !verificationCompleted){
+            setShowVerificationModal(true)
+        }else {
+            setShowVerificationModal(false)
+        }
+
+    }, [userIsVerified, verificationCompleted])
+
+    ///////////////////////// Verification Logic End /////////////////////////
+    
+
     useEffect(() => {
         getTransactionDetails(()=>{}, transferId);
     }, [transferId])
@@ -95,16 +130,16 @@ const PaymentMethod = () => {
     }, [recipient])
 
     const autoSelectPaymentMethod = () => {
-        if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
-            toastAction({
-                show: true,
-                type: "info",
-                timeout: 15000,
-                title: "Just a minute, please!",
-                message: "We need to verify who you are to make this transaction"
-            })
-            history.push(paths.VERIFICATION)
-        }
+        // if (!userIsVerified(user) && !isUserFirstTransaction(user) && !userHasReachedFinalVerificationStage(user)) {
+        //     toastAction({
+        //         show: true,
+        //         type: "info",
+        //         timeout: 15000,
+        //         title: "Just a minute, please!",
+        //         message: "We need to verify who you are to make this transaction"
+        //     })
+        //     // history.push(paths.VERIFICATION)
+        // }
         if (transaction?.originCurrency === 'GBP') {
             selectPaymentMethod('truelayer')
             PAYMENT_GATEWAYS['trust-payment'].isRecommended = false
@@ -162,96 +197,102 @@ const PaymentMethod = () => {
     }
 
     return (
-        <Body>
-
-            {
-                openConfirmModal === 'forCancel' &&
-                <ConfirmModal
-                    message="Are you sure you want to cancel this transfer?"
-                    onSave={{
-                        label: 'Yes, cancel',
-                        fn: () => handleCancel()
-                    }}
-                    onCancel={{
-                        label: "No, don't cancel",
-                        fn: () => setOpenConfirmModal(null)
-                    }}
-                /> 
-            }
-
-            {
-                openConfirmModal === 'forProceed' &&
-                <ConfirmModal
-                    message="Are you sure you want to procced?"
-                    onSave={{
-                        label: 'Yes, proceed',
-                        fn: ()=>handleProceed(transfer)
-                    }}
-                    onCancel={{
-                        label: "No, not yet",
-                        fn: () => setOpenConfirmModal(null)
-                    }}
-                />
-            }
-
-            <NavBar />
-            <ProgressBar point={4} />
-
-            <div className="page-content">
-                <div>
-                    <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
-                    <div className="green-txt desktop-hide view-td">View transfer details</div>
-                </div>
-                <div className="box-container details">
-                    <div>
-                        {
-                            paymentMethodOptions.map((paymentMethod: any) => (
-                                <PaymentOption 
-                                    key={paymentMethod.slug}
-                                    paymentMethod={paymentMethod}
-                                    isSelected={paymentMethod.slug === selected}
-                                    selectPaymentMethod={selectPaymentMethod}
-                                    label={paymentMethod.label(transaction)}
-                                />
-                            ))
-                        }
-                            <div>
-                                <div className="pls-note">Please note</div>
-                                <div className="list">
-                                    <ul>
-                                        <li>Please ensure the <span className="green-txt"> payment details</span> of your recipient are &nbsp; correct. <span className="red-txt"> Any error after this step cannot be corrected</span> <span className="green-txt"><Link to={paths.RECIPIENT + "?t=" + transferId}>Edit recipient details</Link> </span></li>
-                                        <li>If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        { 
-                            <div className="box-container details">
-                                <RecipientDetailsBox hideType="mobile-hide" green_mamba />
-                                <RecipientDetailsBox hideType="desktop-hide" />
-                            </div>
-                        }
-                    </div>
-                    <div className="mobile-hide">
-                        <TransferDetailsBox transferId={transferId} />
-                    </div>
-                </div>
-                <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
-                 {
-                    selected === 'trust-payment' ?
-                    <PaymentRedirect 
-                        mainamount = {getTotalToPay()} 
-                        currencyiso3a = {transaction?.originCurrency} 
-                        transactionId={transaction?.meta?.transactionId} 
-                        transferId={transferId} 
-                    />
-                    :
-                    <span> 
-                        <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> 
-                    </span>
+        <>
+            {showVerificationModal ? <PaymentVerificationModal closeModal={() => setShowVerificationModal(false)} /> : null}
+            <Body>
+                {
+                    openConfirmModal === 'forCancel' &&
+                    <ConfirmModal
+                        message="Are you sure you want to cancel this transfer?"
+                        onSave={{
+                            label: 'Yes, cancel',
+                            fn: () => handleCancel()
+                        }}
+                        onCancel={{
+                            label: "No, don't cancel",
+                            fn: () => setOpenConfirmModal(null)
+                        }}
+                    /> 
                 }
+
+                {
+                    openConfirmModal === 'forProceed' &&
+                    <ConfirmModal
+                        message="Are you sure you want to procced?"
+                        onSave={{
+                            label: 'Yes, proceed',
+                            fn: ()=>handleProceed(transfer)
+                        }}
+                        onCancel={{
+                            label: "No, not yet",
+                            fn: () => setOpenConfirmModal(null)
+                        }}
+                    />
+                }
+
+                <NavBar />
+                <ProgressBar point={4} />
+
+                <div className="page-content">
+                    {
+                        !showVerificationModal && (
+                            <div>
+                                <PageHeading heading="Pay" subheading="How would you like to pay for the transfer?" back="/review" />
+                                <div className="green-txt desktop-hide view-td">View transfer details</div>
+                            </div>
+                        )
+                    }
+                    <div className="box-container details">
+                        <div>
+                            {
+                                paymentMethodOptions.map((paymentMethod: any) => (
+                                    <PaymentOption 
+                                        key={paymentMethod.slug}
+                                        paymentMethod={paymentMethod}
+                                        isSelected={paymentMethod.slug === selected}
+                                        selectPaymentMethod={selectPaymentMethod}
+                                        label={paymentMethod.label(transaction)}
+                                    />
+                                ))
+                            }
+                                <div>
+                                    <div className="pls-note">Please note</div>
+                                    <div className="list">
+                                        <ul>
+                                            <li>Please ensure the <span className="green-txt"> payment details</span> of your recipient are &nbsp; correct. <span className="red-txt"> Any error after this step cannot be corrected</span> <span className="green-txt"><Link to={paths.RECIPIENT + "?t=" + transferId}>Edit recipient details</Link> </span></li>
+                                            <li>If all details are correct, proceed to pay the sum of <b className="green-txt">{formatCurrency(`${transaction?.meta?.totalToPay}`)} {transaction?.originCurrency}</b> to complete your transfer</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            { 
+                                <div className="box-container details">
+                                    <RecipientDetailsBox hideType="mobile-hide" green_mamba />
+                                    <RecipientDetailsBox hideType="desktop-hide" />
+                                </div>
+                            }
+                        </div>
+                        <div className="mobile-hide">
+                            <TransferDetailsBox transferId={transferId} />
+                        </div>
+                    </div>
+                    <div className="btns"><span onClick={()=>setOpenConfirmModal('forCancel')}>Cancel transfer</span>
+                    {
+                        selected === 'trust-payment' ?
+                        <PaymentRedirect 
+                            mainamount = {getTotalToPay()} 
+                            currencyiso3a = {transaction?.originCurrency} 
+                            transactionId={transaction?.meta?.transactionId} 
+                            transferId={transferId} 
+                        />
+                        :
+                        <span> 
+                            <button onClick={()=>setOpenConfirmModal('forProceed')}>Proceed to payment</button> 
+                        </span>
+                    }
+                    </div>
                 </div>
-            </div>
-        </Body>
+            </Body>
+        </>
     )
 }
 
