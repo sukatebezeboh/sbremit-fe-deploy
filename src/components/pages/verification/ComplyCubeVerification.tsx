@@ -25,8 +25,6 @@ export const ComplyCubeVerification = () => {
         }
     }
 
-    console.log(verificationList)
-
     const idVerification = verificationList?.find((method: { type: string; }) => method.type === "IDENTITY")
     const invalidIdVerification = idVerification && (idVerification.status === 'PENDING')
 
@@ -132,7 +130,7 @@ export const ComplyCubeVerification = () => {
                             type: "info",
                             timeout: 10000,
                             title: "Great News",
-                            message: "You ID verification is now in progress"
+                            message: "Your ID verification is now in progress"
                         })
                     })
                 /**
