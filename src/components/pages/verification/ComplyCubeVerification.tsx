@@ -25,6 +25,8 @@ export const ComplyCubeVerification = () => {
         }
     }
 
+    console.log(verificationList)
+
     const idVerification = verificationList?.find((method: { type: string; }) => method.type === "IDENTITY")
     const invalidIdVerification = idVerification && (idVerification.status === 'PENDING')
 
@@ -39,8 +41,8 @@ export const ComplyCubeVerification = () => {
         options: {
         heading: "SB Remit identity verification",
         message: [
-            `Only ${userCountry} Government issues Document Accepted`,
-            `${userCountry} Passport, ${userCountry} Drivers License, ${userCountry} Biometrics resident permit (BRP)`,
+            `Only ${userCountry} Government issued documents are accepted.`,
+            `Passport or Drivers License or Residence Permit or National Identity Card`
         ],
         startButtonText: `Verify your ${userCountry} identity`
         },
@@ -129,8 +131,8 @@ export const ComplyCubeVerification = () => {
                             show: true,
                             type: "info",
                             timeout: 10000,
-                            title: "Congratulations!",
-                            message: "You have Verificaion request is in progress"
+                            title: "Great News",
+                            message: "You ID verification is now in progress"
                         })
                     })
                 /**
@@ -145,9 +147,15 @@ export const ComplyCubeVerification = () => {
         })
     }
 
+    // !invalidIdVerification && !invalidDocumentVerification
 
     if(verificationCompleted){
-        return <p>Identity & Document verification Completed</p>
+        return (
+        <>
+            {!invalidIdVerification ? <p>✅ Identity Verification</p> : null}
+            {!invalidDocumentVerification ? <p>✅ Document upload</p> : null}
+        </>
+        )
     }
 
     if(!complyCubeToken){
