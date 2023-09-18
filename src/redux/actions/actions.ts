@@ -1576,7 +1576,7 @@ export const getPromo = async (code: string) => {
     toastAction({
       show: true,
       type: "error",
-      timeout: 8000,
+      timeout: 3000,
       message: res.data.error.message,
     });
     return undefined;
