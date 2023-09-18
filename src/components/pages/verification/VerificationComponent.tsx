@@ -43,34 +43,27 @@ export const VerificationComponent = () => {
       setSelectedCountry(initialValues.location_country)
     }, [initialValues.location_country])
 
-    const subheading = method === constants.VERIFICATION_TYPE_IDENTITY
-    ? 'Enter information to verify your identity'
-    : method === constants.VERIFICATION_TYPE_DOCUMENT
-    ? 'Follow the prompts to verify your documents'
-    : 'Enter information to verify your identity'
-
   const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
 
   return (
-    <>
-      <Body>
+    <div style={{padding: "10px", minHeight: "100vh"}}>
+      {!isFormVerified ? (<Body>
           <div className="page-content">
-            {!isFormVerified ? (
-              <Formik
-                initialValues={{ ...initialValues }}
-                validationSchema={userVerificationValidator}
-                onSubmit={(values) => {
-                  userVerificationAction(values, () => {})
-                }}
-              >
-                {({ errors, touched, values }: any) => (
-                <VerificationForm {...{ errors, touched, values, selectedCountry, setSelectedCountry }}/>
-                )}
-              </Formik>
-            ) : <p>Form verification Completed</p>}
+          <Formik
+            initialValues={{ ...initialValues }}
+            validationSchema={userVerificationValidator}
+            onSubmit={(values) => {
+              userVerificationAction(values, () => {})
+            }}
+          >
+            {({ errors, touched, values }: any) => (
+            <VerificationForm {...{ errors, touched, values, selectedCountry, setSelectedCountry }}/>
+            )}
+          </Formik>
           </div>
-      </Body>
+      </Body>) : <p>✅ Verification form completed</p>}
+      
       <ComplyCubeVerification />
-    </>
+    </div>
   );
 };
