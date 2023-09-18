@@ -1361,11 +1361,10 @@ export const userVerificationAction = (
     })
     .then((res) => {
       if (res.data.status === "200") {
-        store.dispatch({ type: LOADING, payload: false })
-        refreshUserDetails()
-        callback?.()
-      }
-      else {
+        store.dispatch({ type: LOADING, payload: false });
+        refreshUserDetails();
+        callback?.();
+      } else {
         toastAction({
           show: true,
           type: "error",
@@ -1574,6 +1573,12 @@ export const getPromo = async (code: string) => {
   if (res.data.status == 200) {
     return res.data.data;
   } else {
+    toastAction({
+      show: true,
+      type: "error",
+      timeout: 8000,
+      message: res.data.error.message,
+    });
     return undefined;
   }
 };
