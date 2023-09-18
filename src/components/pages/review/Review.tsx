@@ -17,6 +17,8 @@ const Review = () => {
     const transfer = useSelector((state: any)=>state.transfer)
     const dispatch = useDispatch();
 
+
+    
     const handleConfirmClick = () => {
         confirmTransfer(recipient, transfer, (id: string) => {
             dispatch({
@@ -54,7 +56,7 @@ const Review = () => {
         :
         <Body>
             <NavBar />
-            <ProgressBar point={3} />
+            <ProgressBar point={2} />
             <div className="page-content">
                 <div>
                     <PageHeading heading="Review" subheading="Review the details of your transfer" back={paths.RECIPIENT} />
@@ -64,7 +66,7 @@ const Review = () => {
                     <TransferDetailsBox />
                     <RecipientDetailsBox hideType="desktop-hide" />
                 </div>
-                <div className="btns"><span onClick={()=>history.push(paths.RECIPIENT)}>Back</span> <button onClick={()=>handleConfirmClick()}>Confirm</button> </div>
+                <div className="btns"><span onClick={()=>history.push(paths.RECIPIENT)}>Back</span> <button onClick={handleConfirmClick}>Confirm</button> </div>
             </div>
         </Body>
     )

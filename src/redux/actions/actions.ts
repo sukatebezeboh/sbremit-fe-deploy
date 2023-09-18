@@ -1361,9 +1361,11 @@ export const userVerificationAction = (
     })
     .then((res) => {
       if (res.data.status === "200") {
-        store.dispatch({ type: LOADING, payload: false });
-        callback?.();
-      } else {
+        store.dispatch({ type: LOADING, payload: false })
+        refreshUserDetails()
+        callback?.()
+      }
+      else {
         toastAction({
           show: true,
           type: "error",
