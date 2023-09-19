@@ -12,7 +12,7 @@ export const ComplyCubeVerification = () => {
     const user = useSelector((state: any) => state.auth.user);
     const [complyCubeToken, setComplyCubeToken] = useState('')
 
-    const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+    const isFormVerified = Boolean(user?.meta?.verified)
 
     const location_country = user?.profile?.location_country
     const userCountry = location_country === "GB" ? "UK" : location_country
