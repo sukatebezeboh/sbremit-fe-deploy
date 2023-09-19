@@ -43,7 +43,7 @@ export const VerificationComponent = () => {
       setSelectedCountry(initialValues.location_country)
     }, [initialValues.location_country])
 
-  const isFormVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+  const isFormVerified = Boolean(user?.meta?.verified)
 
   return (
     <div style={{padding: "10px", minHeight: "100vh"}}>

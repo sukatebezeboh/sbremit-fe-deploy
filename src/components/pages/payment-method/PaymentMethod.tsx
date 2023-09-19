@@ -70,7 +70,7 @@ const PaymentMethod = () => {
 
     ///////////////////////// Verification Logic Start /////////////////////////
 
-    const userIsVerified = Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry"
+    const userIsVerified = Boolean(user?.meta?.verified)
     let verificationList = []
 
     if(user?.verifications){
