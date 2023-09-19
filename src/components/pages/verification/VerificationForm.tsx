@@ -6,7 +6,6 @@ import {
   days,
   months,
 } from "../../../util/constants";
-import TransferDetailsBox from "../../modules/transfer-details-box/TransferDetailsBox";
 
 
 const VerificationForm = ({ errors, touched, values, selectedCountry, setSelectedCountry }: any) => {
@@ -442,7 +441,6 @@ const VerificationForm = ({ errors, touched, values, selectedCountry, setSelecte
             </div>
             </div>
             <div className="mobile-hide">
-            <TransferDetailsBox />
             </div>
         </div>
         <div className="btns">
