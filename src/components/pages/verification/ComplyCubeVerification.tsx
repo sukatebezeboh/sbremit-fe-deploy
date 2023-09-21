@@ -5,6 +5,11 @@ import http from 'util/http';
 
 // INVALID VALID PENDING FAILED ATTEMPTED
 
+/**
+ * PENDING - new user / never tried to verify
+ * ATTEMPTED - usr has verified but we still await
+ */
+
 // "phoneCode": null,
 //             "state": null,
 
