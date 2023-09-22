@@ -11,6 +11,10 @@
                     {
                         "/": "/payments/interac",
                         "exclude": true
+                    },
+                    {
+                        "/": "/verification",
+                        "exclude": true
                     }
                 ]
             }
