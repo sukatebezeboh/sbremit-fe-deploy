@@ -18,6 +18,8 @@ const ChangePassword = lazy(() => import('../components/pages/change-password/Ch
 const TransferMethod = lazy(() => import('../components/pages/transfer-method/TransferMethod'));
 const GetQuote = lazy(() => import('../components/pages/get-quote/GetQuote'));
 const Verification = lazy(() => import('../components/pages/verification/Verification'));
+// TemporaryMobileVerification
+const TemporaryMobileVerification = lazy(() => import('../components/pages/verification/temporaryMobileVerification'));
 const Recipient = lazy(() => import('../components/pages/recipient/Recipient'));
 const RecipientDetails = lazy(() => import('../components/pages/recipient-details/RecipientDetails'));
 const Review = lazy(() => import('../components/pages/review/Review'));
@@ -266,6 +268,11 @@ export const Routing: IRoute[] = [
     {
         path: paths.VERIFICATION,
         component: Verification,
+        protected: true
+    },
+    {
+        path: "/verification/mobile",
+        component: TemporaryMobileVerification,
         protected: true
     },
     {
