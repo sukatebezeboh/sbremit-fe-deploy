@@ -10,7 +10,7 @@
             {
                 "scheme": "https",
                 "host": "sbremit.com",
-                "path": "/verification"
+                "path": "/verification/*"
             }
         ]
     }
