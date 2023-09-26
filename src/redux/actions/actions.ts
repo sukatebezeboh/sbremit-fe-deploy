@@ -1654,11 +1654,13 @@ export const generateCheckoutId = async (
 };
 
 export const getPaymentStatus = async (checkoutID: string) => {
-  http.post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
-    checkoutid: checkoutID,
-  }).then((res) => {
-    console.log(res.data.data)
-  });
+  http
+    .post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
+      checkoutid: checkoutID,
+    })
+    .then((res) => {
+      console.log(res.data.data);
+    });
 };
 
 export const fetchTruelayerProviders = (callback: Function) => {

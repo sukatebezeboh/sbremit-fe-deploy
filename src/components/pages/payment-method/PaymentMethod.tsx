@@ -55,18 +55,17 @@ const PaymentMethod = () => {
     PAYMENT_GATEWAYS["trust-payment"],
   ]);
 
-  const [checkoutID, setCheckoutID] = useState("");
-
   const dispatch = useDispatch();
 
   const generateCheckoutIDforAxcssPayment = (transfer: any) => {
-    // this exp make api request to the server to create generate checkout ID
-    generateCheckoutId(transfer.transactionDetails.id, setCheckoutID);
-    if (checkoutID !== "") {
+    // this exp make api request to the server to generate checkout ID
+    const handleCheckoutID = (checkoutID: string) => {
       history.push(
         `/axcess-merchant/${checkoutID}/${transfer.transactionDetails.id}`
       );
-    }
+    };
+
+    generateCheckoutId(transfer.transactionDetails.id, handleCheckoutID);
   };
 
   const handleProceed = async (transfer: any) => {
