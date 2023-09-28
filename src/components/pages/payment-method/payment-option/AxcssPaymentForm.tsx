@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
 
 interface PaymentFormProps {
   checkoutId: string;
@@ -15,6 +14,15 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
   useEffect(() => {
     const paymentScript = document.createElement("script");
     paymentScript.src = `https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
+    paymentFormContainerRef.current?.appendChild(paymentScript);
+    paymentScript.innerText = `
+    var wpwlOptions = {
+      registrations: {
+        requireCvv: false,
+        hideInitialPaymentForms: true
+      }
+    };
+  `;
     paymentFormContainerRef.current?.appendChild(paymentScript);
   }, []);
 
