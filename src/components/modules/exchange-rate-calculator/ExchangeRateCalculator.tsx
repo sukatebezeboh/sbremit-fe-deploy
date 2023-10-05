@@ -236,12 +236,31 @@ const ExchangeRateCalculator = ({
                     {promoText ? (
                       <span className="deep-green"> {promoText} </span>
                     ) : (
+
                       <span className="red-txt">
                         {" "}
                         *Spend btw: {promo?.settings?.minimumSpend}{" "}
                         {toSend.currency} and {promo?.settings?.maximumSpend}{" "}
                         {toSend.currency}{" "}
                       </span>
+
+                      <>
+                        <span className="red-txt">
+                          {promo?.settings?.baseCurrency != undefined ? (
+                            <span>
+                              {" "}
+                              *1 {toSend.currency} = {promo?.settings?.rate}{" "}
+                              {toReceive.currency}{" "}
+                            </span>
+                          ) : (
+                            <span>
+                              *Spend btw: {promo?.settings?.minimumSpend}{" "}
+                              {toSend.currency} and{" "}
+                              {promo?.settings?.maximumSpend} {toSend.currency}
+                            </span>
+                          )}{" "}
+                        </span>
+                      </>
                     )}
                   </div>
                 </div>

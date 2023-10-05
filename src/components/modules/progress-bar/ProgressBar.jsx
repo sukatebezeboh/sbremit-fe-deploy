@@ -16,7 +16,7 @@ const Div = styled.div`
                 border-radius: 15px;
                 background: #3f896f;
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 1fr 0.1fr;
+                grid-template-columns: 1fr 1fr 1fr 0.1fr;
                 padding: 0px;
                 margin: auto;
                 .point {
@@ -28,7 +28,7 @@ const Div = styled.div`
                 }
                 .point-1 {
                     width: 43px;
-                    height: 6px;
+                    height: 4px;
                 }
                 .progressed {
                     width: 100%;
@@ -45,7 +45,7 @@ const Div = styled.div`
             }
             .point-labels {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 1fr 0.1fr;
+                grid-template-columns: 1fr 1fr 1fr 0.1fr;
                 margin: 0px auto;
                 margin-top: 20px;
                 width: 76%;
@@ -59,7 +59,7 @@ const Div = styled.div`
                 }
             }
         }
-@media only screen and (max-width: 900px) { 
+@media only screen and (max-width: 900px) {
     margin-top: 60px;
     .timeline {
         margin-bottom: 0px;
@@ -102,15 +102,13 @@ const ProgressBar = (props) => {
                         <div className={`point point-1 ${point == 1 ? "progressing" : (point > 1 ? 'progressed': '')}`}></div>
                         <div className={`point point-2 ${point == 2 ? "progressing" : (point > 2 ? 'progressing progressed': '')}`}></div>
                         <div className={`point point-3 ${point == 3 ? "progressing" : (point > 3 ? 'progressing progressed': '')}`}></div>
-                        <div className={`point point-4 ${point == 4 ? "progressing" : (point > 4 ? 'progressing progressed': '')}`}></div>
-                        <div className={`point point-5 ${point == 5 ? "progressing" : (point > 5 ? 'progressed': '')}`}></div>
+                        <div className={`point point-4 ${point == 4 ? "progressing" : (point > 4 ? 'progressed': '')}`}></div>
                     </div>
                     <div className="point-labels">
                         <div className="label-1"> <div><Link to={paths.GET_QUOTE}>Get quote</Link></div></div>
-                        <div className="label-2"> <div>Verification</div> </div>
-                        <div className="label-3"> <div><Link to={point >=3 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
-                        <div className="label-4"> <div><Link to={point >=4 ? paths.REVIEW : "#"}>Review </Link></div></div>
-                        <div className="label-4"> <div><Link to={point >=3 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
+                        <div className="label-2"> <div><Link to={point >=2 ? paths.RECIPIENT : "#"}>Recipient</Link></div></div>
+                        <div className="label-3"> <div><Link to={point >=3 ? paths.REVIEW : "#"}>Review </Link></div></div>
+                        <div className="label-4"> <div><Link to={point >=4 ? paths.PAYMENT_METHOD : "#"}>Pay</Link></div></div>
                     </div>
                 </div>
         </Div>

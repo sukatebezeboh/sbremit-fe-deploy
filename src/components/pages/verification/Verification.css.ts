@@ -5,8 +5,7 @@ export default styled.div`
     margin-top: 0px;
     .box-container {
       display: grid;
-      grid-template-columns: 2fr 1.3fr;
-      grid-gap: 2%;
+      grid-template-columns: 1fr;
       padding-top: 50px;
     }
     hr {
