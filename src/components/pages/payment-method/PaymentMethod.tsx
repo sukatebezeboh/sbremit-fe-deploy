@@ -60,9 +60,11 @@ const PaymentMethod = () => {
   const generateCheckoutIDforAxcssPayment = (transfer: any) => {
     // this exp make api request to the server to generate checkout ID
     const handleCheckoutID = (checkoutID: string) => {
-      history.push(
-        `/axcess-merchant/${checkoutID}/${transfer.transactionDetails.id}`
-      );
+      if (checkoutID !== null) {
+        history.push(
+          `/axcess-merchant/${checkoutID}/${transfer.transactionDetails.id}`
+        );
+      }
     };
 
     generateCheckoutId(transfer.transactionDetails.id, handleCheckoutID);
@@ -82,7 +84,8 @@ const PaymentMethod = () => {
       });
       return;
     }
-    if (selected === "trust-payment") {
+    if (selected === "axcess-payment") {
+      generateCheckoutIDforAxcssPayment(transfer)
     } else if (selected === "bank_transfer") {
       history.push(paths.CREATE_TRANSFER + "?t=" + transferId);
     } else if (selected === "truelayer") {
@@ -236,7 +239,7 @@ const PaymentMethod = () => {
             label: "Yes, proceed",
             fn: () => {
               selected === "axcess-payment"
-                ? generateCheckoutIDforAxcssPayment(transfer)
+                ? handleProceed(transfer)
                 : handleProceed(transfer);
             },
           }}
