@@ -1367,7 +1367,6 @@ export const userVerificationAction = (
     })
     .then((res) => {
       if (res.data.status === "200") {
-
         store.dispatch({ type: LOADING, payload: false });
         callback?.();
       } else {
@@ -1581,7 +1580,6 @@ export const getPromo = async (code: string) => {
     console.log(res.data.data);
     return res.data.data;
   } else {
-
     toastAction({
       show: true,
       type: "error",
@@ -1673,7 +1671,6 @@ export const getPaymentStatus = async (
     })
     .then((res) => {
       callback(res.data);
-
     });
 };
 
@@ -2128,7 +2125,6 @@ export const initiateInteracTransferPayment = (transferId: number) => {
     });
 };
 
-
 export const getClientIp = async (callback?: Function) => {
   try {
     const res = await axios.get("https://api.ipify.org?format=json");
@@ -2138,7 +2134,6 @@ export const getClientIp = async (callback?: Function) => {
     return null;
   }
 };
-
 
 export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
@@ -2152,11 +2147,6 @@ export const updateTransferWithPaymentGatewayCharge = async (
     .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
       paymentGateway,
       clientIp,
-  http
-    .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
-      paymentGateway,
-      clientIp: window.localStorage.getItem("IP_Address"),
-
     })
     .then((res: any) => {
       if (res?.data?.status == 200) {
