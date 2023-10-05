@@ -364,9 +364,10 @@ const Recipient = () => {
                 .filter(
                   (isTransferMethod: any) =>
                     isTransferMethod.profile.transferMethod ===
-                      transfer.transferMethod &&
-                    isTransferMethod?.profile?.remittanceHandler ==
-                      transfer?.remittanceHandler
+                    transfer.transferMethod
+                  // &&
+                  // isTransferMethod?.profile?.remittanceHandler ==
+                  //   transfer?.remittanceHandler
                 )
                 .map((recipient: any) => (
                   <RecipientCard
