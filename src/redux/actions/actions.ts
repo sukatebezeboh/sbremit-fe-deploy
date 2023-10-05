@@ -39,7 +39,6 @@ import {
 import http from "../../util/http";
 import { themeNames } from "../../components/modules/toast-factory/themes";
 import { constants, countriesAndCurrency } from "../../util/constants";
-import { error } from "jquery";
 
 const user = store.getState().auth.user;
 const serviceProvider = env.X_SERVICE_PROVIDER;
@@ -85,6 +84,7 @@ export const signUpAction = async (data: any) => {
   if (!data.clientIp) {
     data.clientIp = await getClientIp();
   }
+
   axios
     .post(
       config.API_HOST + endpoints.SIGN_UP,
@@ -785,6 +785,7 @@ export const getUserTransactionsPaginated = (
   const transfer = store.getState().transfer;
 
   store.dispatch({ type: LOADING, payload: true });
+
   http
     .get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id)) //  + `?limit=${limit}&offset=${offset}&order=id%20DESC`
     .then((res) => {
@@ -1366,6 +1367,7 @@ export const userVerificationAction = (
     })
     .then((res) => {
       if (res.data.status === "200") {
+
         store.dispatch({ type: LOADING, payload: false });
         callback?.();
       } else {
@@ -1573,6 +1575,7 @@ export const getPromo = async (code: string) => {
   const res = await http.get(parseEndpointParameters(endpoints.PROMO, code), {
     headers: { "X-SERVICE-PROVIDER": serviceProvider },
   });
+
   console.log(res);
   if (res.data.status == 200) {
     console.log(res.data.data);
@@ -1664,6 +1667,7 @@ export const getPaymentStatus = async (
     })
     .then((res) => {
       callback(res.data);
+
     });
 };
 
@@ -2118,6 +2122,7 @@ export const initiateInteracTransferPayment = (transferId: number) => {
     });
 };
 
+
 export const getClientIp = async (callback?: Function) => {
   try {
     const res = await axios.get("https://api.ipify.org?format=json");
@@ -2128,17 +2133,24 @@ export const getClientIp = async (callback?: Function) => {
   }
 };
 
+
 export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
   paymentGateway: string,
   callback?: Function
 ) => {
   const transfer = store.getState().transfer;
+
   const clientIp = await getClientIp();
   http
     .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
       paymentGateway,
       clientIp,
+  http
+    .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
+      paymentGateway,
+      clientIp: window.localStorage.getItem("IP_Address"),
+
     })
     .then((res: any) => {
       if (res?.data?.status == 200) {

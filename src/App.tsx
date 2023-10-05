@@ -1,7 +1,8 @@
-import React, { Suspense, useEffect } from 'react';
+import React, {Suspense, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory, useLocation, withRouter } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import ReactPixel from 'react-facebook-pixel';
+import axios from 'axios';
 
 import './App.css';
 import { Routing, IRoute } from './util/routes'
@@ -63,6 +64,15 @@ function App() {
         signOutAction();
       })
   }, [location.pathname]);
+
+  useEffect(() => {
+    axios
+      .get('https://api.ipify.org?format=json')
+      .then(ipResponse => {
+        window.localStorage.setItem("IP_Address", ipResponse?.data?.ip)
+      })
+      .catch(error => console.error('Error getting Ip:', error));
+  }, []);
 
   return (
     <React.Fragment>
