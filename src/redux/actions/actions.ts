@@ -330,6 +330,7 @@ const signOutOnClient = () => {
   CookieService.remove(env.SESSION_KEY);
   CookieService.remove(env.SESSION_ID);
   CookieService.remove("user");
+
   store.dispatch({
     type: AUTH,
     payload: { isAuthenticated: false, user: undefined },
@@ -1653,13 +1654,16 @@ export const generateCheckoutId = async (
     });
 };
 
-export const getPaymentStatus = async (checkoutID: string) => {
+export const getPaymentStatus = async (
+  checkoutID: string,
+  callback: Function
+) => {
   http
     .post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
       checkoutid: checkoutID,
     })
     .then((res) => {
-      console.log(res.data.data);
+      callback(res.data);
     });
 };
 

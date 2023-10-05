@@ -43,6 +43,8 @@ export default function AxcessMerchant() {
   const checkoutID = params.checkoutID;
   const transferId = params.transferId;
 
+  // The design of this page is temporary and will be updated once the redesign is completed by the UI/UX team.
+  
   return (
     <Body>
       <CustomFlexBox $direction="column" $gap={16}>
@@ -66,7 +68,7 @@ export default function AxcessMerchant() {
         </CustomFlexBox>
         <AxcssPaymentForm
           checkoutId={checkoutID}
-          shopperResultUrl={`/transfer-complete/${transferId}`}
+          shopperResultUrl={`/auth-transfer-complete/${transferId}`}
         />
         <span>
           Powered by: <strong>Axcess Merchant services</strong>
