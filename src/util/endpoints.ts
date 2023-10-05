@@ -29,6 +29,8 @@ const endpoints = {
     PROMO: '/promo/$_1',
     SAVE_TRULIOO_DOCUMENT_VERIFICATION: '/verification/documents',
     TRUELAYER_INITIATE_PAYMENT: '/truelayer/payment',
+    GET_CHECKOUT_ID: '/axcess/$_1/transfers',
+    GET_AXCESS_PAYMENT_NOTIFICATION: '/axcess/payment/notification',
     TOAST_NOTIF: '/user/toast',
     USER_REFERRALS: '/user/referrals',
     REGISTER_COUNTRY: '/country/register',
@@ -41,6 +43,7 @@ const endpoints = {
     EXCHANGE_RATE_SPREADS: '/rate/spreads',
     INTERAC_PAYMENT: '/payments/interac',
     CREATE_PUSH_NOTIFICATION_TOKEN: '/user/notifications/push'
+
 }
 
 export default endpoints;

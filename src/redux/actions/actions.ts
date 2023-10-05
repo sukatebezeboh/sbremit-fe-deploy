@@ -81,6 +81,10 @@ export const checkAuth = () => {
 export const signUpAction = async (data: any) => {
   const serviceProvider = env.X_SERVICE_PROVIDER;
   store.dispatch({ type: SUBMITTING, payload: SIGN_UP });
+  if (!data.clientIp) {
+    data.clientIp = await getClientIp();
+  }
+
   axios
     .post(
       config.API_HOST + endpoints.SIGN_UP,
@@ -326,6 +330,7 @@ const signOutOnClient = () => {
   CookieService.remove(env.SESSION_KEY);
   CookieService.remove(env.SESSION_ID);
   CookieService.remove("user");
+
   store.dispatch({
     type: AUTH,
     payload: { isAuthenticated: false, user: undefined },
@@ -711,6 +716,7 @@ export const getTransactionDetails = (callback?: Function, id?: any) => {
 export const getUserTransactions = (callback?: Function) => {
   const user = store.getState().auth.user;
   const transfer = store.getState().transfer;
+
   store.dispatch({ type: LOADING, payload: true });
   http
     .get(parseEndpointParameters(endpoints.GET_TRANSFERS, user.id))
@@ -1361,11 +1367,10 @@ export const userVerificationAction = (
     })
     .then((res) => {
       if (res.data.status === "200") {
-        store.dispatch({ type: LOADING, payload: false })
-        refreshUserDetails()
-        callback?.()
-      }
-      else {
+
+        store.dispatch({ type: LOADING, payload: false });
+        callback?.();
+      } else {
         toastAction({
           show: true,
           type: "error",
@@ -1571,9 +1576,12 @@ export const getPromo = async (code: string) => {
     headers: { "X-SERVICE-PROVIDER": serviceProvider },
   });
 
+  console.log(res);
   if (res.data.status == 200) {
+    console.log(res.data.data);
     return res.data.data;
   } else {
+    console.log("not found");
     return undefined;
   }
 };
@@ -1630,6 +1638,36 @@ export const updateTransferRecipient = (
           message: "Could not update transfer",
         });
       }
+    });
+};
+
+export const generateCheckoutId = async (
+  transferId: any,
+  callback: Function
+) => {
+  http
+    .get(parseEndpointParameters(endpoints.GET_CHECKOUT_ID, transferId))
+    .then((res) => {
+      if (res.data.status === "200") {
+        callback(res.data.data.id);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const getPaymentStatus = async (
+  checkoutID: string,
+  callback: Function
+) => {
+  http
+    .post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
+      checkoutid: checkoutID,
+    })
+    .then((res) => {
+      callback(res.data);
+
     });
 };
 
@@ -2084,16 +2122,35 @@ export const initiateInteracTransferPayment = (transferId: number) => {
     });
 };
 
+
+export const getClientIp = async (callback?: Function) => {
+  try {
+    const res = await axios.get("https://api.ipify.org?format=json");
+    callback?.(res?.data?.ip);
+    return res?.data?.ip;
+  } catch (e) {
+    return null;
+  }
+};
+
+
 export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
   paymentGateway: string,
   callback?: Function
 ) => {
   const transfer = store.getState().transfer;
+
+  const clientIp = await getClientIp();
+  http
+    .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
+      paymentGateway,
+      clientIp,
   http
     .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
       paymentGateway,
       clientIp: window.localStorage.getItem("IP_Address"),
+
     })
     .then((res: any) => {
       if (res?.data?.status == 200) {
