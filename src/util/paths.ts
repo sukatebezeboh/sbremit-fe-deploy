@@ -30,6 +30,9 @@ export const paths = {
   CARD_PAYMENT: "/card-payment",
   CREATE_TRANSFER: "/create-transfer",
   TRANSFER_COMPLETE: "/transfer-complete/:transferId?",
+  //--temporary fix
+  TRANSFER_COMPLETE_FORAUTH_USER: "/auth-transfer-complete/:transferId?",
+  //--
   TRANSFER_STATUS: "/transfer/:status/:transferId?",
   TRUELAYER_PROVIDERS: "/truelayer-providers",
   TRUSTPAYMENT_FOR_MOBILE: "/trustPayment-for-mobile",

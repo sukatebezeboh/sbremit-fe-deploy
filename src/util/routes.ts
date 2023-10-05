@@ -143,6 +143,10 @@ const AxcessMerchant = lazy(
   () => import("../components/pages/Trust-payment-for-mobile/AxcessMerchant")
 );
 
+const SucessPageForAuthUsers = lazy(
+  () => import("../components/pages/transfer-complete/ForAuthUsers")
+);
+
 export interface IRoute {
   path: string;
   component:
@@ -401,6 +405,11 @@ export const Routing: IRoute[] = [
     path: paths.TRANSFER_COMPLETE,
     component: TransferComplete,
     protected: false,
+  },
+  {
+    path: paths.TRANSFER_COMPLETE_FORAUTH_USER,
+    component: SucessPageForAuthUsers,
+    protected: true,
   },
   {
     path: paths.TRANSFER_STATUS,
