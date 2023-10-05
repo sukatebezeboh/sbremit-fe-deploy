@@ -1581,7 +1581,13 @@ export const getPromo = async (code: string) => {
     console.log(res.data.data);
     return res.data.data;
   } else {
-    console.log("not found");
+
+    toastAction({
+      show: true,
+      type: "error",
+      timeout: 5000,
+      message: res.data.error.message,
+    });
     return undefined;
   }
 };
