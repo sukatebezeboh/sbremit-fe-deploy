@@ -52,7 +52,7 @@ const PaymentMethod = () => {
     [recipients, transaction]
   );
   const [paymentMethodOptions, setPaymentMethodOptions] = useState<any>([
-    PAYMENT_GATEWAYS["trust-payment"],
+    PAYMENT_GATEWAYS["axcess-payment"],
   ]);
 
   const dispatch = useDispatch();
@@ -85,7 +85,7 @@ const PaymentMethod = () => {
       return;
     }
     if (selected === "axcess-payment") {
-      generateCheckoutIDforAxcssPayment(transfer)
+      generateCheckoutIDforAxcssPayment(transfer);
     } else if (selected === "bank_transfer") {
       history.push(paths.CREATE_TRANSFER + "?t=" + transferId);
     } else if (selected === "truelayer") {
@@ -152,21 +152,21 @@ const PaymentMethod = () => {
     }
     if (transaction?.originCurrency === "GBP") {
       selectPaymentMethod("truelayer");
-      PAYMENT_GATEWAYS["trust-payment"].isRecommended = false;
+      PAYMENT_GATEWAYS["axcess-payment"].isRecommended = false;
       setPaymentMethodOptions([
         PAYMENT_GATEWAYS["truelayer"],
-        //PAYMENT_GATEWAYS["trust-payment"],
+        //PAYMENT_GATEWAYS["axcess-payment"],
         PAYMENT_GATEWAYS["axcess-payment"],
       ]);
     } else if (transaction?.originCurrency === "CAD") {
       selectPaymentMethod("interac");
       setPaymentMethodOptions([
-        //PAYMENT_GATEWAYS["trust-payment"],
+        //PAYMENT_GATEWAYS["axcess-payment"],
         PAYMENT_GATEWAYS["axcess-payment"],
         PAYMENT_GATEWAYS["interac"],
       ]);
     } else if (transaction?.originCurrency === "EUR") {
-      selectPaymentMethod("trust-payment");
+      selectPaymentMethod("axcess-payment");
     } else {
       selectPaymentMethod("bank_transfer");
     }
@@ -174,7 +174,7 @@ const PaymentMethod = () => {
 
   type TPaymentMethods =
     | "interac"
-    | "trust-payment"
+    | "axcess-payment"
     | "truelayer"
     | "bank_transfer";
   const selectPaymentMethod = (paymentGateway: TPaymentMethods) => {
@@ -320,20 +320,20 @@ const PaymentMethod = () => {
           <span onClick={() => setOpenConfirmModal("forCancel")}>
             Cancel transfer
           </span>
-          {selected === "trust-payment" ? (
-            <PaymentRedirect
-              mainamount={getTotalToPay()}
-              currencyiso3a={transaction?.originCurrency}
-              transactionId={transaction?.meta?.transactionId}
-              transferId={transferId}
-            />
-          ) : (
-            <span>
-              <button onClick={() => setOpenConfirmModal("forProceed")}>
-                Proceed to payment
-              </button>
-            </span>
-          )}
+          {/* {selected === "axcess-payment" ? ( 
+            // <PaymentRedirect
+            //   mainamount={getTotalToPay()}
+            //   currencyiso3a={transaction?.originCurrency}
+            //   transactionId={transaction?.meta?.transactionId}
+            //   transferId={transferId}
+            // />
+          // ) : (
+          // )}*/}
+          <span>
+            <button onClick={() => setOpenConfirmModal("forProceed")}>
+              Proceed to payment
+            </button>
+          </span>
         </div>
       </div>
     </Body>
