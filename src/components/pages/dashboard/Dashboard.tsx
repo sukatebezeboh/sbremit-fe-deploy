@@ -28,6 +28,9 @@ import RoundFloatingPlus from "../../modules/parts/RoundFloatingPlus";
 import TransactionDetail from "../../modules/transaction-detail-modal/TransactionDetail";
 import TransferExpiryCountDown from "../../modules/transfer-expiry-countdown/TransferExpiryCountDown";
 import style from "./Dashboard.css";
+import { MdErrorOutline } from "react-icons/md";
+import Modal from "components/modules/modal/Modal";
+import { PaymentFraudInfo } from "components/modules/parts/PaymentFraudInfo";
 
 const Body = style();
 
@@ -41,6 +44,7 @@ const Dashboard = () => {
   const history = useHistory();
   const [isResending, setIsResending] = useState(false);
   const [transfersLoading, setTransfersLoading] = useState(true);
+  const [openPaymentFraudInfo, setOpenPaymentFraudInfo] = useState(false);
   const appValues = useSelector((state: any) => state.appValues);
   const referralSettings = getValueFromArray(
     "settings",
@@ -189,6 +193,13 @@ const Dashboard = () => {
         }
         isResending={isResending}
       />
+
+      <PaymentFraudInfo
+        open={openPaymentFraudInfo}
+        setOpen={setOpenPaymentFraudInfo}
+        transferInfo={modalData}
+      />
+
       <div className="page-content">
         <PageHeading
           heading="Dashboard"
@@ -312,7 +323,6 @@ const Dashboard = () => {
                 className="up"
                 onClick={() => {
                   setModalData(transaction);
-                  handleOpenTDModal(true);
                 }}
               >
                 <div>
@@ -362,11 +372,23 @@ const Dashboard = () => {
                   )}
                 </div>
                 <div className="status">
-                  <span className={transaction.status?.toLowerCase()}>
-                    {translateTransactionStatus(
-                      transaction.status.toLowerCase()
-                    )}
-                  </span>
+                  {transaction?.status === constants.TRANSFER_PAYMENT_FRAUD ? (
+                    <div className="payment_fraud">
+                      <button onClick={() => setOpenPaymentFraudInfo(true)}>
+                        {" "}
+                        {translateTransactionStatus(
+                          transaction.status.toLowerCase()
+                        )}
+                      </button>
+                      <MdErrorOutline size={24} color="#CF0921" />
+                    </div>
+                  ) : (
+                    <span className={transaction.status?.toLowerCase()}>
+                      {translateTransactionStatus(
+                        transaction.status.toLowerCase()
+                      )}{" "}
+                    </span>
+                  )}
                 </div>
                 <div className="figures">
                   <div className="uppercase">

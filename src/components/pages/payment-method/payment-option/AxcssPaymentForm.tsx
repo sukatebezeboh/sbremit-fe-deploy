@@ -33,7 +33,7 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
           action={shopperResultUrl}
           className="paymentWidgets"
           data-brands="VISA MASTER AMEX"
-        ></form>
+        />
       </div>
     </div>
   );
