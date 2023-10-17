@@ -89,7 +89,9 @@ export const PaymentFraudInfo = ({
 }: PaymentFraudInfoProps) => {
   const history = useHistory();
   const handleContacUs = () => {
-    history.push(`content/contact`, { transferId: transferInfo.id });
+    history.push(`content/contact`, {
+      transferId: transferInfo?.meta.transactionId,
+    });
   };
   return open ? (
     <Div>
