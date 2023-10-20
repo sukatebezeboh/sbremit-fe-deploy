@@ -94,10 +94,30 @@ const style = () => styled.div`
                         span {
                             background: #FCD20F;
                             color: #424242;
-                            display: inline-block;
                             padding: 7px 15px;
                             border-radius: 15px;
                             font-size: 14px;
+                        }
+                        .payment_fraud{
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+
+                            button{
+                                border: 1px solid #CF0921;
+                                background: white;
+                                color: #CF0921;
+                                cursor: pointer;
+                                
+                                padding: 7px 15px;
+                                border-radius: 15px;
+                                font-size: 14px;
+
+                                &:hover{
+                                    background: #CF0921;
+                                    color: #FFF;
+                                }
+                            }
                         }
                     }
                     &.figures {
@@ -265,12 +285,21 @@ const style = () => styled.div`
                             height: 30px;
                         }
                         &.status {
-                            span {
+                            span, .payment_fraud {
                                 padding: 3px 10px;
                                 position: absolute;
                                 top: 33px;
                                 right: -30vw;
                                 float: right;
+                            }
+                            .payment_fraud{
+                                top: 30px;
+                                gap: 8px;
+                                button{
+                                    white-space: nowrap;
+                                    padding: 3px 10px;
+                                    font-size: 12px;
+                                }
                             }
                         }
                         span {
