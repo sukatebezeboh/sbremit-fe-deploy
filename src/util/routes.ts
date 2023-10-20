@@ -405,6 +405,7 @@ export const Routing: IRoute[] = [
     path: paths.TRANSFER_COMPLETE,
     component: TransferComplete,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.TRANSFER_COMPLETE_FORAUTH_USER,
