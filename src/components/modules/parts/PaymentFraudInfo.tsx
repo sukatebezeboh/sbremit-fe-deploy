@@ -103,7 +103,7 @@ export const PaymentFraudInfo = ({
       />
       <div className="modal">
         <div className="content">
-          <h2>Payment Verification not successful</h2>
+          <h2>Possible reasons:</h2>
           <div className="list">
             <ol>
               <li>Card issued country and country of residence mismatch</li>
