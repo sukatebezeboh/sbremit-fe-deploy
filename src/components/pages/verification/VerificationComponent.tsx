@@ -18,6 +18,8 @@ import { useHistory } from "react-router-dom";
 
 export const VerificationComponent = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
+  const [displayComplyCubeVerification, setDisplayComplyCubeVerification] =
+    useState(false);
   const history = useHistory();
 
   const [method, setMethod] = useState("");
@@ -41,12 +43,12 @@ export const VerificationComponent = () => {
     setSelectedCountry(initialValues.location_country);
   }, [initialValues.location_country]);
 
-  const isFormVerified = Boolean(user?.meta?.verified); //user?.meta?.verified !== "1" ? false : true;
+  const isFormVerified = user?.meta?.verified !== "1" ? false : true;
 
   const verifyUser = async (values: any) => {
     try {
       await userVerificationAction(values, () => {});
-      history.push("dashboard");
+      setDisplayComplyCubeVerification(true);
     } catch (error) {}
   };
 
@@ -80,7 +82,7 @@ export const VerificationComponent = () => {
         <p>✅ Verification form completed</p>
       )}
 
-      <ComplyCubeVerification />
+      {displayComplyCubeVerification && <ComplyCubeVerification />}
     </div>
   );
 };
