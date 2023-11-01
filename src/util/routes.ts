@@ -11,7 +11,7 @@ const ForgetPassword = lazy(
   () => import("../components/pages/new-auth-pages/views/ForgotPassword")
 );
 const EmailLinkSent = lazy(
-  () => import("../components/pages/new-auth-pages/views/VerifyEmail")
+  () => import("../components/pages/email-link-sent/EmailLinkSent")
 );
 const PasswordEmailReset = lazy(
   () => import("../components/pages/new-auth-pages/views/ResetPassword")
