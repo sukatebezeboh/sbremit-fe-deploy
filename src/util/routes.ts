@@ -14,7 +14,7 @@ const EmailLinkSent = lazy(
   () => import("../components/pages/new-auth-pages/views/VerifyEmail")
 );
 const PasswordEmailReset = lazy(
-  () => import("../components/pages/password-email-reset/PasswordEmailReset")
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordSMSReset = lazy(
   () => import("../components/pages/password-sms-reset/PasswordSMSReset")
@@ -23,7 +23,7 @@ const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
 const ResetPassword = lazy(
-  () => import("../components/pages/new-auth-pages/views/ResetPassword")
+  () => import("../components/pages/reset-password/ResetPassword")
 );
 const PasswordResetComplete = lazy(
   () =>

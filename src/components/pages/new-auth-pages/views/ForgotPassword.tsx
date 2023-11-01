@@ -17,7 +17,7 @@ const ForgotPassword = () => {
 
   const onSubmit = (values: object) => {
     console.log(values);
-    push(paths.RESET_PASSWORD);
+    push(paths.PASSWORD_EMAIL_RESET);
   };
 
   return (
