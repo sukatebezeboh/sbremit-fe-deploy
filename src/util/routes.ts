@@ -1,16 +1,20 @@
 import { Suspense, lazy, LazyExoticComponent } from "react";
 import { paths } from "./paths";
 
-const SignUp = lazy(() => import("../components/pages/sign-up/SignUp"));
-const SignIn = lazy(() => import("../components/pages/sign-in/SignIn"));
+const SignUp = lazy(
+  () => import("../components/pages/new-auth-pages/views/CreateAccount")
+);
+const SignIn = lazy(
+  () => import("../components/pages/new-auth-pages/views/Login")
+);
 const ForgetPassword = lazy(
-  () => import("../components/pages/forget-password/ForgetPassword")
+  () => import("../components/pages/new-auth-pages/views/ForgotPassword")
+);
+const EmailLinkSent = lazy(
+  () => import("../components/pages/new-auth-pages/views/VerifyEmail")
 );
 const PasswordEmailReset = lazy(
   () => import("../components/pages/password-email-reset/PasswordEmailReset")
-);
-const EmailLinkSent = lazy(
-  () => import("../components/pages/email-link-sent/EmailLinkSent")
 );
 const PasswordSMSReset = lazy(
   () => import("../components/pages/password-sms-reset/PasswordSMSReset")
@@ -19,7 +23,7 @@ const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
 const ResetPassword = lazy(
-  () => import("../components/pages/reset-password/ResetPassword")
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordResetComplete = lazy(
   () =>
