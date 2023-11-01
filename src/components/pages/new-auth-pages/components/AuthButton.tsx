@@ -1,16 +1,18 @@
+import ButtonLoader from "components/modules/button-loader/ButtonLoader";
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   icon?: JSX.Element;
+  isLoading?: boolean;
 }
 
-const AuthButton = ({ title, icon, ...otherProps }: Props) => {
+const AuthButton = ({ title, icon, isLoading, ...otherProps }: Props) => {
   return (
     <Container is_auth_button={icon ? "true" : ""} {...otherProps}>
       {icon}
-      <span>{title}</span>
+      <span>{isLoading ? <ButtonLoader /> : title}</span>
     </Container>
   );
 };
@@ -19,7 +21,8 @@ export default AuthButton;
 
 const Container = styled.button<{ is_auth_button: string }>`
   width: 100%;
-  padding: 24px;
+  /* padding: 24px; */
+  height: 70px;
   background-color: ${({ theme, is_auth_button: isAuthButton }) =>
     isAuthButton ? "transparent" : theme.color.primary};
   color: ${({ is_auth_button: isAuthButton, theme }) =>
@@ -51,6 +54,7 @@ const Container = styled.button<{ is_auth_button: string }>`
 
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.font.size.base};
-    padding: 20px;
+    /* padding: 20px; */
+    height: 59px;
   }
 `;

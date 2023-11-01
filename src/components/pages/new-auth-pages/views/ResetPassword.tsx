@@ -7,6 +7,7 @@ import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
 import { useHistory } from "react-router-dom";
+import { resetPasswordAction } from "redux/actions/actions";
 
 const schema = yup.object({
   password: yup.string().min(6).max(255).required().label("Password"),
@@ -19,8 +20,9 @@ const schema = yup.object({
 
 const ResetPasssword = () => {
   const { push } = useHistory();
-  const onSubmit = (data: object) => {
-    console.log(data);
+  const onSubmit = (values: any) => {
+    // console.log(values);
+    resetPasswordAction(values, "email");
     push(paths.PASSWORD_EMAIL_RESET);
   };
 

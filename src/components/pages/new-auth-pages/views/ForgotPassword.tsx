@@ -7,6 +7,8 @@ import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
+import { resetPasswordAction } from "redux/actions/actions";
+import { useSelector } from "react-redux";
 
 const schema = yup.object().shape({
   email: yup.string().email().required().label("Email"),
@@ -14,10 +16,12 @@ const schema = yup.object().shape({
 
 const ForgotPassword = () => {
   const { push } = useHistory();
+  const isSubmitting = useSelector((state: any) => state.submitting);
 
-  const onSubmit = (values: object) => {
-    console.log(values);
-    push(paths.PASSWORD_EMAIL_RESET);
+  const handleSendLink = () => push(paths.PASSWORD_EMAIL_RESET);
+  const onSubmit = (values: any) => {
+    const newValue = { ...values, type: "EMAIL" };
+    resetPasswordAction(newValue, "email", handleSendLink);
   };
 
   return (
@@ -48,7 +52,12 @@ const ForgotPassword = () => {
                 />
               </div>
 
-              <AuthButton type="submit" title="Send link" />
+              <AuthButton
+                type="submit"
+                title="Send link"
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
+              />
             </Content>
           </Form>
         )}

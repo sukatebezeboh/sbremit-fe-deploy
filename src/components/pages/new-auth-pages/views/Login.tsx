@@ -7,6 +7,8 @@ import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
+import { useDispatch, useSelector } from "react-redux";
+import { signInAction } from "redux/actions/actions";
 
 const schema = yup.object({
   email: yup.string().email().required().label("Email"),
@@ -15,8 +17,9 @@ const schema = yup.object({
 
 const Login = () => {
   const { push } = useHistory();
-
-  const onSubmit = (data: object) => console.log(data);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const submitting = useSelector((state: any) => state.submitting);
 
   return (
     <AuthLayout>
@@ -29,7 +32,9 @@ const Login = () => {
       <Formik
         initialValues={{ password: "", email: "" }}
         validationSchema={schema}
-        onSubmit={onSubmit}
+        onSubmit={(values) => {
+          dispatch(signInAction(values, history));
+        }}
       >
         {({ errors, values, handleChange }) => (
           <Form>
@@ -58,7 +63,12 @@ const Login = () => {
                 </div>
               </div>
 
-              <AuthButton type="submit" title="Sign in" />
+              <AuthButton
+                type="submit"
+                title="Sign in"
+                disabled={submitting}
+                isLoading={submitting}
+              />
 
               <OrContainer>
                 <span />

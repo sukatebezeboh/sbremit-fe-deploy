@@ -8,7 +8,8 @@ import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
-import { useHistory } from "react-router-dom";
+import { signUpAction } from "redux/actions/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const schema = yup.object({
   firstName: yup.string().trim().required().label("First name"),
@@ -20,13 +21,25 @@ const schema = yup.object({
   referralCode: yup.string().label("Referral code"),
 });
 
+const getEighteenYearsAgo = () => {
+  let now = new Date();
+  now.setFullYear(now.getFullYear() - 18);
+  return now.toLocaleDateString().split("/").reverse().join("-");
+};
+
 const CreateAccount = () => {
   const [country, setCountry] = useState(COUNTRIES[0]);
-  const { push } = useHistory();
+  const dispatch = useDispatch();
+  const submitting = useSelector((state: any) => state.submitting);
 
-  const onSubmit = (data: object) => {
-    console.log(data);
-    push(paths.EMAIL_LINK_SENT);
+  const handleSubmit = (values: any) => {
+    dispatch(
+      signUpAction({
+        ...values,
+        clientIp: window.localStorage.getItem("IP_Address"),
+        dob: values.dob.split("-").reverse().join("-"),
+      })
+    );
   };
 
   return (
@@ -48,7 +61,7 @@ const CreateAccount = () => {
           phoneNumber: "",
         }}
         validationSchema={schema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
         {({ errors, values, handleChange }) => (
           <Form>
@@ -114,6 +127,7 @@ const CreateAccount = () => {
                     value={values.dob}
                     error={errors.dob}
                     onChange={handleChange("dob")}
+                    max={getEighteenYearsAgo()}
                   />
                   <AuthInput
                     label="Referral code(optional)"
@@ -133,7 +147,12 @@ const CreateAccount = () => {
                 </CheckboxContainer>
               </div>
 
-              <AuthButton type="submit" title="Create account" />
+              <AuthButton
+                type="submit"
+                title="Create account"
+                disabled={submitting}
+                isLoading={submitting}
+              />
             </Content>
           </Form>
         )}

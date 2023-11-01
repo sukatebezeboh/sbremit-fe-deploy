@@ -6,12 +6,14 @@ import OtpInputCustom from "../components/OtpInput";
 import { useAuthContext } from "../AuthProvider";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
+import { useSelector } from "react-redux";
 
 const VerifyEmail = () => {
   const { width } = useWindowDimensions();
   const { setShowSuccess } = useAuthContext();
   const [otp, setOtp] = useState("");
   const numberOfInputs = 5;
+  const isSubmitting = useSelector((state: any) => state.submitting);
 
   return (
     <AuthLayout>
@@ -38,8 +40,9 @@ const VerifyEmail = () => {
 
         <AuthButton
           title="Verify account"
-          disabled={otp.length < numberOfInputs}
           onClick={() => setShowSuccess(true)}
+          disabled={otp.length < numberOfInputs || isSubmitting}
+          isLoading={isSubmitting}
         />
       </Content>
     </AuthLayout>
