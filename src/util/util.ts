@@ -144,7 +144,8 @@ export const translateTransactionStatus = (status: string) => {
     pending_verification: "Pending ID verification",
     pending_documentation: "Pending documentation",
     payment_suspended: "Payment suspended",
-    payment_fraud: "Contact Us"
+    payment_fraud: "Contact Us",
+    payment_declined: "Payment Declined",
   };
 
   return verboseStatus[status] || status?.replaceAll("_", " ");

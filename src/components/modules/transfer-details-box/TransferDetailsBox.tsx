@@ -122,7 +122,7 @@ const TransferDetailsBox = ( { transferId, transferData = null } :any ) => {
                     <div className="row">
                         <div className="left">They get <small> {getInclusiveText(parseWithUnderscores(transferMethod))} </small> </div>
                         <div className="right uppercase"><b>{receiveAmount} {receiveCurrency}</b></div>
-                    </div>
+                </div>
 
                     <div className="row">
                         <div className="left">Total to pay</div>

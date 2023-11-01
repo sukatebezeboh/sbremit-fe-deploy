@@ -1352,7 +1352,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
   };
 };
 
-export const userVerificationAction = (
+export  const userVerificationAction = async(
   values: any,
   callback: Function,
   skipVerification = false

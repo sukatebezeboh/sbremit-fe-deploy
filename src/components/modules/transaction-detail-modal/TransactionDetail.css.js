@@ -201,6 +201,20 @@ export default styled.div`
             }
         }
 
+        .fraud_reason{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #EDEDED;
+                padding: 8px;
+                margin: 8px 0px;
+                margin-bottom: 24px;
+                p{
+                    line-height: 160%;
+                }
+            }
+
         .details {
             display: grid;
             grid-template-columns: 3fr 2.3fr;
@@ -310,6 +324,9 @@ export default styled.div`
             }
             .timeline {
                 display: none;
+            }
+            .fraud_reason{
+                padding: 8px 24px;
             }
             .details {
                 grid-template-columns: 1fr;
