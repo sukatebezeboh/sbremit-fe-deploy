@@ -81,8 +81,9 @@ export const VerificationComponent = () => {
       ) : (
         <p>✅ Verification form completed</p>
       )}
-
-      {displayComplyCubeVerification && <ComplyCubeVerification />}
+      <ComplyCubeVerification />
+      {(displayComplyCubeVerification ||
+        isFormVerified) && <ComplyCubeVerification />}
     </div>
   );
 };
