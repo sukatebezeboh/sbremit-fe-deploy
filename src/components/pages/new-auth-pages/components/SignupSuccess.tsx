@@ -1,14 +1,17 @@
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { useAuthContext } from "../AuthProvider";
 import AuthButton from "./AuthButton";
 import { BiCheckCircle } from "react-icons/bi";
 import { theme } from "../theme";
 import { paths } from "util/paths";
+import { Dispatch, SetStateAction } from "react";
 
-const SignupSuccess = () => {
+interface Props {
+  setShowSuccess: Dispatch<SetStateAction<boolean>>;
+}
+
+const SignupSuccess = ({ setShowSuccess }: Props) => {
   const { push } = useHistory();
-  const { setShowSuccess } = useAuthContext();
 
   return (
     <Container>

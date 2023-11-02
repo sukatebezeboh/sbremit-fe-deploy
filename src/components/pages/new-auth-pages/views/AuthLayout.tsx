@@ -1,14 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import styled from "styled-components";
-import Success from "../components/SignupSuccess";
-import { useAuthContext } from "../AuthProvider";
 import Provider from "../Provider";
 import { paths } from "util/paths";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
-  const { showSuccess } = useAuthContext();
 
   const routesToShowImg: string[] = [paths.SIGN_IN];
   const showBgImage = routesToShowImg.includes(location.pathname);
@@ -20,16 +17,13 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
           style={{ backgroundImage: "url(/assets/bg/new-auth-bg.svg)" }}
           display_on_mobile={showBgImage ? "true" : ""}
         >
-          <Link to={paths.SIGN_IN}>
+          <Link to={paths.LANDING}>
             <img src="/assets/main-logo.svg" alt="logo" />
           </Link>
         </ImageContainer>
 
-        <Content
-          display_on_mobile={showBgImage ? "true" : ""}
-          show_success={showSuccess ? "true" : ""}
-        >
-          <Container>{showSuccess ? <Success /> : <>{children}</>}</Container>
+        <Content display_on_mobile={showBgImage ? "true" : ""}>
+          <Container>{children}</Container>
         </Content>
       </Wrapper>
     </Provider>
@@ -71,7 +65,7 @@ const ImageContainer = styled.div<{ display_on_mobile: string }>`
   }
 `;
 
-const Content = styled.div<{ display_on_mobile: string; show_success: string }>`
+const Content = styled.div<{ display_on_mobile: string }>`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -81,9 +75,8 @@ const Content = styled.div<{ display_on_mobile: string; show_success: string }>`
 
   @media (max-width: 768px) {
     padding: 0 1.25rem 1.5rem;
-    padding-bottom: ${({ show_success }) => (show_success ? "0" : "1.5rem")};
-    margin-top: ${({ display_on_mobile, show_success }) =>
-      display_on_mobile ? "0" : show_success ? "0" : "46px"};
+    margin-top: ${({ display_on_mobile }) =>
+      display_on_mobile ? "0" : "46px"};
   }
 `;
 

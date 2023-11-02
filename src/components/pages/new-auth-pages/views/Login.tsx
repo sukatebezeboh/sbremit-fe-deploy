@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "redux/actions/actions";
 
 const schema = yup.object({
-  email: yup.string().email().required().label("Email"),
+  username: yup.string().email().required().label("Email"),
   password: yup.string().min(6).max(255).required().label("Password"),
 });
 
@@ -30,7 +30,7 @@ const Login = () => {
       />
 
       <Formik
-        initialValues={{ password: "", email: "" }}
+        initialValues={{ password: "", username: "" }}
         validationSchema={schema}
         onSubmit={(values) => {
           dispatch(signInAction(values, history));
@@ -44,10 +44,10 @@ const Login = () => {
                   label="Email Address"
                   placeholder="Enter your email address"
                   type="email"
-                  name="email"
-                  value={values.email}
-                  error={errors.email}
-                  onChange={handleChange("email")}
+                  name="username"
+                  value={values.username}
+                  error={errors.username}
+                  onChange={handleChange("username")}
                 />
                 <div>
                   <AuthInput

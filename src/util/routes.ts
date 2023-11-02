@@ -23,17 +23,14 @@ const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
 const ResetPassword = lazy(
-  () => import("../components/pages/reset-password/ResetPassword")
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordResetComplete = lazy(
   () =>
     import("../components/pages/password-reset-complete/PasswordResetComplete")
 );
 const AccountConfirmation = lazy(
-  () =>
-    import(
-      "../components/email-templates/account-confirmation/AccountConfirmation"
-    )
+  () => import("../components/pages/new-auth-pages/views/VerifyEmail")
 );
 const PasswordReset = lazy(
   () => import("../components/email-templates/password-reset/PasswordReset")

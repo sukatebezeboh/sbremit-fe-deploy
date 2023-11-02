@@ -511,7 +511,15 @@ export const resetPasswordAction = (
       )
       .then((res) => {
         if (res.status === 200) {
-          linkTo(values.username);
+          toastAction({
+            show: true,
+            type: "success",
+            timeout: 10000,
+            message: "A link to reset your password has been sent",
+          });
+          if (linkTo) {
+            linkTo(values.username);
+          }
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
@@ -545,6 +553,9 @@ export const resetPasswordAction = (
             timeout: 15000,
             message: `Password changed`,
           });
+          if (linkTo) {
+            linkTo(values.username);
+          }
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
@@ -1476,10 +1487,10 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
     });
   }
 };
-export const confirmAccountEmail = (redirectTo: Function) => {
+export const confirmAccountEmail = (token: string, showSuccess?: Function) => {
   store.dispatch({ type: LOADING, payload: true });
-  const token = window.location.pathname.replace("/confirm-account/", "");
-  // const token = getQueryParam('token')
+  // const token = window.location.pathname.replace("/confirm-account/", "");
+  // const token = getQueryParam("token");
   const phone = getQueryParam("phone");
   const returnRoute = getQueryParam("ret");
   if (!token) {
@@ -1511,7 +1522,9 @@ export const confirmAccountEmail = (redirectTo: Function) => {
           message: `${res.data.data?.message}`,
         });
         store.dispatch({ type: LOADING, payload: false });
-        redirectTo(paths.SIGN_IN);
+        if (showSuccess) {
+          showSuccess();
+        }
       } else {
         toastAction({
           show: true,
@@ -1521,7 +1534,7 @@ export const confirmAccountEmail = (redirectTo: Function) => {
         });
 
         if (returnRoute) {
-          redirectTo(returnRoute + "?phone=" + encodeURIComponent(phone));
+          // redirectTo(returnRoute + "?phone=" + encodeURIComponent(phone));
         }
         store.dispatch({ type: LOADING, payload: false });
       }

@@ -1,25 +1,38 @@
 import styled from "styled-components";
 import * as yup from "yup";
 import AuthHeader from "../components/AuthHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import { COUNTRIES } from "../utils/countries";
 import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
-import { signUpAction } from "redux/actions/actions";
+import { signUpAction, toastAction } from "redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const schema = yup.object({
   firstName: yup.string().trim().required().label("First name"),
   lastName: yup.string().trim().required().label("Last name"),
-  email: yup.string().email().required().label("Email"),
+  username: yup.string().email().required().label("Email"),
   password: yup.string().min(6).max(255).required().label("Password"),
-  phoneNumber: yup.string().min(9).max(11).required().label("Phone number"),
+  mobile: yup.string().min(9).max(11).required().label("Phone number"),
   dob: yup.date().required().label("Date of birth"),
-  referralCode: yup.string().label("Referral code"),
+  referral: yup.string().label("Referral code"),
 });
+
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  location_country: COUNTRIES[0].countryCode,
+  username: "",
+  dob: "",
+  password: "",
+  mobile: "",
+  checked: false,
+  referral: "",
+};
 
 const getEighteenYearsAgo = () => {
   let now = new Date();
@@ -29,18 +42,59 @@ const getEighteenYearsAgo = () => {
 
 const CreateAccount = () => {
   const [country, setCountry] = useState(COUNTRIES[0]);
+  const [email, setEmail] = useState("");
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const submitting = useSelector((state: any) => state.submitting);
+  const createAccountSuccess = useSelector(
+    (state: any) => state.createAccountSuccess
+  );
+  const createAccountError = useSelector(
+    (state: any) => state.createAccountError
+  );
 
   const handleSubmit = (values: any) => {
-    dispatch(
-      signUpAction({
-        ...values,
-        clientIp: window.localStorage.getItem("IP_Address"),
-        dob: values.dob.split("-").reverse().join("-"),
-      })
-    );
+    setEmail(values.username);
+    const newValues = {
+      ...values,
+      location_country: country.countryCode,
+      clientIp: window.localStorage.getItem("IP_Address"),
+      dob: values.dob.split("-").reverse().join("-"),
+      settings: {
+        marketingPermission: !values.checked,
+      },
+    };
+    dispatch(signUpAction(newValues));
   };
+
+  useEffect(() => {
+    if (createAccountSuccess !== null) {
+      toastAction({
+        show: true,
+        type: "success",
+        timeout: 10000,
+        message: "Account created successfully. Verify your email",
+      });
+      history.push({
+        pathname: paths.CONFIRM_ACCOUNT_EMAIL,
+        state: { username: email },
+      });
+    }
+  }, [createAccountSuccess]);
+
+  useEffect(() => {
+    if (createAccountError) {
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 10000,
+        message:
+          createAccountError?.message ||
+          "There was error creating your account",
+      });
+    }
+  }, [createAccountError]);
 
   return (
     <AuthLayout>
@@ -51,15 +105,7 @@ const CreateAccount = () => {
       />
 
       <Formik
-        initialValues={{
-          password: "",
-          firstName: "",
-          lastName: "",
-          dob: "",
-          referralCode: "",
-          email: "",
-          phoneNumber: "",
-        }}
+        initialValues={{ ...initialValues }}
         validationSchema={schema}
         onSubmit={handleSubmit}
       >
@@ -92,20 +138,20 @@ const CreateAccount = () => {
                   placeholder="Enter your email address"
                   required
                   type="email"
-                  name="email"
-                  value={values.email}
-                  error={errors.email}
-                  onChange={handleChange("email")}
+                  name="username"
+                  value={values.username}
+                  error={errors.username}
+                  onChange={handleChange("username")}
                 />
                 <AuthInput
                   label="Phone Number"
                   placeholder={country.dialCode}
                   required
                   type="tel"
-                  name="phoneNumber"
-                  value={values.phoneNumber}
-                  error={errors.phoneNumber}
-                  onChange={handleChange("phoneNumber")}
+                  name="mobile"
+                  value={values.mobile}
+                  error={errors.mobile}
+                  onChange={handleChange("mobile")}
                   countryInfo={{ country, setCountry }}
                 />
                 <AuthInput
@@ -132,14 +178,21 @@ const CreateAccount = () => {
                   <AuthInput
                     label="Referral code(optional)"
                     placeholder="Enter referral code"
-                    name="referralCode"
-                    value={values.referralCode}
-                    error={errors.referralCode}
-                    onChange={handleChange("referralCode")}
+                    name="referral"
+                    value={values.referral}
+                    error={errors.referral}
+                    onChange={handleChange("referral")}
                   />
                 </FlexRow>
                 <CheckboxContainer>
-                  <input type="checkbox" id="cancelCheckContact" />
+                  <input
+                    id="cancelCheckContact"
+                    onChange={handleChange("checked")}
+                    checked={values.checked}
+                    value={values.checked as any}
+                    type="checkbox"
+                    name="checked"
+                  />
                   <label htmlFor="cancelCheckContact">
                     By ticking this box, you do not wish to be contacted for
                     marketing information purposes or any special offer.

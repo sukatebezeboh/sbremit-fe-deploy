@@ -2,7 +2,6 @@ import AuthHeader from "../components/AuthHeader";
 import styled from "styled-components";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
-import { useHistory } from "react-router-dom";
 import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
@@ -11,17 +10,15 @@ import { resetPasswordAction } from "redux/actions/actions";
 import { useSelector } from "react-redux";
 
 const schema = yup.object().shape({
-  email: yup.string().email().required().label("Email"),
+  username: yup.string().email().required().label("Email"),
 });
 
 const ForgotPassword = () => {
-  const { push } = useHistory();
   const isSubmitting = useSelector((state: any) => state.submitting);
 
-  const handleSendLink = () => push(paths.PASSWORD_EMAIL_RESET);
   const onSubmit = (values: any) => {
     const newValue = { ...values, type: "EMAIL" };
-    resetPasswordAction(newValue, "email", handleSendLink);
+    resetPasswordAction(newValue, "email");
   };
 
   return (
@@ -33,7 +30,7 @@ const ForgotPassword = () => {
       />
 
       <Formik
-        initialValues={{ email: "" }}
+        initialValues={{ username: "" }}
         validationSchema={schema}
         onSubmit={onSubmit}
       >
@@ -45,18 +42,18 @@ const ForgotPassword = () => {
                   label="Email Address"
                   placeholder="Enter your email address"
                   type="email"
-                  name="email"
-                  value={values.email}
-                  error={errors.email}
-                  onChange={handleChange("email")}
+                  name="username"
+                  value={values.username}
+                  error={errors.username}
+                  onChange={handleChange("username")}
                 />
               </div>
 
               <AuthButton
                 type="submit"
                 title="Send link"
-                disabled={isSubmitting}
-                isLoading={isSubmitting}
+                disabled={isSubmitting === paths.RESET_PASSWORD}
+                isLoading={isSubmitting === paths.RESET_PASSWORD}
               />
             </Content>
           </Form>

@@ -5,13 +5,14 @@ import { Form, Formik } from "formik";
 import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
+import { resetPasswordAction } from "redux/actions/actions";
+import { useSelector } from "react-redux";
 import { paths } from "util/paths";
 import { useHistory } from "react-router-dom";
-import { resetPasswordAction } from "redux/actions/actions";
 
 const schema = yup.object({
   password: yup.string().min(6).max(255).required().label("Password"),
-  confirmPassword: yup
+  confirmation: yup
     .string()
     .required("Confirm password is required")
     .label("Confirm Password")
@@ -19,11 +20,11 @@ const schema = yup.object({
 });
 
 const ResetPasssword = () => {
+  const isSubmitting = useSelector((state: any) => state.submitting);
   const { push } = useHistory();
+  const handleSendLink = () => push(paths.SIGN_IN);
   const onSubmit = (values: any) => {
-    // console.log(values);
-    resetPasswordAction(values, "email");
-    push(paths.PASSWORD_EMAIL_RESET);
+    resetPasswordAction(values, "reset", handleSendLink);
   };
 
   return (
@@ -35,7 +36,7 @@ const ResetPasssword = () => {
       />
 
       <Formik
-        initialValues={{ password: "", confirmPassword: "" }}
+        initialValues={{ password: "", confirmation: "" }}
         validationSchema={schema}
         onSubmit={onSubmit}
       >
@@ -56,13 +57,18 @@ const ResetPasssword = () => {
                   label="Confirm Password"
                   placeholder="Confirm password"
                   type="password"
-                  name="confirmPassword"
-                  value={values.confirmPassword}
-                  error={errors.confirmPassword}
-                  onChange={handleChange("confirmPassword")}
+                  name="confirmation"
+                  value={values.confirmation}
+                  error={errors.confirmation}
+                  onChange={handleChange("confirmation")}
                 />
               </div>
-              <AuthButton type="submit" title="Save password" />
+              <AuthButton
+                type="submit"
+                title="Save password"
+                isLoading={isSubmitting}
+                disabled={isSubmitting}
+              />
             </Content>
           </Form>
         )}
