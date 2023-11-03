@@ -1,16 +1,20 @@
 import { Suspense, lazy, LazyExoticComponent } from "react";
 import { paths } from "./paths";
 
-const SignUp = lazy(() => import("../components/pages/sign-up/SignUp"));
-const SignIn = lazy(() => import("../components/pages/sign-in/SignIn"));
-const ForgetPassword = lazy(
-  () => import("../components/pages/forget-password/ForgetPassword")
+const SignUp = lazy(
+  () => import("../components/pages/new-auth-pages/views/CreateAccount")
 );
-const PasswordEmailReset = lazy(
-  () => import("../components/pages/password-email-reset/PasswordEmailReset")
+const SignIn = lazy(
+  () => import("../components/pages/new-auth-pages/views/Login")
+);
+const ForgetPassword = lazy(
+  () => import("../components/pages/new-auth-pages/views/ForgotPassword")
 );
 const EmailLinkSent = lazy(
   () => import("../components/pages/email-link-sent/EmailLinkSent")
+);
+const PasswordEmailReset = lazy(
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordSMSReset = lazy(
   () => import("../components/pages/password-sms-reset/PasswordSMSReset")
@@ -18,18 +22,18 @@ const PasswordSMSReset = lazy(
 const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
+const VerifyPasswordReset = lazy(
+  () => import("../components/pages/new-auth-pages/views/VerifyPasswordReset")
+);
 const ResetPassword = lazy(
-  () => import("../components/pages/reset-password/ResetPassword")
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordResetComplete = lazy(
   () =>
     import("../components/pages/password-reset-complete/PasswordResetComplete")
 );
 const AccountConfirmation = lazy(
-  () =>
-    import(
-      "../components/email-templates/account-confirmation/AccountConfirmation"
-    )
+  () => import("../components/pages/new-auth-pages/views/VerifyEmail")
 );
 const PasswordReset = lazy(
   () => import("../components/email-templates/password-reset/PasswordReset")
@@ -294,6 +298,11 @@ export const Routing: IRoute[] = [
   {
     path: paths.CONFIRM_ACCOUNT_SMS,
     component: AccountConfirmationSMSCode,
+    protected: false,
+  },
+  {
+    path: paths.VERIFY_PASSWORD_RESET,
+    component: VerifyPasswordReset,
     protected: false,
   },
   {
