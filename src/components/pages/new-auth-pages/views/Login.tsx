@@ -2,7 +2,7 @@ import styled from "styled-components";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import AuthHeader from "../components/AuthHeader";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import AuthInput from "../components/AuthInput";
 import AuthButton from "../components/AuthButton";
 import AuthLayout from "./AuthLayout";
@@ -20,6 +20,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const submitting = useSelector((state: any) => state.submitting);
+  const isAuthenticated = useSelector(
+    (state: any) => state.auth.isAuthenticated,
+  )
+
+  if(isAuthenticated) return <Redirect to={paths.DASHBOARD} />
 
   return (
     <AuthLayout>
@@ -36,7 +41,7 @@ const Login = () => {
           dispatch(signInAction(values, history));
         }}
       >
-        {({ errors, values, handleChange }) => (
+        {({ errors, touched, values, handleChange }) => (
           <Form>
             <Content>
               <div className="form">
@@ -46,7 +51,8 @@ const Login = () => {
                   type="email"
                   name="username"
                   value={values.username}
-                  error={errors.username}
+                  errors={errors}
+                  touched={touched}
                   onChange={handleChange("username")}
                 />
                 <div>
@@ -56,7 +62,8 @@ const Login = () => {
                     type="password"
                     name="password"
                     value={values.password}
-                    error={errors.password}
+                    errors={errors}
+                    touched={touched}
                     onChange={handleChange("password")}
                   />
                   <Link to={paths.FORGET_PASSWORD}>Forgot Password?</Link>
@@ -84,7 +91,7 @@ const Login = () => {
                   }
                   onClick={() => push(paths.SIGN_UP)}
                 />
-                <AuthButton
+                {/* <AuthButton
                   title="Sign up with Google"
                   icon={
                     <Icon src="/assets/icons/google.svg" alt="googleIcon" />
@@ -98,7 +105,7 @@ const Login = () => {
                       alt="facebookIcon"
                     />
                   }
-                />
+                /> */}
               </ButtonsContainer>
             </Content>
           </Form>

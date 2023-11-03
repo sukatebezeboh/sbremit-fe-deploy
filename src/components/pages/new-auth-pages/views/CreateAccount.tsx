@@ -109,7 +109,7 @@ const CreateAccount = () => {
         validationSchema={schema}
         onSubmit={handleSubmit}
       >
-        {({ errors, values, handleChange }) => (
+        {({ errors, touched, values, handleChange }) => (
           <Form>
             <Content>
               <div className="form">
@@ -120,7 +120,9 @@ const CreateAccount = () => {
                     required
                     name="firstName"
                     value={values.firstName}
-                    error={errors.firstName}
+                    // error={errors.firstName}
+                    errors={errors}
+                    touched={touched}
                     onChange={handleChange("firstName")}
                   />
                   <AuthInput
@@ -129,7 +131,9 @@ const CreateAccount = () => {
                     required
                     name="lastName"
                     value={values.lastName}
-                    error={errors.lastName}
+                    // error={errors.lastName}
+                    errors={errors}
+                    touched={touched}
                     onChange={handleChange("lastName")}
                   />
                 </FlexRow>
@@ -140,7 +144,9 @@ const CreateAccount = () => {
                   type="email"
                   name="username"
                   value={values.username}
-                  error={errors.username}
+                  // error={errors.username}
+                  errors={errors}
+                  touched={touched}
                   onChange={handleChange("username")}
                 />
                 <AuthInput
@@ -150,7 +156,9 @@ const CreateAccount = () => {
                   type="tel"
                   name="mobile"
                   value={values.mobile}
-                  error={errors.mobile}
+                  // error={errors.mobile}
+                  errors={errors}
+                  touched={touched}
                   onChange={handleChange("mobile")}
                   countryInfo={{ country, setCountry }}
                 />
@@ -161,7 +169,9 @@ const CreateAccount = () => {
                   type="password"
                   name="password"
                   value={values.password}
-                  error={errors.password}
+                  // error={errors.password}
+                  errors={errors}
+                  touched={touched}
                   onChange={handleChange("password")}
                 />
                 <FlexRow className="wrap">
@@ -171,7 +181,9 @@ const CreateAccount = () => {
                     type="date"
                     name="dob"
                     value={values.dob}
-                    error={errors.dob}
+                    // error={errors.dob}
+                    errors={errors}
+                    touched={touched}
                     onChange={handleChange("dob")}
                     max={getEighteenYearsAgo()}
                   />
@@ -180,7 +192,9 @@ const CreateAccount = () => {
                     placeholder="Enter referral code"
                     name="referral"
                     value={values.referral}
-                    error={errors.referral}
+                    // error={errors.referral}
+                    errors={errors}
+                    touched={touched}
                     onChange={handleChange("referral")}
                   />
                 </FlexRow>

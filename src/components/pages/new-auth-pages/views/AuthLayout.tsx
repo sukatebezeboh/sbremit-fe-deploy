@@ -33,7 +33,8 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
 export default AuthLayout;
 
 const Wrapper = styled.div`
-  height: 100vh;
+  min-height: 100vh;
+  height: fit-content;
   display: flex;
 
   @media (max-width: 768px) {
@@ -83,7 +84,7 @@ const Content = styled.div<{ display_on_mobile: string }>`
 const Container = styled.div`
   max-width: 754px;
   width: 100%;
+  min-height: fit-content;
   padding-inline: 2px;
-
   overflow-y: auto;
 `;

@@ -19,7 +19,7 @@ const VerifyEmail = () => {
   const [otp, setOtp] = useState("");
   const isLoading = useSelector((state: any) => state.loading);
 
-  const { username }: any = history?.location?.state;
+  const { username }: any = history?.location?.state || {};
   if (!username) {
     history.replace(paths.SIGN_UP);
     return <></>;

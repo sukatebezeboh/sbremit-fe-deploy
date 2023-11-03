@@ -19,6 +19,8 @@ type Props = {
   required?: boolean;
   error?: string;
   name: string;
+  errors?: any;
+  touched?: any;
 
   countryInfo?: {
     country: Country;
@@ -34,11 +36,15 @@ const AuthInput = React.forwardRef(
       placeholder,
       required,
       error,
+      errors,
+      touched,
       countryInfo,
       name,
       ...otherProps
     } = props;
     const [showPassword, setShowPassword] = useState(false);
+
+    const showError = errors?.[name] && touched?.[name]
 
     return (
       <Container>
@@ -57,7 +63,7 @@ const AuthInput = React.forwardRef(
           )}
           <Input
             {...otherProps}
-            show_error={error}
+            show_error={showError}
             type={showPassword ? "text" : type}
             placeholder={placeholder}
             name={name}
@@ -74,7 +80,7 @@ const AuthInput = React.forwardRef(
               ))}
           </PasswordMask>
         </InputContainer>
-        {error && <Error>{error}</Error>}
+        {errors?.[name] && touched?.[name] && <Error>{errors?.[name]}</Error>}
       </Container>
     );
   }
