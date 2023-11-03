@@ -1368,7 +1368,7 @@ export  const userVerificationAction = async(
     .then((res) => {
       if (res.data.status === "200") {
         store.dispatch({ type: LOADING, payload: false });
-        callback?.();
+        return callback();
       } else {
         toastAction({
           show: true,
@@ -1379,8 +1379,14 @@ export  const userVerificationAction = async(
         store.dispatch({ type: LOADING, payload: false });
       }
     })
-    .catch(() => {
+    .catch((error: any) => {
       store.dispatch({ type: LOADING, payload: false });
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 10000,
+        message: error.message,
+      });
     })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
