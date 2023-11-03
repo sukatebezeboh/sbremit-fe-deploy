@@ -22,6 +22,9 @@ const PasswordSMSReset = lazy(
 const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
+const VerifyPasswordReset = lazy(
+  () => import("../components/pages/new-auth-pages/views/VerifyPasswordReset")
+);
 const ResetPassword = lazy(
   () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
@@ -295,6 +298,11 @@ export const Routing: IRoute[] = [
   {
     path: paths.CONFIRM_ACCOUNT_SMS,
     component: AccountConfirmationSMSCode,
+    protected: false,
+  },
+  {
+    path: paths.VERIFY_PASSWORD_RESET,
+    component: VerifyPasswordReset,
     protected: false,
   },
   {

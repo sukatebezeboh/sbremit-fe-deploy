@@ -22,7 +22,7 @@ const schema = yup.object({
 const ResetPasssword = () => {
   const isSubmitting = useSelector((state: any) => state.submitting);
   const { push } = useHistory();
-  const handleSendLink = () => push(paths.SIGN_IN);
+  const handleSendLink = () => push({pathname: paths.SIGN_IN});
   const onSubmit = (values: any) => {
     resetPasswordAction(values, "reset", handleSendLink);
   };

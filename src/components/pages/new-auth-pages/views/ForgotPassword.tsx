@@ -8,6 +8,7 @@ import AuthLayout from "./AuthLayout";
 import { paths } from "util/paths";
 import { resetPasswordAction } from "redux/actions/actions";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const schema = yup.object().shape({
   username: yup.string().email().required().label("Email"),
@@ -15,10 +16,16 @@ const schema = yup.object().shape({
 
 const ForgotPassword = () => {
   const isSubmitting = useSelector((state: any) => state.submitting);
+  const history = useHistory();
 
   const onSubmit = (values: any) => {
     const newValue = { ...values, type: "EMAIL" };
-    resetPasswordAction(newValue, "email");
+    resetPasswordAction(newValue, "email", () => {
+      history.push({
+        pathname: paths.VERIFY_PASSWORD_RESET,
+        state: { username: values?.username },
+      });
+    });
   };
 
   return (

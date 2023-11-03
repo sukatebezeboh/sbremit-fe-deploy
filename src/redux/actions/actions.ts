@@ -498,7 +498,7 @@ export const changePasswordAction = (values: any) => {
 export const resetPasswordAction = (
   values: any,
   stage = "email",
-  linkTo?: any
+  callback?: any,
 ) => {
   store.dispatch({ type: SUBMITTING, payload: paths.RESET_PASSWORD });
 
@@ -517,9 +517,7 @@ export const resetPasswordAction = (
             timeout: 10000,
             message: "A link to reset your password has been sent",
           });
-          if (linkTo) {
-            linkTo(values.username);
-          }
+          callback?.()
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
@@ -553,9 +551,10 @@ export const resetPasswordAction = (
             timeout: 15000,
             message: `Password changed`,
           });
-          if (linkTo) {
-            linkTo(values.username);
-          }
+          // if (linkTo) {
+          //   linkTo(values.username);
+          // }
+          callback?.()
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
