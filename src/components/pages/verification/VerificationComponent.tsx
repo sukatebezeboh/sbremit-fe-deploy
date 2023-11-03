@@ -13,6 +13,7 @@ import Body from "./Verification.css";
 import VerificationForm from "./VerificationForm";
 import { ComplyCubeVerification } from "./ComplyCubeVerification";
 import { useHistory } from "react-router-dom";
+import { Button } from "@mui/material";
 
 // INVALID VALID PENDING FAILED
 
@@ -24,6 +25,7 @@ export const VerificationComponent = () => {
 
   const [method, setMethod] = useState("");
   const user = useSelector((state: any) => state.auth.user);
+  const [isFormVerified, setFormVerified] = useState(false);
 
   const transferId = new URLSearchParams(window.location.search).get("t");
   console.log("transferId", transferId);
@@ -37,19 +39,21 @@ export const VerificationComponent = () => {
 
   useEffect(() => {
     refreshUserDetails();
+    setFormVerified(Boolean(user?.meta?.verified));
   }, []);
 
   useEffect(() => {
     setSelectedCountry(initialValues.location_country);
   }, [initialValues.location_country]);
 
-  const isFormVerified = user?.meta?.verified !== "1" ? false : true;
+  //const isFormVerified = user?.meta?.verified !== "1" ? false : true;
 
   const verifyUser = async (values: any) => {
-    try {
-      await userVerificationAction(values, () => {});
+    const StartComplyCubeVerification = () => {
+      setFormVerified(true);
       setDisplayComplyCubeVerification(true);
-    } catch (error) {}
+    };
+    await userVerificationAction(values, StartComplyCubeVerification);
   };
 
   return (
@@ -81,9 +85,27 @@ export const VerificationComponent = () => {
       ) : (
         <p>✅ Verification form completed</p>
       )}
-      <ComplyCubeVerification />
-      {(displayComplyCubeVerification ||
-        isFormVerified) && <ComplyCubeVerification />}
+      {/* <ComplyCubeVerification /> */}
+      {(displayComplyCubeVerification || isFormVerified) && (
+        <ComplyCubeVerification />
+      )}
+      <GoToDahboard />
     </div>
+  );
+};
+
+const GoToDahboard = () => {
+  const history = useHistory();
+  return (
+    <Button
+      variant="contained"
+      style={{ background: "#fcd20f", color: "#333333" }}
+      size="large"
+      onClick={() => {
+        history.push("/dashboard");
+      }}
+    >
+      Go back to Dashboard
+    </Button>
   );
 };
