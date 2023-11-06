@@ -76,6 +76,7 @@ export const convertDateString = (value: any) => {
   return d.toDateString();
 };
 
+
 export const getValueFromArray = (
   id: string | number,
   targetId: string | number,
@@ -144,7 +145,7 @@ export const translateTransactionStatus = (status: string) => {
     pending_verification: "Pending ID verification",
     pending_documentation: "Pending documentation",
     payment_suspended: "Payment suspended",
-    payment_fraud: "Contact Us"
+    payment_fraud: "Contact Us",
   };
 
   return verboseStatus[status] || status?.replaceAll("_", " ");
@@ -525,4 +526,11 @@ export const getCountriesFiltered = (payOutCountries: any) => {
   });
 
   return countries;
+};
+
+export const getImage = (name: string, folder: string = "") => {
+  if (folder === "") {
+    return `/${name}`;
+  }
+  return `/assets/${folder}/${name}`;
 };
