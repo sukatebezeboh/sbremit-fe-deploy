@@ -1,6 +1,21 @@
 import { Suspense, lazy, LazyExoticComponent } from "react";
 import { paths } from "./paths";
+// import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
 
+//redesigned pages
+const TransferCompleteAuth = lazy(
+  () =>
+    import(
+      "../components/pages/transcations-flow/app-pages/app-payment-complete/PaymentComplete"
+    )
+);
+const AppTransactions = lazy(
+  () =>
+    import(
+      "../components/pages/transcations-flow/app-pages/app-transactions/Transcations"
+    )
+);
+//----
 const SignUp = lazy(() => import("../components/pages/sign-up/SignUp"));
 const SignIn = lazy(() => import("../components/pages/sign-in/SignIn"));
 const ForgetPassword = lazy(
@@ -189,6 +204,25 @@ export const Routing: IRoute[] = [
     exact: false,
     footerless: true,
   },
+  {
+    path: paths.TRANSACTIONS,
+    component: AppTransactions,
+    protected: true,
+    footerless: true,
+  },
+  {
+    path: paths.AXCESS_MERCHANT,
+    component: AxcessMerchant,
+    protected: true,
+    footerless: true,
+  },
+  {
+    path: paths.TRANSFER_COMPLETE_AUTH,
+    component: TransferCompleteAuth,
+    protected: true,
+    footerless: true,
+  },
+  // ----
   // {
   //     path: paths.BLOG,
   //     component: Blog,
@@ -421,12 +455,6 @@ export const Routing: IRoute[] = [
     path: paths.TRUELAYER_PROVIDERS,
     component: TruelayerProviders,
     protected: true,
-  },
-  {
-    path: paths.AXCESS_MERCHANT,
-    component: AxcessMerchant,
-    protected: true,
-    footerless: true,
   },
   {
     path: paths.TRUSTPAYMENT_FOR_MOBILE,

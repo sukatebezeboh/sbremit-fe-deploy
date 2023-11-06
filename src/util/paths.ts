@@ -30,6 +30,7 @@ export const paths = {
   CARD_PAYMENT: "/card-payment",
   CREATE_TRANSFER: "/create-transfer",
   TRANSFER_COMPLETE: "/transfer-complete/:transferId?",
+  TRANSFER_COMPLETE_AUTH: `/transfer-completed/:transferId?`,
   //--temporary fix
   TRANSFER_COMPLETE_FORAUTH_USER: "/auth-transfer-complete/:transferId?",
   //--
@@ -55,7 +56,10 @@ export const paths = {
   TANZANIA: "/content/about/tanzania",
   CONTACT: "/content/contact",
   MOBILE_MONEY_RATE: "/mobile-money-rate",
-  AXCESS_MERCHANT: "/axcess-merchant/:checkoutID/:transferId",
+  AXCESS_MERCHANT: "/axcess-payment",
 
   NOT_FOUND: "*",
+
+  TRANSACTIONS: "/transactions",
+  ACCOUNT_STATEMENTS: "/account-statements",
 };
