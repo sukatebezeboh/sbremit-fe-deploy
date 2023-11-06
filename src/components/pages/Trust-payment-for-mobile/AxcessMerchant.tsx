@@ -4,10 +4,10 @@ import AxcssPaymentForm from "../payment-method/payment-option/AxcssPaymentForm"
 import { useParams } from "react-router-dom";
 
 const Body = styled.div`
-  background: #fff;
+  //background: #fff;
   width: auto;
   min-width: 320px;
-  max-width: 800px;
+  width: 100%;
   height: auto;
   display: flex;
   align-items: center;
@@ -44,36 +44,13 @@ export default function AxcessMerchant() {
   const transferId = params.transferId;
 
   // The design of this page is temporary and will be updated once the redesign is completed by the UI/UX team.
-  
+
   return (
     <Body>
-      <CustomFlexBox $direction="column" $gap={16}>
-        <CustomFlexBox $direction="row" $gap={12}>
-          <Title>Pay with Card:</Title>
-          <img
-            alt="master-card-img"
-            width={80}
-            src="https://cdn4.iconfinder.com/data/icons/payment-method/160/payment_method_master_card-512.png"
-          />
-          <img
-            alt="visa-card-img"
-            width={80}
-            src="https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/363_Visa_Credit_Card_logo-512.png"
-          />
-          <img
-            alt="american-express-img"
-            width={80}
-            src="https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/16_Amex_Credit_Card_logo_logos-256.png"
-          />
-        </CustomFlexBox>
-        <AxcssPaymentForm
-          checkoutId={checkoutID}
-          shopperResultUrl={`/auth-transfer-complete/${transferId}`}
-        />
-        <span>
-          Powered by: <strong>Axcess Merchant services</strong>
-        </span>
-      </CustomFlexBox>
+      <AxcssPaymentForm
+        checkoutId={checkoutID}
+        shopperResultUrl={`/auth-transfer-complete/${transferId}`}
+      />
     </Body>
   );
 }

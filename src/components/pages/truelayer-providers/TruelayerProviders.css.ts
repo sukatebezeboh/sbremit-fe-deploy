@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export default styled.div`
+   padding: 100px;
 .page-content {
-    margin-top: 0px;
     .box-container {
         display: grid;
         grid-template-columns: 2fr 1.5fr;

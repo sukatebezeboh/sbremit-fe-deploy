@@ -1,43 +1,42 @@
-import React, { useState } from 'react'
-import { Link, Redirect, useHistory } from 'react-router-dom'
-import style from '../shared/auth.css'
-import ForgotPasswordModal from '../../modules/forgot-password-modal/ForgotPasswordModal'
-import SBRemitLogo from '../../modules/sbremit-logo/SBRemitLogo'
-import { SignInValidator } from '../../../util/form-validators'
-import { Field, Form, Formik } from 'formik'
-import { useDispatch, useSelector } from 'react-redux'
-import { signInAction } from '../../../redux/actions/actions'
-import ButtonLoader from '../../modules/button-loader/ButtonLoader'
-import { SIGN_IN } from '../../../redux/actionTypes'
-import { paths } from '../../../util/paths'
+import React, { useState } from "react";
+import { Link, Redirect, useHistory } from "react-router-dom";
+import style from "../shared/auth.css";
+import ForgotPasswordModal from "../../modules/forgot-password-modal/ForgotPasswordModal";
+import SBRemitLogo from "../../modules/sbremit-logo/SBRemitLogo";
+import { SignInValidator } from "../../../util/form-validators";
+import { Field, Form, Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { signInAction } from "../../../redux/actions/actions";
+import ButtonLoader from "../../modules/button-loader/ButtonLoader";
+import { SIGN_IN } from "../../../redux/actionTypes";
+import { paths } from "../../../util/paths";
 
-const Body = style('signin')
+const Body = style("signin");
 
 const SignIn = () => {
-  const [passwordType, setPasswordType] = useState('password')
-  const [pwIcon, setPwIcon] = useState('show')
-  const [showModal, setShowModal] = useState(false)
-  const history = useHistory()
-  const dispatch = useDispatch()
-  const submitting = useSelector((state: any) => state.submitting)
+  const [passwordType, setPasswordType] = useState("password");
+  const [pwIcon, setPwIcon] = useState("show");
+  const [showModal, setShowModal] = useState(false);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const submitting = useSelector((state: any) => state.submitting);
   const isAuthenticated = useSelector(
-    (state: any) => state.auth.isAuthenticated,
-  )
+    (state: any) => state.auth.isAuthenticated
+  );
 
   const handlePasswordClick = () => {
     setPasswordType((prevValue) => {
-      return prevValue === 'password' ? 'text' : 'password'
-    })
+      return prevValue === "password" ? "text" : "password";
+    });
     setPwIcon((prevValue) => {
-      return prevValue === 'show' ? 'hide' : 'show'
-    })
-  }
-
+      return prevValue === "show" ? "hide" : "show";
+    });
+  };
 
   const initialValues: any = {
-    username: '',
-    password: '',
-  }
+    username: "",
+    password: "",
+  };
 
   return isAuthenticated ? (
     <Redirect to={paths.DASHBOARD} />
@@ -51,24 +50,24 @@ const SignIn = () => {
           initialValues={{ ...initialValues }}
           validationSchema={SignInValidator}
           onSubmit={(values) => {
-            dispatch(signInAction(values, history))
+            dispatch(signInAction(values, history));
           }}
         >
           {({ errors, touched, values }: any) => (
             <Form className="form">
               <div className="heading">Welcome back!</div>
               <div className="sub-heading">
-                New to SBremit?{' '}
-                <Link to={{ pathname: '/sign-up', state: { fromLogin: true } }}>
+                New to SBremit?{" "}
+                <Link to={{ pathname: "/sign-up", state: { fromLogin: true } }}>
                   <span>Sign up</span>
-                </Link>{' '}
+                </Link>{" "}
               </div>
               <div className="inputs">
                 <div></div>
                 <div
                   className={
-                    'email ' +
-                    (touched.username && errors.username ? 'form-error' : '')
+                    "email " +
+                    (touched.username && errors.username ? "form-error" : "")
                   }
                 >
                   <div>Email or Phone Number</div>
@@ -83,14 +82,14 @@ const SignIn = () => {
                 </div>
                 <div
                   className={
-                    touched.password && errors.password ? 'form-error' : ''
+                    touched.password && errors.password ? "form-error" : ""
                   }
                 >
                   <div>
-                    Password{' '}
+                    Password{" "}
                     <span
                       className="f-pass"
-                      onClick={() => history.push('/forget-password')}
+                      onClick={() => history.push("/forget-password")}
                     >
                       Forgot Password?
                     </span>
@@ -118,8 +117,8 @@ const SignIn = () => {
                   className="grid-col-1-0"
                   disabled={submitting === SIGN_IN}
                 >
-                  {' '}
-                  <span>Sign in</span>{' '}
+                  {" "}
+                  <span>Sign in</span>{" "}
                   {submitting === SIGN_IN && <ButtonLoader />}
                 </button>
               </div>
@@ -128,7 +127,7 @@ const SignIn = () => {
         </Formik>
       </div>
     </Body>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;
