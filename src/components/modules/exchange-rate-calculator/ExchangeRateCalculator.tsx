@@ -232,13 +232,20 @@ const ExchangeRateCalculator = ({
                   <div className="point-icon">-</div>
 
                   <div className="point-text">
-                    {/* Promo code {promoText ? <span className="deep-green"> {promoText} </span> : <span className="red-txt"> *Spend btw: {promo?.settings?.minimumSpend} {toSend.currency} and {promo?.settings?.maximumSpend} {toSend.currency}  </span>} */}
                     Promo code{" "}
                     {promoText ? (
                       <span className="deep-green"> {promoText} </span>
                     ) : (
+
+                    //   <span className="red-txt">
+                    //     {" "}
+                    //     *Spend btw: {promo?.settings?.minimumSpend}{" "}
+                    //     {toSend.currency} and {promo?.settings?.maximumSpend}{" "}
+                    //     {toSend.currency}{" "}
+                    //   </span>
+
                       <>
-                        <span className="red-txt">
+                        <span className="deep-txt">
                           {promo?.settings?.baseCurrency != undefined ? (
                             <span>
                               {" "}

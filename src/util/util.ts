@@ -144,6 +144,8 @@ export const translateTransactionStatus = (status: string) => {
     pending_verification: "Pending ID verification",
     pending_documentation: "Pending documentation",
     payment_suspended: "Payment suspended",
+    payment_fraud: "Contact Us",
+    payment_declined: "Payment Declined",
   };
 
   return verboseStatus[status] || status?.replaceAll("_", " ");
@@ -248,7 +250,25 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS = () => {
 };
 
 export const userIsVerified = (user: any): boolean => {
-  return Boolean(user?.meta?.verified) && user?.meta?.verified !== "retry";
+  let verificationList = [];
+
+  if (user?.verifications) {
+    for (const key in user.verifications) {
+      verificationList.push(user.verifications[key]);
+    }
+  }
+
+  const idVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "IDENTITY"
+  );
+
+  const idAttempted = idVerification && idVerification.status !== "PENDING";
+
+  return (
+    Boolean(user?.meta?.verified) &&
+    user?.meta?.verified !== "retry" &&
+    idAttempted
+  );
 };
 
 export const isUserFirstTransaction = (user: any): boolean => {

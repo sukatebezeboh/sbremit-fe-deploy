@@ -96,15 +96,14 @@ export const remittanceHandlersTransferCriteria: any[] = [
 ];
 
 export const maxTransfersUnverified: any = {
-
   GBP: 50,
   CAD: 75,
   EUR: 50,
   DKK: 200,
   NOK: 300,
   SEK: 300,
-  CHF: 50
-}
+  CHF: 50,
+};
 
 export const currencySymbols: any = {
   GBP: "£",
@@ -1629,6 +1628,7 @@ export const constants = {
   TRANSFER_STATUS_PAYMENT_COMPLETED: "PAYMENT_COMPLETED",
   TRANSFER_STATUS_COMPLETE: "COMPLETE",
   TRANSFER_STATUS_CANCELLED: "CANCELLED",
+  TRANSFER_PAYMENT_FRAUD: "PAYMENT_FRAUD",
 
   VERIFICATION_TYPE_DOCUMENT: "DOCUMENT",
   VERIFICATION_TYPE_IDENTITY: "IDENTITY",
@@ -1652,41 +1652,43 @@ export const constants = {
 
   REMITTANCE_COUNTRIES_CODES: ["CM", "UG", "KE", "TZ", "NG", "GH", "CI"],
 
-    SIGNUP_COUNTRIES: {
-      //   "AT": "Austria",
-        "BE": "Belgium",
-      //   "BG": "Bulgaria",
-        "CA": "Canada",
-      //   "HR": "Croatia",
-      //   "CY": "Cyprus",
-      //   "CZ": "Czech Republic",
-        "DK": "Denmark",
-      //   "EE": "Estonia",
-        "FI": "Finland",
-        "FR": "France",
-        "DE": "Germany",
-      //   "GR": "Greece",
-      //   "HU": "Hungary",
-        "IE": "Ireland",
-        "IT": "Italy",
-      //   "LT": "Lithuania",
-      //   "LU": "Luxembourg",
-      //   "MT": "Malta",
-        "NL": "Netherlands",
-        "NO": "Norway",
-      //   "PL": "Poland",
-      //   "PT": "Portugal",
-      //   "RO": "Romania",
-      //   "SK": "Slovakia",
-      //   "SI": "Slovenia",
-        "ES": "Spain",
-        "SE": "Sweden",
-        "CH": "Switzerland",
-        "GB": "United Kingdom",
-    },
+  SIGNUP_COUNTRIES: {
+    //   "AT": "Austria",
+    BE: "Belgium",
+    //   "BG": "Bulgaria",
+    CA: "Canada",
+    //   "HR": "Croatia",
+    //   "CY": "Cyprus",
+    //   "CZ": "Czech Republic",
+    DK: "Denmark",
+    //   "EE": "Estonia",
+    FI: "Finland",
+    FR: "France",
+    DE: "Germany",
+    //   "GR": "Greece",
+    //   "HU": "Hungary",
+    IE: "Ireland",
+    IT: "Italy",
+    //   "LT": "Lithuania",
+    //   "LU": "Luxembourg",
+    //   "MT": "Malta",
+    NL: "Netherlands",
+    NO: "Norway",
+    //   "PL": "Poland",
+    //   "PT": "Portugal",
+    //   "RO": "Romania",
+    //   "SK": "Slovakia",
+    //   "SI": "Slovenia",
+    ES: "Spain",
+    SE: "Sweden",
+    CH: "Switzerland",
+    GB: "United Kingdom",
+  },
 
-    COUNTRIES_PHONE_CODES: countriesAndCodes.sort((a, b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0 ),
-}
+  COUNTRIES_PHONE_CODES: countriesAndCodes.sort((a, b) =>
+    a.name > b.name ? 1 : a.name < b.name ? -1 : 0
+  ),
+};
 
 export const transferMethodsInWords: any = {
   1: "Mobile money",
@@ -1797,16 +1799,15 @@ export const countriesTransferMethodAvailability: any = {
     cash_pickup: false,
   },
   CI: {
-   mobile_money: true,
-   bank_transfer: true,
-   cash_pickup: false,
+    mobile_money: true,
+    bank_transfer: true,
+    cash_pickup: false,
   },
   ZA: {
-   mobile_money: true,
-   bank_transfer: true,
-   cash_pickup: false,
+    mobile_money: true,
+    bank_transfer: true,
+    cash_pickup: false,
   },
-
 };
 
 export const countriesAndCurrency = [

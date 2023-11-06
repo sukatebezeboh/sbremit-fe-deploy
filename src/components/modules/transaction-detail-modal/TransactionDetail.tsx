@@ -27,6 +27,7 @@ const TransactionDetail = (props: any) => {
     const transferPaymentMade  = () =>  {
        return data.status === constants.TRANSFER_STATUS_PAYMENT_COMPLETED || data.meta.paymentCompleted
     }
+    const paymentDeclinedReason = data?.meta?.decline_reason;
 
 
     return (
@@ -82,9 +83,15 @@ const TransactionDetail = (props: any) => {
                     </div>
                 </div>
 
+                {
+                    paymentDeclinedReason &&    
+                        <div className='fraud_reason'>
+                           <p><b>Payment declined due to: </b> {paymentDeclinedReason}</p>
+                        </div> 
+                }
                 <div className="details">
                     <RecipientDetailsBox recipientData={recipient} />
-                    <TransferDetailsBox transferData={data}  />
+                    <TransferDetailsBox transferData={data} />
                 </div>
             </div>
 

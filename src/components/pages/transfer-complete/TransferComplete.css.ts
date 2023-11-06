@@ -116,7 +116,7 @@ export default styled.div`
 @media only screen and (max-width: 900px) { 
 .page-content {
     width: 100%;
-    height: 120vh;
+     height: 120vh;
     margin-top: -10px;
     margin-bottom: -50px;
     padding-top: 10px;
