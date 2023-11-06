@@ -3,9 +3,9 @@ import { SIGN_UP, AUTH } from "../actionTypes";
 
 const initialState = {
   isAuthenticated: undefined,
-  user: undefined
+  user: undefined,
+  verification: true,
 };
-
 
 const auth = (state: any = initialState, action: IAction) => {
   switch (action.type) {
@@ -13,11 +13,11 @@ const auth = (state: any = initialState, action: IAction) => {
       break;
     }
     case AUTH: {
-      return {...action.payload}
+      return { ...state, ...action.payload };
     }
     default:
       return state;
   }
-}
+};
 
 export default auth;

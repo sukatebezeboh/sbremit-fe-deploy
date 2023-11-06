@@ -39,6 +39,7 @@ import {
 import http from "../../util/http";
 import { themeNames } from "../../components/modules/toast-factory/themes";
 import { constants, countriesAndCurrency } from "../../util/constants";
+import { filterNotifications } from "components/pages/transcations-flow/app-components/Notifications";
 
 const user = store.getState().auth.user;
 const serviceProvider = env.X_SERVICE_PROVIDER;
@@ -316,10 +317,18 @@ export const refreshUserDetails = (callback?: Function) => {
 };
 
 export const signOutAction = (ignoreRequest = false) => {
-  if (!ignoreRequest) {
+  const signOutClient = () => {
     store.dispatch({ type: LOADING, payload: true });
     http.delete(endpoints.SESSION).then((res) => {
       signOutOnClient();
+    });
+  };
+  if (!ignoreRequest) {
+    confirmDialog({
+      message: "Are you sure you want to logout your account?",
+      isPositive: true,
+      open: true,
+      callback: () => signOutClient(),
     });
   } else {
     signOutOnClient();
@@ -1352,12 +1361,15 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
   };
 };
 
-export const userVerificationAction = (
+export const userVerificationAction = async (
   values: any,
   callback: Function,
   skipVerification = false
 ) => {
-  store.dispatch({ type: LOADING, payload: true });
+  store.dispatch({
+    type: LOADING,
+    payload: "Submitting infomations...",
+  });
   const userId = store.getState().auth.user?.id;
   http
     .post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
@@ -1439,7 +1451,7 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
       defaultThemeName: themeNames.CLEAR_MAMBA,
       title: "We were unable to verify your account",
       message:
-        "<div style='color: grey;'>Something went wrong with your account verification. Please, try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified</div>",
+        "Something went wrong with your account verification. Please, try verifying your account using another method <br> <br> Payment <b>will not</b> be sent to your recipient until your account is verified",
       extraBtnText: "Verify now",
       extraBtnHandler: () => history.push(paths.VERIFICATION),
       extraBtnClass: "verif-toast-failed-extra-btn-class",
@@ -1565,28 +1577,30 @@ export const fetchUserNotifications = (limit?: number) => {
     )
     .then((res) => {
       if (res.data.status === "200") {
-        store.dispatch({ type: NOTIFICATIONS, payload: [...res.data.data] });
+        store.dispatch({
+          type: NOTIFICATIONS,
+          payload: filterNotifications(res.data.data),
+        });
       }
     });
 };
 
-export const getPromo = async (code: string) => {
+export const getPromo = async (code: string, callback: Function) => {
   const res = await http.get(parseEndpointParameters(endpoints.PROMO, code), {
     headers: { "X-SERVICE-PROVIDER": serviceProvider },
   });
 
-  console.log(res);
   if (res.data.status == 200) {
-    console.log(res.data.data);
-    return res.data.data;
+    callback(res.data.data);
   } else {
-    toastAction({
-      show: true,
-      type: "error",
-      timeout: 5000,
-      message: res.data.error.message,
-    });
-    return undefined;
+    callback(res.data.error.message);
+    // toastAction({
+    //   show: true,
+    //   type: "error",
+    //   timeout: 5000,
+    //   message: res.data.error.message,
+    // });
+    //return undefined;
   }
 };
 
