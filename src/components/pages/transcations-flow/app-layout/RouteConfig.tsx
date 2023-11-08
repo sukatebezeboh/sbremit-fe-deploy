@@ -14,11 +14,11 @@ import AxcessMerchant from "../app-components/AxcessPaymentForm";
 import TrulayerProvider from "../app-components/TrulayerProvider";
 import PaymentComplete from "../app-pages/app-payment-complete/PaymentComplete";
 import Settings from "../app-pages/app-settings/Settings";
+import Referrals from "../app-pages/app-referral/Referrals";
 
 export default function RouteConfig() {
   return (
     <Switch>
-      <Route path={paths.DASHBOARD} component={Dashboard} />
       <Route path={paths.TRANSACTIONS} component={Transcations} />
       <Route path={paths.TRANSFER_METHOD} component={TransferMethod} />
       <Route path={paths.GET_QUOTE} component={GetQuote} />
@@ -27,11 +27,13 @@ export default function RouteConfig() {
       <Route path={paths.PAYMENT_METHOD} component={Pay} />
       <Route path={paths.AXCESS_MERCHANT} component={AxcessMerchant} />
       <Route path={paths.TRUELAYER_PROVIDERS} component={TrulayerProvider} />
+      <Route path={paths.TRANSFER_COMPLETE_AUTH} component={PaymentComplete} />
 
+      <Route path={paths.REFERRALS} component={Referrals} />
+      <Route path={paths.DASHBOARD} component={Dashboard} />
       <Route path={paths.PROFILE} component={Profile} />
       <Route path={paths.USER_SETTINGS} component={Settings} />
       <Route path={paths.VERIFICATION} component={Verifications} />
-      <Route path={paths.TRANSFER_COMPLETE_AUTH} component={PaymentComplete} />
     </Switch>
   );
 }
