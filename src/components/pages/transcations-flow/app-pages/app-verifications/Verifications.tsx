@@ -12,17 +12,20 @@ import {
   Radio,
   RadioChangeEvent,
   Space,
-  Tag
+  Tag,
 } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { refreshUserDetails, userVerificationAction } from "redux/actions/actions";
+import {
+  refreshUserDetails,
+  userVerificationAction,
+} from "redux/actions/actions";
 import { paths } from "util/paths";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import { getFlagURL } from "../../utils/reuseableUtils";
+import { DateFormat, getFlagURL } from "../../utils/reuseableUtils";
 import { Title } from "../app-dashboard/DashboardSyles";
 import {
   FlexAndWrap,
@@ -213,13 +216,11 @@ const FormVerification = ({ open, setOpen, submit }: FormVerificationProps) => {
   const [dob, setDob] = useState(`${day}-${month}-${year}`);
   const [enbledOtherGenderInput, setEnabledOtherGenderInput] = useState(false);
 
-  const dateFormat = "DD-MM-YYYY";
-
   const initialValues: any = {
     // phoneCode: "+01",
     address2: "",
     location_country: location_country,
-    dob: dayjs(`${day}-${month}-${year}`, dateFormat),
+    dob: dayjs(`${day}-${month}-${year}`, DateFormat),
     gender: "male",
     ...user?.profile,
   };
@@ -274,7 +275,11 @@ const FormVerification = ({ open, setOpen, submit }: FormVerificationProps) => {
       onCancel={handleCancel}
       width={800}
       okText="Submit"
-      footer={null}
+      onOk={() => {
+        form.validateFields().then((values) => {
+          onFormFinish(values);
+        });
+      }}
     >
       <Divider style={{ marginTop: "12px" }} />
       <div style={{ marginTop: "32px", width: "100%" }}>
@@ -342,7 +347,7 @@ const FormVerification = ({ open, setOpen, submit }: FormVerificationProps) => {
             >
               <DatePicker
                 size="large"
-                format={dateFormat}
+                format={DateFormat}
                 // defaultValue={dayjs(`${day}-${month}-${year}`, "DD-MM-YYYY")}
                 style={{ width: "100%" }}
                 onChange={onDatePickerChange}
@@ -520,14 +525,6 @@ const FormVerification = ({ open, setOpen, submit }: FormVerificationProps) => {
           </Form.Item>
 
           <Divider style={{ marginTop: "12px" }} />
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <SubmitButtonStyles>
-              <Button onClick={handleCancel}>Cancel</Button>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </SubmitButtonStyles>
-          </Form.Item>
         </Form>
       </div>
     </Modal>

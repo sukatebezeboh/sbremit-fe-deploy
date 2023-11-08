@@ -34,6 +34,14 @@ const initialTransferState: {} = {
   status: "ALL",
   search: "",
 
+  recipientBankDeatails: {
+    accountNumber: "",
+    countryCode: "",
+    bankCode: "",
+    branchCode: "",
+    key: "",
+  },
+
   recipientId: "",
   promo: undefined,
   promoCode: "",

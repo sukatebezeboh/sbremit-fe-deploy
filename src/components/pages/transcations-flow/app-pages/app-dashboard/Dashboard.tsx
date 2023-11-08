@@ -12,17 +12,20 @@ import {
   DashboardContainerStyle,
   DashboardTransactionsStyle,
   FabAddNewTransfer,
+  ForUnverifiedUserMsgStyles,
   Title,
 } from "./DashboardSyles";
-import { FloatButton } from "antd";
+import { Alert, Button, FloatButton } from "antd";
 import Transcations from "../app-transactions/Transcations";
 import { useHistory } from "react-router-dom";
 import { paths } from "util/paths";
 import { useSelector } from "react-redux";
 import { categorizeTransactions } from "../../utils/reuseableUtils";
 import { resetTransferData } from "redux/actions/actions";
+import Marquee from "react-fast-marquee";
 
 export default function Dashboard() {
+  const isUserVerified = useSelector((state: any) => state.auth.verification);
   const { transactions } = useSelector((state: any) => state.transfer);
   const history = useHistory();
 
@@ -58,8 +61,27 @@ export default function Dashboard() {
     },
   ];
 
+  const ForUnverifiedUserMsg = () => (
+    <ForUnverifiedUserMsgStyles>
+      <Alert
+        className="alert"
+        banner
+        message={
+          <Marquee pauseOnHover gradient={false}>
+            {" "}
+            Verify your account to unlock secure transactions! 🛡️{" "}
+          </Marquee>
+        }
+      />{" "}
+      <Button type="primary" onClick={() => history.push(paths.VERIFICATION)}>
+        Verify now
+      </Button>
+    </ForUnverifiedUserMsgStyles>
+  );
+
   return (
     <DashboardContainerStyle>
+      {!isUserVerified && <ForUnverifiedUserMsg />}
       <DashboardAnalyticsStyle>
         <Title>Analytics</Title>
         <div className="anlytics_cards">
@@ -80,12 +102,11 @@ export default function Dashboard() {
               </div>
             </AnalyticCard>
           ))}
-          {
-            <AddNewTransfer onClick={addNewTransfer}>
-              <PlusOutlined rev={undefined} />
-              <p>Start transfer</p>
-            </AddNewTransfer>
-          }
+
+          <AddNewTransfer onClick={addNewTransfer}>
+            <PlusOutlined rev={undefined} />
+            <p>Start transfer</p>
+          </AddNewTransfer>
         </div>
       </DashboardAnalyticsStyle>
       <DashboardTransactionsStyle>
@@ -93,6 +114,7 @@ export default function Dashboard() {
       </DashboardTransactionsStyle>
       <FabAddNewTransfer>
         <FloatButton
+          style={{ padding: 8, width: 52 }}
           icon={<PlusOutlined rev={undefined} />}
           type="primary"
           shape="square"

@@ -2,6 +2,7 @@ import {
   CheckCircleFilled,
   SwapOutlined,
   WarningFilled,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { Avatar, Divider, Input, Select, Space, Switch, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
@@ -187,13 +188,16 @@ const PromoInput = () => {
     const promoValue = e.target.value;
     setPromoInputValue(promoValue);
 
-    // Clear the existing timer (if any)
+    // Clear the existing timer and promoErr (if any)
     if (timer) {
       clearTimeout(timer);
+      setPromoErr("");
+      setIsPromoValid(false);
     }
 
     const newTimer = setTimeout(async () => {
       //update promo to redux store
+
       dispatch({
         type: TRANSFER,
         payload: {
@@ -202,7 +206,7 @@ const PromoInput = () => {
         },
       });
 
-      await getPromo(promoValue, validatePromo);
+      promoValue !== "" && (await getPromo(promoValue, validatePromo));
     }, 400);
     setTimer(newTimer);
   };
@@ -223,7 +227,13 @@ const PromoInput = () => {
             isPromoInputAndValid ? (
               <CheckCircleFilled rev={undefined} className="icon" />
             ) : (
-              <WarningFilled rev={undefined} className="icon" />
+              <>
+                {promoErr === "" ? (
+                  <LoadingOutlined rev={undefined} />
+                ) : (
+                  <WarningFilled rev={undefined} className="icon" />
+                )}
+              </>
             )
           ) : (
             <></>
@@ -297,20 +307,23 @@ const CalculatorInput = ({ inputType }: { inputType: "payin" | "payout" }) => {
 
   return (
     <CalculatorInputStyles $error={errorMessage != ""}>
-      <Input
-        addonBefore={isPayin ? "You send" : "They get"}
-        addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
-        placeholder="0.00"
-        size="large"
-        status={errorMessage != "" ? "error" : ""}
-        onChange={handleOnInputChange}
-        value={
-          isPayin
-            ? formatAmount(payinActualValue)
-            : formatAmount(payoutActualValue)
-        }
-      />
-      <span className="error_message">{errorMessage}</span>
+      <Space direction="vertical" size={8}>
+        <span className="label">{isPayin ? "You send" : "They get"}</span>
+        <Input
+          //addonBefore={isPayin ? "You send" : "They get"}
+          addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
+          placeholder="0.00"
+          size="large"
+          status={errorMessage != "" ? "error" : ""}
+          onChange={handleOnInputChange}
+          value={
+            isPayin
+              ? formatAmount(payinActualValue)
+              : formatAmount(payoutActualValue)
+          }
+        />
+        {isPayin && <span className="error_message">{errorMessage}</span>}
+      </Space>
     </CalculatorInputStyles>
   );
 };

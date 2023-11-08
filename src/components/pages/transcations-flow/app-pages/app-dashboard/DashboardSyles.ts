@@ -193,3 +193,21 @@ export const FabAddNewTransfer = styled.div`
     display: flex;
   }
 `;
+
+export const ForUnverifiedUserMsgStyles = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  .alert {
+    width: 30vw;
+    @media (max-width: ${Breakpoint.md}) {
+      width: 100%;
+    }
+  }
+  @media (max-width: ${Breakpoint.md}) {
+    margin-bottom: 14px;
+  }
+`;

@@ -233,3 +233,23 @@ export function unreadNotificationsCount(notifications: any): number {
   );
   return unreadNotifications.length;
 }
+
+export const DateFormat = "DD-MM-YYYY";
+
+export const mobileMoneyProviderList: any = {
+  UG: [
+    { label: "Airtel", value: "Airtel" },
+    { label: "MTN", value: "MTN" },
+  ],
+  KE: [
+    { label: "Airtel", value: "Airtel" },
+    { label: "Equitel", value: "Equitel" },
+    { label: "Safaricom", value: "Safaricom" },
+  ],
+  TZ: [
+    { label: "Airtel", value: "Airtel" },
+    { label: "Safaricom", value: "Safaricom" },
+    { label: "Tigo", value: "Tigo" },
+    { label: "Vodafone", value: "Vodafone" },
+  ],
+};

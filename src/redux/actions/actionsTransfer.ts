@@ -117,7 +117,17 @@ export const updateRecipient = (
       transferQuoteId: transferQuoteId,
     })
     .then((res) => {
-      callback(res.data.data.id);
+      if (res.data.status == "200") {
+        callback(res.data.data.id);
+      } else {
+        toastAction({
+          show: true,
+          type: "error",
+          timeout: 25000,
+          message:
+            res.data.error.message || "An error occurred during the request.",
+        });
+      }
     })
     .catch((error) => {
       console.log(error);

@@ -1,9 +1,8 @@
 import axios from "axios";
 import sha1 from "sha1";
 
-import config from "../env";
-import { checkAuth, signOutAction } from "../redux/actions/actions";
-import env from '../env';
+import { default as config, default as env } from "../env";
+import { checkAuth, signOutSuperAction } from "../redux/actions/actions";
 
 
 const http = axios.create({
@@ -39,7 +38,7 @@ http.interceptors.request.use((config: any) => {
 
 http.interceptors.response.use((response: any) => {
     if (response.data.status === 500 && response.data?.error?.message?.toLowerCase()?.includes('hash')) {
-        signOutAction(true);
+        signOutSuperAction(true);
     }
     return response;
 });

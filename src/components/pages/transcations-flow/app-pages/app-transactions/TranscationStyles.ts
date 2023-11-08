@@ -40,17 +40,21 @@ export const TransactionsContentStyles = styled.div`
 export const TranscationsTableHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: no-wrap;
   align-items: center;
   gap: 24px;
   padding: 12px 24px;
   width: 100%;
   .date_selector {
-    width: max-content;
+    //width: 200px;
     flex: 1;
   }
   @media (max-width: ${Breakpoint.md}) {
     padding: 0px 24px;
+    gap: 16px;
+  }
+  @media (max-width: ${Breakpoint.sm}) {
+    padding: 0px 16px;
   }
 `;
 

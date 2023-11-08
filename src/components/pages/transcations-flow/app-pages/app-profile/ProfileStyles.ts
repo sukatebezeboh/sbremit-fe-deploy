@@ -51,7 +51,7 @@ export const ActionsButtonStyles = styled.div`
   width: 100%;
   padding: 0px 24px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   @media (max-width: ${Breakpoint.sm}) {
     flex-direction: column;
     gap: 14px;

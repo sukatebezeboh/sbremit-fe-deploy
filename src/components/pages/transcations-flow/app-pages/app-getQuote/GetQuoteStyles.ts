@@ -50,7 +50,7 @@ export const CalculatorTabStyles = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 8px 0px;
-  gap: 18px;
+  gap: 12px;
   width: 100%;
   .rate_and_icon {
     width: 100%;
@@ -138,7 +138,10 @@ export const CalculatorInputStyles = styled.div<{ $error?: boolean }>`
   flex-direction: column;
   gap: 3px;
   width: 100%;
-
+  .label {
+    font-size: 12px;
+    color: ${Colors.textColor};
+  }
   .error_message {
     display: ${(props) => (props.$error ? "flex" : "none")};
     font-size: 12px;

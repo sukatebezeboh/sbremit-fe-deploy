@@ -131,10 +131,15 @@ export const FlexAndWrap = styled.div`
 `;
 
 export const SubmitButtonStyles = styled.div`
-  width: 100%;
+  width: inherit;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   //padding: 4px 0px;
+  //box-sizing: border-box;
   gap: 12px;
+  @media (max-width: ${Breakpoint.sm}) {
+    width: 100%;
+    justify-content: flex-start;
+  }
 `;

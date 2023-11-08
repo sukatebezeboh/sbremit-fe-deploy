@@ -101,15 +101,18 @@ export const BannerPromotionStyle = styled.div`
     .button {
       span {
         color: ${Colors.bgwhite};
+        text-decoration: none;
       }
       width: 100%;
     }
 
     span {
-      color: ${Colors.textColor};
+      color: ${Colors.sbGreen};
+      text-decoration: underline;
       font-size: 13px;
       font-weight: 500;
       line-height: 18px;
+      cursor: pointer;
     }
   }
 `;

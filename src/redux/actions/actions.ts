@@ -163,7 +163,7 @@ const handleSignInResponse = (res: any, data: any) => {
         timeout: 20000,
         defaultThemeName: themeNames.CLEAR_MAMBA,
         title: errorMessage,
-        message: `<div style='color: grey;'> Click the button below to activate account for ${data.username} </div>`,
+        message: `An activation link has been sent to your email: ${data.username} `,
         extraBtnText: isPhoneNumber(data.username)
           ? "Activate my account"
           : "Resend activation mail",
@@ -335,6 +335,17 @@ export const signOutAction = (ignoreRequest = false) => {
   }
 };
 
+export const signOutSuperAction = (ignoreRequest = false) => {
+  if (!ignoreRequest) {
+    store.dispatch({ type: LOADING, payload: true });
+    http.delete(endpoints.SESSION).then((res) => {
+      signOutOnClient();
+    });
+  } else {
+    signOutOnClient();
+  }
+};
+
 const signOutOnClient = () => {
   CookieService.remove(env.SESSION_KEY);
   CookieService.remove(env.SESSION_ID);
@@ -468,7 +479,7 @@ export const editUserProfile = <T extends { profile: any }>(data: T) => {
     });
 };
 
-export const changePasswordAction = (values: any) => {
+export const changePasswordAction = (values: any, callback: Function) => {
   store.dispatch({ type: SUBMITTING, payload: paths.CHANGE_PASSWORD });
   const { oldPassword, password, confirmation } = values;
 
@@ -488,6 +499,7 @@ export const changePasswordAction = (values: any) => {
           title: `Password changed!`,
           message: `You have successfully changed your password`,
         });
+        callback();
       } else {
         toastAction({
           show: true,
@@ -633,8 +645,8 @@ export const createRecipient = (recipientData: any, callback?: any) => {
           timeout: 10000,
           message: "New recipient added",
         });
-        callback?.openModal?.(false);
-        callback?.selectRecipient?.(res.data.data);
+        callback();
+        //callback?.selectRecipient?.(res.data.data);
       } else {
         toastAction({
           show: true,
@@ -1292,7 +1304,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
               timeout: -1,
               defaultThemeName: themeNames.CENTER_PROMPT,
               title: "Change request received",
-              message: `<div style="color: grey; padding-top: 5px;">An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change</div>`,
+              message: `An email has been sent to <a href="mailto:xxx@xxx.xx" target="_blank" class="green-txt">${res?.data?.data?.username}</a> to confirm your name change`,
             });
           }
           // CookieService.put('user', JSON.stringify(res.data.data))
@@ -1307,9 +1319,9 @@ export const editProfileAction = (values: any, callback?: Function) => {
             type: "error",
             timeout: 10000,
             defaultThemeName: themeNames.CLEAR_MAMBA,
-            message: `<div style="color: grey;">${
+            message: `${
               res?.data?.error?.message || "Could not update profile"
-            } </div>`,
+            } `,
           });
         }
       });
@@ -1768,8 +1780,7 @@ export const registerCountry = (values: any) => {
           timeout: 5000,
           defaultThemeName: themeNames.CLEAR_MAMBA,
           title: "Thanks for helping us grow.",
-          message:
-            "<div style='color: grey;'>Your response has been saved</div>",
+          message: "Your response has been saved",
         });
       } else {
         stackNewToast({
@@ -1779,8 +1790,7 @@ export const registerCountry = (values: any) => {
           timeout: 5000,
           defaultThemeName: themeNames.CLEAR_MAMBA,
           title: "Error processing your request",
-          message:
-            "<div style='color: grey;'>Check your form to see all required fields are filled</div>",
+          message: "Check your form to see all required fields are filled",
         });
       }
     })
@@ -1919,8 +1929,7 @@ export const verifyPivotRecipientReference = (
             timeout: -1,
             defaultThemeName: themeNames.CENTER_PROMPT,
             title: `The recipient name, ${payload.firstName} ${payload.lastName}, you entered does not match name found for the provided mobile number`,
-            message:
-              "<div style='color: grey;'>Would you like to proceed anyway?</div>",
+            message: "Would you like to proceed anyway?",
             close: () => {
               unstackNewToast({ name: "confirm-momo-recipient-mismatch" });
             },
@@ -1941,8 +1950,7 @@ export const verifyPivotRecipientReference = (
           timeout: -1,
           defaultThemeName: themeNames.CENTER_PROMPT,
           title: `The recipient details were not received`,
-          message:
-            "<div style='color: grey;'>Please provide a valid mobile number</div>",
+          message: "Please provide a valid mobile number",
           close: () => {
             unstackNewToast({ name: "confirm-momo-recipient-mismatch" });
           },
