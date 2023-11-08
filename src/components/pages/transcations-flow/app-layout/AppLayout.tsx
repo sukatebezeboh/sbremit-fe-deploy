@@ -21,7 +21,7 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { AUTH } from "redux/actionTypes";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { paths } from "util/paths";
 import {
   userIsVerified,
@@ -34,18 +34,34 @@ export default function AppLayout() {
   const { user } = auth || {};
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
-    // if (user !== undefined) {
-    checkIfUserIsVerified();
     getRecipients();
     getUserCurrencyInfo();
     getTransactions();
     fetchUserNotifications();
+    checkIfUserIsVerified(false);
+
+    //check user verification on paymentmethod page
+    if (location.pathname === paths.PAYMENT_METHOD) {
+      checkIfUserIsVerified(true);
+    }
     return () => {};
-    // }
   }, []);
 
-  const checkIfUserIsVerified = () => {
+  const checkIfUserIsVerified = (redirect: boolean) => {
+    const redirectUser = () => {
+      toastAction({
+        show: true,
+        type: "info",
+        timeout: 15000,
+        title: "Just a minute, please!",
+        message:
+          "We need to verify your identity before you can complete this transaction",
+      });
+      history.push(paths.VERIFICATION);
+    };
+
     if (
       !userIsVerified(user) &&
       !isUserFirstTransaction(user) &&
@@ -55,15 +71,7 @@ export default function AppLayout() {
         type: AUTH,
         payload: { ...auth, verification: false },
       });
-      toastAction({
-        show: true,
-        type: "info",
-        timeout: 15000,
-        title: "Just a minute, please!",
-        message:
-          "We need to verify your identity before you can start a transaction",
-      });
-      history.push(paths.VERIFICATION);
+      redirect && redirectUser();
     } else {
       dispatch({
         type: AUTH,
