@@ -173,8 +173,9 @@ export const DateSelector = () => {
         options={[
           { value: "1", label: "24 hrs ago" },
           { value: "7", label: "7 days ago" },
-          { value: "30", label: "1 month ago" },
-          { value: "60", label: "3 month ago" },
+          { value: "30", label: "30 days ago" },
+          { value: "60", label: "60 days ago" },
+          { value: "90", label: "90 days ago" },
           { value: "360", label: "1 year ago" },
           { value: "8000", label: "All Time", disabled: false },
         ]}
