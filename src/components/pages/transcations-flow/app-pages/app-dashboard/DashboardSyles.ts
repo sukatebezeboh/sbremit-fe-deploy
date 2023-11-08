@@ -71,8 +71,8 @@ export const AnalyticCard = styled.div<{ $iconBgColor: string }>`
   border: 1px solid ${Colors.borderColor2};
   overflow: hidden;
 
-  box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),
-    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),
+    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08); */
 
   .body {
     padding: 16px;
@@ -117,8 +117,8 @@ export const AnalyticCard = styled.div<{ $iconBgColor: string }>`
       flex-shrink: 0;
       border-radius: 6px;
       background: ${(props) => props.$iconBgColor};
-      box-shadow: 0px -1.6278px 10.01724px 0px rgba(0, 0, 0, 0.03),
-        0px -13px 80px 0px rgba(0, 0, 0, 0.07);
+      /* box-shadow: 0px -1.6278px 10.01724px 0px rgba(0, 0, 0, 0.03),
+        0px -13px 80px 0px rgba(0, 0, 0, 0.07); */
     }
   }
   .footer {
@@ -140,6 +140,16 @@ export const AnalyticCard = styled.div<{ $iconBgColor: string }>`
       font-size: 16px;
       font-weight: 500;
       margin: 0;
+      @media (max-width: ${Breakpoint.md}) {
+        font-size: 14px;
+        width: 200px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 `;
@@ -155,9 +165,9 @@ export const AddNewTransfer = styled.button`
   background: ${Colors.sbGreen};
   gap: 16px;
   border-radius: 14px;
-
+  /* 
   box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),
-    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08);
+    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08); */
 
   border: none;
   outline: none;

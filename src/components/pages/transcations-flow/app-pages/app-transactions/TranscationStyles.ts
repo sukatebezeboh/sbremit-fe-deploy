@@ -26,8 +26,8 @@ export const TransactionsContentStyles = styled.div`
   border: 1px solid ${Colors.borderColor};
   padding: 24px 0px;
 
-  box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),
-    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),
+    0px 11.44983px 17.86905px 0px rgba(0, 0, 0, 0.08); */
 
   box-sizing: border-box;
   flex-shrink: 0;

@@ -32,6 +32,9 @@ export const NavBarContainerStyle = styled.div`
       display: none;
     }
   }
+  @media (max-width: ${Breakpoint.sm}) {
+    padding: 0px 18px;
+  }
 `;
 
 export const UserInfoAndNotificationIcon = styled.div`

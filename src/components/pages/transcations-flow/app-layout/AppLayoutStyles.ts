@@ -41,4 +41,7 @@ export const ApplayoutBodyStyle = styled.div`
   @media (max-width: ${Breakpoint.md}) {
     padding: 0px 32px;
   }
+  @media (max-width: ${Breakpoint.sm}) {
+    padding: 0px 18px;
+  }
 `;

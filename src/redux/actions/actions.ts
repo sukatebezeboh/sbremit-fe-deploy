@@ -2189,3 +2189,25 @@ export const resetTransferData = () => {
     payload: undefined,
   });
 };
+
+export const updateTandC = (meta: any, callback: Function) => {
+  const user = store.getState().auth.user;
+  const profile = user.profile;
+  http
+    .put(parseEndpointParameters(endpoints.USER, user.id), {
+      profile,
+      meta,
+    })
+    .then((res: any) => {
+      if (res.data.status === "200") {
+        callback();
+      } else {
+        toastAction({
+          show: true,
+          type: "error",
+          timeout: 10000,
+          message: res.data?.error?.message || "Could not submit agreement",
+        });
+      }
+    });
+};
