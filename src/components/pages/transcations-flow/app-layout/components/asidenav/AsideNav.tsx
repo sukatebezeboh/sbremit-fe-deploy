@@ -20,6 +20,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { getCurrentPathName } from "components/pages/transcations-flow/utils/reuseableUtils";
 import { signOutAction } from "redux/actions/actions";
 import { useSelector } from "react-redux";
+import { paths } from "util/paths";
 
 const SBlogo = `/assets/main-logo.svg`;
 const PromotionSVG = "/assets/icons/promotion_svg_icon.svg";
@@ -44,19 +45,19 @@ export default function AsideNav() {
       label: "Dashboard",
       key: "dashboard",
       icon: <HomeOutlined rev={undefined} />,
-      disabled: !isUserVerified,
+      //disabled: !isUserVerified,
     },
     {
       label: "Transactions",
       key: "transactions",
       icon: <SwapOutlined rev={undefined} />,
-      disabled: !isUserVerified,
+      //disabled: !isUserVerified,
     },
     {
       label: "Referrals",
       key: "referrals",
       icon: <GiftOutlined rev={undefined} />,
-      disabled: true, //!isUserVerified,
+      //disabled: true, //!isUserVerified,
     },
     {
       label: "Verification",
@@ -68,13 +69,13 @@ export default function AsideNav() {
       label: "Profile",
       key: "profile",
       icon: <UserOutlined rev={undefined} />,
-      disabled: !isUserVerified,
+      //disabled: !isUserVerified,
     },
     {
       label: "Settings",
       key: "settings",
       icon: <SettingOutlined rev={undefined} />,
-      disabled: !isUserVerified,
+      //disabled: !isUserVerified,
     },
     {
       label: "Logout",
@@ -103,6 +104,7 @@ export default function AsideNav() {
 }
 
 const PromotionBanner = () => {
+  const history = useHistory();
   return (
     <BannerPromotionStyle>
       <img alt="Piggy Bank" src={PiggyMoneySVG} />
@@ -111,10 +113,17 @@ const PromotionBanner = () => {
       <span>You receive £10 when they send over £200.</span>
       <span>They also get a £3 reward for using your referral code.</span>
       <div className="CTA">
-        <Button className="button" size="large" type="primary">
+        <Button
+          onClick={() => history.push(paths.REFERRALS)}
+          className="button"
+          size="large"
+          type="primary"
+        >
           Start earning!
         </Button>
-        <span>Terms & Conditions apply</span>
+        <span onClick={() => history.push(paths.LEGAL + "/terms")}>
+          Terms & Conditions apply
+        </span>
       </div>
       <div className="svg">
         <img alt="svg-icons" src={PromotionSVG} />
