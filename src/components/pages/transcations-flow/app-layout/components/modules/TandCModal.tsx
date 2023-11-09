@@ -9,7 +9,7 @@ const SBlogo = `/assets/main-logo.svg`;
 
 export default function TandCModal() {
   const user = useSelector((state: any) => state.auth.user);
-  const { readTermsAndCondition } = user?.meta || {};
+  const { readTermsAndCondition } = user?.profile || {};
   const [loader, setLoader] = useState(false);
   const state = readTermsAndCondition === "0" ? true : false;
   const [showTandCmodal, setShowTandCmodal] = useState(state);
@@ -21,7 +21,7 @@ export default function TandCModal() {
     };
 
     const update = { readTermsAndCondition: "1" };
-    const updateAndMetaData = { ...user.meta, ...update };
+    const updateAndMetaData = { ...user.profile, ...update };
     updateTandC(updateAndMetaData, restoreState);
   };
 

@@ -2190,9 +2190,9 @@ export const resetTransferData = () => {
   });
 };
 
-export const updateTandC = (meta: any, callback: Function) => {
+export const updateTandC = (profile: any, callback: Function) => {
   const user = store.getState().auth.user;
-  const profile = user.profile;
+  const meta = user.meta;
   http
     .put(parseEndpointParameters(endpoints.USER, user.id), {
       profile,
