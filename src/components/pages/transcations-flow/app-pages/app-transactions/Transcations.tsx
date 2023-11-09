@@ -288,11 +288,11 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
         const recipientFirstName = thisRecipient(
           recipients,
           data.recipientId
-        ).firstName;
+        )?.firstName;
         const recipientLastName = thisRecipient(
           recipients,
           data.recipientId
-        ).lastName;
+        )?.lastName;
         selectedTransaction.push([
           `${convertDateToSeperateWithDash(data.dateCreated)}`,
           `SBR${data.meta.transactionId}`,
