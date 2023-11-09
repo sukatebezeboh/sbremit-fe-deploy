@@ -68,7 +68,7 @@ export const AnalyticCard = styled.div<{ $iconBgColor: string }>`
   flex-direction: column;
   justify-content: space-between;
   border-radius: 14px;
-  border: 1px solid ${Colors.borderColor2};
+  border: 1px solid ${Colors.borderColor};
   overflow: hidden;
 
   /* box-shadow: 0px 4.16441px 5.32008px 0px rgba(0, 0, 0, 0.08),

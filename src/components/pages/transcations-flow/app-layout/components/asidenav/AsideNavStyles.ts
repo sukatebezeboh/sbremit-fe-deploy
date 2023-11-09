@@ -52,6 +52,10 @@ export const BannerPromotionStyle = styled.div`
   justify-content: space-between;
   gap: 16px;
 
+  @media (max-width: ${Breakpoint.sm}) {
+    gap: 12px;
+  }
+
   width: 100%;
   height: auto;
   flex-shrink: 0;
@@ -59,14 +63,18 @@ export const BannerPromotionStyle = styled.div`
 
   .svg {
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
 
     img {
       width: 178.735px;
       height: 199px;
 
       @media (max-width: ${Breakpoint.xl}) {
+        width: 145.88px;
+      }
+      @media (max-width: ${Breakpoint.xl}) {
+        margin-top: -24px;
         width: 145.88px;
       }
     }
@@ -76,6 +84,10 @@ export const BannerPromotionStyle = styled.div`
     width: 72px;
     height: 72px;
     flex-shrink: 0;
+    @media (max-width: ${Breakpoint.sm}) {
+      width: 60px;
+      height: 60px;
+    }
   }
   p {
     color: ${Colors.textColor};
@@ -84,6 +96,10 @@ export const BannerPromotionStyle = styled.div`
     line-height: 29px;
     margin: 0;
     z-index: 1;
+
+    @media (max-width: ${Breakpoint.sm}) {
+      font-size: 10px;
+    }
   }
   span {
     color: ${Colors.textColor2};
