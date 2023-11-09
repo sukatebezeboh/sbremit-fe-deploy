@@ -1,6 +1,6 @@
 import { Button, Modal } from "antd";
 import { Colors } from "components/pages/transcations-flow/utils/stylesVariables";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { updateTandC } from "redux/actions/actions";
 import styled from "styled-components";
@@ -12,7 +12,11 @@ export default function TandCModal() {
   const { readTermsAndCondition } = user?.profile || {};
   const [loader, setLoader] = useState(false);
   const state = readTermsAndCondition === "0" ? true : false;
-  const [showTandCmodal, setShowTandCmodal] = useState(state);
+  const [showTandCmodal, setShowTandCmodal] = useState(false);
+
+  useEffect(() => {
+    setShowTandCmodal(state);
+  }, [user]);
 
   const updateAndCloseModal = () => {
     const restoreState = () => {
@@ -29,7 +33,7 @@ export default function TandCModal() {
     <Modal
       open={showTandCmodal}
       //   onCancel={handleCancel}
-      width={400}
+      width={410}
       footer={null}
     >
       <ModalContentStyle>
