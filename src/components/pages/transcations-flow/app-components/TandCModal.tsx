@@ -19,6 +19,8 @@ export default function TandCModal() {
   }, [user]);
 
   const updateAndCloseModal = () => {
+    setLoader(true);
+    
     const resetState = () => {
       setShowTandCmodal(false);
       setLoader(false);
