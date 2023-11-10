@@ -28,7 +28,7 @@ import {
   isUserFirstTransaction,
   userHasReachedFinalVerificationStage,
 } from "../utils/reuseableUtils";
-import TandCModal from "./components/modules/TandCModal";
+import TandCModal from "../app-components/TandCModal";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);

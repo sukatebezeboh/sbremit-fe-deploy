@@ -2200,6 +2200,7 @@ export const updateTandC = (profile: any, callback: Function) => {
     })
     .then((res: any) => {
       if (res.data.status === "200") {
+        refreshUserDetails();
         callback();
       } else {
         toastAction({

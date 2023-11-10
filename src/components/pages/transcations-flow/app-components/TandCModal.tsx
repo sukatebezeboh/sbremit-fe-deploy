@@ -19,14 +19,14 @@ export default function TandCModal() {
   }, [user]);
 
   const updateAndCloseModal = () => {
-    const restoreState = () => {
+    const resetState = () => {
       setShowTandCmodal(false);
       setLoader(false);
     };
 
     const update = { readTermsAndCondition: "1" };
     const updateAndMetaData = { ...user.profile, ...update };
-    updateTandC(updateAndMetaData, restoreState);
+    updateTandC(updateAndMetaData, resetState);
   };
 
   return (
