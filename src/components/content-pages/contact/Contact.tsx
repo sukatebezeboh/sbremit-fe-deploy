@@ -2,7 +2,7 @@ import emailjs from "@emailjs/browser";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { toastAction } from "redux/actions/actions";
+import { toastAction, sendEmail } from "redux/actions/actions";
 import { paths } from "util/paths";
 import { asset } from "../../../util/util";
 import NavHeader from "../nav-header/NavHeader";
@@ -29,26 +29,14 @@ const Contact = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    emailjs
-      .send("service_899wtxn", "template_2oj9lu8", values, "p1WYYOlh6LUYqiOST")
-      .then(
-        (res) => {
-          toastAction({
-            show: true,
-            type: "success",
-            timeout: 10000,
-            message: "Mail recieved. We will address your request shortly",
-          });
-        },
-        (error) => {
-          toastAction({
-            show: true,
-            type: "error",
-            timeout: 10000,
-            message: "There was error sending your mail. Retry after 5 minutes",
-          });
-        }
-      );
+    sendEmail({
+      title: "Contact form",
+      transferID : transferId,
+      tel: "651076194",
+      email: values.email,
+      message: values.message,
+      userid: user?.id || 0
+    })
   };
 
   const handleChange = (e: any) => {
