@@ -22,9 +22,17 @@ export default styled.div`
       width: 100%;
       padding: 50px;
       margin: 0px auto;
+
+      .btns {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
       .heading {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        //grid-template-columns: 1fr 1fr;
         .title {
           font: normal normal normal 20px/24px Montserrat;
           color: #a3a3a3;
@@ -115,19 +123,19 @@ export default styled.div`
             overflow: hidden;
           }
         }
-        div.phone-box{
+        div.phone-box {
           border: 1px solid #7fbcad;
           border-radius: 4px;
           display: flex;
           flex-direction: row;
           align-items: center;
           margin-bottom: 30px;
-          img{
+          img {
             height: 24px;
             width: 36px;
-            margin:0 8px;
+            margin: 0 8px;
           }
-          input{
+          input {
             width: 50%;
             margin-bottom: 0;
             flex: 1;
@@ -135,7 +143,6 @@ export default styled.div`
             border-top: 0;
             border-bottom: 0;
           }
-
         }
         div.mobile-head {
           margin-bottom: -44px;
@@ -257,7 +264,7 @@ export default styled.div`
           z-index: 1;
         }
         .subheading {
-          margin-bottom: -16px;
+          margin-bottom: -5px;
         }
       }
       .box-container {
@@ -278,8 +285,7 @@ export default styled.div`
             input,
             select {
               height: 30px !important;
-              font: normal normal normal 14px/18px
-                Montserrat;
+              font: normal normal normal 14px/18px Montserrat;
             }
             select {
               /* padding: 10px 50%; */
@@ -297,8 +303,7 @@ export default styled.div`
             > div {
               margin-top: 15px;
               > div {
-                font: normal normal normal 10px/13px
-                  Montserrat;
+                font: normal normal normal 10px/13px Montserrat;
                 line-height: 19px;
               }
               .show-hide {
@@ -312,13 +317,11 @@ export default styled.div`
             > button {
               margin-top: 25px;
               height: 40px;
-              font: normal normal normal 13px/16px
-                Montserrat;
+              font: normal normal normal 13px/16px Montserrat;
             }
             .radio-txt {
               padding: 10px 5px;
-              font: normal normal normal 14px/19px
-                Montserrat;
+              font: normal normal normal 14px/19px Montserrat;
             }
           }
         }
@@ -350,4 +353,4 @@ export default styled.div`
       }
     }
   }
-`
+`;

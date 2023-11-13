@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { refreshUserDetails, toastAction } from "redux/actions/actions";
 import http from "util/http";
+import { paths } from "util/paths";
 
 // INVALID VALID PENDING FAILED ATTEMPTED
 
@@ -13,11 +15,20 @@ import http from "util/http";
 // "phoneCode": null,
 //             "state": null,
 
-export const ComplyCubeVerification = () => {
+interface ComplyCubeVerificationProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export const ComplyCubeVerification = ({
+  open,
+  setOpen,
+}: ComplyCubeVerificationProps) => {
   const user = useSelector((state: any) => state.auth.user);
   const [complyCubeToken, setComplyCubeToken] = useState("");
+  const history = useHistory();
 
-  const isFormVerified = true; //Boolean(user?.meta?.verified);
+  const isFormVerified = Boolean(user?.meta?.verified);
 
   const location_country = user?.profile?.location_country;
   const userCountry = location_country === "GB" ? "UK" : location_country;
@@ -85,13 +96,14 @@ export const ComplyCubeVerification = () => {
   }
 
   useEffect(() => {
-    if (isFormVerified && !verificationCompleted && complyCubeToken) {
+    if (open && complyCubeToken) {
       openComplyCube();
+      setOpen(false);
     }
-  }, [isFormVerified, verificationCompleted, complyCubeToken]);
+  }, [open]);
 
   useEffect(() => {
-    if (isFormVerified) {
+    if (!verificationCompleted) {
       // fetch Token /verification-token-experience
       http
         .get("/verification-token-experience") // data.token
@@ -102,7 +114,7 @@ export const ComplyCubeVerification = () => {
         })
         .catch((error) => console.log("complycube error"));
     }
-  }, [isFormVerified]);
+  }, []);
 
   const openComplyCube = () => {
     const newWindow: any = window;
@@ -134,7 +146,7 @@ export const ComplyCubeVerification = () => {
           .then(() => {})
           .catch(() => {})
           .finally(() => {
-            refreshUserDetails();
+            refreshUserDetails(() => history.push(paths.DASHBOARD));
             complycube.updateSettings({ isModalOpen: false });
             toastAction({
               show: true,
@@ -144,28 +156,30 @@ export const ComplyCubeVerification = () => {
               message: "Your ID verification is now in progress",
             });
           });
+
         /**
-                 {
-                    documentCapture: {documentId: '6501d77d9f98560008d03834', documentType: 'driving_license'}
-                    faceCapture: {liveVideoId: "6501d7539f98560008d03812"}
-                }
-                */
+           {
+               documentCapture: {documentId: '6501d77d9f98560008d03834', documentType: 'driving_license'}
+               faceCapture: {liveVideoId: "6501d7539f98560008d03812"}
+            }
+            */
       },
       onError: (err: any) => console.log("complycube-error", err),
       onModalClose: () => complycube.updateSettings({ isModalOpen: false }),
     });
   };
 
+  verificationCompleted && refreshUserDetails();
   // !invalidIdVerification && !invalidDocumentVerification
 
-  if (verificationCompleted) {
-    return (
-      <>
-        {!invalidIdVerification ? <p>✅ Identity Verification</p> : null}
-        {!invalidDocumentVerification ? <p>✅ Document upload</p> : null}
-      </>
-    );
-  }
+  //   if (verificationCompleted) {
+  //     return (
+  //       <>
+  //         {!invalidIdVerification ? <p>✅ Identity Verification</p> : null}
+  //         {!invalidDocumentVerification ? <p>✅ Document upload</p> : null}
+  //       </>
+  //     );
+  //   }
 
   if (!complyCubeToken) {
     return null;
