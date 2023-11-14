@@ -1,91 +1,80 @@
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Field, Form } from "formik";
-import {
-  constants,
-  days,
-  months,
-} from "../../../util/constants";
+import { constants, days, months } from "../../../util/constants";
+import styled from "styled-components";
+import { paths } from "util/paths";
 
+const VerificationForm = ({
+  errors,
+  touched,
+  values,
+  selectedCountry,
+  setSelectedCountry,
+}: any) => {
+  const history = useHistory();
+  const countries: any = useSelector((state: any) => state.appValues.countries);
 
-const VerificationForm = ({ errors, touched, values, selectedCountry, setSelectedCountry }: any) => {
-    const history = useHistory();
-    const countries: any = useSelector(
-        (state: any) => state.appValues.countries,
-    );
-
-    // console.log("countries", countries)
-    // const userCountry = values?.location_country;
+  // console.log("countries", countries)
+  // const userCountry = values?.location_country;
   return (
-    <Form>
+    <FormStyles>
+      <Form className="form">
         <div className="box-container">
-            <div className="form part">
-            <div className="heading mobile-hide">
-                <div className="title">
-                My personal details
-                </div>
+          <div className="form part">
+            <div className="heading">
+              <div className="title">My personal details</div>
             </div>
             <hr className="mobile-hide" />
 
             <div className="inputs">
-                <div className="names">
-                    <div
-                        className={
-                        touched.firstName &&
-                        errors.firstName
-                            ? "form-error"
-                            : ""
-                        }>
-                        <div>
-                        First Name<i>*</i>
-                        </div>
-                        <Field
-                        className="green-txt"
-                        type="text"
-                        name="firstName"
-                        placeholder="John"
-                        />
-                        {touched.firstName &&
-                        errors.firstName && (
-                            <div className="form-error-message">
-                            {errors.firstName}
-                            </div>
-                        )}
-                    </div>
-                    <div></div>
-                    <div
-                        className={
-                        touched.lastName &&
-                        errors.lastName
-                            ? "form-error"
-                            : ""
-                        }>
-                        <div>
-                        Last Name<i>*</i>
-                        </div>
-                        <Field
-                        className="green-txt"
-                        type="text"
-                        name="lastName"
-                        placeholder="Doe"
-                        />
-                        {touched.lastName &&
-                        errors.lastName && (
-                            <div className="form-error-message">
-                            {errors.lastName}
-                            </div>
-                        )}
-                    </div>
-                </div>
+              <div className="names">
                 <div
-                    className={
-                    touched.mobile && errors.mobile
-                        ? "form-error"
-                        : ""
-                    }>
-                    <div className="">Mobile<i>*</i></div>
-                    <div className="phone-box">
-                        {/* <Field
+                  className={
+                    touched.firstName && errors.firstName ? "form-error" : ""
+                  }
+                >
+                  <div>
+                    First Name<i>*</i>
+                  </div>
+                  <Field
+                    className="green-txt"
+                    type="text"
+                    name="firstName"
+                    placeholder="John"
+                  />
+                  {touched.firstName && errors.firstName && (
+                    <div className="form-error-message">{errors.firstName}</div>
+                  )}
+                </div>
+                <div></div>
+                <div
+                  className={
+                    touched.lastName && errors.lastName ? "form-error" : ""
+                  }
+                >
+                  <div>
+                    Last Name<i>*</i>
+                  </div>
+                  <Field
+                    className="green-txt"
+                    type="text"
+                    name="lastName"
+                    placeholder="Doe"
+                  />
+                  {touched.lastName && errors.lastName && (
+                    <div className="form-error-message">{errors.lastName}</div>
+                  )}
+                </div>
+              </div>
+              <div
+                className={touched.mobile && errors.mobile ? "form-error" : ""}
+              >
+                <div className="">
+                  Mobile<i>*</i>
+                </div>
+                <div className="phone-box">
+                  {/* <Field
                         className="green-txt phone-code-adjust"
                         as="select"
                         name="phoneCode"
@@ -101,359 +90,326 @@ const VerificationForm = ({ errors, touched, values, selectedCountry, setSelecte
                             )},
                         )}
                         </Field> */}
-                        <img
-                            src={`https://flagcdn.com/h24/${selectedCountry?.toLowerCase()}.png`}
-                            alt={selectedCountry + 'flag'}
-                        />
-                        <p className="green-txt">{values.phoneCode}</p>
-                        <Field
-                            className="green-txt"
-                            type="text"
-                            name="mobile"
-                        />
-                        {touched.mobile &&
-                        errors.mobile && (
-                            <div className="form-error-message form-error-message-adjust-up">
-                            {errors.mobile}
-                            </div>
-                        )}
-
+                  <img
+                    src={`https://flagcdn.com/h24/${selectedCountry?.toLowerCase()}.png`}
+                    alt={selectedCountry + "flag"}
+                  />
+                  <p className="green-txt">{values.phoneCode}</p>
+                  <Field className="green-txt" type="text" name="mobile" />
+                  {touched.mobile && errors.mobile && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.mobile}
                     </div>
+                  )}
                 </div>
+              </div>
 
-                <div
-                    className={
-                        (touched.day && errors.day) ||
-                        (touched.month &&
-                        errors.month) ||
-                        (touched.year && errors.year)
-                        ? "form-error"
-                        : ""
-                    }>
-                    <div>
-                        Date of birth<i>* &nbsp; &nbsp; &nbsp; { (
-                        <span className="form-error-message form-error-message-adjust-up ">
-                        {errors.day || errors.month || errors.year}
-                        </span>
-                    )} </i>
-                    </div>
-
-                    <div className="grid-col-1-2-1 grid-gap-1 dob">
-                        <div>
-                        <Field
-                            className="day-select green-txt"
-                            as="select"
-                            name="day"
-                            placeholder="day"
-                            value={
-                            days[Number(values.day)]
-                            }>
-                            <option value=""> -- </option>
-                            {days.map((day: any) => (
-                            <option
-                                key={days[day]}
-                                value={day + 1}>
-                                {day + 1}
-                            </option>
-                            ))}
-                        </Field>
-                        </div>
-                        <div>
-                        <Field
-                            className="month-select green-txt"
-                            as="select"
-                            name="month"
-                            placeholder="month"
-                            value={
-                            Object.values(months)[
-                                Number(values.month) -
-                                1
-                            ]
-                            }>
-                            <option value="">  --- </option>
-                            {Object.entries(
-                            months,
-                            ).map((month: any) => (
-                            <option
-                                value={Number(
-                                month[1],
-                                )}>
-                                {month[0]}
-                            </option>
-                            ))}
-                        </Field>
-                        </div>
-                        <div>
-                        <Field
-                            name="year"
-                            className="green-txt"
-                            type="text"
-                            placeholder="Year"
-                        />
-                        </div>
-                    </div>
-                </div>
-
-                <div
+              <div
                 className={
-                    touched.gender && errors.gender
+                  (touched.day && errors.day) ||
+                  (touched.month && errors.month) ||
+                  (touched.year && errors.year)
                     ? "form-error"
                     : ""
-                }>
+                }
+              >
                 <div>
-                    Gender<i>*</i>
+                  Date of birth
+                  <i>
+                    * &nbsp; &nbsp; &nbsp;{" "}
+                    {
+                      <span className="form-error-message form-error-message-adjust-up ">
+                        {errors.day || errors.month || errors.year}
+                      </span>
+                    }{" "}
+                  </i>
+                </div>
+
+                <div className="grid-col-1-2-1 grid-gap-1 dob">
+                  <div>
+                    <Field
+                      className="day-select green-txt"
+                      as="select"
+                      name="day"
+                      placeholder="day"
+                      value={days[Number(values.day)]}
+                    >
+                      <option value=""> -- </option>
+                      {days.map((day: any) => (
+                        <option key={days[day]} value={day + 1}>
+                          {day + 1}
+                        </option>
+                      ))}
+                    </Field>
+                  </div>
+                  <div>
+                    <Field
+                      className="month-select green-txt"
+                      as="select"
+                      name="month"
+                      placeholder="month"
+                      value={Object.values(months)[Number(values.month) - 1]}
+                    >
+                      <option value=""> --- </option>
+                      {Object.entries(months).map((month: any) => (
+                        <option value={Number(month[1])}>{month[0]}</option>
+                      ))}
+                    </Field>
+                  </div>
+                  <div>
+                    <Field
+                      name="year"
+                      className="green-txt"
+                      type="text"
+                      placeholder="Year"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={touched.gender && errors.gender ? "form-error" : ""}
+              >
+                <div>
+                  Gender<i>*</i>
                 </div>
                 <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
-                    <span className="grid-col-0-1 radio-span">
+                  <span className="grid-col-0-1 radio-span">
                     <Field
-                        className="green-txt"
-                        type="radio"
-                        name="gender"
-                        value="male"
+                      className="green-txt"
+                      type="radio"
+                      name="gender"
+                      value="male"
                     />
-                    <span className="radio-txt">
-                        Male
-                    </span>
-                    </span>
-                    <span className="grid-col-0-1 radio-span">
+                    <span className="radio-txt">Male</span>
+                  </span>
+                  <span className="grid-col-0-1 radio-span">
                     <Field
-                        className="green-txt"
-                        type="radio"
-                        name="gender"
-                        value="female"
+                      className="green-txt"
+                      type="radio"
+                      name="gender"
+                      value="female"
                     />
-                    <span className="radio-txt">
-                        Female
-                    </span>
-                    </span>
-                    <span className="grid-col-0-1 radio-span">
+                    <span className="radio-txt">Female</span>
+                  </span>
+                  <span className="grid-col-0-1 radio-span">
                     <Field
-                        className="green-txt"
-                        type="radio"
-                        name="gender"
-                        value={
-                        values.gender !== "male" &&
-                        values.gender !== "female"
-                            ? values.gender
-                            : ""
-                        }
+                      className="green-txt"
+                      type="radio"
+                      name="gender"
+                      value={
+                        values.gender !== "male" && values.gender !== "female"
+                          ? values.gender
+                          : ""
+                      }
                     />
-                    <span className="radio-txt">
-                        Other
-                    </span>
-                    </span>
-                    <span className="m-grid-col-span-1-4">
+                    <span className="radio-txt">Other</span>
+                  </span>
+                  <span className="m-grid-col-span-1-4">
                     {" "}
                     <Field
-                        className="green-txt specify"
-                        name="gender"
-                        placeholder="Please specify"
+                      className="green-txt specify"
+                      name="gender"
+                      placeholder="Please specify"
                     />{" "}
-                    </span>
+                  </span>
                 </div>
-                {touched.gender &&
-                    errors.gender && (
-                    <div className="form-error-message form-error-message-adjust-up">
-                        {errors.gender}
-                    </div>
-                    )}
-                </div>
-                <div
+                {touched.gender && errors.gender && (
+                  <div className="form-error-message form-error-message-adjust-up">
+                    {errors.gender}
+                  </div>
+                )}
+              </div>
+              <div
                 className={
-                    touched.buildingNumber &&
-                    errors.buildingNumber
+                  touched.buildingNumber && errors.buildingNumber
                     ? "form-error"
                     : ""
-                }>
+                }
+              >
                 <div>
-                    House/Building Number<i>*</i>
+                  House/Building Number<i>*</i>
                 </div>
 
                 <Field
-                    className="green-txt building-number"
-                    name="buildingNumber"
-                    type="text"
-                    placeholder="Building No"
+                  className="green-txt building-number"
+                  name="buildingNumber"
+                  type="text"
+                  placeholder="Building No"
                 />
-                {touched.buildingNumber &&
-                    errors.buildingNumber && (
-                    <div className="form-error-message">
-                        {errors.buildingNumber}
-                    </div>
-                    )}
-                </div>
-                <div className="building-name">
+                {touched.buildingNumber && errors.buildingNumber && (
+                  <div className="form-error-message">
+                    {errors.buildingNumber}
+                  </div>
+                )}
+              </div>
+              <div className="building-name">
                 <div>Building Name</div>
                 <Field
-                    className="green-txt street-name"
-                    name="buildingName"
-                    type="text"
-                    placeholder="Building name"
+                  className="green-txt street-name"
+                  name="buildingName"
+                  type="text"
+                  placeholder="Building name"
                 />
-                </div>
-                <div
+              </div>
+              <div
                 className={
-                    (touched.buildingNumber &&
-                    errors.buildingNumber) ||
-                    (touched.streetName &&
-                    errors.streetName)
+                  (touched.buildingNumber && errors.buildingNumber) ||
+                  (touched.streetName && errors.streetName)
                     ? "form-error"
                     : ""
-                }>
+                }
+              >
                 <div>
-                    Street Name<i>*</i>
+                  Street Name<i>*</i>
                 </div>
                 <Field
-                    className="green-txt street-name"
-                    name="streetName"
-                    type="text"
-                    placeholder="Street name"
+                  className="green-txt street-name"
+                  name="streetName"
+                  type="text"
+                  placeholder="Street name"
                 />
-                {touched.streetName &&
-                    errors.streetName && (
-                    <div className="form-error-message">
-                        {errors.streetName}
-                    </div>
-                    )}
-                </div>
-                <div
-                className={`city-town-div ${
-                    touched.city && errors.city
-                    ? "form-error"
-                    : ""
-                }`}>
-                <div>City / Town</div>
-                <Field
-                    className="green-txt"
-                    name="city"
-                    type="text"
-                />
-                {touched.city && errors.city && (
-                    <div className="form-error-message form-error-message-adjust-up">
-                    {errors.city}
-                    </div>
+                {touched.streetName && errors.streetName && (
+                  <div className="form-error-message">{errors.streetName}</div>
                 )}
-                </div>
-                {selectedCountry === "CA" && (
+              </div>
+              <div
+                className={`city-town-div ${
+                  touched.city && errors.city ? "form-error" : ""
+                }`}
+              >
+                <div>City / Town</div>
+                <Field className="green-txt" name="city" type="text" />
+                {touched.city && errors.city && (
+                  <div className="form-error-message form-error-message-adjust-up">
+                    {errors.city}
+                  </div>
+                )}
+              </div>
+              {selectedCountry === "CA" && (
                 <div
-                    className={`city-town-div ${
-                    touched.province &&
-                    errors.province
-                        ? "form-error"
-                        : ""
-                    }`}>
-                    <div>
+                  className={`city-town-div ${
+                    touched.province && errors.province ? "form-error" : ""
+                  }`}
+                >
+                  <div>
                     Province<i>*</i>
-                    </div>
-                    <Field
+                  </div>
+                  <Field
                     className="green-txt"
                     name="province"
                     type="text"
                     placeholder="Province"
-                    />
-                    {touched.province &&
-                    errors.province && (
-                        <div className="form-error-message form-error-message-adjust-up">
-                        {errors.province}
-                        </div>
-                    )}
+                  />
+                  {touched.province && errors.province && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.province}
+                    </div>
+                  )}
                 </div>
-                )}
-                {selectedCountry !== "CA" && (
+              )}
+              {selectedCountry !== "CA" && (
                 <div
-                    className={`city-town-div ${
-                    touched.county && errors.county
-                        ? "form-error"
-                        : ""
-                    }`}>
-                    <div>County</div>
-                    <Field
+                  className={`city-town-div ${
+                    touched.county && errors.county ? "form-error" : ""
+                  }`}
+                >
+                  <div>County</div>
+                  <Field
                     className="green-txt"
                     name="county"
                     type="text"
                     placeholder="county"
-                    />
-                    {touched.county &&
-                    errors.county && (
-                        <div className="form-error-message form-error-message-adjust-up">
-                        {errors.county}
-                        </div>
-                    )}
+                  />
+                  {touched.county && errors.county && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.county}
+                    </div>
+                  )}
                 </div>
-                )}
-                <div
+              )}
+              <div
                 className={`state-input-div ${
-                    touched.location_country &&
-                    errors.location_country
+                  touched.location_country && errors.location_country
                     ? "form-error"
                     : ""
-                }`}>
+                }`}
+              >
                 <div>Location Country</div>
                 <Field
-                    className="green-txt"
-                    name="location_country"
-                    as="select"
-                    type="text"
-                    disabled={true}
-                    onClick={(e: any) => {
-                    setSelectedCountry(
-                        e.target.value,
-                    );
-                    }}>
-                    <option value=""></option>
-                    {Object.keys(countries).map(
-                    (key) => (
-                        <option value={key}>
-                        {countries[key]}
-                        </option>
-                    ),
-                    )}
+                  className="green-txt"
+                  name="location_country"
+                  as="select"
+                  type="text"
+                  disabled={true}
+                  onClick={(e: any) => {
+                    setSelectedCountry(e.target.value);
+                  }}
+                >
+                  <option value=""></option>
+                  {Object.keys(countries).map((key) => (
+                    <option value={key}>{countries[key]}</option>
+                  ))}
                 </Field>
                 <img
-                    src={`./assets/flags/${values.location_country}.png`}
-                    alt="uk"
+                  src={`./assets/flags/${values.location_country}.png`}
+                  alt="uk"
                 />
-                {touched.location_country &&
-                    errors.location_country && (
-                    <div className="form-error-message form-error-message-adjust-up">
-                        {errors.location_country}
-                    </div>
-                    )}
-                </div>
-                <div
-                className={
-                    touched.zip && errors.zip
-                    ? "form-error"
-                    : ""
-                }>
-                <div>Postal / zip code</div>
-                <Field
-                    className="green-txt"
-                    name="zip"
-                    type="text"
-                />
-                {touched.zip && errors.zip && (
-                    <div className="form-error-message form-error-message-adjust-up">
-                    {errors.zip}
-                    </div>
+                {touched.location_country && errors.location_country && (
+                  <div className="form-error-message form-error-message-adjust-up">
+                    {errors.location_country}
+                  </div>
                 )}
-                </div>
+              </div>
+              <div className={touched.zip && errors.zip ? "form-error" : ""}>
+                <div>Postal / zip code</div>
+                <Field className="green-txt" name="zip" type="text" />
+                {touched.zip && errors.zip && (
+                  <div className="form-error-message form-error-message-adjust-up">
+                    {errors.zip}
+                  </div>
+                )}
+              </div>
             </div>
+            <div className="btns">
+              <span onClick={() => window.location.reload()}>Close</span>{" "}
+              <button type="submit">Continue</button>{" "}
             </div>
-            <div className="mobile-hide">
-            </div>
+          </div>
+          <div className="mobile-hide"></div>
         </div>
-        <div className="btns">
-            <span
-            onClick={() =>
-                history.push("/get-quote")
-            }>
-            Back
-            </span>{" "}
-            <button type="submit">Continue</button>{" "}
-        </div>
-    </Form>
+      </Form>
+    </FormStyles>
   );
 };
 
 export default VerificationForm;
+
+const FormStyles = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  .form {
+    margin-top: 400px;
+    max-width: 80vw;
+    box-sizing: border-box;
+
+    @media only screen and (max-width: 500px) {
+      margin-top: 100px;
+      max-width: 100vw;
+    }
+  }
+`;

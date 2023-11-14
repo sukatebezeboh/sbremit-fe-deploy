@@ -123,7 +123,7 @@ const Verification = () => {
             )}
           </Formik>
         ) : <p>Form verification Completed</p>}
-        <ComplyCubeVerification />
+        {/* <ComplyCubeVerification /> */}
       </div>
     </Body>
   );
