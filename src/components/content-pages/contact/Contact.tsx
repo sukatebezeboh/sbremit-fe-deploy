@@ -1,4 +1,3 @@
-import emailjs from "@emailjs/browser";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -16,26 +15,33 @@ const Contact = () => {
   const location = useLocation();
   const transferId = (location.state as LocationState)?.transferId;
   const user = useSelector((state: any) => state.auth.user);
+  // const [values, setValues] = useState({
+  //   fullname:
+  //     user == undefined
+  //       ? ""
+  //       : `${user?.profile.firstName + " " + user?.profile.lastName}`,
+  //   email: user?.username || "",
+  //   mobile: user?.profile.mobile || "",
+  //   transferId: transferId || "",
+  //   message: "",
+  // });
   const [values, setValues] = useState({
-    fullname:
+    name:
       user == undefined
         ? ""
         : `${user?.profile.firstName + " " + user?.profile.lastName}`,
     email: user?.username || "",
-    mobile: user?.profile.mobile || "",
-    transferId: transferId || "",
+    tel: user?.profile.mobile || "",
+    transferID: transferId || "",
     message: "",
   });
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     sendEmail({
-      title: "Contact form",
-      transferID : transferId,
-      tel: "651076194",
-      email: values.email,
-      message: values.message,
-      userid: user?.id || 0
+      ...values,
+      userid: user?.id || '',
+      title: transferId ? `Transfer ${transferId} complain` : "Contact form",
     })
   };
 
@@ -138,10 +144,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="text"
-                    name="fullname"
+                    name="name"
                     placeholder="Enter your full name"
-                    value={values.fullname}
+                    value={values.name}
                     required
+                    disabled={user}
                   />
                 </div>
 
@@ -150,10 +157,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="tel"
-                    name="mobile"
+                    name="tel"
                     placeholder="e.g. +44(0)3301334158"
-                    value={values.mobile}
+                    value={values.tel}
                     required
+                    disabled={user}
                   />
                 </div>
               </div>
@@ -168,6 +176,7 @@ const Contact = () => {
                     placeholder="Enter your email address"
                     value={values.email}
                     required
+                    disabled={user}
                   />
                 </div>
 
@@ -176,10 +185,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="text"
-                    name="transferId"
+                    name="transferID"
                     placeholder="e.g TR71294645323"
-                    value={values.transferId}
-                    required
+                    value={values.transferID}
+                    // required
+                    disabled={!!transferId}
                   />
                 </div>
               </div>
