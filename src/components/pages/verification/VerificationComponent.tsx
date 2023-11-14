@@ -14,8 +14,30 @@ import VerificationForm from "./VerificationForm";
 import { ComplyCubeVerification } from "./ComplyCubeVerification";
 import { useHistory } from "react-router-dom";
 import { Button } from "@mui/material";
+import styled from "styled-components";
 
 // INVALID VALID PENDING FAILED
+interface VerificationMethod {
+  type: string;
+  status: string;
+}
+function checkIdVerificationStatus(user: any): boolean {
+  let verificationList: VerificationMethod[] = [];
+
+  if (user?.verifications) {
+    for (const key in user.verifications) {
+      verificationList.push(user.verifications[key]);
+    }
+  }
+
+  const idVerification = verificationList.find(
+    (method) => method.type === "IDENTITY"
+  );
+
+  const idAttempted = idVerification && idVerification.status !== "PENDING";
+
+  return idAttempted || false;
+}
 
 export const VerificationComponent = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -26,6 +48,7 @@ export const VerificationComponent = () => {
   const [method, setMethod] = useState("");
   const user = useSelector((state: any) => state.auth.user);
   const [isFormVerified, setFormVerified] = useState(false);
+  const [openFormVerification, setOpenFormVerification] = useState(false);
 
   const transferId = new URLSearchParams(window.location.search).get("t");
   console.log("transferId", transferId);
@@ -38,59 +61,95 @@ export const VerificationComponent = () => {
   };
 
   useEffect(() => {
-    refreshUserDetails();
+    //refreshUserDetails();
     setFormVerified(Boolean(user?.meta?.verified));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setSelectedCountry(initialValues.location_country);
   }, [initialValues.location_country]);
 
-  //const isFormVerified = user?.meta?.verified !== "1" ? false : true;
+  const isIdAttempted = checkIdVerificationStatus(user); //user?.meta?.verified !== "1" ? false : true;
 
   const verifyUser = async (values: any) => {
-    const StartComplyCubeVerification = () => {
-      setFormVerified(true);
-      setDisplayComplyCubeVerification(true);
+    const resetState = () => {
+      setOpenFormVerification(false);
+      refreshUserDetails();
+      //setFormVerified(true);
+      //setDisplayComplyCubeVerification(true);
     };
-    await userVerificationAction(values, StartComplyCubeVerification);
+    await userVerificationAction(values, resetState);
   };
 
   return (
-    <div style={{ padding: "10px", minHeight: "100vh" }}>
-      {!isFormVerified ? (
-        <Body>
-          <div className="page-content">
-            <Formik
-              initialValues={{ ...initialValues }}
-              validationSchema={userVerificationValidator}
-              onSubmit={(values) => {
-                verifyUser(values);
-              }}
-            >
-              {({ errors, touched, values }: any) => (
-                <VerificationForm
-                  {...{
-                    errors,
-                    touched,
-                    values,
-                    selectedCountry,
-                    setSelectedCountry,
-                  }}
-                />
-              )}
-            </Formik>
-          </div>
-        </Body>
-      ) : (
-        <p>✅ Verification form completed</p>
-      )}
-      {/* <ComplyCubeVerification /> */}
-      {(displayComplyCubeVerification || isFormVerified) && (
-        <ComplyCubeVerification />
-      )}
+    <VerificationComponentStyles>
+      <div className="container">
+        {openFormVerification && (
+          <Body>
+            <div className="page-content">
+              <Formik
+                initialValues={{ ...initialValues }}
+                validationSchema={userVerificationValidator}
+                onSubmit={(values) => {
+                  verifyUser(values);
+                }}
+              >
+                {({ errors, touched, values }: any) => (
+                  <VerificationForm
+                    {...{
+                      errors,
+                      touched,
+                      values,
+                      selectedCountry,
+                      setSelectedCountry,
+                      setFormVerified,
+                    }}
+                  />
+                )}
+              </Formik>
+            </div>
+          </Body>
+        )}
+        <>
+          <p>{isFormVerified ? "✅" : "❌"} Form Verification</p>
+          <p>{isIdAttempted ? "✅" : "❌"} Identity Verification</p>
+          <p>{isIdAttempted ? "✅" : "❌"} Document upload</p>
+        </>
+
+        {/* <ComplyCubeVerification /> */}
+
+        <ComplyCubeVerification
+          open={displayComplyCubeVerification}
+          setOpen={setDisplayComplyCubeVerification}
+        />
+
+        <div className="btns">
+          <Button
+            variant="contained"
+            //style={{ background: "#fcd20f", color: "#333333" }}
+            size="large"
+            onClick={() => {
+              setOpenFormVerification(true);
+            }}
+            disabled={isFormVerified}
+          >
+            Start form verification
+          </Button>
+          <Button
+            variant="contained"
+            //style={{ background: "#fcd20f", color: "#333333" }}
+            size="large"
+            onClick={() => {
+              setDisplayComplyCubeVerification(true);
+            }}
+            disabled={isIdAttempted}
+          >
+            Start ID verification
+          </Button>
+        </div>
+      </div>
       <GoToDahboard />
-    </div>
+    </VerificationComponentStyles>
   );
 };
 
@@ -98,7 +157,7 @@ const GoToDahboard = () => {
   const history = useHistory();
   return (
     <Button
-      variant="contained"
+      variant="outlined"
       style={{ background: "#fcd20f", color: "#333333" }}
       size="large"
       onClick={() => {
@@ -109,3 +168,31 @@ const GoToDahboard = () => {
     </Button>
   );
 };
+
+const VerificationComponentStyles = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid #3333;
+    box-sizing: border-box;
+    padding: 42px;
+    border-radius: 8px;
+
+    p {
+      margin: 0;
+    }
+    .btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+`;
