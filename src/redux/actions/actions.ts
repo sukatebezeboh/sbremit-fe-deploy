@@ -43,6 +43,59 @@ import { constants, countriesAndCurrency } from "../../util/constants";
 const user = store.getState().auth.user;
 const serviceProvider = env.X_SERVICE_PROVIDER;
 
+type TApiMethods = 'get' | 'post' | 'put' | 'delete' | 'patch'
+
+export const reduxApiHandler = async (endpoint: string, method: TApiMethods = 'get', data?: any) => {
+  const serviceProvider = env.X_SERVICE_PROVIDER;
+  store.dispatch({ type: SUBMITTING, payload: SIGN_UP });
+  if (!data.clientIp) {
+    data.clientIp = await getClientIp();
+  }
+
+  const url = config.API_HOST + endpoint
+  const headerConfig = {
+    headers: { "X-SERVICE-PROVIDER": serviceProvider },
+  }
+
+  try {
+    let response
+    if(method === 'get'){
+      response = await axios.get(url, headerConfig)
+    } else {
+      response = await axios[method](url, {...data}, headerConfig)
+    }
+    
+    if(response.data.status === '200') {
+      return [response?.data?.data, null]
+    }
+    return [null, response?.data?.error]
+  } catch (error) {
+    console.log("error not handled", error)
+    // handle error
+    return [null, "Oops! something went wrong"]
+  }
+};
+
+export const sendEmail = async (data: any) => {
+  const [result, _] = await reduxApiHandler('/support/mail', 'post', data)
+
+  if (result) {
+    return toastAction({
+      show: true,
+      type: "success",
+      timeout: 10000,
+      message: "Mail recieved. We will address your request shortly",
+    })
+  }
+
+  toastAction({
+    show: true,
+    type: "error",
+    timeout: 10000,
+    message: "There was error sending your mail. Retry after 5 minutes",
+  });
+};
+
 export const checkAuth = () => {
   const session = CookieService.get(env.SESSION_KEY);
   const user = CookieService.get("user");
