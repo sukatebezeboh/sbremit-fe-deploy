@@ -1,8 +1,7 @@
-import emailjs from "@emailjs/browser";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { toastAction } from "redux/actions/actions";
+import { toastAction, sendEmail } from "redux/actions/actions";
 import { paths } from "util/paths";
 import { asset } from "../../../util/util";
 import NavHeader from "../nav-header/NavHeader";
@@ -16,39 +15,34 @@ const Contact = () => {
   const location = useLocation();
   const transferId = (location.state as LocationState)?.transferId;
   const user = useSelector((state: any) => state.auth.user);
+  // const [values, setValues] = useState({
+  //   fullname:
+  //     user == undefined
+  //       ? ""
+  //       : `${user?.profile.firstName + " " + user?.profile.lastName}`,
+  //   email: user?.username || "",
+  //   mobile: user?.profile.mobile || "",
+  //   transferId: transferId || "",
+  //   message: "",
+  // });
   const [values, setValues] = useState({
-    fullname:
+    name:
       user == undefined
         ? ""
         : `${user?.profile.firstName + " " + user?.profile.lastName}`,
     email: user?.username || "",
-    mobile: user?.profile.mobile || "",
-    transferId: transferId || "",
+    tel: user?.profile.mobile || "",
+    transferID: transferId || "",
     message: "",
   });
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    emailjs
-      .send("service_899wtxn", "template_2oj9lu8", values, "p1WYYOlh6LUYqiOST")
-      .then(
-        (res) => {
-          toastAction({
-            show: true,
-            type: "success",
-            timeout: 10000,
-            message: "Mail recieved. We will address your request shortly",
-          });
-        },
-        (error) => {
-          toastAction({
-            show: true,
-            type: "error",
-            timeout: 10000,
-            message: "There was error sending your mail. Retry after 5 minutes",
-          });
-        }
-      );
+    sendEmail({
+      ...values,
+      userid: user?.id || '',
+      title: transferId ? `Transfer ${transferId} complain` : "Contact form",
+    })
   };
 
   const handleChange = (e: any) => {
@@ -150,10 +144,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="text"
-                    name="fullname"
+                    name="name"
                     placeholder="Enter your full name"
-                    value={values.fullname}
+                    value={values.name}
                     required
+                    disabled={user}
                   />
                 </div>
 
@@ -162,10 +157,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="tel"
-                    name="mobile"
+                    name="tel"
                     placeholder="e.g. +44(0)3301334158"
-                    value={values.mobile}
+                    value={values.tel}
                     required
+                    disabled={user}
                   />
                 </div>
               </div>
@@ -180,6 +176,7 @@ const Contact = () => {
                     placeholder="Enter your email address"
                     value={values.email}
                     required
+                    disabled={user}
                   />
                 </div>
 
@@ -188,10 +185,11 @@ const Contact = () => {
                   <input
                     onChange={handleChange}
                     type="text"
-                    name="transferId"
+                    name="transferID"
                     placeholder="e.g TR71294645323"
-                    value={values.transferId}
-                    required
+                    value={values.transferID}
+                    // required
+                    disabled={!!transferId}
                   />
                 </div>
               </div>
