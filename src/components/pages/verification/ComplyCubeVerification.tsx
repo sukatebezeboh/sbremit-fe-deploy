@@ -45,13 +45,14 @@ export const ComplyCubeVerification = ({
     (method: { type: string }) => method.type === "IDENTITY"
   );
   const invalidIdVerification =
-    idVerification && idVerification.status === "PENDING";
+    (idVerification && idVerification.status === "PENDING") || undefined;
 
   const documentVerification = verificationList?.find(
     (method: { type: string }) => method.type === "DOCUMENT"
   );
   const invalidDocumentVerification =
-    documentVerification && documentVerification.status === "PENDING";
+    (documentVerification && documentVerification.status === "PENDING") ||
+    undefined;
 
   const verificationCompleted =
     !invalidIdVerification && !invalidDocumentVerification;
@@ -169,7 +170,7 @@ export const ComplyCubeVerification = ({
     });
   };
 
-  verificationCompleted && refreshUserDetails();
+  //verificationCompleted && refreshUserDetails();
   // !invalidIdVerification && !invalidDocumentVerification
 
   //   if (verificationCompleted) {
