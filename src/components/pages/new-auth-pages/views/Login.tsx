@@ -11,7 +11,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "redux/actions/actions";
 
 const schema = yup.object({
-  username: yup.string().email().required().label("Email"),
+  username: yup.string()
+  .trim()
+  .test('test-username', 'Enter Valid Phone/Email', value => {
+    const phoneRegex = /^\+?\d{7,}$/;
+    const emailRegex =
+      /^([a-zA-Z0-9_\\.-]+)([+][a-zA-Z0-9_\\.-]+)*@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+    let isValidEmail = value ? emailRegex.test(value) : false;
+    let isValidPhone = value ? phoneRegex.test(value) : false;
+    if (!isValidEmail && !isValidPhone) {
+      return false;
+    }
+    return true;
+  }),
   password: yup.string().min(6).max(255).required().label("Password"),
 });
 
@@ -46,10 +59,9 @@ const Login = () => {
             <Content>
               <div className="form">
                 <AuthInput
-                  label="Email Address"
+                  label="Email address / Phone number"
                   placeholder="Enter your email address"
-                  type="email"
-                  name="username"
+                  name="text"
                   value={values.username}
                   errors={errors}
                   touched={touched}
