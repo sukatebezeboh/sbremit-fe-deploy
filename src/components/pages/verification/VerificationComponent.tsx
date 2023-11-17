@@ -21,6 +21,7 @@ interface VerificationMethod {
   type: string;
   status: string;
 }
+
 function checkIdVerificationStatus(user: any): boolean {
   let verificationList: VerificationMethod[] = [];
 
@@ -34,9 +35,16 @@ function checkIdVerificationStatus(user: any): boolean {
     (method) => method.type === "IDENTITY"
   );
 
-  const idAttempted = idVerification && idVerification.status !== "PENDING";
+  const docVerification = verificationList.find(
+    (method) => method.type === "DOCUMENT"
+  );
 
-  return idAttempted || false;
+  const idAttempted = idVerification && idVerification.status !== "PENDING";
+  const docAttempted = docVerification && docVerification.status !== "PENDING";
+
+  const verificationAttempted = idAttempted || docAttempted;
+
+  return verificationAttempted || false;
 }
 
 export const VerificationComponent = () => {
@@ -188,11 +196,13 @@ const VerificationComponentStyles = styled.div`
 
     p {
       margin: 0;
+      font-size: 20px;
+      line-height: 180%;
     }
     .btns {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
   }
 `;
