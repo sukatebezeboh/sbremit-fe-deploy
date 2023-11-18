@@ -13,18 +13,44 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
 
   useEffect(() => {
     const paymentScript = document.createElement("script");
-    paymentScript.innerText = `
+    paymentScript.innerHTML = `
       var wpwlOptions = {
         registrations: {
           requireCvv: false,
           hideInitialPaymentForms: true
-        }
+        },
+        onReady: function() {
+          var createRegistrationHtml = '<div class="customLabel">Store payment details?</div><div class="customInput"><input type="checkbox" name="createRegistration" value="true" /></div>';
+          $('form.wpwl-form-card').find('.wpwl-button').before(createRegistrationHtml);
+        },
       };
+
+      // onReady callback function
+      function onPaymentWidgetReady() {
+        if (window.wpwl) {
+          window.wpwl.onReady(wpwlOptions);
+        }
+      }
+
+      // Append the payment script with onload callback
+      var paymentScript = document.createElement('script');
+      paymentScript.src = 'https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}';
+      paymentScript.onload = onPaymentWidgetReady;
+      document.body.appendChild(paymentScript);
     `;
-    //Moving forward this url should be dynamic to handle live and uat
-    paymentScript.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
-    paymentFormContainerRef.current?.appendChild(paymentScript);
-  }, []);
+
+    const paymentFormContainer = paymentFormContainerRef.current;
+    if (paymentFormContainer) {
+      paymentFormContainer.appendChild(paymentScript);
+    }
+
+    // Cleanup function to remove the injected script when unmounting
+    return () => {
+      if (paymentFormContainer) {
+        paymentFormContainer.removeChild(paymentScript);
+      }
+    };
+  }, [checkoutId]);
 
   return (
     <div>
