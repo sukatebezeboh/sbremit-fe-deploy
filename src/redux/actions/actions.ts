@@ -43,41 +43,45 @@ import { constants, countriesAndCurrency } from "../../util/constants";
 const user = store.getState().auth.user;
 const serviceProvider = env.X_SERVICE_PROVIDER;
 
-type TApiMethods = 'get' | 'post' | 'put' | 'delete' | 'patch'
+type TApiMethods = "get" | "post" | "put" | "delete" | "patch";
 
-export const reduxApiHandler = async (endpoint: string, method: TApiMethods = 'get', data?: any) => {
+export const reduxApiHandler = async (
+  endpoint: string,
+  method: TApiMethods = "get",
+  data?: any
+) => {
   const serviceProvider = env.X_SERVICE_PROVIDER;
   store.dispatch({ type: SUBMITTING, payload: SIGN_UP });
   if (!data.clientIp) {
     data.clientIp = await getClientIp();
   }
 
-  const url = config.API_HOST + endpoint
+  const url = config.API_HOST + endpoint;
   const headerConfig = {
     headers: { "X-SERVICE-PROVIDER": serviceProvider },
-  }
+  };
 
   try {
-    let response
-    if(method === 'get'){
-      response = await axios.get(url, headerConfig)
+    let response;
+    if (method === "get") {
+      response = await axios.get(url, headerConfig);
     } else {
-      response = await axios[method](url, {...data}, headerConfig)
+      response = await axios[method](url, { ...data }, headerConfig);
     }
-    
-    if(response.data.status === '200') {
-      return [response?.data?.data, null]
+
+    if (response.data.status === "200") {
+      return [response?.data?.data, null];
     }
-    return [null, response?.data?.error]
+    return [null, response?.data?.error];
   } catch (error) {
-    console.log("error not handled", error)
+    console.log("error not handled", error);
     // handle error
-    return [null, "Oops! something went wrong"]
+    return [null, "Oops! something went wrong"];
   }
 };
 
 export const sendEmail = async (data: any) => {
-  const [result, _] = await reduxApiHandler('/support/mail', 'post', data)
+  const [result, _] = await reduxApiHandler("/support/mail", "post", data);
 
   if (result) {
     return toastAction({
@@ -85,7 +89,7 @@ export const sendEmail = async (data: any) => {
       type: "success",
       timeout: 10000,
       message: "Mail recieved. We will address your request shortly",
-    })
+    });
   }
 
   toastAction({
@@ -551,7 +555,7 @@ export const changePasswordAction = (values: any) => {
 export const resetPasswordAction = (
   values: any,
   stage = "email",
-  callback?: any,
+  callback?: any
 ) => {
   store.dispatch({ type: SUBMITTING, payload: paths.RESET_PASSWORD });
 
@@ -570,7 +574,7 @@ export const resetPasswordAction = (
             timeout: 10000,
             message: "A link to reset your password has been sent",
           });
-          callback?.()
+          callback?.();
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
@@ -607,7 +611,7 @@ export const resetPasswordAction = (
           // if (linkTo) {
           //   linkTo(values.username);
           // }
-          callback?.()
+          callback?.();
           store.dispatch({ type: SUBMITTING, payload: "" });
         } else {
           toastAction({
@@ -1415,7 +1419,7 @@ export const editUserSettingsAction = (values: any, callback?: Function) => {
   };
 };
 
-export  const userVerificationAction = async(
+export const userVerificationAction = async (
   values: any,
   callback: Function,
   skipVerification = false
@@ -1718,16 +1722,19 @@ export const updateTransferRecipient = (
 
 export const generateCheckoutId = async (
   transferId: any,
-  callback: Function
+  callback: Function,
+  callbackOnError: Function
 ) => {
   http
     .get(parseEndpointParameters(endpoints.GET_CHECKOUT_ID, transferId))
     .then((res) => {
       if (res.data.status === "200") {
-        callback(res.data.data.id);
+        return callback(res?.data?.data?.id);
       }
+      callbackOnError(res?.data?.status);
     })
     .catch((error) => {
+      callbackOnError();
       console.log(error);
     });
 };
