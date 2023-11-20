@@ -1,7 +1,7 @@
 import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import { themeNames } from "components/modules/toast-factory/themes";
-import { Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { Field, Form, Formik, FormikProps } from "formik";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { GeoapifyGeocoderAutocomplete, GeoapifyContext } from '@geoapify/react-geocoder-autocomplete';
@@ -22,11 +22,13 @@ import FormButton from "../../modules/form-button/FormButton";
 import NavBar from "../../modules/navbar/NavBar";
 import PageHeading from "../../modules/page-heading/PageHeading";
 import style from "./EditProfile.css";
+import * as Yup from 'yup';
 // import PhoneNumberInput from 'components/modules/parts/PhoneNumberInput';
 
 const Body = style();
 
 const EditProfile = () => {
+  const formikRef = useRef<FormikProps<any>>(null);
   const countries: any = useSelector(
     (state: any) => state.appValues.countries,
   );
@@ -37,7 +39,32 @@ const EditProfile = () => {
   useEffect(() => {
     setAddressOne(user?.profile?.address1)
     setAddressTwo(user?.profile?.address2)
+    triggerFieldErrors();
   }, [])
+
+
+  const triggerFieldErrors = () => {
+    Object.keys(initialValues).forEach((fieldName) => {
+      // Check if the field is empty in initialValues
+      const fieldValue = initialValues[fieldName];
+      const isFieldEmpty = !fieldValue && fieldValue === '';
+  
+      if (isFieldEmpty) {
+        try {
+          EditProfileValidator.validateSyncAt(fieldName, fieldValue, {
+            abortEarly: false,
+          });
+        } catch (error) {
+          if (error instanceof Yup.ValidationError) {
+            // Set field error for required fields that are empty
+            console.log(fieldName, error?.message)
+            formikRef.current?.setFieldError(fieldName, error?.message);
+          }
+        }
+      }
+    });
+  };
+  
 
 
   const handleAddressChange = (address: any, setAddress: any, addressKey: any) => {
@@ -66,7 +93,7 @@ const EditProfile = () => {
     ...user?.profile,
   };
 
-  const userCountry = user?.profile?.location_country || "GB"
+  const userCountry = user?.profile?.location_country && "GB"
 
   // console.log("user?.profile", user?.profile)//user?.profile?.location_country:"GB"
 
@@ -85,7 +112,7 @@ phoneCode
     const processedStreets: any = [];
 
     const filtered = suggestions.filter((value: any) => {
-      if (!value.properties.address_line1 || processedStreets.indexOf(value.properties.address_line1) >= 0) {
+      if (!value.properties.address_line1 && processedStreets.indexOf(value.properties.address_line1) >= 0) {
         return false;
       } else {
         processedStreets.push(value.properties.address_line1);
@@ -125,6 +152,7 @@ phoneCode
         <Formik
           initialValues={{ ...initialValues }}
           validationSchema={EditProfileValidator}
+          innerRef={formikRef}
           onSubmit={(values) => {
             const { address1, ...valuesWithOutAddress1 } = values;
 
@@ -157,7 +185,6 @@ phoneCode
                       <div className="names">
                         <div
                           className={
-                            touched.firstName &&
                               errors.firstName
                               ? "form-error"
                               : ""
@@ -267,9 +294,9 @@ phoneCode
                         <div
                           onClick={handleDOBClick}
                           className={
-                            (touched.day && errors.day) ||
+                            (touched.day && errors.day) &&
                               (touched.month &&
-                                errors.month) ||
+                                errors.month) &&
                               (touched.year && errors.year)
                               ? "form-error m-grid-span-1-3"
                               : "m-grid-span-1-3"
@@ -393,7 +420,6 @@ phoneCode
 
                       <div
                         className={
-                          touched.address1 &&
                             errors.address1
                             ? "form-error"
                             : ""
@@ -449,28 +475,28 @@ phoneCode
                           )}
                       </div>
                       <div
-                        className={`city-town-div ${touched.city && errors.city
+                        className={`city-town-div ${errors.city
                           ? "form-error"
                           : ""
                           }`}>
                         <div>City / Town</div>
                         <Field name="city" type="text" />
-                        {touched.city && errors.city && (
+                        {errors.city && (
                           <div className="form-error-message form-error-message-adjust-up">
                             {errors.city}
                           </div>
                         )}
                       </div>
                       <div
-                        className={`state-input-div ${touched.state && errors.state
+                        className={`state-input-div ${ errors.streetName
                           ? "form-error"
                           : ""
                           }`}>
                         <div>State</div>
-                        <Field name="state" type="text" />
-                        {touched.state && errors.state && (
+                        <Field name="streetName" type="text" />
+                        {errors.streetName && (
                           <div className="form-error-message form-error-message-adjust-up">
-                            {errors.state}
+                            {errors.streetName}
                           </div>
                         )}
                       </div>
@@ -506,14 +532,13 @@ phoneCode
                           )}
                       </div> */}
                       <div
-                        className={
-                          touched.zip && errors.zip
+                        className={errors.zip
                             ? "form-error"
                             : ""
                         }>
                         <div>Postal / zip code</div>
                         <Field name="zip" type="text" />
-                        {touched.zip && errors.zip && (
+                        {errors.zip && (
                           <div className="form-error-message form-error-message-adjust-up">
                             {errors.zip}
                           </div>

@@ -55,7 +55,7 @@ export const ComplyCubeVerification = ({
     undefined;
 
   const verificationCompleted =
-    !invalidIdVerification && !invalidDocumentVerification;
+    !invalidIdVerification || !invalidDocumentVerification;
 
   const stages: any = [
     {
