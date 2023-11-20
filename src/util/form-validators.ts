@@ -174,10 +174,13 @@ export const EditProfileValidator = Yup.object().shape({
   firstName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   lastName: Yup.string().min(2, "Too short").max(30, "Too long").required("Required"),
   mobile: Yup.string().min(7, "Too short").max(15, "Too long").required("Required"),
-  state: Yup.string().min(3, "Too short").max(25, "Too long"),
+  streetName: Yup.string().min(3, "Too short").max(25, "Too long"),
   day: Yup.number().min(1, "Input day").max(31, "Input day"),
   month: Yup.number().min(1, "Input month").max(12, "Input month"),
   year: Yup.number().min(1900, "Input month").max((new Date()).getFullYear(), "Input month"),
+  address1: Yup.string().required('Required'),
+  city: Yup.string().required('Required'),
+  zip: Yup.string().required('Required'),
 });
 
 export const userVerificationValidator = Yup.object().shape({

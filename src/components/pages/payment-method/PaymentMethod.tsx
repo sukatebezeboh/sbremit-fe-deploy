@@ -67,7 +67,36 @@ const PaymentMethod = () => {
       }
     };
 
-    generateCheckoutId(transfer.transactionDetails.id, handleCheckoutID);
+    const handleCheckoutIdOnError = (errorStatus: string) => {
+      setOpenConfirmModal(null);
+      if (errorStatus && errorStatus === "400") {
+        return stackNewToast({
+          name: "verification-failed",
+          show: true,
+          type: "error",
+          defaultThemeName: themeNames.CLEAR_MAMBA,
+          title: "Missing Information",
+          message:
+            "<div style='color: grey;'>Kindly update your profile to complete this payment</div>",
+          extraBtnText: "Update Now",
+          extraBtnHandler: () => history.push(paths.EDIT_PROFILE),
+          extraBtnClass: "verif-toast-failed-extra-btn-class",
+        });
+      }
+
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 60000,
+        message: "An error occured, try again later!",
+      });
+    };
+
+    generateCheckoutId(
+      transfer.transactionDetails.id,
+      handleCheckoutID,
+      handleCheckoutIdOnError
+    );
   };
 
   const handleProceed = async (transfer: any) => {
