@@ -54,22 +54,45 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
   const paymentFormContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    //Create and inject the payment script
     const paymentScript = document.createElement("script");
-    paymentScript.innerText = `
+    paymentScript.innerHTML = `
       var wpwlOptions = {
-      style: "plain",
         registrations: {
           requireCvv: false,
           hideInitialPaymentForms: true
-        }
+        },
+        onReady: function() {
+          var createRegistrationHtml = '<div class="customLabel">Store payment details?</div><div class="customInput"><input type="checkbox" name="createRegistration" value="true" /></div>';
+          $('form.wpwl-form-card').find('.wpwl-button').before(createRegistrationHtml);
+        },
       };
+
+      // onReady callback function
+      function onPaymentWidgetReady() {
+        if (window.wpwl) {
+          window.wpwl.onReady(wpwlOptions);
+        }
+      }
+
+      // Append the payment script with onload callback
+      var paymentScript = document.createElement('script');
+      paymentScript.src = 'https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}';
+      paymentScript.onload = onPaymentWidgetReady;
+      document.body.appendChild(paymentScript);
     `;
-    //Moving forward this url should be dynamic to handle live and uat
-    //test: https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId={checkoutId}
-    paymentScript.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
-    paymentFormContainerRef.current?.appendChild(paymentScript);
-  }, []);
+
+    const paymentFormContainer = paymentFormContainerRef.current;
+    if (paymentFormContainer) {
+      paymentFormContainer.appendChild(paymentScript);
+    }
+
+    // Cleanup function to remove the injected script when unmounting
+    return () => {
+      if (paymentFormContainer) {
+        paymentFormContainer.removeChild(paymentScript);
+      }
+    };
+  }, [checkoutId]);
 
   return (
     <BodyStyles ref={paymentFormContainerRef}>
@@ -109,8 +132,14 @@ const BodyStyles = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100%;
   box-sizing: border-box;
+
+  @media (max-width: ${Breakpoint.sm}) {
+    overflow-x: auto;
+    margin-top: 42px;
+    justify-content: flex-start;
+  }
   //width: 100%;
 
   .container {
@@ -120,8 +149,13 @@ const BodyStyles = styled.div`
     align-items: center;
     gap: 32px;
     border-radius: 12px;
+    height: fit-content;
     //background: #ededed;
     //width: 60vw;
+
+    @media (max-width: ${Breakpoint.sm}) {
+      gap: 24px;
+    }
   }
   .header {
     display: flex;
@@ -169,6 +203,7 @@ const BodyStyles = styled.div`
     @media (max-width: ${Breakpoint.sm}) {
       width: 100%;
       padding: 10px;
+      margin-top: -15px;
     }
   }
   .footer > p {

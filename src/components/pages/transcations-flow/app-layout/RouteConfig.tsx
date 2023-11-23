@@ -15,11 +15,11 @@ import TrulayerProvider from "../app-components/TrulayerProvider";
 import PaymentComplete from "../app-pages/app-payment-complete/PaymentComplete";
 import Settings from "../app-pages/app-settings/Settings";
 import Referrals from "../app-pages/app-referral/Referrals";
+import AccountStatement from "../app-pages/app-transactions/AccountStatement";
 
 export default function RouteConfig() {
   return (
     <Switch>
-      <Route path={paths.TRANSACTIONS} component={Transcations} />
       <Route path={paths.TRANSFER_METHOD} component={TransferMethod} />
       <Route path={paths.GET_QUOTE} component={GetQuote} />
       <Route path={paths.RECIPIENT} component={Recipients} />
@@ -29,6 +29,8 @@ export default function RouteConfig() {
       <Route path={paths.TRUELAYER_PROVIDERS} component={TrulayerProvider} />
       <Route path={paths.TRANSFER_COMPLETE_AUTH} component={PaymentComplete} />
 
+      <Route path={paths.TRANSACTIONS} component={Transcations} />
+      <Route path={paths.ACCOUNT_STATEMENTS} component={AccountStatement} />
       <Route path={paths.REFERRALS} component={Referrals} />
       <Route path={paths.DASHBOARD} component={Dashboard} />
       <Route path={paths.PROFILE} component={Profile} />

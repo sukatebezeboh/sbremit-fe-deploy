@@ -620,13 +620,11 @@ export const getRecipient = (id: string) => {
 
 export const createRecipient = (recipientData: any, callback?: any) => {
   const transfer = store.getState().transfer;
-  const transferMethod = transfer.transferMethod;
   recipientData = {
     firstName: recipientData.firstName,
     lastName: recipientData.lastName,
     profile: {
       ...recipientData,
-      transferMethod,
       remittanceHandler: transfer.remittanceHandler,
     },
   };
@@ -1266,7 +1264,7 @@ export const confirmDialog = (data: {
 };
 
 export const editProfileAction = (values: any, callback?: Function) => {
-  const userId = store.getState().auth.user?.id;
+  const { id, meta } = store.getState().auth.user;
   confirmDialog({
     message: `Please, input your account password to make this change`,
     isPositive: undefined,
@@ -1283,7 +1281,8 @@ export const editProfileAction = (values: any, callback?: Function) => {
 
   const executeProfileEdit = () => {
     http
-      .put(parseEndpointParameters(endpoints.USER, userId), {
+      .put(parseEndpointParameters(endpoints.USER, id), {
+        meta,
         profile: { ...values },
       })
       .then((res: any) => {
@@ -1673,17 +1672,34 @@ export const updateTransferRecipient = (
 
 export const generateCheckoutId = async (
   transferId: any,
-  callback: Function
+  callback: Function,
+  history: any
 ) => {
   http
     .get(parseEndpointParameters(endpoints.GET_CHECKOUT_ID, transferId))
     .then((res) => {
       if (res.data.status === "200") {
-        callback(res.data.data.id);
+        return callback(res.data.data.id);
+      } else if (res.data.status === "400") {
+        return toastAction({
+          show: true,
+          type: "error",
+          toastType: "toast-with-confirmation-btns",
+          title: "Missing Information!",
+          message: "Kindly update your profile to complete this payment",
+          extraBtnText: "Update now",
+          duration: 0,
+          extraBtnHandler: () => history.push(paths.PROFILE),
+        });
       }
     })
     .catch((error) => {
-      console.log(error);
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 15000,
+        message: "An error occurred. Please try again.",
+      });
     });
 };
 

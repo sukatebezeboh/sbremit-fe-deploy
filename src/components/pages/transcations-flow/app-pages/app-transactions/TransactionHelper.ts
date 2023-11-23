@@ -39,36 +39,40 @@ export const convertDate = (unixTimestamp: number): string => {
   return formattedDate;
 };
 
-export const convertDateToSeperateWithDash = (unixTimestamp: number): string => {
+export const convertDateToSeperateWithDash = (
+  unixTimestamp: number
+): string => {
   const date = new Date(unixTimestamp * 1000);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based, so we add 1.
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based, so we add 1.
   const year = date.getFullYear().toString();
 
   return `${day}-${month}-${year}`;
 };
 
-
 export const formatTransactionsReversed = (
   transactions: any,
-  recipients: any
+  recipients: any,
+  page: string
 ) => {
   const dataSource: TableDataType[] = [];
+  const isAccountStatement = page === "account_statement";
 
   if (transactions !== null && transactions !== undefined) {
+    if (isAccountStatement) {
+    }
     transactions
+      .filter((transaction: any) =>
+        isAccountStatement
+          ? transaction?.status === constants.TRANSFER_STATUS_COMPLETE
+          : true
+      )
       .slice()
       .reverse()
       .forEach((transaction: any, index: number) => {
         const data = {
           key: index,
           recipient: transaction,
-          //         `${
-          //     thisRecipient(recipients, transaction?.recipientId)?.firstName ||
-          //     "-"
-          //   } ${
-          //     thisRecipient(recipients, transaction?.recipientId)?.lastName || "-"
-          //   }`,
           date: `${convertDateAndTimeString(transaction?.dateCreated)}`,
           amount_paid: `${transaction?.originCurrency || "-"} ${
             formatAmount(transaction?.originAmount) || "-"
@@ -145,7 +149,7 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   if (transactionStatus === constants.TRANSFER_STATUS_EXPIRED) {
     return { text: "Expired", color: gray };
   }
-  // if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_CANCELLED) { 
+  // if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_CANCELLED) {
   //   return { text: "Cancelled", color: gray };
   // }
 

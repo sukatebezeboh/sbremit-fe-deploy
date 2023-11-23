@@ -18,8 +18,12 @@ import {
   PaymentMethodsWrapperStyles,
   PleaseNoteStyles,
 } from "./PayMethodsStyles";
-import { generateCheckoutId } from "redux/actions/actions";
+import {
+  generateCheckoutId,
+  initiateInteracTransferPayment,
+} from "redux/actions/actions";
 import { paths } from "util/paths";
+import { PaymentGateWays } from "./paymentGateway";
 
 interface LocationState {
   transfer: any;
@@ -45,7 +49,11 @@ export default function Pay() {
 
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
+    //close Confirmation modal
+    closeConfirmationModal();
+
     if (paymentMethod === "interac") {
+      initiateInteracTransferPayment(+transferInfo.id);
     }
     if (paymentMethod === "truelayer") {
       history.push(paths.TRUELAYER_PROVIDERS, { transaferId: transferInfo.id });
@@ -53,12 +61,10 @@ export default function Pay() {
     if (paymentMethod === "axcess-payment") {
       generateCheckoutIDforAxcssPayment(transferInfo);
     }
-
     // clear redux store #transactions
   };
 
   const generateCheckoutIDforAxcssPayment = (transfer: any) => {
-    // this exp make api request to the server to generate checkout ID
     const handleCheckoutID = (checkoutID: string) => {
       if (checkoutID !== null) {
         history.push(paths.AXCESS_MERCHANT, {
@@ -68,7 +74,8 @@ export default function Pay() {
       }
     };
 
-    generateCheckoutId(transferInfo.id, handleCheckoutID);
+    // this exp make api request to the server to generate checkout ID
+    generateCheckoutId(transferInfo.id, handleCheckoutID, history);
   };
 
   const onPayClick = () => {
@@ -76,6 +83,13 @@ export default function Pay() {
       ...confirmModalData,
       message: `Are you sure you want to procced?`,
       open: true,
+    }));
+  };
+
+  const closeConfirmationModal = () => {
+    setConfimModalData((confirmModalData) => ({
+      ...confirmModalData,
+      open: false,
     }));
   };
 
@@ -110,12 +124,7 @@ export default function Pay() {
         onSave={() => {
           handleProceed(selectedMethod);
         }}
-        onCancel={() => {
-          setConfimModalData((confirmModalData) => ({
-            ...confirmModalData,
-            open: false,
-          }));
-        }}
+        onCancel={closeConfirmationModal}
       />
       <PaymentMethodsContainerStyles>
         <TransactionsSteps step="pay" />
@@ -125,7 +134,7 @@ export default function Pay() {
         />
         <PaymentMethodsWrapperStyles>
           <Collapse size="large" className="transfer_details" items={items} />
-          {PAYMENT_GATEWAYS.map((method, index) => (
+          {PaymentGateWays(transferInfo)?.map((method, index) => (
             <PaymentMethodCard
               selected={selectedMethod == method.slug ? true : false}
               title={method.method}
@@ -184,26 +193,6 @@ const PaymentMethodCard = ({
   );
 };
 
-export const PAYMENT_GATEWAYS = [
-  {
-    slug: "axcess-payment",
-    method: "Pay with card",
-    provider: "Axcess Merchant",
-    label: (transaction: any) =>
-      transaction?.meta?.destinationCountryCode === "CM"
-        ? `0.00 ${transaction?.originCurrency}`
-        : `0.99 ${transaction?.originCurrency}`,
-    isRecommended: true,
-  },
-  {
-    slug: "truelayer",
-    method: "Instant bank transfer",
-    provider: "True Layer",
-    label: (transaction: any) => `0.00 ${transaction?.originCurrency}`,
-    isRecommended: false,
-  },
-];
-
 const PleaseNote = () => {
   return (
     <PleaseNoteStyles>
@@ -225,69 +214,3 @@ const PleaseNote = () => {
     </PleaseNoteStyles>
   );
 };
-
-{
-  /* <ConfirmModal
-  message="Are you sure you want to cancel this transfer?"
-  onSave={{
-    label: "Yes, cancel",
-    fn: () => handleCancel(),
-  }}
-  onCancel={{
-    label: "No, don't cancel",
-    fn: () => setOpenConfirmModal(null),
-  }}
-/>; */
-}
-
-// const proceedToPayment = () => {
-//   if(!allowSkipVerification && !checkUserVerification()){
-//     checkUserVerification()
-//     return
-//   }
-//   if (!selected) {
-//     setShowSelected(true);
-//     return;
-//   }
-//   // TODO: Simplyfy checkTransactionBeforePayment and take out of redux
-//   SBReduxActions.checkTransactionBeforePayment((transactions: any) => {
-//     const thisTransaction = transactions.find(
-//       (tranz: any) => tranz.id === transaction?.id,
-//     );
-
-//     if (!thisTransaction) {
-//       return;
-//     }
-//     if (
-//       thisTransaction.status?.toUpperCase() !==
-//       constants.TRANSFER_STATUS_PENDING
-//     ) {
-//       return setTransactionPaidFor(true);
-//     }
-//     dispatch({
-//       type: 'TRANSFER',
-//       payload: {...transfer, paymentMethod: selected},
-//     });
-
-//     if (selected === 'interac') {
-//       SBReduxActions.initiateInteracTransferPayment(transferId, toWebPayment);
-//     }
-//     if (selected === 'truelayer') {
-//       SBReduxActions.fetchTruelayerProviders((providers: any) => {
-//         setTruelayerProviders(providers);
-//         setShowTruelayerOptions(true);
-//       });
-//     }
-//     if (selected === 'trust-payment') {
-//       const baseUrl = Config?.WEB_APP_URL + '/trustPayment-for-mobile';
-
-//       const trustPaymentUrl = `${baseUrl}?currency=${
-//         transaction?.originCurrency
-//       }&amount=${getTotalToPay()}&transactionId=${
-//         transaction?.meta?.transactionId
-//       }&transferId=${transferId}`;
-
-//       toWebPayment(trustPaymentUrl);
-//     }
-//   });
-// };

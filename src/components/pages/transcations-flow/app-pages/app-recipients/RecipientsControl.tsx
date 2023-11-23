@@ -18,6 +18,7 @@ import {
   getFlagURL,
   mobileMoneyProviderList,
   replaceUnderScore,
+  transferMethodsInWords,
 } from "../../utils/reuseableUtils";
 import { userAppValues } from "../../utils/useAppValues";
 const { Option } = Select;
@@ -25,7 +26,7 @@ const { Option } = Select;
 interface NewRecipientProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  //callback: Function;
+  transferQuoteResponse: any;
 }
 
 const initialValues = {
@@ -48,22 +49,27 @@ const initialValues = {
   accountBranch: "",
   recipientAccountNumber: "",
   mobileMoneyProvider: "",
+  transferMethod: "",
 };
 
-export const NewRecipient = ({ open, setOpen }: NewRecipientProps) => {
+export const NewRecipient = ({
+  open,
+  setOpen,
+  transferQuoteResponse,
+}: NewRecipientProps) => {
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const [mobileMoneyProvider, setMobileMoneyProvider] = useState("");
-  const {
-    transferMethod,
-    destinationCurrency,
-    payoutCurrency,
-    recipientBankDeatails,
-  } = transfer || {};
+  const { destinationCurrency } = transferQuoteResponse || {};
+
+  const { recipientBankDeatails } = transfer || {};
+
+  const transferMethod =
+    transferMethodsInWords[transferQuoteResponse?.transferMethod];
 
   const recipientCountry = PayoutCountries.find(
-    (country: any) => country.currency === payoutCurrency
+    (country: any) => country.currency === destinationCurrency
   );
   const [form] = Form.useForm();
 
@@ -84,6 +90,7 @@ export const NewRecipient = ({ open, setOpen }: NewRecipientProps) => {
     initialValues.phoneCode = recipientCountry?.dialCode || "";
     initialValues.confirmPhoneCode = recipientCountry?.dialCode || "";
     values.mobileMoneyProvider = mobileMoneyProvider || "";
+    values.transferMethod = transferMethod;
     const combinedValues = {
       ...initialValues,
       ...values,
@@ -92,7 +99,7 @@ export const NewRecipient = ({ open, setOpen }: NewRecipientProps) => {
     //console.log(combinedValues);
     createRecipient(combinedValues, setOpen(false));
 
-    //reset recipientBankDeatails  from redux
+    //reset recipientBankDeatails on redux
     dispatch({
       type: TRANSFER,
       payload: {
@@ -139,13 +146,14 @@ export const NewRecipient = ({ open, setOpen }: NewRecipientProps) => {
     >
       <Divider style={{ marginTop: "12px" }} />
       <p>
-        Payment method ({replaceUnderScore(transferMethod).toLocaleUpperCase()})
+        Payment method ({replaceUnderScore(transferMethod)?.toLocaleUpperCase()}
+        )
       </p>
       <Alert
         description={
           <span>
-            It is your <b>RESPONSIBILTY</b> to ensure the payment details are
-            correct.
+            It is your <b style={{ color: "red" }}>RESPONSIBILTY</b> to ensure
+            the payment details are correct.
           </span>
         }
         type="info"
@@ -349,7 +357,7 @@ const Microfinance = (
       label="Recipient Account Number"
       rules={[
         {
-          required: true,
+          required: false,
           message: "Please enter recipient account number!",
         },
       ]}
@@ -361,7 +369,7 @@ const Microfinance = (
       label="Account Branch"
       rules={[
         {
-          required: true,
+          required: false,
           message: "Please enter account branch!",
         },
       ]}
@@ -420,7 +428,7 @@ const AccountInputField = () => {
 
   return (
     <Space direction="vertical">
-      <Space>
+      <Space wrap>
         <Input size="large" value="CM21" disabled />
         <Input
           size="large"

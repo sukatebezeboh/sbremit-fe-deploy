@@ -19,6 +19,7 @@ import {
   formatAmount,
   getPaymentEstimatedTime,
   possibleIssues,
+  replaceUnderScore,
   transferMethodsInWords,
 } from "../../utils/reuseableUtils";
 import {
@@ -79,6 +80,7 @@ export const TransactionDetail = ({
         payinActualValue: originAmount,
         payoutActualValue: destinationAmount,
         payoutCurrency: destinationCurrency,
+        transferMethod,
       },
     });
     //then naviagate to get quoute
@@ -108,7 +110,7 @@ export const TransactionDetail = ({
             <FlexContainerWithSpaceBtw>
               <Space direction="vertical" size={0}>
                 <strong>
-                  {recipient.firstName} {recipient.lastName}
+                  {recipient?.firstName} {recipient?.lastName}
                 </strong>
                 <TransactionIdStyles>
                   {convertDateAndTimeString(dateCreated)}
@@ -143,18 +145,19 @@ export const TransactionDetail = ({
                 <Button
                   type="primary"
                   onClick={() => {
-                    history.push(paths.REVIEW, { transferId: transaction.id });
+                    history.push(paths.PAYMENT_METHOD, {
+                      transfer: transaction,
+                    });
                   }}
                 >
                   Pay
                 </Button>
               )}
-              {status === constants.TRANSFER_STATUS_COMPLETE ||
-                (status === constants.TRANSFER_STATUS_EXPIRED && (
-                  <Button type="primary" onClick={resendTransfer}>
-                    Resend
-                  </Button>
-                ))}
+              {status !== constants.TRANSFER_STATUS_PENDING && (
+                <Button type="primary" onClick={resendTransfer}>
+                  Resend
+                </Button>
+              )}
               {status === constants.TRANSFER_PAYMENT_FRAUD && (
                 <Button
                   danger
@@ -345,7 +348,7 @@ export const RecipientDetails = ({
         </>
       )}
       {/* Bank Transfer */}
-      {transferMethod === "cash_pickup" && (
+      {transferMethod === "bank_transfer" && (
         <>
           <Descriptions.Item label="Bank Name">
             {bankName || "--"}
@@ -389,7 +392,9 @@ export const TransactionDetails = ({
       bordered={noBorder ? false : true}
     >
       <Descriptions.Item label="Transfer Method">
-        {transferMethodsInWords[transferMethod] || "--"}
+        {replaceUnderScore(
+          transferMethodsInWords[transferMethod]
+        )?.toUpperCase() || "--"}
       </Descriptions.Item>
       <Descriptions.Item label="You send">
         {formatAmount(originAmount)} {originCurrency}

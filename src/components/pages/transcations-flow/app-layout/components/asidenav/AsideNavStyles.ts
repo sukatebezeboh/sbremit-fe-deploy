@@ -13,6 +13,12 @@ export const AsideNavContainerStyles = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 24px;
+  /* Reserve space for the scrollbar */
+  padding-right: 34px;
+
+  &:hover {
+    overflow-x: auto;
+  }
 
   .logo_and_menu {
     display: flex;
@@ -21,6 +27,7 @@ export const AsideNavContainerStyles = styled.div`
   }
 
   @media (max-width: ${Breakpoint.xl}) {
+    overflow-x: auto;
     width: 320px;
     padding: 28px 32px;
   }
@@ -60,6 +67,8 @@ export const BannerPromotionStyle = styled.div`
   height: auto;
   flex-shrink: 0;
   position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
 
   .svg {
     position: absolute;

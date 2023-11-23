@@ -1,3 +1,4 @@
+import { SearchOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Badge,
@@ -5,20 +6,18 @@ import {
   Divider,
   Empty,
   Input,
-  List,
   Modal,
   Radio,
   RadioChangeEvent,
   Space,
-  Table,
   Typography,
 } from "antd";
-import { ColumnsType } from "antd/es/table";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { TRANSFER } from "redux/actionTypes";
+import { updateRecipient } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
-import DateSelectorAndSearchBar from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import LargeButton, {
   PageTitileAndDescription,
   TransactionsSteps,
@@ -28,24 +27,20 @@ import {
   generateAlphabetColor,
   getFirstLetter,
   replaceUnderScore,
+  transferMethodsInWords,
 } from "../../utils/reuseableUtils";
 import { ModalMarginTop } from "../../utils/stylesVariables";
-import { Title } from "../app-dashboard/DashboardSyles";
+import { NewRecipient } from "./RecipientsControl";
 import {
   RecipientTableStyle,
   RecipientTableStyles,
   RecipientsContainerStyle,
 } from "./RecipientsStyles";
-import { DeleteOutlined } from "@ant-design/icons";
-import { updateRecipient } from "redux/actions/actionsTransfer";
-import { TRANSFER } from "redux/actionTypes";
-import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
-import { NewRecipient } from "./RecipientsControl";
 
 const { Text } = Typography;
 
 interface LocationState {
-  transferId: string;
+  transferQuoteResponse: any;
 }
 
 const prefix = (
@@ -60,29 +55,31 @@ const prefix = (
   />
 );
 
-const filterRecipients = (searchvalue: string, recipients: any) => {
-  const filtered = recipients.filter((recipient: any) => {
+const filterRecipients = (
+  searchValue: string,
+  recipients: any,
+  transferMethod: string
+) => {
+  const filtered = recipients?.filter((recipient: any) => {
+    const fullName =
+      `${recipient?.firstName} ${recipient?.lastName}`.toLowerCase();
+    const searchLowerCase = searchValue.toLowerCase();
+    const transferMethodInWord =
+      transferMethodsInWords[transferMethod]?.toLowerCase();
+
     return (
-      (
-        recipient.firstName.toLowerCase() +
-        " " +
-        recipient.lastName.toLowerCase()
-      ).indexOf(searchvalue) !== -1 ||
-      (
-        recipient.lastName.toLowerCase() +
-        " " +
-        recipient.firstName.toLowerCase()
-      ).indexOf(searchvalue) !== -1
+      recipient?.profile?.transferMethod.toLowerCase() ===
+        transferMethodInWord && fullName.includes(searchLowerCase)
     );
   });
-
   return filtered;
 };
 
 export default function Recipients() {
   const history = useHistory();
   const location = useLocation();
-  const transferId = (location.state as LocationState)?.transferId;
+  const transferQuoteResponse = (location.state as LocationState)
+    ?.transferQuoteResponse;
   const { recipientId } = useSelector((state: any) => state.transfer);
   const recipients = useSelector((state: any) => state.recipients.recipients);
   const [openCategoriesModal, setOpenCategoriesModal] = useState(false);
@@ -90,13 +87,20 @@ export default function Recipients() {
   const [searchValue, setSearchValue] = useState("");
   const [btnLoader, setBtnLoader] = useState(false);
 
+  const { id, transferMethod } = transferQuoteResponse || {};
+
   const onContinueClicked = (category?: string) => {
     setBtnLoader(true);
     const naviagetToReview = (id: string) => {
+      setBtnLoader(false);
       history.push(paths.REVIEW, { transferId: id });
+    };
+
+    const onErrorEncountered = () => {
       setBtnLoader(false);
     };
-    updateRecipient(transferId, recipientId, naviagetToReview);
+
+    updateRecipient(id, recipientId, naviagetToReview, onErrorEncountered);
   };
 
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +118,7 @@ export default function Recipients() {
       <NewRecipient
         open={openNewRecipientModal}
         setOpen={setOpenNewRecipientModal}
+        transferQuoteResponse={transferQuoteResponse}
       />
       <TransactionsSteps step="recipient" />
       <PageTitileAndDescription
@@ -138,7 +143,7 @@ export default function Recipients() {
         </div>
         <Divider style={{ margin: 0 }} />
         <RecipientTable
-          recipients={filterRecipients(searchValue, recipients)}
+          recipients={filterRecipients(searchValue, recipients, transferMethod)}
         />
       </RecipientTableStyles>
       <LargeButton

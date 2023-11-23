@@ -14,6 +14,7 @@ import {
   SettingOutlined,
   FilePdfOutlined,
   LogoutOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -51,6 +52,18 @@ export default function AsideNav() {
       label: "Transactions",
       key: "transactions",
       icon: <SwapOutlined rev={undefined} />,
+      children: [
+        {
+          label: "Transaction history",
+          key: "transactions",
+          icon: <HistoryOutlined rev={undefined} />,
+        },
+        {
+          label: "Account statement",
+          key: "account-statements",
+          icon: <FilePdfOutlined rev={undefined} />,
+        },
+      ],
       //disabled: !isUserVerified,
     },
     {
@@ -95,7 +108,7 @@ export default function AsideNav() {
           mode="inline"
           items={menuList}
           className="menu"
-          // defaultOpenKeys={["transactions"]}
+          defaultOpenKeys={["transactions"]}
         />
       </div>
       <PromotionBanner />

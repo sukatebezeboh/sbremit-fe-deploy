@@ -13,13 +13,16 @@ const transferMethodIds: any = {
   cash_pickup: "3",
 };
 
-export const getTransactionQuoteRequest = async (callback: Function) => {
+export const getTransactionQuoteRequest = async (
+  method: string,
+  callback: Function,
+  onErrorCallback: Function
+) => {
   const userId = store.getState().auth.user?.id;
   const transfer = store.getState().transfer;
   const {
     payinCurrency,
     payoutCurrency,
-    transferMethod,
     allowOperatorFee,
     payinActualValue,
     promoCode,
@@ -44,7 +47,7 @@ export const getTransactionQuoteRequest = async (callback: Function) => {
     const exchangeRateQuoteId = data?.data?.id;
 
     const payloadForFinalQoute = {
-      transferMethodId: transferMethodIds[transferMethod || ""],
+      transferMethodId: transferMethodIds[method || ""],
       originCurrency: payinCurrency,
       originAmount: String(payinActualValue),
       destinationCurrency: payoutCurrency,
@@ -62,19 +65,27 @@ export const getTransactionQuoteRequest = async (callback: Function) => {
         payload: "IInitializing your transfer...",
       });
       if (res.data.status === "200") {
-        return callback(res.data.data.id);
+        return callback(res.data.data);
       } else {
+        onErrorCallback();
         toastAction({
           show: true,
           type: "error",
           timeout: 15000,
-          message: res.data.error.message,
+          message:
+            res.data.error.message || "An error occurred. Please try again.",
         });
       }
       store.dispatch({ type: LOADING, payload: false });
     });
   } catch (error: any) {
-    //console.log(error.error);
+    onErrorCallback();
+    toastAction({
+      show: true,
+      type: "error",
+      timeout: 15000,
+      message: "An error occurred. Please try again.",
+    });
   }
 };
 

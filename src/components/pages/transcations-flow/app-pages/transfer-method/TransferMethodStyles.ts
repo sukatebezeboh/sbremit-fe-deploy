@@ -22,7 +22,7 @@ export const TransferMethodContainerStyles = styled.div`
   }
 `;
 
-export const TransferMethodsStyles = styled.div`
+export const TransferMethodsStyles = styled.div<{ $selectedMethod: string }>`
   border-radius: 20px;
   border: 1px solid ${Colors.borderColor};
   background: ${Colors.bgwhite};
@@ -79,6 +79,25 @@ export const TransferMethodsStyles = styled.div`
           }
           //---icon
           font-size: 80px;
+          .cash_pickup_icon {
+            width: 80px;
+            //adjust to white
+            filter: ${(props) =>
+              props.$selectedMethod === "cash_pickup"
+                ? "invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)"
+                : "none"};
+            &:hover {
+              //adjust to sbGreen
+              filter: ${(props) =>
+                props.$selectedMethod === "cash_pickup"
+                  ? ""
+                  : "invert(7%) sepia(90%) saturate(7380%) hue-rotate(159deg) brightness(95%) contrast(131%)"};
+            }
+
+            @media (max-width: ${Breakpoint.xl}) {
+              width: 40px;
+            }
+          }
           .method_name_description {
             max-width: 209px;
             display: flex;

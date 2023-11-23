@@ -54,7 +54,7 @@ export const ComplyCubeVerification = ({
     documentVerification && documentVerification.status === "PENDING";
 
   const verificationCompleted =
-    !invalidIdVerification && !invalidDocumentVerification;
+    !invalidIdVerification || !invalidDocumentVerification;
 
   const stages: any = [
     {
@@ -122,7 +122,7 @@ export const ComplyCubeVerification = ({
       token: complyCubeToken,
       stages,
       onComplete: function (data: any) {
-        console.log("Capture complete", data);
+        //console.log("Capture complete", data);
         const listOfData = [];
         if (data?.documentCapture) {
           listOfData.push(

@@ -60,7 +60,7 @@ export const getUserCurrencyInfo = () => {
   const userCountryCode = user.profile.location_country;
   const userCountryInfo = PayinCountries.find(
     (country) =>
-      country.countryCode.toLowerCase() === userCountryCode.toLowerCase()
+      country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
   );
 
   //console.log(userCountryInfo);
@@ -108,7 +108,8 @@ export const updateCorrespondingExchangeRate = async (
 export const updateRecipient = (
   transferQuoteId: string,
   recipientId: string,
-  callback: Function
+  callback: Function,
+  callbackOnError: Function
 ) => {
   const user = store.getState().auth.user;
   http
@@ -120,9 +121,11 @@ export const updateRecipient = (
       if (res.data.status == "200") {
         callback(res.data.data.id);
       } else {
+        callbackOnError();
         toastAction({
           show: true,
           type: "error",
+          title: "Error",
           timeout: 25000,
           message:
             res.data.error.message || "An error occurred during the request.",
@@ -130,7 +133,8 @@ export const updateRecipient = (
       }
     })
     .catch((error) => {
-      console.log(error);
+      callbackOnError();
+      //console.log(error);
     });
 };
 

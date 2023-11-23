@@ -150,6 +150,7 @@ export const UsageStyles = styled(ReferralContentStyles)`
   gap: 24px;
   ._uasge {
     flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
     display: flex;
     flex-direction: row;

@@ -212,7 +212,7 @@ export const ForUnverifiedUserMsgStyles = styled.div`
   box-sizing: border-box;
   flex-shrink: 0;
   .alert {
-    width: 30vw;
+    width: 100%;
     @media (max-width: ${Breakpoint.md}) {
       width: 100%;
     }

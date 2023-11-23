@@ -1,8 +1,4 @@
-import {
-  InfoCircleOutlined,
-  ReloadOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { ReloadOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Badge,
@@ -18,11 +14,9 @@ import React, { useState } from "react";
 import { IoIosMore } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { constants } from "util/constants";
+import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
-import DateSelectorAndSearchBar, {
-  DateSelector,
-} from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
+import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import { generateAccountStatementPDF } from "../../utils/generateAccountStatementPdf";
 import { getFirstLetter } from "../../utils/reuseableUtils";
@@ -37,12 +31,12 @@ import {
   thisRecipient,
 } from "./TransactionHelper";
 import {
+  RecipientName,
   TransactionIdStyles,
   TransactionsContainerStyles,
   TransactionsContentStyles,
   TranscationsTableHeader,
 } from "./TranscationStyles";
-import { TRANSFER } from "redux/actionTypes";
 
 interface TableDataType {
   key: React.Key;
@@ -67,11 +61,15 @@ const items = [
   },
 ];
 
-export default function Transcations({ dashboard }: { dashboard?: boolean }) {
+interface TranscationsProps {
+  page: "dashboard" | "account_statement";
+}
+
+export default function Transcations({ page }: TranscationsProps) {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { transactions, total, limit } = useSelector(
+  const { transactions, total, limit, days } = useSelector(
     (state: any) => state.transfer
   );
   const recipients = useSelector((state: any) => state.recipients.recipients);
@@ -115,7 +113,6 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
       {
         title: "Recipient",
         dataIndex: "recipient",
-        ellipsis: true,
         render: (recipient) => {
           return (
             <Space>
@@ -128,10 +125,13 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
                 )}
               </Avatar>
               <Space direction="vertical" size={0}>
-                <span>
-                  {thisRecipient(recipients, recipient.recipientId)?.firstName}{" "}
-                  {thisRecipient(recipients, recipient.recipientId)?.lastName}
-                </span>
+                <RecipientName>
+                  {`${
+                    thisRecipient(recipients, recipient.recipientId)?.firstName
+                  } ${
+                    thisRecipient(recipients, recipient.recipientId)?.lastName
+                  }`}
+                </RecipientName>
                 <TransactionIdStyles>
                   SBR{recipient.meta.transactionId}
                 </TransactionIdStyles>
@@ -225,8 +225,12 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
 
   const formatedTransactionsForTable = formatTransactionsReversed(
     transactions,
-    recipients
+    recipients,
+    page
   );
+
+  const totalTranscations =
+    page === "account_statement" ? formatedTransactionsForTable.length : total;
 
   const columns = generateColumns(recipients);
 
@@ -243,6 +247,7 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const hasSelected = selectedRowKeys.length > 0;
 
   const handleTablePaginationChange = (pagination: TablePaginationConfig) => {
@@ -318,18 +323,25 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
 
   return (
     <TransactionsContainerStyles>
-      {dashboard ? (
+      {page === "dashboard" ? (
         <></>
+      ) : page === "account_statement" ? (
+        <PageTitileAndDescription
+          title="Account Statement 📋"
+          description={`View, manage, analyze, and download all completed transactions from  ${
+            days == 8000 ? "all time." : `the past ${days} day(s).`
+          } `}
+        />
       ) : (
         <PageTitileAndDescription
           title="Transaction History 🕒"
-          description="View, manage, download, and analyze all the transactions you've created."
+          description="View, manage and analyze all the transactions you've created."
         />
       )}
       <TransactionsContentStyles>
         <TranscationsTableHeader>
-          <Title>Transactions ({total})</Title>
-          {dashboard ? (
+          <Title>Transactions ({totalTranscations})</Title>
+          {page === "dashboard" ? (
             <Button
               onClick={() => {
                 history.push(paths.TRANSACTIONS);
@@ -344,47 +356,49 @@ export default function Transcations({ dashboard }: { dashboard?: boolean }) {
 
         <Table
           onChange={handleTablePaginationChange}
-          rowSelection={rowSelection}
+          rowSelection={page === "account_statement" ? rowSelection : undefined}
           columns={columns}
           dataSource={formatedTransactionsForTable}
           pagination={{
             position: ["bottomCenter"],
             //pageSize: 10,
             showSizeChanger: false,
-            total: total,
+            total: totalTranscations,
           }}
-          footer={() => (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <div>
-                <Tooltip title="Click to reload selected transactions">
+          footer={() =>
+            page === "account_statement" && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <Tooltip title="Click to reload selected transactions">
+                    <Button
+                      onClick={onReloadSelectionClicked}
+                      disabled={!hasSelected}
+                      loading={loading}
+                    >
+                      Reload
+                    </Button>
+                  </Tooltip>
+                  <span style={{ marginLeft: 8 }}>
+                    {hasSelected ? `Selected (${selectedRowKeys.length})` : ""}
+                  </span>
+                </div>
+                <Tooltip title="Click to dwonload selected transaction(s)">
                   <Button
-                    onClick={onReloadSelectionClicked}
                     disabled={!hasSelected}
-                    loading={loading}
+                    onClick={downloadStatementPdf}
+                    loading={downloadState}
                   >
-                    Reload
+                    Download
                   </Button>
                 </Tooltip>
-                <span style={{ marginLeft: 8 }}>
-                  {hasSelected ? `Selected (${selectedRowKeys.length})` : ""}
-                </span>
               </div>
-              <Tooltip title="Click to dwonload selected transaction(s)">
-                <Button
-                  disabled={!hasSelected}
-                  onClick={downloadStatementPdf}
-                  loading={downloadState}
-                >
-                  Download
-                </Button>
-              </Tooltip>
-            </div>
-          )}
+            )
+          }
           scroll={{ x: 1200 }}
         />
       </TransactionsContentStyles>

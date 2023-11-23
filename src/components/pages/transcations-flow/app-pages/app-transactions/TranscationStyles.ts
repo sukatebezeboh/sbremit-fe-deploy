@@ -128,3 +128,10 @@ export const FraudReaonsStyles = styled.div`
     }
   }
 `;
+
+export const RecipientName = styled.div`
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;

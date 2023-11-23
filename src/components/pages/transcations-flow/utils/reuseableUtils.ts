@@ -37,9 +37,10 @@ interface getCurrentPathNameProps {
 export function getCurrentPathName(route: string): getCurrentPathNameProps {
   const formatRoute = route.split("/");
   const replaceDash = [formatRoute[1].replace(/-/g, " ")];
+
   return {
     withoutDash: `${replaceDash}`,
-    withDash: `${replaceDash}`,
+    withDash: `${formatRoute?.[1]}`,
   };
 }
 
@@ -129,20 +130,20 @@ export const formatAmount = (value: string, currency: string = ""): string => {
 };
 
 export const transferMethodsInWords: any = {
-  1: "Mobile Wallet",
-  2: "Bank Deposit",
-  3: "Cash Pickup",
-  mobile_money: "Mobile Wallet",
-  bank_transfer: "Bank Deposit",
-  cash_pickup: "Cash Pickup",
+  1: "mobile_money",
+  2: "bank_transfer",
+  3: "cash_pickup",
+  mobile_money: "mobile_money",
+  bank_transfer: " bank_transfer",
+  cash_pickup: "cash_pickup",
   cardless_withdrawal: "ATM withdrawal",
   bills_payment: "Pay Bills",
   mobile_topup: "Mobile Topup",
 };
 const paymentMethodEstimatedTimeMap: any = {
-  "Mobile Wallet": "10 minutes",
-  "Cash Pickup": "2 minutes",
-  "Bank Deposit": "2 hours",
+  mobile_money: "10 minutes",
+  cash_pickup: "2 minutes",
+  bank_transfer: "2 hours",
   "ATM withdrawal": "2 minutes",
 };
 
@@ -253,3 +254,11 @@ export const mobileMoneyProviderList: any = {
     { label: "Vodafone", value: "Vodafone" },
   ],
 };
+
+export function consoleLogOnLocalHost(logData: any) {
+  if (window.location.href.includes("localhost")) {
+    console.log(logData);
+  } else {
+    return null;
+  }
+}

@@ -36,45 +36,53 @@ export default function AppLayout() {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
+  const { trullioVerified } = user?.meta || {};
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
     getTransactions();
     fetchUserNotifications();
-    checkIfUserIsVerified(false);
+    checkIfUserIsVerified(false); // this does not trigger a redirect
 
-    //check user verification on paymentmethod page
+    //check user verification on paymentmethod page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
       checkIfUserIsVerified(true);
     }
     return () => {};
   }, []);
 
-  const checkIfUserIsVerified = (redirect: boolean) => {
-    const redirectUser = () => {
-      toastAction({
-        show: true,
-        type: "info",
-        timeout: 15000,
-        title: "Just a minute, please!",
-        message:
-          "We need to verify your identity before you can complete this transaction",
-      });
-      history.push(paths.VERIFICATION);
-    };
+  const redirectUser = () => {
+    toastAction({
+      show: true,
+      type: "info",
+      timeout: 15000,
+      title: "Just a minute, please!",
+      message:
+        "We need to verify your identity before you can complete this transaction",
+    });
+    history.push(paths.VERIFICATION);
+  };
 
-    if (
-      !userIsVerified(user) &&
-      !isUserFirstTransaction(user) &&
-      !userHasReachedFinalVerificationStage(user)
-    ) {
+  const isUserVerificationRequired =
+    !userIsVerified(user) &&
+    !isUserFirstTransaction(user) &&
+    !userHasReachedFinalVerificationStage(user);
+
+  const checkIfUserIsVerified = (redirect: boolean) => {
+    if (trullioVerified && Boolean(trullioVerified)) {
+      return dispatch({
+        type: AUTH,
+        payload: { ...auth, verification: true },
+      });
+    } else if (isUserVerificationRequired) {
       dispatch({
         type: AUTH,
         payload: { ...auth, verification: false },
       });
-      redirect && redirectUser();
+      return redirect && redirectUser();
     } else {
-      dispatch({
+      return dispatch({
         type: AUTH,
         payload: { ...auth, verification: true },
       });
@@ -99,7 +107,7 @@ export default function AppLayout() {
             </div>
           </div>
         </ApplayoutContainerStlye>
-        <TandCModal/>
+        <TandCModal />
       </ApplayoutStlye>
     </ConfigProvider>
   );

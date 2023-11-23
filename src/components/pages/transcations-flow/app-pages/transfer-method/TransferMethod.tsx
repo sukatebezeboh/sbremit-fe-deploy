@@ -18,6 +18,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
 
+const cashPickUpLogo = "/assets/icons/cash-pickup.svg";
+
 export default function TransferMethod() {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ export default function TransferMethod() {
 
   const startTransfer = () => {
     setLoading(true);
-    history.push(paths.GET_QUOTE);
+    history.push(paths.GET_QUOTE, { transferMethod: method });
   };
 
   return (
@@ -45,7 +47,7 @@ export default function TransferMethod() {
         title="Select transfer method"
         description="How would you like your recipient to receive the money?💰"
       />
-      <TransferMethodsStyles>
+      <TransferMethodsStyles $selectedMethod={method}>
         <div className="methods">
           <Radio.Group
             onChange={onMethodChange}
@@ -100,7 +102,13 @@ const Methods = [
     key: "bank_transfer",
   },
   {
-    icon: <DollarOutlined rev={undefined} />,
+    icon: (
+      <img
+        src={cashPickUpLogo}
+        alt="cash pickup"
+        className="cash_pickup_icon"
+      />
+    ), //<DollarOutlined rev={undefined} />,
     name: "Cash Pickup",
     description: "Cash Pick-up fee from 0 GBP",
     key: "cash_pickup",

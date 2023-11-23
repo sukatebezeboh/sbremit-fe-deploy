@@ -64,7 +64,9 @@ export default function Dashboard() {
   const ForUnverifiedUserMsg = () => (
     <ForUnverifiedUserMsgStyles>
       <Alert
+        showIcon={false}
         className="alert"
+        type="error"
         banner
         message={
           <Marquee pauseOnHover gradient={false}>
@@ -73,7 +75,11 @@ export default function Dashboard() {
           </Marquee>
         }
       />{" "}
-      <Button type="primary" onClick={() => history.push(paths.VERIFICATION)}>
+      <Button
+        type="primary"
+        onClick={() => history.push(paths.VERIFICATION)}
+        danger
+      >
         Verify now
       </Button>
     </ForUnverifiedUserMsgStyles>
@@ -110,7 +116,7 @@ export default function Dashboard() {
         </div>
       </DashboardAnalyticsStyle>
       <DashboardTransactionsStyle>
-        <Transcations dashboard />
+        <Transcations page="dashboard" />
       </DashboardTransactionsStyle>
       <FabAddNewTransfer>
         <FloatButton

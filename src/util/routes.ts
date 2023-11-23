@@ -15,6 +15,14 @@ const AppTransactions = lazy(
       "../components/pages/transcations-flow/app-pages/app-transactions/Transcations"
     )
 );
+
+const AccountStatement = lazy(
+  () =>
+    import(
+      "../components/pages/transcations-flow/app-pages/app-transactions/AccountStatement"
+    )
+);
+
 //----
 const SignUp = lazy(() => import("../components/pages/sign-up/SignUp"));
 const SignIn = lazy(() => import("../components/pages/sign-in/SignIn"));
@@ -219,6 +227,12 @@ export const Routing: IRoute[] = [
   {
     path: paths.TRANSFER_COMPLETE_AUTH,
     component: TransferCompleteAuth,
+    protected: true,
+    footerless: true,
+  },
+  {
+    path: paths.ACCOUNT_STATEMENTS,
+    component: AccountStatement,
     protected: true,
     footerless: true,
   },
