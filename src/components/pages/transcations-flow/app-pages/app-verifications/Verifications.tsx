@@ -16,34 +16,41 @@ import {
   VerificationsBodyStyles,
   VerificationsContainerStyles,
 } from "./VerificationsStyles";
-import { Verifictions, checkVerification } from "./verificationsHelper";
+import {
+  Verifictions,
+  checkToShowVerificationForm,
+  checkVerification,
+} from "./verificationsHelper";
+import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 
 export default function Verifications() {
   const user = useSelector((state: any) => state.auth.user);
   const history = useHistory();
   const [openFormModal, setOpenFormModal] = useState(false);
   const [isFormVerified, setFormVerified] = useState(false);
+  // For cases of user.meta.verified is true #verification parent
+  const { verified } = user?.meta || {};
+
   const [displayComplyCubeVerification, setDisplayComplyCubeVerification] =
     useState(false);
 
   useEffect(() => {
-    setFormVerified(Boolean(user?.meta?.verified));
+    setFormVerified(() => Boolean(checkToShowVerificationForm(user)));
   }, [user]);
+
+  const hasCompletedAllVerifications = Boolean(verified);
 
   const idAttempted = checkVerification(user, Verifictions.id);
   const docAttempted = checkVerification(user, Verifictions.document);
 
-  //For cases of old users with either ID or Document verification
-  const docOrIdAttempted = idAttempted || docAttempted;
+  //For cases of old users with either ID or Document verification plus new users
+  const docAndIdAttempted = idAttempted && docAttempted;
 
   const onSubmitFormClicked = async (values: any) => {
     const StartComplyCubeVerification = () => {
       setFormVerified(true);
 
-      //For cases where user has attempted idVerification before form verification
-      if (idAttempted) {
-        refreshUserDetails();
-      }
+      refreshUserDetails();
     };
     await userVerificationAction(values, StartComplyCubeVerification);
   };
@@ -53,13 +60,13 @@ export default function Verifications() {
       title: "Identity Verification",
       description: "Please verify your Identity",
       key: "identity",
-      isAttempted: docOrIdAttempted,
+      isAttempted: docAndIdAttempted,
     },
     {
       title: "Document Verification",
       description: "Please verify your Documnets",
       key: "document",
-      isAttempted: docOrIdAttempted,
+      isAttempted: docAndIdAttempted,
     },
     {
       title: "Proof of address",
@@ -92,7 +99,7 @@ export default function Verifications() {
           footer={
             <div className="footer">
               <Tag color="#007B5D">
-                {isFormVerified && docOrIdAttempted
+                {isFormVerified && docAndIdAttempted
                   ? "100%"
                   : isFormVerified
                   ? "50%"
@@ -114,7 +121,10 @@ export default function Verifications() {
                   </div>
                 </div>
               </VerificationStyle>
-              {item.isAttempted ? (
+              {/* if hasCompletedAllVerifications === true ? show success icons for all cases : lets identify each case */}
+              {hasCompletedAllVerifications ? (
+                successIcon
+              ) : item.isAttempted ? (
                 successIcon
               ) : (
                 <Button

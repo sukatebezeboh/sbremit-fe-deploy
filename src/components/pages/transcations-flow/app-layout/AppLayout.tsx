@@ -43,9 +43,9 @@ export default function AppLayout() {
     getUserCurrencyInfo();
     getTransactions();
     fetchUserNotifications();
-    checkIfUserIsVerified(false); // this does not trigger a redirect
+    checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
 
-    //check user verification on paymentmethod page and redirect if !verified
+    //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
       checkIfUserIsVerified(true);
     }

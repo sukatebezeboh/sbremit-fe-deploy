@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { DateFormat, getFlagURL } from "../../utils/reuseableUtils";
+import {
+  DateFormat,
+  convertToDateFormat,
+  getFlagURL,
+} from "../../utils/reuseableUtils";
 import {
   DatePicker,
   DatePickerProps,
@@ -14,6 +18,7 @@ import {
 } from "antd";
 import { FlexAndWrap } from "./VerificationsStyles";
 import dayjs from "dayjs";
+import { userAppValues } from "../../utils/useAppValues";
 
 interface FormVerificationProps {
   open: boolean;
@@ -28,16 +33,21 @@ export const FormVerification = ({
 }: FormVerificationProps) => {
   const user = useSelector((state: any) => state.auth.user);
   const countries = useSelector((state: any) => state.appValues.countries);
+  const { PayinCountries } = userAppValues();
   const { location_country, day, year, month } = user?.profile;
   const [form] = Form.useForm();
   const [dob, setDob] = useState(`${day}-${month}-${year}`);
   const [enbledOtherGenderInput, setEnabledOtherGenderInput] = useState(false);
 
+  const userCountryData = PayinCountries.find(
+    (country: any) => country.countryCode === location_country
+  );
+
   const initialValues: any = {
     // phoneCode: "+01",
     address2: "",
     location_country: location_country,
-    dob: dayjs(`${day}-${month}-${year}`, DateFormat),
+    dob: dayjs(convertToDateFormat(`${day}-${month}-${year}`), DateFormat),
     gender: "male",
     ...user?.profile,
   };
@@ -149,7 +159,12 @@ export const FormVerification = ({
                 },
               ]}
             >
-              <Input size="large" placeholder="Mobile number" type="phone" />
+              <Input
+                addonBefore={userCountryData?.dialCode}
+                size="large"
+                placeholder="Mobile number"
+                type="phone"
+              />
             </Form.Item>
             <Form.Item
               name="dob"
@@ -278,7 +293,7 @@ export const FormVerification = ({
                 className="child"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Please input province!",
                   },
                 ]}
@@ -292,7 +307,7 @@ export const FormVerification = ({
                 className="child"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                     message: "Please input your County!",
                   },
                 ]}

@@ -1,7 +1,7 @@
 import { Input, Select, Space, Tooltip } from "antd";
 import {
-    formatAmount,
-    getFlagURL,
+  formatAmount,
+  getFlagURL,
 } from "components/pages/transcations-flow/utils/reuseableUtils";
 import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
 import React, { useEffect, useState } from "react";
@@ -9,9 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
 import { updateCorrespondingExchangeRate } from "redux/actions/actionsTransfer";
 import { isWithinPaymentLimit } from "../GetQuoteHelper";
-import {
-    CalculatorInputStyles
-} from "../GetQuoteStyles";
+import { CalculatorInputStyles } from "../GetQuoteStyles";
 
 const { Option } = Select;
 
@@ -33,10 +31,6 @@ export const CalculatorInput = ({
 
   const isPayin = inputType === "payin";
   const isAmountValid = isWithinPaymentLimit(transfer);
-
-  useEffect(() => {
-    updateCorrespondingExchangeRate(payinCurrency, payoutCurrency);
-  }, [payinCurrency, payoutCurrency]);
 
   useEffect(() => {
     setErrorMessage(isAmountValid);
@@ -99,12 +93,19 @@ const SelectAfter = (
   isPayin: boolean
 ) => {
   const transfer = useSelector((state: any) => state.transfer);
-  const { payinActualValue } = transfer;
+  const { payinActualValue, payoutCurrency } = transfer;
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const PayInCountryData = PayinCountries.find(
     (country) => country.currency === payInCurrency
   );
+
+  useEffect(() => {
+    //update excahnge rate onmount
+    if (payInCurrency !== "") {
+      updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
+    }
+  }, [payInCurrency]);
 
   const handlePayOutCountryChange = (value: string) => {
     dispatch({

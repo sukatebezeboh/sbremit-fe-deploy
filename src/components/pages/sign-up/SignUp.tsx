@@ -29,7 +29,7 @@ const getEighteenYearsAgo = () => {
   return now.toLocaleDateString().split('/').reverse().join('-');
 }
 
-const SignUp = () => {
+const SignUp1 = () => {
   const [passwordType, setPasswordType] = useState('password')
   const [pwIcon, setPwIcon] = useState('show')
   const [openModal, setOpenModal] = useState(false)
@@ -412,4 +412,4 @@ const { touched, errors, values } = formik;
   )
 }
 
-export default SignUp
+export default SignUp1

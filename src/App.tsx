@@ -27,7 +27,7 @@ import AppLoader from "./components/modules/app-loader/AppLoader";
 import { AppFooter } from "./components/modules/app-footer/AppFooter";
 import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
 import { ConfirmDialog } from "components/modules/confirm-dialog/ConfirmDialog";
-import SignIn from "components/pages/sign-in/SignIn";
+import Login from "components/pages/new-auth-pages/views/Login";
 import { isProductionEnv } from "./util/util";
 import http from "util/http";
 import endpoints from "util/endpoints";
@@ -126,8 +126,8 @@ function App() {
                       //           }
                       // </Suspense>
                       <Suspense fallback={<AppLoader show={true} />}>
-                        <SignIn />
-                        <AppFooter />
+                        <Login />
+                        {/* <AppFooter /> */}
                       </Suspense>
                     )}
                   </React.Fragment>

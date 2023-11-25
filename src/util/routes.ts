@@ -24,10 +24,15 @@ const AccountStatement = lazy(
 );
 
 //----
-const SignUp = lazy(() => import("../components/pages/sign-up/SignUp"));
-const SignIn = lazy(() => import("../components/pages/sign-in/SignIn"));
+const SignUp = lazy(
+  () => import("../components/pages/new-auth-pages/views/CreateAccount")
+);
+const SignIn = lazy(
+  () => import("../components/pages/new-auth-pages/views/Login")
+);
+
 const ForgetPassword = lazy(
-  () => import("../components/pages/forget-password/ForgetPassword")
+  () => import("../components/pages/new-auth-pages/views/ForgotPassword")
 );
 const PasswordEmailReset = lazy(
   () => import("../components/pages/password-email-reset/PasswordEmailReset")
@@ -42,17 +47,17 @@ const ResetSmsCode = lazy(
   () => import("../components/pages/reset-sms-code/ResetSmsCode")
 );
 const ResetPassword = lazy(
-  () => import("../components/pages/reset-password/ResetPassword")
+  () => import("../components/pages/new-auth-pages/views/ResetPassword")
 );
 const PasswordResetComplete = lazy(
   () =>
     import("../components/pages/password-reset-complete/PasswordResetComplete")
 );
 const AccountConfirmation = lazy(
-  () =>
-    import(
-      "../components/email-templates/account-confirmation/AccountConfirmation"
-    )
+  () => import("../components/pages/new-auth-pages/views/VerifyEmail")
+);
+const VerifyPasswordReset = lazy(
+  () => import("../components/pages/new-auth-pages/views/VerifyPasswordReset")
 );
 const PasswordReset = lazy(
   () => import("../components/email-templates/password-reset/PasswordReset")
@@ -308,20 +313,28 @@ export const Routing: IRoute[] = [
     path: paths.SIGN_UP,
     component: SignUp,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.SIGN_IN,
     component: SignIn,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.FORGET_PASSWORD,
     component: ForgetPassword,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.PASSWORD_EMAIL_RESET,
     component: PasswordEmailReset,
+    protected: false,
+  },
+  {
+    path: paths.VERIFY_PASSWORD_RESET,
+    component: VerifyPasswordReset,
     protected: false,
   },
   {
@@ -348,6 +361,7 @@ export const Routing: IRoute[] = [
     path: paths.RESET_PASSWORD,
     component: ResetPassword,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.PASSWORD_RESET_COMPLETE,

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { AntdConfigSettings } from "components/pages/transcations-flow/utils/stylesVariables";
 import { TOAST } from "redux/actionTypes";
 import { useDispatch, useSelector } from "react-redux";
+import { consoleLogOnLocalHost } from "components/pages/transcations-flow/utils/reuseableUtils";
 
 type ToastType = "success" | "info" | "warning" | "error";
 
@@ -24,15 +25,12 @@ export default function Toast(props: ToastProps) {
   const { config } = props;
   const dispatch = useDispatch();
   const toastConfig = useSelector((state: any) => state.toast.toast);
+  const [api, contextHolder] = notification.useNotification();
 
   const close = () => {
     dispatch({
       type: TOAST,
-      payload: {
-        ...toastConfig,
-        show: false,
-        duration: 1,
-      },
+      payload: {},
     });
   };
 
@@ -40,9 +38,9 @@ export default function Toast(props: ToastProps) {
     <ConfigProvider theme={AntdConfigSettings}>
       {config.extraBtnHandler ? (
         <Space>
-          {/* <Button type="text" onClick={close}>
+          <Button type="text" onClick={close}>
             Close
-          </Button> */}
+          </Button>
           <Button
             type="primary"
             onClick={() => {
@@ -60,17 +58,18 @@ export default function Toast(props: ToastProps) {
   );
 
   useEffect(() => {
-    if (config.show) {
-      return notification[config.type]({
+    consoleLogOnLocalHost(`Toast: ${config.message}`);
+    if (config.show === true) {
+      return api[config.type]({
         message: config.title ? config.title : config.type?.toLocaleUpperCase(),
         description: config.message,
         placement: "topRight",
-        duration: config.duration === 0 ? config.duration : 5,
+        duration: config.extraBtnHandler ? 0 : 5,
         btn,
-        onClose: () => close(),
+        onClose: close,
       });
     }
   }, [config?.show]);
 
-  return null;
+  return <> {contextHolder}</>;
 }

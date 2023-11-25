@@ -12,9 +12,7 @@ export const ToastWithActionsButtons = ({ config }: any) => {
   const close = () => {
     dispatch({
       type: TOAST,
-      payload: {
-        toast: {},
-      },
+      payload: {},
     });
   };
 

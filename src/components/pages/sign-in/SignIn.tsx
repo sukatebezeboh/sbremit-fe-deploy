@@ -13,7 +13,7 @@ import { paths } from "../../../util/paths";
 
 const Body = style("signin");
 
-const SignIn = () => {
+const SignIn1 = () => {
   const [passwordType, setPasswordType] = useState("password");
   const [pwIcon, setPwIcon] = useState("show");
   const [showModal, setShowModal] = useState(false);
@@ -130,4 +130,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignIn1;

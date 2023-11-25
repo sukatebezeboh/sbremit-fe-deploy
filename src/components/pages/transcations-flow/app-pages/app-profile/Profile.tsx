@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import {
+  consoleLogOnLocalHost,
   generateAlphabetColor,
   getFirstLetter,
+  getFlagURL,
 } from "../../utils/reuseableUtils";
 import { EditUserProfile } from "./EditUserProfile";
 import {
@@ -28,9 +30,12 @@ const identifyEmptyRequiredProfileInfo = (
 ) => {
   const requiredFields = ["address1", "city", "zip", "mobile"];
 
-  if (requiredFields.includes(fieldName) && fieldValue === "") {
+  if (
+    requiredFields.includes(fieldName) &&
+    (fieldValue === undefined || fieldValue.trim() === "")
+  ) {
     return {
-      color: "##CF0921",
+      color: "#CF0921",
     };
   } else {
     return {};
@@ -149,7 +154,18 @@ export default function Profile() {
             {zip || "required!"}
           </Descriptions.Item>
           <Descriptions.Item label="Country">
-            {countries[location_country?.toUpperCase()] || "-"}
+            <Space align="center">
+              <img
+                src={getFlagURL(location_country?.toUpperCase())}
+                alt={location_country}
+                style={{
+                  width: "24px",
+                  height: "18px",
+                  marginTop: "5px",
+                }}
+              />
+              {countries[location_country?.toUpperCase()] || "-"}
+            </Space>
           </Descriptions.Item>
         </Descriptions>
       </Card>

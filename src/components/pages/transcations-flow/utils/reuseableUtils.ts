@@ -209,13 +209,22 @@ export const userIsVerified = (user: any): boolean => {
     (method: { type: string }) => method.type === "IDENTITY"
   );
 
-  const idAttempted = idVerification && idVerification.status !== "PENDING";
-
-  return (
-    Boolean(user?.meta?.verified) &&
-    user?.meta?.verified !== "retry" &&
-    idAttempted
+  const docVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "DOCUMENT"
   );
+
+  const docAttempted = docVerification && docVerification?.status !== "PENDING";
+
+  const idAttempted = idVerification && idVerification?.status !== "PENDING";
+
+  const docAndIdAtempted = docAttempted && idAttempted;
+
+  // for cases where user has meta.verified == "1".
+  if (Boolean(user?.meta?.verified)) {
+    return true;
+  }
+  //else let consider user.verifications
+  return docAndIdAtempted ?? false;
 };
 
 export const isUserFirstTransaction = (user: any): boolean => {
@@ -260,5 +269,29 @@ export function consoleLogOnLocalHost(logData: any) {
     console.log(logData);
   } else {
     return null;
+  }
+}
+
+export function convertToDateFormat(date: string): string {
+  const parts = date?.split("-");
+
+  if (parts.length === 3) {
+    const day = parts[0];
+    const month = parts[1];
+    let year = parts[2];
+
+    const formattedDay = day.length === 1 ? `0${day}` : day;
+    const formattedMonth = month.length === 1 ? `0${month}` : month;
+
+    // Check and format the year
+    if (year.length === 2) {
+      year = `20${year}`;
+    } else if (year.length !== 4) {
+      return "Invalid year format";
+    }
+
+    return `${formattedDay}-${formattedMonth}-${year}`;
+  } else {
+    return "Invalid date format";
   }
 }

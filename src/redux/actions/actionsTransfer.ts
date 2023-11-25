@@ -100,6 +100,12 @@ export const updateCorrespondingExchangeRate = async (
     .catch((error) => {
       //console.log(error);
       store.dispatch({ type: LOADING, payload: false });
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 25000,
+        message: error.message || "An error occurred, Please try again.",
+      });
     });
 };
 

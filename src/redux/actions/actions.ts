@@ -134,6 +134,15 @@ export const signInAction = (data: any, history: any) => {
 
 const handleSignInResponse = (res: any, data: any) => {
   if (res.data.status === "200") {
+    // console.log(res.data);
+    if (res?.data?.data?.status === 500) {
+      return toastAction({
+        show: true,
+        type: "error",
+        timeout: 5000,
+        message: `${res.data.error.message}`,
+      });
+    }
     toastAction({
       show: true,
       type: "success",
@@ -168,6 +177,7 @@ const handleSignInResponse = (res: any, data: any) => {
           ? "Activate my account"
           : "Resend activation mail",
         extraBtnHandler: () =>
+          // window.location.replace(paths.CONFIRM_ACCOUNT_EMAIL),
           isPhoneNumber(data.username)
             ? window.location.replace(
                 `${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(
@@ -181,7 +191,7 @@ const handleSignInResponse = (res: any, data: any) => {
       errorMessage.indexOf("blocked") !== -1 ||
       errorMessage.indexOf("inactive") !== -1
     ) {
-      stackNewToast({
+      toastAction({
         name: "user-blocked-notice",
         show: true,
         type: "error",
@@ -253,6 +263,9 @@ export const resendActivation = (username: string) => {
           message: isPhoneNumber(username)
             ? `An activation code has been sent to your phone.`
             : "An activation link has been sent to your email.",
+          // extraBtnText: "Enter activation code",
+          // extraBtnHandler: () =>
+          //   window.location.replace(paths.CONFIRM_ACCOUNT_EMAIL),
         });
       } else {
         toastAction({
@@ -380,7 +393,7 @@ export const toastAction = (toastConfig: any) => {
     () => {
       store.dispatch({
         type: TOAST,
-        payload: { ...toastConfig, show: true, readyToClose: true },
+        payload: {},
       });
     },
     toastConfig?.timeout ? toastConfig?.timeout - 2000 : 8000
@@ -389,7 +402,7 @@ export const toastAction = (toastConfig: any) => {
   const t_id_2 = setTimeout(() => {
     store.dispatch({
       type: TOAST,
-      payload: { ...toastConfig, show: false, readyToClose: false },
+      payload: {},
     });
   }, toastConfig?.timeout || 10000);
 
@@ -516,6 +529,7 @@ export const changePasswordAction = (values: any, callback: Function) => {
       store.dispatch({ type: SUBMITTING, payload: "" });
     });
 };
+
 export const resetPasswordAction = (
   values: any,
   stage = "email",
@@ -523,7 +537,27 @@ export const resetPasswordAction = (
 ) => {
   store.dispatch({ type: SUBMITTING, payload: paths.RESET_PASSWORD });
 
-  if (stage === "email") {
+  const handleSuccess = (message: string, type: string, timeout: number) => {
+    toastAction({
+      show: true,
+      type,
+      timeout,
+      message,
+    });
+    store.dispatch({ type: SUBMITTING, payload: "" });
+  };
+
+  const handleError = (message: string, type: string, timeout: number) => {
+    toastAction({
+      show: true,
+      type,
+      timeout,
+      message,
+    });
+    store.dispatch({ type: SUBMITTING, payload: "" });
+  };
+
+  const handleEmailStage = () => {
     axios
       .post(
         config.API_HOST + endpoints.PASSWORD_REQUEST,
@@ -532,19 +566,26 @@ export const resetPasswordAction = (
       )
       .then((res) => {
         if (res.status === 200) {
+          if (res?.data?.status === 500) {
+            return handleError(`${res.data.error.message}`, "error", 20000);
+          }
           linkTo(values.username);
-          store.dispatch({ type: SUBMITTING, payload: "" });
+          handleSuccess(`Email sent to ${values.username}`, "success", 20000);
         } else {
-          toastAction({
-            show: true,
-            type: "warning",
-            timeout: 20000,
-            message: `Could not send mail to ${values.username}`,
-          });
-          store.dispatch({ type: SUBMITTING, payload: "" });
+          handleError(
+            `Could not send mail to ${values.username}`,
+            "warning",
+            20000
+          );
         }
+      })
+      .catch((err) => {
+        //console.log(err.message);
+        handleError(err.message, "error", 20000);
       });
-  } else {
+  };
+
+  const handlePasswordResetStage = () => {
     axios
       .post(
         config.API_HOST + endpoints.PASSWORD_RESET,
@@ -552,31 +593,27 @@ export const resetPasswordAction = (
           password: values.password,
           confirmation: values.confirmation,
           token: window.location.pathname.replace("/reset-password/", ""),
-          // token: getQueryParam('token'),
         },
         {
-          headers: { "X-SERVICE-PROVIDER": serviceProvider },
+          headers: { "X-SERVICE-PROVIDER": config.serviceProvider },
         }
       )
       .then((res: any) => {
         if (res.data.status === "200") {
-          toastAction({
-            show: true,
-            type: "success",
-            timeout: 15000,
-            message: `Password changed`,
-          });
-          store.dispatch({ type: SUBMITTING, payload: "" });
+          handleSuccess("Password changed", "success", 15000);
         } else {
-          toastAction({
-            show: true,
-            type: "error",
-            timeout: 10000,
-            message: `Could not change password`,
-          });
-          store.dispatch({ type: SUBMITTING, payload: "" });
+          handleError("Could not change password", "error", 10000);
         }
+      })
+      .catch((err) => {
+        handleError(err.message, "error", 10000);
       });
+  };
+
+  if (stage === "email") {
+    handleEmailStage();
+  } else {
+    handlePasswordResetStage();
   }
 };
 
@@ -1499,10 +1536,10 @@ export const checkForVerificationStatusToast = (user: any, history: any) => {
     });
   }
 };
-export const confirmAccountEmail = (redirectTo: Function) => {
+export const confirmAccountEmail = (token: string, showSuccess?: Function) => {
   store.dispatch({ type: LOADING, payload: true });
-  const token = window.location.pathname.replace("/confirm-account/", "");
-  // const token = getQueryParam('token')
+  // const token = window.location.pathname.replace("/confirm-account/", "");
+  // const token = getQueryParam("token");
   const phone = getQueryParam("phone");
   const returnRoute = getQueryParam("ret");
   if (!token) {
@@ -1534,7 +1571,9 @@ export const confirmAccountEmail = (redirectTo: Function) => {
           message: `${res.data.data?.message}`,
         });
         store.dispatch({ type: LOADING, payload: false });
-        redirectTo(paths.SIGN_IN);
+        if (showSuccess) {
+          showSuccess();
+        }
       } else {
         toastAction({
           show: true,
@@ -1544,7 +1583,7 @@ export const confirmAccountEmail = (redirectTo: Function) => {
         });
 
         if (returnRoute) {
-          redirectTo(returnRoute + "?phone=" + encodeURIComponent(phone));
+          // redirectTo(returnRoute + "?phone=" + encodeURIComponent(phone));
         }
         store.dispatch({ type: LOADING, payload: false });
       }
