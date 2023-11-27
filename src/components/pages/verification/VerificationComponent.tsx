@@ -52,6 +52,40 @@ function checkIdVerificationStatus(user: any): boolean {
   return verificationAttempted ?? false;
 }
 
+const checkToShowVerificationForm = (user: any) => {
+  let verificationList = [];
+
+  if (user?.verifications) {
+    for (const key in user.verifications) {
+      verificationList.push(user.verifications[key]);
+    }
+  }
+  const idVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "IDENTITY"
+  );
+
+  const docVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "DOCUMENT"
+  );
+
+  const docIsPending = docVerification && docVerification?.status === "PENDING";
+
+  const idIsPending = idVerification && idVerification?.status === "PENDING";
+
+  const docOrIdIsPending = docIsPending || idIsPending;
+
+  if (
+    !Boolean(user?.meta?.verified) &&
+    !Boolean(user?.meta?.submittedVerificationData) &&
+    docOrIdIsPending
+  ) {
+    return false; // Show the form to submit data
+  } else {
+    return true; // Submitted, don't show the form
+  }
+};
+
+
 export const VerificationComponent = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [displayComplyCubeVerification, setDisplayComplyCubeVerification] =
@@ -75,7 +109,7 @@ export const VerificationComponent = () => {
 
   useEffect(() => {
     //refreshUserDetails();
-    setFormVerified(Boolean(user?.meta?.verified));
+    setFormVerified(checkToShowVerificationForm(user));
   }, [user]);
 
   useEffect(() => {
