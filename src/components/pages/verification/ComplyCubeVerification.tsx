@@ -54,8 +54,10 @@ export const ComplyCubeVerification = ({
     (documentVerification && documentVerification.status === "PENDING") ||
     undefined;
 
-  const verificationCompleted =
-    !invalidIdVerification || !invalidDocumentVerification;
+  // const verificationCompleted =
+  //   !invalidIdVerification || !invalidDocumentVerification;
+
+  const verificationCompleted = Boolean(user?.meta?.verified);
 
   const stages: any = [
     {
@@ -104,7 +106,7 @@ export const ComplyCubeVerification = ({
   }, [open]);
 
   useEffect(() => {
-    if (open) {
+    if (!verificationCompleted) {
       // fetch Token /verification-token-experience
       http
         .get("/verification-token-experience") // data.token
