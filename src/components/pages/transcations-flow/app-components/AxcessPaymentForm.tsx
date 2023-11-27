@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Breakpoint, Colors } from "../utils/stylesVariables";
 import { PageTitileAndDescription } from "../utils/ReusablePageContent";
+import _env from "env";
 
 const Body = styled.div`
   //background: #fff;
@@ -35,7 +36,7 @@ export default function AxcessMerchant() {
     <Body>
       <AxcssPaymentForm
         checkoutId={checkoutID}
-        shopperResultUrl={`/transfer-completed/${transferId}`}
+        shopperResultUrl={`${_env.APP_HOST}/transfer-completed/${transferId}`}
       />
     </Body>
   );
