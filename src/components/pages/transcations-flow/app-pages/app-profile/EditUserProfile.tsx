@@ -245,7 +245,7 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
               className="child"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please input your Address line 2!",
                 },
               ]}

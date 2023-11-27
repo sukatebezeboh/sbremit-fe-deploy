@@ -17,6 +17,7 @@ import {
   UsernameAndTransactIDContiner,
   UsernameStyles,
 } from "./ProfileStyles";
+import { checkToShowVerificationForm } from "../app-verifications/verificationsHelper";
 
 const headerPadding = {
   padding: "14px 0",
@@ -105,6 +106,7 @@ export default function Profile() {
             <Button
               icon={<EditOutlined rev={undefined} key="edit" />}
               onClick={() => setEditProfileModal(true)}
+              disabled={!checkToShowVerificationForm(user)}
             >
               Edit profile
             </Button>

@@ -157,5 +157,13 @@ export const getTransactionsInfo = (
         callback(res.data.data);
       }
     })
-    .catch((error) => {});
+    .catch((error) => {
+      toastAction({
+        show: true,
+        type: "error",
+        title: "Error",
+        timeout: 25000,
+        message: error.message || "An error occurred, Please try again.",
+      });
+    });
 };

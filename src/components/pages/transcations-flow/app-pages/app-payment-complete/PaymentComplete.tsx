@@ -3,7 +3,7 @@ import {
   CloseOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { Avatar } from "antd";
+import { Alert, Avatar, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
@@ -17,6 +17,7 @@ import {
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
+import _env from "env";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -32,6 +33,7 @@ export default function PaymentComplete() {
   let { transferId } = useParams<any>();
   const [trasnferInfo, setTransferInfo] = useState<any>();
   const [paymentInfo, setPaymentInfo] = useState<any>();
+  const [isRequestError, setIsrequestError] = useState(false);
 
   useEffect(() => {
     getTransactionsInfo(setTransferInfo, transferId);
@@ -39,12 +41,16 @@ export default function PaymentComplete() {
 
   useEffect(() => {
     if (trasnferInfo !== undefined) {
-      getPaymentStatus(axcess_checkout_id, updatePaymentInfo);
+      getPaymentStatus(axcess_checkout_id, updatePaymentInfo, OnErrorRequest);
     }
   }, [trasnferInfo]);
 
   const updatePaymentInfo = (data: any) => {
     setPaymentInfo(data);
+  };
+
+  const OnErrorRequest = () => {
+    setIsrequestError(true);
   };
 
   const { totalToPay, axcess_checkout_id, transactionId } =
@@ -59,10 +65,14 @@ export default function PaymentComplete() {
   return (
     <PaymentCompleteConatinerStyles>
       {!paymentInfo ? (
-        <>
-          <LoadingOutlined rev={undefined} />
-          <span>Fetching payment infomations....</span>
-        </>
+        isRequestError ? (
+          OnErrorRequestAlert
+        ) : (
+          <>
+            <LoadingOutlined rev={undefined} />
+            <span>Fetching payment infomations....</span>
+          </>
+        )
       ) : (
         <PaymentCompleteWrapperStyles>
           <IconStyles $type={isPaymentSuccessfull}>
@@ -110,3 +120,20 @@ export default function PaymentComplete() {
     </PaymentCompleteConatinerStyles>
   );
 }
+
+const OnErrorRequestAlert = (
+  <Alert
+    className="alert"
+    type="error"
+    banner
+    description={
+      <span>
+        Oops! Something went wrong with your request. Please{" "}
+        <i>
+          <a href={`${_env.APP_HOST}${paths.CONTACT}`}>Contact Us</a>
+        </i>{" "}
+        for assistance. Thank you!
+      </span>
+    }
+  />
+);

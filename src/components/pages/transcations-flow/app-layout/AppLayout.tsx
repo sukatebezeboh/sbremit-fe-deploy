@@ -64,10 +64,9 @@ export default function AppLayout() {
     history.push(paths.VERIFICATION);
   };
 
-  const isUserVerificationRequired =
-    !userIsVerified(user) &&
-    !isUserFirstTransaction(user) &&
-    !userHasReachedFinalVerificationStage(user);
+  const isUserVerificationRequired = !userIsVerified(user); //&&
+  // !isUserFirstTransaction(user) &&
+  // !userHasReachedFinalVerificationStage(user);
 
   const checkIfUserIsVerified = (redirect: boolean) => {
     if (trullioVerified && Boolean(trullioVerified)) {

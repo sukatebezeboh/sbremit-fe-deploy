@@ -1744,7 +1744,8 @@ export const generateCheckoutId = async (
 
 export const getPaymentStatus = async (
   checkoutID: string,
-  callback: Function
+  callback: Function,
+  onCallbackError: Function
 ) => {
   http
     .post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
@@ -1752,6 +1753,15 @@ export const getPaymentStatus = async (
     })
     .then((res) => {
       callback(res.data);
+    })
+    .catch((error) => {
+      onCallbackError();
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 15000,
+        message: "An error occurred. Please try again.",
+      });
     });
 };
 

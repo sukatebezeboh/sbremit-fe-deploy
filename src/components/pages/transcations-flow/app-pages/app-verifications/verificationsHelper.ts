@@ -19,7 +19,7 @@ export const checkVerification = (user: any, verificationType: string) => {
   const isVerificationAttempted =
     verification && verification.status !== "PENDING";
 
-  return isVerificationAttempted || false;
+  return isVerificationAttempted ?? false;
 };
 
 export const checkToShowVerificationForm = (user: any) => {

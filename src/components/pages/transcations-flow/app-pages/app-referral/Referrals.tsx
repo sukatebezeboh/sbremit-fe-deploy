@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Divider,
+  Empty,
   Progress,
   Space,
   Statistic,
@@ -16,7 +17,7 @@ import { paths } from "util/paths";
 import {
   copyToClipBoard,
   getPercentage,
-  getUserDefaultCurrency,
+  //getUserDefaultCurrency,
   getValueFromArray,
 } from "../../../../../util/util"; //"util/util";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
@@ -35,6 +36,7 @@ import {
   UsageStyles,
   PromoUserNameStyles,
 } from "./ReferralsStyles";
+import { userAppValues } from "../../utils/useAppValues";
 const { Meta } = Card;
 
 function isNotAwaiting(user: any, referralSettings: any) {
@@ -51,6 +53,13 @@ function isNotAwaiting(user: any, referralSettings: any) {
 export default function Referrals() {
   const user = useSelector((state: any) => state.auth.user);
   const appValues = useSelector((state: any) => state.appValues);
+  const { PayinCountries } = userAppValues();
+  const userCountryInfo = PayinCountries.find(
+    (country) => country.countryCode === user?.profile?.location_country
+  );
+
+  const getUserDefaultCurrency = () => userCountryInfo?.currency;
+
   const referralSettings = getValueFromArray(
     "settings",
     "name",
@@ -69,11 +78,7 @@ export default function Referrals() {
   const getShareReferralText = (extraText = "") => {
     return encodeURIComponent(
       `SB REMIT is a cheap, fast and secure way of sending money to Africa. 
-		It even gets better - you can earn ${getUserDefaultCurrency(
-      user,
-      appValues,
-      true
-    )}${
+		It even gets better - you can earn ${getUserDefaultCurrency()}${
         referralSettings?.data?.referredUserDiscountValue
       } when you sign-up with my referral link and make a successful transfer.
 
@@ -82,7 +87,8 @@ export default function Referrals() {
     );
   };
 
-  const defaultCurrency = getUserDefaultCurrency(user, appValues);
+  const defaultCurrency = getUserDefaultCurrency() ?? "";
+
   const getAccruedBonus = (users: any) => {
     const filteredUsers = users?.filter(
       (user: any) =>
@@ -98,7 +104,7 @@ export default function Referrals() {
     <ReferralContainerStyles>
       <PageTitileAndDescription
         title="My Referral Page"
-        description="Refer a friend and earn £10!😛"
+        description="Invite a friend and earn £10 in credit!😛"
       />
       <ReferralContentStyles>
         <HeaderStyles>
@@ -221,6 +227,7 @@ const Usage = ({
     <UsageStyles>
       <Title>Usage</Title>
       <div className="_uasge">
+        {referralDetails?.referredUsers?.length == 0 && <Empty />}
         {referralDetails?.referredUsers?.map((user: any, index: number) => {
           const referalCodeSTyles = {
             width: "100%",
