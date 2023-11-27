@@ -31,6 +31,11 @@ function checkIdVerificationStatus(user: any): boolean {
     }
   }
 
+  //cehck if meta.verified is true
+  if (Boolean(user.meta?.verified)) {
+    return true;
+  }
+
   const idVerification = verificationList.find(
     (method) => method.type === "IDENTITY"
   );
@@ -42,9 +47,9 @@ function checkIdVerificationStatus(user: any): boolean {
   const idAttempted = idVerification && idVerification.status !== "PENDING";
   const docAttempted = docVerification && docVerification.status !== "PENDING";
 
-  const verificationAttempted = idAttempted || docAttempted;
+  const verificationAttempted = idAttempted && docAttempted;
 
-  return verificationAttempted || false;
+  return verificationAttempted ?? false;
 }
 
 export const VerificationComponent = () => {
