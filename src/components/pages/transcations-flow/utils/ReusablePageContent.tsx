@@ -4,6 +4,8 @@ import { Breakpoint, Colors, Heading } from "./stylesVariables";
 import { MouseEventHandler } from "react";
 import { loading } from "redux/reducers/app";
 import { useHistory } from "react-router-dom";
+import { constants } from "util/constants";
+import { paths } from "util/paths";
 
 interface PageTitileAndDescriptionProps {
   title: string;
@@ -180,3 +182,52 @@ export default function LargeButton({
     </Space>
   );
 }
+
+interface TrnsferDetailsActionButtonsProps {
+  status: string;
+  transaction: any;
+  history: any;
+  resendTransfer: () => void;
+}
+
+export const TrnsferDetailsActionButtons = ({
+  status,
+  transaction,
+  history,
+  resendTransfer,
+}: TrnsferDetailsActionButtonsProps) => {
+  let buttonContent = "Resend"; // Default button content
+
+  const renderActionButton = () => {
+    let onClickAction: () => void = resendTransfer; // Default onClick action
+
+    if (status === constants.TRANSFER_STATUS_PENDING) {
+      buttonContent = "Pay";
+      onClickAction = () => {
+        history.push(paths.PAYMENT_METHOD, {
+          transfer: transaction,
+        });
+      };
+    } else if (status === constants.TRANSFER_PAYMENT_FRAUD) {
+      buttonContent = "Contact us";
+      onClickAction = () =>
+        history.push(paths.CONTACT, {
+          transferId: transaction.meta.transactionId,
+        });
+    }
+
+    return (
+      <Button
+        type={
+          status === constants.TRANSFER_PAYMENT_FRAUD ? "default" : "primary"
+        }
+        danger={status === constants.TRANSFER_PAYMENT_FRAUD ? true : false}
+        onClick={onClickAction}
+      >
+        {buttonContent}
+      </Button>
+    );
+  };
+
+  return renderActionButton();
+};
