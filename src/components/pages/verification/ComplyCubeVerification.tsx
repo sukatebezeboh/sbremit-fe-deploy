@@ -104,7 +104,7 @@ export const ComplyCubeVerification = ({
   }, [open]);
 
   useEffect(() => {
-    if (!verificationCompleted) {
+    if (open) {
       // fetch Token /verification-token-experience
       http
         .get("/verification-token-experience") // data.token
