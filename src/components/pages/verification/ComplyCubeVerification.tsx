@@ -53,8 +53,8 @@ export const ComplyCubeVerification = ({
   const invalidDocumentVerification =
     documentVerification && documentVerification.status === "PENDING";
 
-  const verificationCompleted =
-    !invalidIdVerification || !invalidDocumentVerification;
+  const verificationCompleted = Boolean(user?.meta?.verifed);
+    //!invalidIdVerification || !invalidDocumentVerification;
 
   const stages: any = [
     {
