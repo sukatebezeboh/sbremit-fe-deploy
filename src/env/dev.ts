@@ -1,8 +1,8 @@
 const config = {
-  API_HOST: '/api',
-  API_PROXY: "http://api-uat.sbremit.co.uk",
-  APP_HOST: "https://sbremit.netlify.app",
-  //API_HOST: "https://api-uat.sbremit.co.uk",
-};
+  // API_HOST: 'http://localhost:80', //
+  API_HOST: 'http://api-uat.sbremit.co.uk',
+  API_PROXY: 'http://api-uat.sbremit.co.uk',
+  APP_HOST: 'http://localhost:3000'
+}
 
-export default config;
+export default config
