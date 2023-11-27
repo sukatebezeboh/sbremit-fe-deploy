@@ -43,6 +43,7 @@ import {
 import { paths } from "util/paths";
 import { useHistory } from "react-router-dom";
 import { TRANSFER } from "redux/actionTypes";
+import { TrnsferDetailsActionButtons } from "../../utils/ReusablePageContent";
 
 interface TransactionDetailProps {
   open: boolean;
@@ -136,40 +137,12 @@ export const TransactionDetail = ({
                 }
                 text={formatTransactionStatus(status).text}
               />
-              {status === constants.TRANSFER_STATUS_PAYMENT_DECLINED && (
-                <Button type="primary" onClick={resendTransfer}>
-                  Retry
-                </Button>
-              )}
-              {status === constants.TRANSFER_STATUS_PENDING && (
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    history.push(paths.PAYMENT_METHOD, {
-                      transfer: transaction,
-                    });
-                  }}
-                >
-                  Pay
-                </Button>
-              )}
-              {status !== constants.TRANSFER_STATUS_PENDING && (
-                <Button type="primary" onClick={resendTransfer}>
-                  Resend
-                </Button>
-              )}
-              {status === constants.TRANSFER_PAYMENT_FRAUD && (
-                <Button
-                  danger
-                  onClick={() =>
-                    history.push(paths.CONTACT, {
-                      transferId: transaction.meta.transactionId,
-                    })
-                  }
-                >
-                  Contact us
-                </Button>
-              )}
+              <TrnsferDetailsActionButtons
+                status={status}
+                transaction
+                resendTransfer={resendTransfer}
+                history
+              />
             </FlexContainerWithSpaceBtw>
             {status === constants.TRANSFER_STATUS_PAYMENT_DECLINED && (
               <Alert
