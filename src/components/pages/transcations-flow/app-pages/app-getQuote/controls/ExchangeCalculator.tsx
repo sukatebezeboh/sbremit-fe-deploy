@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
 import {
-    CalculatorTabStyles,
-    ExchangeCalculatorStyles,
-    PayoutInclusiveStyles,
+  CalculatorTabStyles,
+  ExchangeCalculatorStyles,
+  PayoutInclusiveStyles,
 } from "../GetQuoteStyles";
 import { CalculatorInput } from "./CalculatorInput";
 import { PromoInput } from "./PromoInput";
