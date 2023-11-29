@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { refreshUserDetails, toastAction } from "redux/actions/actions";
 import http from "util/http";
-import { paths } from "util/paths";
 
 // INVALID VALID PENDING FAILED ATTEMPTED
 
@@ -54,7 +53,7 @@ export const ComplyCubeVerification = ({
     documentVerification && documentVerification.status === "PENDING";
 
   const verificationCompleted = Boolean(user?.meta?.verifed);
-    //!invalidIdVerification || !invalidDocumentVerification;
+  //!invalidIdVerification || !invalidDocumentVerification;
 
   const stages: any = [
     {
@@ -112,7 +111,14 @@ export const ComplyCubeVerification = ({
             setComplyCubeToken(res.data.data.token);
           }
         })
-        .catch((error) => console.log("complycube error"));
+        .catch((error) =>
+          toastAction({
+            show: true,
+            type: "error",
+            timeout: 15000,
+            message: "An error occurred. Please try again.",
+          })
+        );
     }
   }, []);
 
@@ -146,14 +152,9 @@ export const ComplyCubeVerification = ({
           .then(() => {})
           .catch(() => {})
           .finally(() => {
-            refreshUserDetails(() => history.push(paths.DASHBOARD));
             complycube.updateSettings({ isModalOpen: false });
-            toastAction({
-              show: true,
-              type: "info",
-              timeout: 10000,
-              title: "Great News",
-              message: "Your ID verification is now in progress",
+            refreshUserDetails(() => {
+              checkSubmittedVerification();
             });
           });
 
@@ -169,16 +170,35 @@ export const ComplyCubeVerification = ({
     });
   };
 
-  // !invalidIdVerification && !invalidDocumentVerification
-
-  //   if (verificationCompleted) {
-  //     return (
-  //       <>
-  //         {!invalidIdVerification ? <p>✅ Identity Verification</p> : null}
-  //         {!invalidDocumentVerification ? <p>✅ Document upload</p> : null}
-  //       </>
-  //     );
-  //   }
+  //this check prompt user if either of the verication is still pending
+  const checkSubmittedVerification = () => {
+    //if id or doc is still pending
+    if (invalidDocumentVerification) {
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 10000,
+        title: "Identity failed!",
+        message: "ID verification was not successful, Please try again",
+      });
+    } else if (invalidDocumentVerification) {
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 10000,
+        title: "Document failed!",
+        message: "Document verification was not successful, Please try again",
+      });
+    } else {
+      toastAction({
+        show: true,
+        type: "info",
+        timeout: 10000,
+        title: "Great News",
+        message: "Your ID verification is now in progress",
+      });
+    }
+  };
 
   if (!complyCubeToken) {
     return null;
