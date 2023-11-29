@@ -51,7 +51,7 @@ export const TransferMethodsStyles = styled.div<{ $selectedMethod: string }>`
         width: 380px;
       }
       @media (max-width: ${Breakpoint.md}) {
-        width: 70vw;
+        width: 100%;
       }
       .radio {
         width: 100%;
