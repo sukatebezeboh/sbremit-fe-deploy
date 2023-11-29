@@ -11,6 +11,7 @@ import LargeButton, {
 import {
   RecipientDetails,
   TransactionDetails,
+  TransactionsInfomations,
 } from "../app-transactions/TransactionDetail";
 import {
   PaymentMethodCardStyles,
@@ -98,18 +99,7 @@ export default function Pay() {
       key: "1",
       label: "Transfer details",
       children: (
-        <>
-          <RecipientDetails
-            transaction={transferInfo}
-            noBorder={true}
-            title="Recipient’s details"
-          />
-          <TransactionDetails
-            transaction={transferInfo}
-            noBorder={true}
-            title="Transfer details"
-          />
-        </>
+        <TransactionsInfomations transaction={transferInfo} noBorder={true} />
       ),
     },
   ];
