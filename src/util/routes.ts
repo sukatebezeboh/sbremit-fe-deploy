@@ -372,6 +372,7 @@ export const Routing: IRoute[] = [
     path: paths.CONFIRM_ACCOUNT_EMAIL,
     component: AccountConfirmation,
     protected: false,
+    footerless: true,
   },
   {
     path: paths.CONFIRM_ACCOUNT,
