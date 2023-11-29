@@ -124,7 +124,7 @@ export const signInAction = (data: any, history: any) => {
       }
     )
     .then((res: any) => {
-      handleSignInResponse(res, data);
+      handleSignInResponse(res, data, history);
     })
     .catch((err) => {})
     .then(() => {
@@ -132,7 +132,7 @@ export const signInAction = (data: any, history: any) => {
     });
 };
 
-const handleSignInResponse = (res: any, data: any) => {
+const handleSignInResponse = (res: any, data: any, history?: any) => {
   if (res.data.status === "200") {
     // console.log(res.data);
     if (res?.data?.data?.status === 500) {
@@ -173,20 +173,22 @@ const handleSignInResponse = (res: any, data: any) => {
         defaultThemeName: themeNames.CLEAR_MAMBA,
         title: errorMessage,
         message: `An activation link has been sent to your email: ${data.username} `,
-        extraBtnText: isPhoneNumber(data.username)
-          ? "Activate my account"
-          : "Resend activation mail",
-        extraBtnHandler: () =>
-          // window.location.replace(paths.CONFIRM_ACCOUNT_EMAIL),
-          isPhoneNumber(data.username)
-            ? window.location.replace(
-                `${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(
-                  data.username
-                )}`
-              )
-            : resendActivation(data.username),
+        // extraBtnText: isPhoneNumber(data.username)
+        //   ? "Activate my account"
+        //   : "Resend activation mail",
+        // extraBtnHandler: () =>
+        //   isPhoneNumber(data.username)
+        //     ? window.location.replace(
+        //         `${paths.CONFIRM_ACCOUNT_SMS}?phone=${encodeURIComponent(
+        //           data.username
+        //         )}`
+        //       )
+        //     : resendActivation(data.username),
         extraBtnClass: "verif-toast-failed-extra-btn-class",
       });
+
+      !isPhoneNumber(data.username) &&
+        history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: data.username });
     } else if (
       errorMessage.indexOf("blocked") !== -1 ||
       errorMessage.indexOf("inactive") !== -1
