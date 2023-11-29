@@ -120,11 +120,12 @@ export default function Dashboard() {
       </DashboardTransactionsStyle>
       <FabAddNewTransfer>
         <FloatButton
-          style={{ padding: 8, width: 52 }}
+          style={{ padding: 6, width: 62 }}
           icon={<PlusOutlined rev={undefined} />}
           type="primary"
           shape="square"
           onClick={addNewTransfer}
+          description="Start"
         />
       </FabAddNewTransfer>
     </DashboardContainerStyle>
