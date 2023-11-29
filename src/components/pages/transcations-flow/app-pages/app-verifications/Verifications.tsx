@@ -21,7 +21,6 @@ import {
   checkToShowVerificationForm,
   checkVerification,
 } from "./verificationsHelper";
-import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 
 export default function Verifications() {
   const user = useSelector((state: any) => state.auth.user);
@@ -57,22 +56,22 @@ export default function Verifications() {
 
   const verificationList = [
     {
+      title: "Proof of address",
+      description: "Please tell us a little about yourself",
+      key: "address",
+      isAttempted: isFormVerified,
+    },
+    {
       title: "Identity Verification",
       description: "Please verify your Identity",
       key: "identity",
-      isAttempted: docAndIdAttempted,
+      isAttempted: idAttempted,
     },
     {
       title: "Document Verification",
       description: "Please verify your Documnets",
       key: "document",
-      isAttempted: docAndIdAttempted,
-    },
-    {
-      title: "Proof of address",
-      description: "Please tell us a little about yourself",
-      key: "address",
-      isAttempted: isFormVerified,
+      isAttempted: docAttempted,
     },
   ];
 
@@ -82,6 +81,37 @@ export default function Verifications() {
     } else {
       //cases for document and id
       return setDisplayComplyCubeVerification(true);
+    }
+  };
+
+  //this logic ensure user follow the order of FE verifications check
+  const isBtnDiabled = (key: string): boolean => {
+    if (key === "identity" && isFormVerified) {
+      return false; //do not diabled when key is id and from isVerfied
+    } else if (key === "document" && !idAttempted) {
+      return true; // diabled if id is yet to be attempted
+    }
+    return false; // enable for address
+  };
+
+  const verificationPercentage = (): string => {
+    const successfulAttempts = [
+      isFormVerified,
+      idAttempted,
+      docAttempted,
+    ].filter((attempt) => attempt).length;
+
+    if (verified) {
+      //super verified
+      return "3";
+    } else if (successfulAttempts === 3) {
+      return "3";
+    } else if (successfulAttempts === 1) {
+      return "1";
+    } else if (successfulAttempts === 2) {
+      return "2";
+    } else {
+      return "0";
     }
   };
 
@@ -99,12 +129,7 @@ export default function Verifications() {
           footer={
             <div className="footer">
               <Tag color="#007B5D">
-                {isFormVerified && docAndIdAttempted
-                  ? "100%"
-                  : isFormVerified
-                  ? "50%"
-                  : "0%"}{" "}
-                completed ✅
+                {verificationPercentage()}/3 completed ✅
               </Tag>
             </div>
           }
@@ -130,7 +155,7 @@ export default function Verifications() {
                 <Button
                   type="primary"
                   onClick={() => handleOnStartClicked(item.key)}
-                  disabled={item.key === "document" && !item.isAttempted} //avoid two CTA
+                  disabled={isBtnDiabled(item.key)} //avoid two CTA, ensure Form submission before ID and Doc
                 >
                   Start
                 </Button>
