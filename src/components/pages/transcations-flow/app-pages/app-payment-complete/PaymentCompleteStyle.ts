@@ -15,8 +15,10 @@ export const PaymentCompleteConatinerStyles = styled(
   height: fit-content;
   align-items: center;
   justify-content: center;
+  margin-top: 100px;
   @media (max-width: ${Breakpoint.sm}) {
     gap: 24px;
+    margin-top: 32px;
   }
 `;
 
@@ -58,19 +60,20 @@ export const PaymentCompleteWrapperStyles = styled.div`
     margin-top: 40px;
   }
 `;
+//#87d068
 
-export const IconStyles = styled.div<{ $type: boolean }>`
+export const IconStyles = styled.div<{ $color: string }>`
   position: absolute;
   top: 0;
   left: 50%;
   margin-top: 0px;
   transform: translate(-50%, -50%);
   .avatar {
-    background: ${(props) => (props.$type ? "#87d068" : Colors.sbRed)};
+    background: ${(props) => props.$color};
   }
 `;
 
-export const ExtraInfo = styled.div<{ $type: boolean }>`
+export const ExtraInfo = styled.div<{ $color: string }>`
   width: 400px;
   text-align: center;
   display: flex;
@@ -81,12 +84,13 @@ export const ExtraInfo = styled.div<{ $type: boolean }>`
     gap: 12px;
   }
   p {
+    color: ${(props) => props.$color};
     margin: 0;
     line-height: 150%;
   }
-  span {
-    color: ${(props) => (props.$type ? Colors.sbGreen : Colors.sbRed)};
+  /* span {
+    color: 
     font-size: 16px;
     line-height: 150%;
-  }
+  } */
 `;
