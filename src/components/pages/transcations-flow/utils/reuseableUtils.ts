@@ -174,22 +174,28 @@ export function categorizeTransactions(transactions: any) {
   });
 
   const totalCount = transactions.length;
-  const cancelledPercentage = ((cancelledCount / totalCount) * 100).toFixed(0);
-  const pendingPercentage = ((pendingCount / totalCount) * 100).toFixed(0);
-  const completedPercentage = ((completedCount / totalCount) * 100).toFixed(0);
+  const cancelledPercentage = Number(
+    ((cancelledCount / totalCount) * 100)?.toFixed(0)
+  );
+  const pendingPercentage = Number(
+    ((pendingCount / totalCount) * 100)?.toFixed(0)
+  );
+  const completedPercentage = Number(
+    ((completedCount / totalCount) * 100)?.toFixed(0)
+  );
 
   const result = {
     cancelled: {
       total: cancelledCount,
-      percentage: cancelledPercentage,
+      percentage: isNaN(cancelledPercentage) ? 0 : cancelledPercentage,
     },
     pending: {
       total: pendingCount,
-      percentage: pendingPercentage,
+      percentage: isNaN(pendingPercentage) ? 0 : pendingPercentage,
     },
     completed: {
       total: completedCount,
-      percentage: completedPercentage,
+      percentage: isNaN(completedPercentage) ? 0 : completedPercentage,
     },
   };
 
