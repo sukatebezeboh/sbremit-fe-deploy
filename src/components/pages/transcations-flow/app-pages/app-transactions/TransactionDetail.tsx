@@ -139,19 +139,19 @@ export const TransactionDetail = ({
               />
               <TrnsferDetailsActionButtons
                 status={status}
-                transaction
+                transaction={transaction}
                 resendTransfer={resendTransfer}
-                history
+                history={history}
               />
             </FlexContainerWithSpaceBtw>
-            {status === constants.TRANSFER_STATUS_PAYMENT_DECLINED && (
+            {/* {status === constants.TRANSFER_STATUS_PAYMENT_DECLINED && (
               <Alert
                 message="Reason:"
                 description={decline_reason}
                 type="info"
                 showIcon
               />
-            )}
+            )} */}
             {transaction?.status === constants.TRANSFER_PAYMENT_FRAUD && (
               <Alert
                 message="Possible Reason:"
@@ -244,10 +244,29 @@ const TransactionsDetailsSteps = ({ transaction }: { transaction: any }) => {
 
 export const TransactionsInfomations = ({
   transaction,
+  noBorder,
 }: {
   transaction: any;
+  noBorder?: boolean;
 }) => {
-  //console.log("Trans: ", transaction);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 500px)");
+    setIsMobile(mediaQuery.matches);
+
+    const handleMediaQueryChange = (event: any) => {
+      setIsMobile(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+
   const onChange = (key: string) => {
     //console.log(key);
   };
@@ -255,12 +274,24 @@ export const TransactionsInfomations = ({
     {
       key: "1",
       label: "Recipient’s Details",
-      children: <RecipientDetails transaction={transaction} />,
+      children: (
+        <RecipientDetails
+          transaction={transaction}
+          layout={isMobile ? "vertical" : "horizontal"}
+          noBorder={noBorder}
+        />
+      ),
     },
     {
       key: "2",
       label: "Transfer Details",
-      children: <TransactionDetails transaction={transaction} />,
+      children: (
+        <TransactionDetails
+          transaction={transaction}
+          layout={isMobile ? "vertical" : "horizontal"}
+          noBorder={noBorder}
+        />
+      ),
     },
   ];
   return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
@@ -271,12 +302,14 @@ interface TransactionInfomationProps {
   noBorder?: boolean;
   title?: string;
   extra?: any;
+  layout?: "horizontal" | "vertical";
 }
 
 export const RecipientDetails = ({
   transaction,
   noBorder,
   title,
+  layout,
 }: TransactionInfomationProps) => {
   const recipients = useSelector((state: any) => state.recipients.recipients);
   const recipient = thisRecipient(recipients, transaction?.recipientId);
@@ -294,6 +327,7 @@ export const RecipientDetails = ({
       title={title}
       column={columnSizes}
       bordered={noBorder ? false : true}
+      layout={layout}
     >
       <Descriptions.Item label="Name">
         {recipient?.firstName || "--"} {recipient?.lastName || "--"}
@@ -339,6 +373,7 @@ export const TransactionDetails = ({
   transaction,
   noBorder,
   title,
+  layout,
 }: TransactionInfomationProps) => {
   const {
     transferMethod,
@@ -363,6 +398,7 @@ export const TransactionDetails = ({
       title={title}
       column={columnSizes}
       bordered={noBorder ? false : true}
+      layout={layout}
     >
       <Descriptions.Item label="Transfer Method">
         {replaceUnderScore(
