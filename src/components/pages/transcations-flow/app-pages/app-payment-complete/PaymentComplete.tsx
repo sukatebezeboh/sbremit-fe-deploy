@@ -2,8 +2,9 @@ import {
   CheckOutlined,
   CloseOutlined,
   LoadingOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
-import { Alert, Avatar, Space } from "antd";
+import { Alert, Avatar, Button, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
@@ -18,6 +19,7 @@ import {
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
 import _env from "env";
+import { checkPaymentCodeWithPattern } from "./PaymentCompleteHelper";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -60,7 +62,35 @@ export default function PaymentComplete() {
   const date = new Date(currentTimestamp);
   const formattedDate: string = date.toLocaleString("en-US", options);
 
-  const isPaymentSuccessfull = paymentInfo && paymentInfo.status !== "error";
+  const PaymentCategoryIndex =
+    checkPaymentCodeWithPattern(paymentInfo?.code) ?? 1; //fallback inprogress
+
+  const AvatarIcons = [
+    <CheckOutlined rev={undefined} />,
+    <ClockCircleOutlined rev={undefined} />,
+    <CloseOutlined rev={undefined} />,
+  ];
+
+  const PaymentTitle = [
+    "Payment Successful!",
+    "Payment Inprogress!",
+    "Payment Unsuccessful!",
+  ];
+
+  const PaymentDescriptions = [
+    <p>
+      The payment has been completed successfully.
+      <br /> Thanks for being there with us.
+    </p>,
+    <p>
+      Payment in progress, <br /> Please note, it may take up to 3 minutes for
+      the status of your transaction to be updated.
+    </p>,
+    <p>The payment was not completed successfully!</p>,
+  ];
+
+  const AvatarColors = ["#87d068", "#4259cf", "#CF0921"];
+  const PaymentDescriptionsColors = ["#007B5D", "#4259cf", "#CF0921"];
 
   return (
     <PaymentCompleteConatinerStyles>
@@ -75,46 +105,34 @@ export default function PaymentComplete() {
         )
       ) : (
         <PaymentCompleteWrapperStyles>
-          <IconStyles $type={isPaymentSuccessfull}>
-            <Avatar
-              className="avatar"
-              size={60}
-              icon={
-                isPaymentSuccessfull ? (
-                  <CheckOutlined rev={undefined} />
-                ) : (
-                  <CloseOutlined rev={undefined} />
-                )
-              }
-            />
-          </IconStyles>
-          <h2>
-            {totalToPay} {trasnferInfo?.originCurrency}
-          </h2>
-          <Title>
-            {isPaymentSuccessfull ? "Payment completed!" : "Payment Failed!"}
-          </Title>
-          <ExtraInfo $type={isPaymentSuccessfull}>
-            {isPaymentSuccessfull ? (
-              <p>
-                The payment has been completed sucessfully.
-                <br /> Thanks for being there with us
-              </p>
-            ) : (
-              <p>Hey, seems like there was some trouble!</p>
-            )}
-            <span> ~{paymentInfo?.message}~</span>
-          </ExtraInfo>
-          <span className="id_and_date">
-            Transaction ID: SBR{transactionId}, {formattedDate}{" "}
-          </span>
-          <LargeButton
-            text="Dashboard"
-            onClick={() => {
-              history.push(paths.DASHBOARD);
-            }}
-            hideBackBtn={true}
-          />
+          <>
+            <IconStyles $color={AvatarColors[PaymentCategoryIndex]}>
+              <Avatar
+                className="avatar"
+                size={60}
+                icon={AvatarIcons[PaymentCategoryIndex]}
+              />
+            </IconStyles>
+            <h2>
+              {totalToPay} {trasnferInfo?.originCurrency}
+            </h2>
+            <Title>{PaymentTitle[PaymentCategoryIndex]}</Title>
+            <ExtraInfo $color={PaymentDescriptionsColors[PaymentCategoryIndex]}>
+              {PaymentDescriptions[PaymentCategoryIndex]}
+              {/* <span> ~{paymentInfo?.message}~</span> */}
+            </ExtraInfo>
+            <span className="id_and_date">
+              Transaction ID: SBR{transactionId}, {formattedDate}{" "}
+            </span>
+            <Button
+              type="default"
+              onClick={() => {
+                history.push(paths.DASHBOARD);
+              }}
+            >
+              Go back to dashboard
+            </Button>
+          </>
         </PaymentCompleteWrapperStyles>
       )}
     </PaymentCompleteConatinerStyles>
@@ -137,3 +155,8 @@ const OnErrorRequestAlert = (
     }
   />
 );
+
+// Please note, it may take up to 3 minutes for the status of your
+//transaction to be updated.
+
+//Successful, unsuccessful, Payment processing
