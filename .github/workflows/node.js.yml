@@ -53,8 +53,9 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         script: |
-          cd sbremit
+          cd sb-proxy
+          git pull
           docker stack remove sbremit
           docker system prune -f
           docker pull sbstdev/fe-uat:latest
-          docker stack deploy -c docker-compose.yml sbremit
+          docker stack deploy -c docker-compose-files/uat/docker-compose.yml sbremit
