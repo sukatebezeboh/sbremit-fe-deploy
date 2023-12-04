@@ -75,6 +75,7 @@ export const CalculatorInput = ({
           size="large"
           status={errorMessage != "" ? "error" : ""}
           onChange={handleOnInputChange}
+          disabled={exchangeRate === 0}
           value={
             isPayin
               ? formatAmount(payinActualValue)
