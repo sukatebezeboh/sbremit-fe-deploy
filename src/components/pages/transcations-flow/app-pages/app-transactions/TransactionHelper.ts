@@ -144,6 +144,9 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_DECLINED) {
     return { text: "Payment declined", color: blue };
   }
+  if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_PROCESSING) {
+    return { text: "Processing", color: blue };
+  }
 
   // GRAY ZONE
   if (transactionStatus === constants.TRANSFER_STATUS_EXPIRED) {
