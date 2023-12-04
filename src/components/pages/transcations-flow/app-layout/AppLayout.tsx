@@ -92,13 +92,13 @@ export default function AppLayout() {
     <ConfigProvider theme={AntdConfigSettings}>
       <ApplayoutStlye>
         <ApplayoutContainerStlye>
-          <div className="asidenav">
+          <aside className="asidenav">
             <AsideNav />
-          </div>
+          </aside>
           <div className="body">
-            <div className="navbar">
+            <nav className="navbar">
               <Navbar />
-            </div>
+            </nav>
             <div className="content">
               <ApplayoutBodyStyle>
                 <RouteConfig />
