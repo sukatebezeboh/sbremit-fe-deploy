@@ -262,13 +262,22 @@ export const userIsVerified = (user: any): boolean => {
     (method: { type: string }) => method.type === "IDENTITY"
   );
 
-  const idAttempted = idVerification && idVerification.status !== "PENDING";
-
-  return (
-    Boolean(user?.meta?.verified) &&
-    user?.meta?.verified !== "retry" &&
-    idAttempted
+  const docVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "DOCUMENT"
   );
+
+  const docAttempted = docVerification && docVerification?.status !== "PENDING";
+
+  const idAttempted = idVerification && idVerification?.status !== "PENDING";
+
+  const docAndIdAtempted = docAttempted && idAttempted;
+
+  // for cases where user has meta.verified == "1".
+  if (Boolean(user?.meta?.verified)) {
+    return true;
+  }
+  //else let consider user.verifications
+  return docAndIdAtempted ?? false;
 };
 
 export const isUserFirstTransaction = (user: any): boolean => {
