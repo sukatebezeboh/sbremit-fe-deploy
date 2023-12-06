@@ -179,7 +179,8 @@ const Recipient = () => {
       });
       return;
     }
-    if (userIsVerified(user)) {
+    
+    if (!userIsVerified(user)) {
       toastAction({
         show: true,
         type: "info",

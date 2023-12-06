@@ -85,7 +85,6 @@ const checkToShowVerificationForm = (user: any) => {
   }
 };
 
-
 export const VerificationComponent = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [displayComplyCubeVerification, setDisplayComplyCubeVerification] =
