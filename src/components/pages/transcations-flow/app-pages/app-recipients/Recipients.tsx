@@ -1,11 +1,19 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  MoreOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import {
   Avatar,
   Badge,
   Button,
   Divider,
+  Dropdown,
   Empty,
+  Flex,
   Input,
+  MenuProps,
   Modal,
   Radio,
   RadioChangeEvent,
@@ -36,6 +44,7 @@ import {
   RecipientTableStyles,
   RecipientsContainerStyle,
 } from "./RecipientsStyles";
+import { deleteRecipient, getRecipients } from "redux/actions/actions";
 
 const { Text } = Typography;
 
@@ -193,6 +202,7 @@ const RecipientTable = (recipients: any) => {
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
   const [selectedId, setSelectedId] = useState("");
+  const [activeRecipientDropDown, setActiveRecipientDropDown] = useState<any>();
 
   const onRadioChange = (e: RadioChangeEvent) => {
     const id = e.target.value;
@@ -206,6 +216,27 @@ const RecipientTable = (recipients: any) => {
     });
   };
 
+  const handleRecipientDelete = (recipientId: string | number) => {
+    deleteRecipient(recipientId, () => getRecipients());
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <div>Delete</div>,
+      icon: <DeleteOutlined rev={undefined} />,
+      onClick: () => {
+        handleRecipientDelete(activeRecipientDropDown?.id);
+      },
+      danger: true,
+    },
+    // {
+    //   key: "2",
+    //   label: <div>Update</div>,
+    //   icon: <EditOutlined rev={undefined} />,
+    // },
+  ];
+
   return (
     <RecipientTableStyle>
       <Radio.Group onChange={onRadioChange} value={selectedId}>
@@ -215,28 +246,39 @@ const RecipientTable = (recipients: any) => {
           ) : (
             data?.map((item, inedx) => (
               <Radio value={item.id} key={item.id}>
-                <div className="list">
-                  <div className="info">
-                    <Avatar
-                      size={34}
-                      className="avatar"
-                      style={{
-                        background: generateAlphabetColor(
-                          String(getFirstLetter(item.recipient))
-                        ),
-                      }}
-                    >
-                      {getFirstLetter(item.recipient)}
-                    </Avatar>
-                    <div className="info_details">
-                      <p>{item.recipient}</p>
-                      <span>{`${item.paymentMethod} ~ ${item.phoneNumber}`}</span>
+                <Flex
+                  justify="space-between"
+                  align="center"
+                  style={{ width: "inherit" }}
+                  gap={46}
+                >
+                  <div className="list">
+                    <div className="info">
+                      <Avatar
+                        size={34}
+                        className="avatar"
+                        style={{
+                          background: generateAlphabetColor(
+                            String(getFirstLetter(item.recipient))
+                          ),
+                        }}
+                      >
+                        {getFirstLetter(item.recipient)}
+                      </Avatar>
+                      <div className="info_details">
+                        <p>{item.recipient}</p>
+                        <span>{`${item.paymentMethod} ~ ${item.phoneNumber}`}</span>
+                      </div>
                     </div>
                   </div>
-                  {/* <Button size="small" danger type="text">
-                  Delete
-                </Button> */}
-                </div>
+                  <Dropdown menu={{ items }} placement="bottom">
+                    <Button
+                      type="default"
+                      icon={<MoreOutlined rev={undefined} />}
+                      onClick={() => setActiveRecipientDropDown(item)}
+                    />
+                  </Dropdown>
+                </Flex>
               </Radio>
             ))
           )}
