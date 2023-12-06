@@ -149,6 +149,7 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
       timeout: 5000,
       message: `Welcome, ${res.data.data.profile.firstName}`,
     });
+    history.push(paths.DASHBOARD);
 
     CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
     CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
