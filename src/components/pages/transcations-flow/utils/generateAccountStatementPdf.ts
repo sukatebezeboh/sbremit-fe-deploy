@@ -1,23 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const generateTableWithRows = (transactions: any) => {
-  const data: any = [];
-
-  for (let i = 1; i <= 12; i++) {
-    data.push([
-      `01-03-2023 ${i}`,
-      `SB100002345${i}`,
-      `815$`,
-      `GBP ${0.5 * i}`,
-      `2600 XAF`,
-      `Gaston Fornimoh`,
-    ]);
-  }
-
-  return data;
-};
-
 const tableheader = [
   "Date",
   "Transaction ID",
