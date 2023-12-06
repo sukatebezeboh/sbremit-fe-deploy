@@ -120,7 +120,7 @@ const SelectAfter = (
   };
 
   return isPayin && PayInCountryData !== undefined ? (
-    <Tooltip title={`${PayInCountryData.name}`}>
+    // <Tooltip title={`${PayInCountryData.name}`}>
       <Space align="center">
         <img
           src={getFlagURL(PayInCountryData.countryCode)}
@@ -133,12 +133,12 @@ const SelectAfter = (
         />
         <span>{PayInCountryData.currency}</span>
       </Space>
-    </Tooltip>
+    // </Tooltip>
   ) : (
     <Select defaultValue={defaultValue} onChange={handlePayOutCountryChange}>
       {PayoutCountries.map((country, index) => (
         <Option value={country.currency} key={country.name + index}>
-          <Tooltip title={`${country.name}`}>
+          {/* <Tooltip title={`${country.name}`}> */}
             <Space align="center">
               <img
                 src={getFlagURL(country.countryCode)}
@@ -151,7 +151,7 @@ const SelectAfter = (
               />
               <span>{country.currency}</span>
             </Space>
-          </Tooltip>
+          {/* </Tooltip> */}
         </Option>
       ))}
     </Select>
