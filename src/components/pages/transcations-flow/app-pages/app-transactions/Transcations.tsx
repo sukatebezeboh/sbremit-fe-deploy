@@ -340,7 +340,10 @@ export default function Transcations({ page }: TranscationsProps) {
       )}
       <TransactionsContentStyles>
         <TranscationsTableHeader>
-          <Title>Transactions ({totalTranscations})</Title>
+          <Title>
+            {page === "dashboard" ? "Transactions" : "Total"} (
+            {totalTranscations})
+          </Title>
           {page === "dashboard" ? (
             <Button
               onClick={() => {
