@@ -25,6 +25,9 @@ export const ComplyCubeVerification = ({
 }: ComplyCubeVerificationProps) => {
   const user = useSelector((state: any) => state.auth.user);
   const [complyCubeToken, setComplyCubeToken] = useState("");
+  const [verificationType, setVerificationType] = useState<
+    "identity" | "document"
+  >("identity");
   const history = useHistory();
 
   const isFormVerified = Boolean(user?.meta?.verified);
@@ -55,16 +58,26 @@ export const ComplyCubeVerification = ({
   const verificationCompleted = Boolean(user?.meta?.verifed);
   //!invalidIdVerification || !invalidDocumentVerification;
 
+  const checkAndUpdateVerificationType = () => {
+    //if id verification is not pending and doc is pending update verificationType to doc
+    if (!invalidIdVerification && invalidDocumentVerification) {
+      setVerificationType("document");
+    } else {
+      // reset to identity
+      setVerificationType("identity");
+    }
+  };
+
   const stages: any = [
     {
       name: "intro",
       options: {
-        heading: "SB Remit identity verification",
+        heading: `SB Remit ${verificationType} verification`,
         message: [
           `Only ${userCountry} Government issued documents are accepted.`,
           `Passport or Drivers License or Residence Permit or National Identity Card`,
         ],
-        startButtonText: `Verify your ${userCountry} identity`,
+        startButtonText: `Verify your ${userCountry} ${verificationType}`,
       },
     },
     "userConsentCapture",
@@ -99,6 +112,7 @@ export const ComplyCubeVerification = ({
       openComplyCube();
       setOpen(false);
     }
+    checkAndUpdateVerificationType();
   }, [open]);
 
   useEffect(() => {

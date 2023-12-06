@@ -84,14 +84,16 @@ export default function Verifications() {
     }
   };
 
-  //this logic ensure user follow the order of FE verifications check
+  //this logic ensure user follow the order of FE verifications check and enable CTA
   const isBtnDiabled = (key: string): boolean => {
     if (key === "identity" && isFormVerified) {
       return false; //do not diabled when key is id and from isVerfied
-    } else if (key === "document" && !idAttempted) {
-      return true; // diabled if id is yet to be attempted
+    } else if (key === "document" && idAttempted) {
+      return false; // enable if doc and id is idAttempted
+    } else if (key === "address") {
+      return false; // enable for address
     }
-    return false; // enable for address
+    return true; // diabled otherwise
   };
 
   const verificationPercentage = (): string => {
