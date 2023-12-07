@@ -1,5 +1,9 @@
-import { CheckCircleTwoTone, UnlockOutlined } from "@ant-design/icons";
-import { Avatar, Button, List, Space, Tag } from "antd";
+import {
+  CheckCircleTwoTone,
+  UnlockOutlined,
+  QuestionOutlined,
+} from "@ant-design/icons";
+import { Avatar, Button, FloatButton, List, Space, Tag } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -117,6 +121,10 @@ export default function Verifications() {
     }
   };
 
+  const openVerificationHelp = () => {
+    return null;
+  };
+
   return (
     <VerificationsContainerStyles>
       <PageTitileAndDescription
@@ -176,6 +184,14 @@ export default function Verifications() {
       <ComplyCubeVerification
         open={displayComplyCubeVerification}
         setOpen={setDisplayComplyCubeVerification}
+      />
+
+      <FloatButton
+        tooltip="Mobile? Untick 'Desktop Site' for smoother verification."
+        //tooltip="Need some help!"
+        icon={<QuestionOutlined rev={undefined} />}
+        type="primary"
+        onClick={openVerificationHelp}
       />
     </VerificationsContainerStyles>
   );
