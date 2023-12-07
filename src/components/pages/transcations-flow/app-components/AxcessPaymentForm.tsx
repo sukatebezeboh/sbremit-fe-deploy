@@ -138,7 +138,7 @@ const BodyStyles = styled.div`
 
   @media (max-width: ${Breakpoint.sm}) {
     overflow-x: auto;
-    margin-top: 42px;
+    margin-top: 60px;
     justify-content: flex-start;
   }
   //width: 100%;
