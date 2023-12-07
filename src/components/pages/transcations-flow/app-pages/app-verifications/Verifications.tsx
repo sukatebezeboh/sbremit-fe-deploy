@@ -187,7 +187,7 @@ export default function Verifications() {
       />
 
       <FloatButton
-        tooltip="Mobile? Untick 'Desktop Site' for smoother verification."
+        tooltip="Mobile? Untick 'Desktop Site' for smoother verification experience."
         //tooltip="Need some help!"
         icon={<QuestionOutlined rev={undefined} />}
         type="primary"
