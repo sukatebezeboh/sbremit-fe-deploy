@@ -39,8 +39,11 @@ const initialValues = {
 
 const getEighteenYearsAgo = () => {
   let now = new Date();
-  now.setFullYear(now.getFullYear() - 18);
-  return now.toLocaleDateString().split("/").reverse().join("-");
+  let year = now.getFullYear() - 18;
+  let month =
+    now.getMonth() + 1 >= 10 ? now.getMonth() + 1 : "0" + now.getMonth() + 1;
+  let date = now.getDate() >= 10 ? now.getDate() : "0" + now.getDate();
+  return `${year}-${month}-${date}`;
 };
 
 const CreateAccount = () => {
