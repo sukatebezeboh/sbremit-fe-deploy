@@ -61,19 +61,19 @@ export default function Verifications() {
   const verificationList = [
     {
       title: "Proof of address",
-      description: "Please tell us a little about yourself",
+      description: "Please tell us a little about yourself.",
       key: "address",
       isAttempted: isFormVerified,
     },
     {
       title: "Identity Verification",
-      description: "Please verify your Identity",
+      description: "We need to verify your identity.",
       key: "identity",
       isAttempted: idAttempted,
     },
     {
       title: "Document Verification",
-      description: "Please verify your Documnets",
+      description: "We also need to verify your document.",
       key: "document",
       isAttempted: docAttempted,
     },
