@@ -121,36 +121,36 @@ const SelectAfter = (
 
   return isPayin && PayInCountryData !== undefined ? (
     // <Tooltip title={`${PayInCountryData.name}`}>
-      <Space align="center">
-        <img
-          src={getFlagURL(PayInCountryData.countryCode)}
-          alt={PayInCountryData.name}
-          style={{
-            width: "24px",
-            height: "18px",
-            marginTop: "5px",
-          }}
-        />
-        <span>{PayInCountryData.currency}</span>
-      </Space>
-    // </Tooltip>
+    <Space align="center">
+      <img
+        src={getFlagURL(PayInCountryData.countryCode)}
+        alt={PayInCountryData.name}
+        style={{
+          width: "24px",
+          height: "18px",
+          marginTop: "5px",
+        }}
+      />
+      <span>{PayInCountryData.currency}</span>
+    </Space>
   ) : (
+    // </Tooltip>
     <Select defaultValue={defaultValue} onChange={handlePayOutCountryChange}>
       {PayoutCountries.map((country, index) => (
         <Option value={country.currency} key={country.name + index}>
           {/* <Tooltip title={`${country.name}`}> */}
-            <Space align="center">
-              <img
-                src={getFlagURL(country.countryCode)}
-                alt={country.name}
-                style={{
-                  width: "24px",
-                  height: "18px",
-                  marginTop: "5px",
-                }}
-              />
-              <span>{country.currency}</span>
-            </Space>
+          <Space align="center">
+            <img
+              src={getFlagURL(country.countryCode)}
+              alt={country.name}
+              style={{
+                width: "24px",
+                height: "18px",
+                marginTop: "5px",
+              }}
+            />
+            <span>{country.currency}</span>
+          </Space>
           {/* </Tooltip> */}
         </Option>
       ))}
