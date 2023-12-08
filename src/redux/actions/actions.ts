@@ -332,26 +332,26 @@ export const refreshUserDetails = (callback?: Function) => {
     });
 };
 
-export const signOutAction = (ignoreRequest = false) => {
-  const signOutClient = () => {
-    store.dispatch({ type: LOADING, payload: true });
-    http.delete(endpoints.SESSION).then((res) => {
-      signOutOnClient();
-    });
-  };
-  if (!ignoreRequest) {
-    confirmDialog({
-      message: "Are you sure you want to logout your account?",
-      isPositive: true,
-      open: true,
-      callback: () => signOutClient(),
-    });
-  } else {
-    signOutOnClient();
-  }
-};
+// export const signOutAction = (ignoreRequest = false) => {
+//   const signOutClient = () => {
+//     store.dispatch({ type: LOADING, payload: true });
+//     http.delete(endpoints.SESSION).then((res) => {
+//       signOutOnClient();
+//     });
+//   };
+//   if (!ignoreRequest) {
+//     confirmDialog({
+//       message: "Are you sure you want to logout your account?",
+//       isPositive: true,
+//       open: true,
+//       callback: () => signOutClient(),
+//     });
+//   } else {
+//     signOutOnClient();
+//   }
+// };
 
-export const signOutSuperAction = (ignoreRequest = false) => {
+export const signOutAction = (ignoreRequest = false) => {
   if (!ignoreRequest) {
     store.dispatch({ type: LOADING, payload: true });
     http.delete(endpoints.SESSION).then((res) => {
