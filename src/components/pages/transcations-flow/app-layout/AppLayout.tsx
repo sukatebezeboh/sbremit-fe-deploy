@@ -1,4 +1,16 @@
 import { ConfigProvider } from "antd";
+import { useEffect } from "react";
+import {
+  fetchUserNotifications,
+  getClientIp,
+  getRecipients,
+  toastAction,
+} from "redux/actions/actions";
+import {
+  getTransactions,
+  getUserCurrencyInfo,
+} from "redux/actions/actionsTransfer";
+import { AntdConfigSettings } from "../utils/stylesVariables";
 import {
   ApplayoutBodyStyle,
   ApplayoutContainerStlye,
@@ -7,28 +19,15 @@ import {
 import RouteConfig from "./RouteConfig";
 import AsideNav from "./components/asidenav/AsideNav";
 import Navbar from "./components/navbar/Navbar";
-import { AntdConfigSettings } from "../utils/stylesVariables";
-import { useEffect } from "react";
-import {
-  getTransactions,
-  getUserCurrencyInfo,
-} from "redux/actions/actionsTransfer";
-import {
-  fetchUserNotifications,
-  getRecipients,
-  toastAction,
-} from "redux/actions/actions";
 
 import { useDispatch, useSelector } from "react-redux";
-import { AUTH } from "redux/actionTypes";
 import { useHistory, useLocation } from "react-router-dom";
+import { AUTH } from "redux/actionTypes";
 import { paths } from "util/paths";
-import {
-  userIsVerified,
-  isUserFirstTransaction,
-  userHasReachedFinalVerificationStage,
-} from "../utils/reuseableUtils";
 import TandCModal from "../app-components/TandCModal";
+import {
+  userIsVerified
+} from "../utils/reuseableUtils";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
@@ -44,6 +43,7 @@ export default function AppLayout() {
     getTransactions();
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
+    getClientIp(); // get user IP address
 
     //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {

@@ -2216,9 +2216,17 @@ export const initiateInteracTransferPayment = (transferId: number) => {
 };
 
 export const getClientIp = async (callback?: Function) => {
+  const transfer = store.getState().transfer;
   try {
     const res = await axios.get("https://api.ipify.org?format=json");
     callback?.(res?.data?.ip);
+    store.dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        clientIp: res?.data?.ip,
+      }
+    })
     return res?.data?.ip;
   } catch (e) {
     return null;
@@ -2228,11 +2236,12 @@ export const getClientIp = async (callback?: Function) => {
 export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
   paymentGateway: string,
+  clientIp: string,
   callback?: Function
 ) => {
   const transfer = store.getState().transfer;
 
-  const clientIp = await getClientIp();
+  //const clientIp = await getClientIp();
   http
     .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
       paymentGateway,

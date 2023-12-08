@@ -51,6 +51,7 @@ const initialTransferState: {} = {
   exchangeRate: 0,
   payinCurrency: "",
   payoutCurrency: "XAF",
+  clientIp: "",
 };
 
 export const transfer = (

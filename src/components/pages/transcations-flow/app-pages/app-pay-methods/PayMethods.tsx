@@ -22,9 +22,11 @@ import {
 import {
   generateCheckoutId,
   initiateInteracTransferPayment,
+  updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import { paths } from "util/paths";
 import { PaymentGateWays } from "./paymentGateway";
+import { useSelector } from "react-redux";
 
 interface LocationState {
   transfer: any;
@@ -33,6 +35,8 @@ interface LocationState {
 export default function Pay() {
   const location = useLocation();
   const history = useHistory();
+  const transfer = useSelector((state: any) => state.transfer);
+  const { clientIp } = transfer || {};
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
   const transferInfo = (location.state as LocationState)?.transfer;
   const [confirmModalData, setConfimModalData] = useState({
@@ -41,6 +45,7 @@ export default function Pay() {
     message: "",
   });
 
+  console.log(clientIp);
   useEffect(() => {
     if (
       transferInfo.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING
@@ -50,6 +55,7 @@ export default function Pay() {
 
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
+    updateTransferWithPaymentGatewayCharge(transferInfo.id, paymentMethod, clientIp);
     //close Confirmation modal
     closeConfirmationModal();
 
