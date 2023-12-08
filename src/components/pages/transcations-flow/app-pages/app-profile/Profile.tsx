@@ -166,7 +166,9 @@ export default function Profile() {
                   marginTop: "5px",
                 }}
               />
-              {countries[location_country?.toUpperCase()] || "-"}
+              {countries[location_country?.toUpperCase()] ||
+                location_country?.toUpperCase() ||
+                "-"}
             </Space>
           </Descriptions.Item>
         </Descriptions>
