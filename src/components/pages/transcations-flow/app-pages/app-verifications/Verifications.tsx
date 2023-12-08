@@ -3,7 +3,7 @@ import {
   UnlockOutlined,
   QuestionOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, FloatButton, List, Space, Tag } from "antd";
+import { Alert, Avatar, Button, FloatButton, List, Space, Tag } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { FormVerification } from "./FormVerification";
 import {
+  VerificationHelpNoteStyle,
   VerificationStyle,
   VerificationsBodyStyles,
   VerificationsContainerStyles,
@@ -186,13 +187,15 @@ export default function Verifications() {
         setOpen={setDisplayComplyCubeVerification}
       />
 
-      <FloatButton
+      {/* <FloatButton
         tooltip="Mobile? Untick 'Desktop Site' for smoother verification experience."
         //tooltip="Need some help!"
         icon={<QuestionOutlined rev={undefined} />}
         type="primary"
         onClick={openVerificationHelp}
-      />
+      /> */}
+
+      {verificationHelpNote}
     </VerificationsContainerStyles>
   );
 }
@@ -222,4 +225,21 @@ const successIcon = (
       flexShrink: 0,
     }}
   />
+);
+
+const verificationHelpNote = (
+  <VerificationHelpNoteStyle>
+    <Alert
+      description={
+        <div>
+          Note: For a smoother <b>Identity verification experience</b> on
+          mobile, consider disabling the <b>'Desktop Site'</b> mode in your
+          browser settings.
+        </div>
+      }
+      type="info"
+      showIcon
+      closable
+    />
+  </VerificationHelpNoteStyle>
 );

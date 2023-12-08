@@ -143,3 +143,15 @@ export const SubmitButtonStyles = styled.div`
     justify-content: flex-start;
   }
 `;
+
+export const VerificationHelpNoteStyle = styled.div`
+  margin-top: -15px;
+  width: 860px;
+
+  @media (max-width: ${Breakpoint.xl}) {
+    width: 64vw;
+  }
+  @media (max-width: ${Breakpoint.md}) {
+    width: 85vw;
+  }
+`;
