@@ -1,10 +1,16 @@
-import React, { useEffect } from "react";
 import {
   CheckOutlined,
   CloseOutlined,
   HistoryOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
+import { Alert, Button, FloatButton } from "antd";
+import Marquee from "react-fast-marquee";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { paths } from "util/paths";
+import { categorizeTransactions } from "../../utils/reuseableUtils";
+import Transcations from "../app-transactions/Transcations";
 import {
   AddNewTransfer,
   AnalyticCard,
@@ -15,23 +21,11 @@ import {
   ForUnverifiedUserMsgStyles,
   Title,
 } from "./DashboardSyles";
-import { Alert, Button, FloatButton } from "antd";
-import Transcations from "../app-transactions/Transcations";
-import { useHistory } from "react-router-dom";
-import { paths } from "util/paths";
-import { useSelector } from "react-redux";
-import { categorizeTransactions } from "../../utils/reuseableUtils";
-import { resetTransferData } from "redux/actions/actions";
-import Marquee from "react-fast-marquee";
 
 export default function Dashboard() {
   const isUserVerified = useSelector((state: any) => state.auth.verification);
   const { transactions } = useSelector((state: any) => state.transfer);
   const history = useHistory();
-
-  useEffect(() => {
-    resetTransferData();
-  }, []);
 
   const addNewTransfer = () => {
     history.push(paths.TRANSFER_METHOD);

@@ -22,6 +22,7 @@ import {
 import {
   generateCheckoutId,
   initiateInteracTransferPayment,
+  resetTransferData,
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import { paths } from "util/paths";
@@ -55,7 +56,11 @@ export default function Pay() {
 
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
-    updateTransferWithPaymentGatewayCharge(transferInfo.id, paymentMethod, clientIp);
+    updateTransferWithPaymentGatewayCharge(
+      transferInfo.id,
+      paymentMethod,
+      clientIp
+    );
     //close Confirmation modal
     closeConfirmationModal();
 
@@ -69,6 +74,7 @@ export default function Pay() {
       generateCheckoutIDforAxcssPayment(transferInfo);
     }
     // clear redux store #transactions
+    resetTransferData();
   };
 
   const generateCheckoutIDforAxcssPayment = (transfer: any) => {
