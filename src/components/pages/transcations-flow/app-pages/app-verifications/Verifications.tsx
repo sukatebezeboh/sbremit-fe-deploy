@@ -180,7 +180,7 @@ export default function Verifications() {
         setOpen={setDisplayComplyCubeVerification}
       />
 
-      {!idAttempted && verificationHelpNote}
+      {!idAttempted && !hasCompletedAllVerifications && verificationHelpNote}
     </VerificationsContainerStyles>
   );
 }
