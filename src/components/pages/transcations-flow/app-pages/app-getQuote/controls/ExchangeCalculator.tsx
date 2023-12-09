@@ -1,5 +1,5 @@
-import { SwapOutlined } from "@ant-design/icons";
-import { Avatar, Divider, Select, Space, Switch } from "antd";
+import { LoadingOutlined, SwapOutlined } from "@ant-design/icons";
+import { Avatar, Divider, Space, Switch } from "antd";
 import { Colors } from "components/pages/transcations-flow/utils/stylesVariables";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,7 +64,14 @@ export const ExchangeCalculator = () => {
               )} ${payoutCurrency}`}</span>
               <Avatar
                 icon={
-                  <SwapOutlined rev={undefined} style={{ rotate: "-90deg" }} />
+                  exchangeRate === 0 ? (
+                    <LoadingOutlined rev={undefined} />
+                  ) : (
+                    <SwapOutlined
+                      rev={undefined}
+                      style={{ rotate: "-90deg" }}
+                    />
+                  )
                 }
                 style={{ background: Colors.sbGreen }}
               />
