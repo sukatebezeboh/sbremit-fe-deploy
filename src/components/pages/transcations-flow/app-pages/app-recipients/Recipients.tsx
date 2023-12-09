@@ -40,6 +40,7 @@ import {
 import { ModalMarginTop } from "../../utils/stylesVariables";
 import { NewRecipient } from "./RecipientsControl";
 import {
+  FlexWithAlignCenter,
   RecipientTableStyle,
   RecipientTableStyles,
   RecipientsContainerStyle,
@@ -239,19 +240,18 @@ const RecipientTable = (recipients: any) => {
 
   return (
     <RecipientTableStyle>
-      <Radio.Group onChange={onRadioChange} value={selectedId}>
+      <Radio.Group
+        className="radio_group"
+        onChange={onRadioChange}
+        value={selectedId}
+      >
         <Space direction="vertical" size={16}>
           {data.length === 0 ? (
             <Empty />
           ) : (
             data?.map((item, inedx) => (
-              <Radio value={item.id} key={item.id}>
-                <Flex
-                  justify="space-between"
-                  align="center"
-                  style={{ width: "inherit" }}
-                  gap={46}
-                >
+              <Radio value={item.id} key={item.id} className="radio">
+                <FlexWithAlignCenter>
                   <div className="list">
                     <div className="info">
                       <Avatar
@@ -271,6 +271,7 @@ const RecipientTable = (recipients: any) => {
                       </div>
                     </div>
                   </div>
+
                   <Dropdown menu={{ items }} placement="bottom">
                     <Button
                       type="default"
@@ -278,7 +279,7 @@ const RecipientTable = (recipients: any) => {
                       onClick={() => setActiveRecipientDropDown(item)}
                     />
                   </Dropdown>
-                </Flex>
+                </FlexWithAlignCenter>
               </Radio>
             ))
           )}

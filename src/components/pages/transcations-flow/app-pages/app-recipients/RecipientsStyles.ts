@@ -79,29 +79,49 @@ export const RecipientTableStyle = styled.div`
   height: 100%;
   overflow: auto;
   flex: 1;
-  .list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .radio_group {
     width: inherit;
-    //flex: 1;
-    .info {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      .avatar {
-        box-sizing: border-box;
-        flex-shrink: 0;
-      }
-      .info_details {
-        p {
-          margin: 0;
-          font-weight: 600;
-        }
-        span {
+    .radio {
+      //background: red;
+      //flex: 1;
+      width: 100%;
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        width: inherit;
+        //flex: 1;
+        .info {
+          display: flex;
+          gap: 14px;
+          align-items: center;
+          .avatar {
+            box-sizing: border-box;
+            flex-shrink: 0;
+          }
+          .info_details {
+            p {
+              margin: 0;
+              font-weight: 600;
+            }
+            span {
+            }
+          }
         }
       }
     }
+  }
+`;
+
+export const FlexWithAlignCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 480px;
+
+  @media (max-width: ${Breakpoint.md}) {
+    width: 70vw;
   }
 `;
 
