@@ -1,9 +1,5 @@
-import {
-  CheckCircleTwoTone,
-  UnlockOutlined,
-  QuestionOutlined,
-} from "@ant-design/icons";
-import { Alert, Avatar, Button, FloatButton, List, Space, Tag } from "antd";
+import { CheckCircleTwoTone, UnlockOutlined } from "@ant-design/icons";
+import { Alert, Avatar, Button, List, Space, Tag } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -46,9 +42,6 @@ export default function Verifications() {
 
   const idAttempted = checkVerification(user, Verifictions.id);
   const docAttempted = checkVerification(user, Verifictions.document);
-
-  //For cases of old users with either ID or Document verification plus new users
-  const docAndIdAttempted = idAttempted && docAttempted;
 
   const onSubmitFormClicked = async (values: any) => {
     const StartComplyCubeVerification = () => {
@@ -187,15 +180,7 @@ export default function Verifications() {
         setOpen={setDisplayComplyCubeVerification}
       />
 
-      {/* <FloatButton
-        tooltip="Mobile? Untick 'Desktop Site' for smoother verification experience."
-        //tooltip="Need some help!"
-        icon={<QuestionOutlined rev={undefined} />}
-        type="primary"
-        onClick={openVerificationHelp}
-      /> */}
-
-      {verificationHelpNote}
+      {!idAttempted && verificationHelpNote}
     </VerificationsContainerStyles>
   );
 }
