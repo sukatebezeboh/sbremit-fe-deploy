@@ -96,7 +96,31 @@ export const NewRecipient = ({
       ...values,
       ...recipientBankDeatails,
     };
-    //console.log(combinedValues);
+
+    // check for other filed values Bank and mirofinace
+    //if accountNumber(Bank field which is Tab 1) is empty extend check to mirofinace(Tab 2) field values and set validation if empty
+    if (recipientBankDeatails.accountNumber === "") {
+      if (combinedValues.recipientAccountNumber === "") {
+        form.setFields([
+          {
+            name: "recipientAccountNumber",
+            errors: ["Recipient Account Number is Required!"],
+          },
+        ]);
+        return; // Stop execution
+      }
+
+      if (combinedValues.accountBranch === "") {
+        form.setFields([
+          {
+            name: "accountBranch",
+            errors: ["Account Branch is Required!"],
+          },
+        ]);
+        return; // Stop execution
+      }
+    }
+
     createRecipient(combinedValues, setOpen(false));
 
     //reset recipientBankDeatails on redux
