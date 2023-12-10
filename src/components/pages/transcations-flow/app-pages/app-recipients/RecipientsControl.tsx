@@ -97,31 +97,55 @@ export const NewRecipient = ({
       ...recipientBankDeatails,
     };
 
-    // check for other filed values Bank and mirofinace
-    //if accountNumber(Bank field which is Tab 1) is empty extend check to mirofinace(Tab 2) field values and set validation if empty
-    if (recipientBankDeatails.accountNumber === "") {
-      if (combinedValues.recipientAccountNumber === "") {
-        form.setFields([
-          {
-            name: "recipientAccountNumber",
-            errors: ["Recipient Account Number is Required!"],
-          },
-        ]);
-        return; // Stop execution
-      }
-
-      if (combinedValues.accountBranch === "") {
-        form.setFields([
-          {
-            name: "accountBranch",
-            errors: ["Account Branch is Required!"],
-          },
-        ]);
-        return; // Stop execution
-      }
+    if (transferMethod === "mobile_money") {
+      createRecipient(combinedValues, setOpen(false));
     }
 
-    createRecipient(combinedValues, setOpen(false));
+    if (transferMethod === "cash_pickup") {
+      createRecipient(combinedValues, setOpen(false));
+    }
+    // TODO: refactor this logic
+    // check for other filed values Bank and mirofinace
+    //if accountNumber(Bank field which is Tab 1) is empty extend check to mirofinace(Tab 2) field values and set validation if empty
+    if (transferMethod === "bank_transfer") {
+      //if tab 1 is not empty and tab 2 is empty
+      if (
+        recipientBankDeatails.accountNumber !== "" &&
+        (combinedValues.recipientAccountNumber === "" ||
+          combinedValues.accountBranch === "")
+      ) {
+        //create recipient for Tab 1
+        createRecipient(combinedValues, setOpen(false));
+      }
+      // else if tab 2 is empty trigger validator for tab 2
+      else if (
+        combinedValues.recipientAccountNumber === "" ||
+        combinedValues.accountBranch === ""
+      ) {
+        if (combinedValues.recipientAccountNumber === "") {
+          form.setFields([
+            {
+              name: "recipientAccountNumber",
+              errors: ["Recipient Account Number is Required!"],
+            },
+          ]);
+          return; // Stop execution
+        }
+
+        if (combinedValues.accountBranch === "") {
+          form.setFields([
+            {
+              name: "accountBranch",
+              errors: ["Account Branch is Required!"],
+            },
+          ]);
+          return; // Stop execution
+        }
+      } else {
+        // create recipient for tab 1
+        createRecipient(combinedValues, setOpen(false));
+      }
+    }
 
     //reset recipientBankDeatails on redux
     dispatch({
