@@ -97,13 +97,10 @@ export const NewRecipient = ({
       ...recipientBankDeatails,
     };
 
-    if (transferMethod === "mobile_money") {
+    if (transferMethod === "mobile_money" || transferMethod === "cash_pickup") {
       createRecipient(combinedValues, setOpen(false));
     }
 
-    if (transferMethod === "cash_pickup") {
-      createRecipient(combinedValues, setOpen(false));
-    }
     // TODO: refactor this logic
     // check for other filed values Bank and mirofinace
     //if accountNumber(Bank field which is Tab 1) is empty extend check to mirofinace(Tab 2) field values and set validation if empty
