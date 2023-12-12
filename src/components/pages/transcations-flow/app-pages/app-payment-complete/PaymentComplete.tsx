@@ -1,25 +1,24 @@
 import {
   CheckOutlined,
+  ClockCircleOutlined,
   CloseOutlined,
   LoadingOutlined,
-  ClockCircleOutlined,
 } from "@ant-design/icons";
-import { Alert, Avatar, Button, Space } from "antd";
+import { Alert, Avatar, Button } from "antd";
+import _env from "env";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
 import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
-import LargeButton from "../../utils/ReusablePageContent";
 import { Title } from "../app-dashboard/DashboardSyles";
+import { checkPaymentCodeWithPattern } from "./PaymentCompleteHelper";
 import {
   ExtraInfo,
   IconStyles,
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
-import _env from "env";
-import { checkPaymentCodeWithPattern } from "./PaymentCompleteHelper";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -83,7 +82,7 @@ export default function PaymentComplete() {
       <br /> Thanks for being there with us.
     </p>,
     <p>
-      Payment in progress, <br /> Please note, it may take up to 3 minutes for
+      Payment in progress, <br /> Please note, it may take up to 5 minutes for
       the status of your transaction to be updated.
     </p>,
     <p>The payment was not completed successfully!</p>,
@@ -155,8 +154,5 @@ const OnErrorRequestAlert = (
     }
   />
 );
-
-// Please note, it may take up to 3 minutes for the status of your
-//transaction to be updated.
 
 //Successful, unsuccessful, Payment processing
