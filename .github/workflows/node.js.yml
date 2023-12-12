@@ -57,5 +57,6 @@ jobs:
           git pull
           docker stack remove sbremit
           docker system prune -f
+          systemctl restart docker.service
           docker pull sbstdev/fe-uat:latest
           docker stack deploy -c docker-compose-files/uat/docker-compose.yml sbremit
