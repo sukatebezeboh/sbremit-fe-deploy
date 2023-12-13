@@ -329,7 +329,7 @@ const VerificationForm = ({
                    errors.city ? "form-error" : ""
                 }`}
               >
-                <div>City / Town</div>
+                <div>City / Town<i>*</i></div>
                 <Field className="green-txt" name="city" type="text" />
                 {touched.city && errors.city && (
                   <div className="form-error-message form-error-message-adjust-up">
@@ -380,7 +380,7 @@ const VerificationForm = ({
                 </div>
               )}
               <div className={errors.zip ? "form-error" : ""}>
-                <div>Postal / zip code</div>
+                <div>Postal / zip code<i>*</i></div>
                 <Field className="green-txt" name="zip" type="text" />
                 {touched.zip ||
                   (errors.zip && (
