@@ -85,6 +85,7 @@ const EditProfile = () => {
 
   const initialValues: any = {
     location_country: "gb",
+    username: user.username,
     ...user?.profile,
   };
 
@@ -176,6 +177,7 @@ phoneCode
             }
 
             delete newValues.email;
+            delete newValues.username;
             editProfileAction(newValues, () => refreshUserInfoAndGotoProfile());
           }}
         >
@@ -229,65 +231,59 @@ phoneCode
                         </div>
                       </div>
 
+                      <div className="email">
+                        <div className={errors.firstName ? "form-error" : ""}>
+                          <div>
+                            Email address<i>*</i>
+                          </div>
+                          <Field
+                            name="username"
+                            type="text"
+                            placeholder="email address"
+                            disabled={true}
+                          />
+                          {touched.firstName && errors.firstName && (
+                            <div className="form-error-message form-error-message-adjust-up">
+                              {errors.firstName}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                       <div
                         className={
-                          touched.mobile && errors.mobile
-                            ? "form-error m-grid-span-1-3"
-                            : "m-grid-span-1-3"
+                          touched.gender && errors.gender ? "form-error" : ""
                         }
                       >
-                        <div className="mobile-head">
-                          Mobile<i>*</i>
+                        <div>
+                          Gender<i>*</i>
                         </div>
-
-                        {/* <PhoneNumberInput
-                            Input={Field}
-                            Select={Field}
-                            isControlledComp={false}
-                            phoneCodeExternalProps={{
-                              as: 'select',
-                              required: true,
-                            }}
-                            phoneCodeName="phoneCode"
-                            countries={constants.COUNTRIES_PHONE_CODES}
-                            name="mobile"
-                            placeholder="e.g 07967885952"
-                            showBorder={true}
-                            isNotCopy={true}
-                            isNotPaste={true}
-                          /> */}
-                        <div className="phone-container">
-                          <img
-                            src={`https://flagcdn.com/h24/${userCountry?.toLowerCase()}.png`}
-                            alt={userCountry + "flag"}
-                          />
-                          <p>{user?.profile?.phoneCode}</p>
-                          <Field
-                            name="mobile"
-                            type="text"
-                            className="phone-no"
-                            placeholder="e.g 07967885952"
-                          />
+                        <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
+                          <span className="grid-col-0-1 radio-span">
+                            <Field type="radio" name="gender" value="male" />
+                            <span className="radio-txt">Male</span>
+                          </span>
+                          <span className="grid-col-0-1 radio-span">
+                            <Field type="radio" name="gender" value="female" />
+                            <span className="radio-txt">Female</span>
+                          </span>
+                          <span className="grid-col-0-1 radio-span">
+                            <Field type="radio" name="gender" value="Other" />
+                            <span className="radio-txt">Other</span>
+                          </span>
+                          <span className="m-grid-col-span-1-4">
+                            {" "}
+                            <Field
+                              name="gender"
+                              className="specify"
+                              placeholder="Please specify"
+                            />{" "}
+                          </span>
                         </div>
-
-                        {/* <Field
-                            as="select"
-                            className="phone-country-select"
-                            name="phoneCode"
-                            id="">
-                            {constants.COUNTRIES_PHONE_CODES.map(
-                              (country) => (
-                                <option
-                                  value={country.phoneCode}>
-                                  {country.phoneCode} -
-                                  {country.name}
-                                </option>
-                              ),
-                            )}
-                          </Field> */}
-                        {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
-
-                        {/* <img src="./assets/flags/UK.png" alt="uk"/> */}
+                        {touched.gender && errors.gender && (
+                          <div className="form-error-message form-error-message-adjust-up">
+                            {errors.gender}
+                          </div>
+                        )}
                       </div>
 
                       <div
@@ -354,43 +350,55 @@ phoneCode
                           </div>
                         </div>
                       </div>
-                      <div
-                        className={
-                          touched.gender && errors.gender ? "form-error" : ""
-                        }
-                      >
-                        <div>
-                          Gender<i>*</i>
+
+                      <div>
+                        <div className="">
+                          Mobile<i>*</i>
                         </div>
-                        <div className="grid-col-1-1-1-2 m-grid-col-1-1-1">
-                          <span className="grid-col-0-1 radio-span">
-                            <Field type="radio" name="gender" value="male" />
-                            <span className="radio-txt">Male</span>
-                          </span>
-                          <span className="grid-col-0-1 radio-span">
-                            <Field type="radio" name="gender" value="female" />
-                            <span className="radio-txt">Female</span>
-                          </span>
-                          <span className="grid-col-0-1 radio-span">
-                            <Field type="radio" name="gender" value="Other" />
-                            <span className="radio-txt">Other</span>
-                          </span>
-                          <span className="m-grid-col-span-1-4">
-                            {" "}
-                            <Field
-                              name="gender"
-                              className="specify"
-                              placeholder="Please specify"
-                            />{" "}
-                          </span>
+                        <div className="phone-box">
+                          <img
+                            src={`https://flagcdn.com/h24/${userCountry?.toLowerCase()}.png`}
+                            alt={userCountry + "flag"}
+                          />
+                          <p className="green-txt">{values.phoneCode}</p>
+                          <Field
+                            className="green-txt"
+                            type="text"
+                            name="mobile"
+                          />
+                          {touched.mobile && errors.mobile && (
+                            <div className="form-error-message form-error-message-adjust-up">
+                              {errors.mobile}
+                            </div>
+                          )}
                         </div>
-                        {touched.gender && errors.gender && (
-                          <div className="form-error-message form-error-message-adjust-up">
-                            {errors.gender}
-                          </div>
-                        )}
                       </div>
 
+                      <div className="buildingName">
+                        <div className={errors.firstName ? "form-error" : ""}>
+                          <div>
+                            Building Name<i>*</i>
+                          </div>
+                          <Field
+                            name="streetName"
+                            type="text"
+                            placeholder="Building name"
+                          />
+                          {touched.firstName && errors.firstName && (
+                            <div className="form-error-message form-error-message-adjust-up">
+                              {errors.firstName}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="form part second">
+                    <hr className="mobile-hide" />
+
+                    <div className="inputs">
                       <div className={errors.address1 ? "form-error" : ""}>
                         <div>
                           Address line 1<i>*</i>
@@ -414,14 +422,7 @@ phoneCode
                           />
                         </GeoapifyContext>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div className="form part second">
-                    <hr className="mobile-hide" />
 
-                    <div className="inputs">
                       <div
                         className={
                           touched.address2 && errors.address2

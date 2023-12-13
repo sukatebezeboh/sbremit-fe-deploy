@@ -97,12 +97,14 @@ export const VerificationComponent = () => {
   const [openFormVerification, setOpenFormVerification] = useState(false);
 
   const transferId = new URLSearchParams(window.location.search).get("t");
-  console.log("transferId", transferId);
+  // console.log("transferId", user?.username);
 
   const initialValues: any = {
     // phoneCode: "+01",
     address2: "",
     location_country: user?.profile?.location_country,
+    city: user?.profile?.city,
+    username: user?.username,
     ...user?.profile,
   };
 
@@ -118,12 +120,15 @@ export const VerificationComponent = () => {
   const isIdAttempted = checkIdVerificationStatus(user); //user?.meta?.verified !== "1" ? false : true;
 
   const verifyUser = async (values: any) => {
+    delete values.email;
+    delete values.username;
     const resetState = () => {
       setOpenFormVerification(false);
       refreshUserDetails();
       //setFormVerified(true);
       //setDisplayComplyCubeVerification(true);
     };
+    //console.log(values);
     await userVerificationAction(values, resetState);
   };
 
@@ -142,6 +147,7 @@ export const VerificationComponent = () => {
               >
                 {({ errors, touched, values }: any) => (
                   <VerificationForm
+                    onCancel={() => setOpenFormVerification(false)}
                     {...{
                       errors,
                       touched,

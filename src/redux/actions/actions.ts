@@ -1432,7 +1432,7 @@ export const userVerificationAction = async (
   http
     .post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
       ...values,
-      address1: values.buildingNumber + ", " + values.streetName,
+      //address1: values.buildingNumber + ", " + values.streetName,
       skipVerification,
     })
     .then((res) => {
