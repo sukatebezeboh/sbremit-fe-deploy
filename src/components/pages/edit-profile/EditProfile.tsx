@@ -377,7 +377,7 @@ phoneCode
                       <div className="buildingName">
                         <div className={errors.firstName ? "form-error" : ""}>
                           <div>
-                            Building Name<i>*</i>
+                            Building Name
                           </div>
                           <Field
                             name="streetName"
@@ -461,7 +461,7 @@ phoneCode
                           errors.city ? "form-error" : ""
                         }`}
                       >
-                        <div>City / Town</div>
+                        <div>City / Town<i>*</i></div>
                         <Field name="city" type="text" />
                         {errors.city && (
                           <div className="form-error-message form-error-message-adjust-up">
@@ -514,7 +514,7 @@ phoneCode
                           )}
                       </div> */}
                       <div className={errors.zip ? "form-error" : ""}>
-                        <div>Postal / zip code</div>
+                        <div>Postal / zip code<i>*</i></div>
                         <Field name="zip" type="text" />
                         {errors.zip && (
                           <div className="form-error-message form-error-message-adjust-up">
