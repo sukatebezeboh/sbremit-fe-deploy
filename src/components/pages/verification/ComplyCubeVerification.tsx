@@ -47,15 +47,19 @@ export const ComplyCubeVerification = ({
     (method: { type: string }) => method.type === "IDENTITY"
   );
   const invalidIdVerification =
-    idVerification && idVerification.status === "PENDING";
+    idVerification &&
+    (idVerification.status === "PENDING" ||
+      idVerification.status === "INVALID");
 
   const documentVerification = verificationList?.find(
     (method: { type: string }) => method.type === "DOCUMENT"
   );
   const invalidDocumentVerification =
-    documentVerification && documentVerification.status === "PENDING";
+    documentVerification &&
+    (documentVerification.status === "PENDING" ||
+      documentVerification.status === "INVALID");
 
-  const verificationCompleted = Boolean(user?.meta?.verifed);
+  const verificationCompleted = Boolean(user?.meta?.verified);
   //!invalidIdVerification || !invalidDocumentVerification;
 
   const checkAndUpdateVerificationType = () => {
@@ -169,7 +173,7 @@ export const ComplyCubeVerification = ({
             complycube.updateSettings({ isModalOpen: false });
             refreshUserDetails(() => {
               checkSubmittedVerification();
-            });
+            }, true);
           });
 
         /**
@@ -187,7 +191,7 @@ export const ComplyCubeVerification = ({
   //this check prompt user if either of the verication is still pending
   const checkSubmittedVerification = () => {
     //if id or doc is still pending
-    if (invalidDocumentVerification) {
+    if (invalidIdVerification) {
       toastAction({
         show: true,
         type: "error",

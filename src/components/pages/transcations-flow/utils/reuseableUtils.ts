@@ -219,9 +219,15 @@ export const userIsVerified = (user: any): boolean => {
     (method: { type: string }) => method.type === "DOCUMENT"
   );
 
-  const docAttempted = docVerification && docVerification?.status !== "PENDING";
+  const docAttempted =
+    docVerification &&
+    docVerification?.status !== "PENDING" &&
+    docVerification?.status !== "INVALID";
 
-  const idAttempted = idVerification && idVerification?.status !== "PENDING";
+  const idAttempted =
+    idVerification &&
+    idVerification?.status !== "PENDING" &&
+    idVerification?.status !== "INVALID";
 
   const docAndIdAtempted = docAttempted && idAttempted;
 

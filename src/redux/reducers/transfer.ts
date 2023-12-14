@@ -52,6 +52,7 @@ const initialTransferState: {} = {
   payinCurrency: "",
   payoutCurrency: "XAF",
   clientIp: "",
+  currentTransferBeforeRedirectVericationsPage: undefined,
 };
 
 export const transfer = (

@@ -25,12 +25,12 @@ import { useHistory, useLocation } from "react-router-dom";
 import { AUTH } from "redux/actionTypes";
 import { paths } from "util/paths";
 import TandCModal from "../app-components/TandCModal";
-import {
-  userIsVerified
-} from "../utils/reuseableUtils";
+import { userIsVerified } from "../utils/reuseableUtils";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
+  const transfer = useSelector((state: any) => state.transfer);
+  const { currentTransferBeforeRedirectVericationsPage } = transfer || {};
   const { user } = auth || {};
   const dispatch = useDispatch();
   const history = useHistory();

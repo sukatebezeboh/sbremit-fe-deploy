@@ -315,13 +315,16 @@ export const confirmUserPassword = (password: string, callback: Function) => {
     });
 };
 
-export const refreshUserDetails = (callback?: Function) => {
+export const refreshUserDetails = (
+  callback?: Function,
+  isForceRefresh = false
+) => {
   const user = store.getState().auth.user;
-  if (!user) {
+  if (!user && !isForceRefresh) {
     return;
   }
   axios
-    .get(config.API_HOST + parseEndpointParameters(endpoints.USER, user.id))
+    .get(config.API_HOST + parseEndpointParameters(endpoints.USER, user?.id))
     .then((response) => {
       CookieService.put("user", JSON.stringify(response.data.data));
       store.dispatch({
@@ -352,6 +355,7 @@ export const refreshUserDetails = (callback?: Function) => {
 // };
 
 export const signOutAction = (ignoreRequest = false) => {
+  resetTransferData();
   if (!ignoreRequest) {
     store.dispatch({ type: LOADING, payload: true });
     http.delete(endpoints.SESSION).then((res) => {
@@ -1425,7 +1429,7 @@ export const userVerificationAction = async (
   http
     .post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
       ...values,
-      address1: values.buildingNumber + ", " + values.streetName,
+      //address1: values.buildingNumber + ", " + values.streetName,
       skipVerification,
     })
     .then((res) => {
@@ -2225,8 +2229,8 @@ export const getClientIp = async (callback?: Function) => {
       payload: {
         ...transfer,
         clientIp: res?.data?.ip,
-      }
-    })
+      },
+    });
     return res?.data?.ip;
   } catch (e) {
     return null;

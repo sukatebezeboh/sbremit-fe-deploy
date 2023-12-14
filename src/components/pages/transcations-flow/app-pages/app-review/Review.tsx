@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
@@ -17,12 +18,13 @@ interface LocationState {
 }
 
 export default function Review() {
+  const transfer = useSelector((state: any) => state.transfer);
   const [trasnferInfo, setTransferInfo] = useState();
   const location = useLocation();
   const transferId = (location.state as LocationState)?.transferId;
   const history = useHistory();
 
-  const startTransfer = () => {
+  const onContinueClicked = () => {
     history.push(paths.PAYMENT_METHOD, {
       transfer: trasnferInfo,
     });
@@ -46,7 +48,11 @@ export default function Review() {
           )}
         </div>
       </RecipientAndTranferContainer>
-      <LargeButton text="Continue" disabled={false} onClick={startTransfer} />
+      <LargeButton
+        text="Continue"
+        disabled={false}
+        onClick={onContinueClicked}
+      />
     </ReviewContainerStyle>
   );
 }

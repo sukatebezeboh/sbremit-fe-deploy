@@ -87,6 +87,7 @@ export const NewRecipient = ({
   const onFormFinish = (values: any) => {
     //console.log(values, recipientBankDeatails);
     delete values.recipientCountry;
+
     initialValues.phoneCode = recipientCountry?.dialCode || "";
     initialValues.confirmPhoneCode = recipientCountry?.dialCode || "";
     values.mobileMoneyProvider = mobileMoneyProvider || "";
@@ -158,6 +159,14 @@ export const NewRecipient = ({
         },
       },
     });
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
+
+  const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
   };
 
   const countryFlag = (
@@ -284,63 +293,69 @@ export const NewRecipient = ({
               size="large"
               type="numnber"
               placeholder="Phone number"
+              onPaste={handlePaste}
+              onCopy={handleCopy}
             />
           </Form.Item>
 
           {transferMethod === "mobile_money" && (
-              <Form.Item
-                name="confirmMobile"
-                label="Confirm phone Number"
-                validateDebounce={1500}
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      if (value !== form.getFieldValue("mobile")) {
-                        return Promise.reject(
-                          "Numbers do not match, please update"
-                        );
-                      } else {
-                        return Promise.resolve();
-                      }
-                    },
+            <Form.Item
+              name="confirmMobile"
+              label="Confirm phone Number"
+              validateDebounce={1500}
+              rules={[
+                {
+                  required: true,
+                  validator: (_, value) => {
+                    if (value !== form.getFieldValue("mobile")) {
+                      return Promise.reject(
+                        "Numbers do not match, please update"
+                      );
+                    } else {
+                      return Promise.resolve();
+                    }
                   },
-                ]}
+                },
+              ]}
+            >
+              <Input
+                type="numnber"
+                size="large"
+                placeholder="Confirm phone number"
+                onPaste={handlePaste}
+                onCopy={handleCopy}
+              />
+            </Form.Item>
+          )}
+
+          {recipientCountry?.countryCode !== "CM" && (
+            <Form.Item
+              name="mobileMoneyProvider"
+              label="Select Mobile Money Provider"
+              initialValue={recipientCountry?.countryCode}
+              rules={[
+                {
+                  required: true,
+                  message: "Please Mobile Money Provider",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select Mobile Money Provider"
+                size="large"
+                allowClear
+                onChange={handleOnSelcetMMPChange}
               >
-                <Input
-                  type="numnber"
-                  size="large"
-                  placeholder="Confirm phone number"
-                />
-              </Form.Item>
-            ) &&
-            recipientCountry?.countryCode !== "CM" && (
-              <Form.Item
-                name="mobileMoneyProvider"
-                label="Select Mobile Money Provider"
-                initialValue={recipientCountry?.countryCode}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please Mobile Money Provider",
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Select Mobile Money Provider"
-                  size="large"
-                  allowClear
-                  onChange={handleOnSelcetMMPChange}
-                >
-                  {mobileMoneyProviderList[
-                    recipientCountry?.countryCode || ""
-                  ].map((item: any, index: number) => (
-                    <Option value={item.value} key={index + "CM"}>
-                      {item.label}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            )}
+                {mobileMoneyProviderList[
+                  recipientCountry?.countryCode || ""
+                ].map((item: any, index: number) => (
+                  <Option value={item.value} key={index + "CM"}>
+                    {item.label}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
 
           {transferMethod === "cash_pickup" && CashPickupMethod}
 

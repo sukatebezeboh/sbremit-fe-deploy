@@ -1,33 +1,30 @@
 import type { CollapseProps } from "antd";
 import { Collapse, Tag } from "antd";
-import { ConfirmModal } from "components/modules/confirm-modal/ConfirmModal";
 import { MouseEventHandler, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { constants } from "util/constants";
-import LargeButton, {
-  PageTitileAndDescription,
-  TransactionsSteps,
-} from "../../utils/ReusablePageContent";
-import {
-  RecipientDetails,
-  TransactionDetails,
-  TransactionsInfomations,
-} from "../app-transactions/TransactionDetail";
-import {
-  PaymentMethodCardStyles,
-  PaymentMethodsContainerStyles,
-  PaymentMethodsWrapperStyles,
-  PleaseNoteStyles,
-} from "./PayMethodsStyles";
+import { TRANSFER } from "redux/actionTypes";
 import {
   generateCheckoutId,
   initiateInteracTransferPayment,
   resetTransferData,
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
+import { constants } from "util/constants";
 import { paths } from "util/paths";
+import LargeButton, {
+  PageTitileAndDescription,
+  TransactionsSteps,
+} from "../../utils/ReusablePageContent";
+import { formatAmount } from "../../utils/reuseableUtils";
+import { TransactionsInfomations } from "../app-transactions/TransactionDetail";
+import {
+  PaymentMethodCardStyles,
+  PaymentMethodsContainerStyles,
+  PaymentMethodsWrapperStyles,
+  PleaseNoteStyles,
+} from "./PayMethodsStyles";
 import { PaymentGateWays } from "./paymentGateway";
-import { useSelector } from "react-redux";
 
 interface LocationState {
   transfer: any;
@@ -37,22 +34,41 @@ export default function Pay() {
   const location = useLocation();
   const history = useHistory();
   const transfer = useSelector((state: any) => state.transfer);
+  const auth = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch();
   const { clientIp } = transfer || {};
+  const { verification } = auth || {};
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
   const transferInfo = (location.state as LocationState)?.transfer;
+  const [loader, setLoader] = useState(false);
   const [confirmModalData, setConfimModalData] = useState({
     open: false,
     title: "Confirmation Required!",
     message: "",
   });
 
-  console.log(clientIp);
   useEffect(() => {
     if (
       transferInfo.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING
     ) {
     }
+    updateCurrentTransferBeforeRedirectToVericationsPage();
   }, [transferInfo]);
+
+  //this ensure we have a transcation to be used once the user is done with verification process
+  const updateCurrentTransferBeforeRedirectToVericationsPage = () => {
+    if (!verification) {
+      return dispatch({
+        type: TRANSFER,
+        payload: {
+          ...transfer,
+          currentTransferBeforeRedirectVericationsPage: transferInfo,
+        },
+      });
+    } else {
+      return;
+    }
+  };
 
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
@@ -62,7 +78,7 @@ export default function Pay() {
       clientIp
     );
     //close Confirmation modal
-    closeConfirmationModal();
+    //closeConfirmationModal();
 
     if (paymentMethod === "interac") {
       initiateInteracTransferPayment(+transferInfo.id);
@@ -75,6 +91,7 @@ export default function Pay() {
     }
     // clear redux store #transactions
     resetTransferData();
+    setLoader(false);
   };
 
   const generateCheckoutIDforAxcssPayment = (transfer: any) => {
@@ -92,11 +109,14 @@ export default function Pay() {
   };
 
   const onPayClick = () => {
-    setConfimModalData((confirmModalData) => ({
-      ...confirmModalData,
-      message: `Are you sure you want to procced?`,
-      open: true,
-    }));
+    setLoader(true);
+    handleProceed(selectedMethod);
+
+    // setConfimModalData((confirmModalData) => ({
+    //   ...confirmModalData,
+    //   message: `Are you sure you want to procced?`,
+    //   open: true,
+    // }));
   };
 
   const closeConfirmationModal = () => {
@@ -118,7 +138,7 @@ export default function Pay() {
 
   return (
     <>
-      <ConfirmModal
+      {/* <ConfirmModal
         type="warning"
         open={confirmModalData.open}
         title={confirmModalData.title}
@@ -127,7 +147,7 @@ export default function Pay() {
           handleProceed(selectedMethod);
         }}
         onCancel={closeConfirmationModal}
-      />
+      /> */}
       <PaymentMethodsContainerStyles>
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription
@@ -147,9 +167,18 @@ export default function Pay() {
               key={method.method + index}
             />
           ))}
-          <PleaseNote />
+          <PleaseNote
+            totalToPay={`${formatAmount(transferInfo?.meta?.totalToPay)} ${
+              transferInfo?.meta?.exchangeBase
+            }`}
+          />
         </PaymentMethodsWrapperStyles>
-        <LargeButton text="Pay" onClick={onPayClick} hideBackBtn={true} />
+        <LargeButton
+          text="Pay"
+          onClick={onPayClick}
+          hideBackBtn={true}
+          loading={loader}
+        />
       </PaymentMethodsContainerStyles>
     </>
   );
@@ -195,7 +224,7 @@ const PaymentMethodCard = ({
   );
 };
 
-const PleaseNote = () => {
+const PleaseNote = ({ totalToPay }: any) => {
   return (
     <PleaseNoteStyles>
       <p>Please note:</p>
@@ -209,7 +238,7 @@ const PleaseNote = () => {
         </li>
         <li>
           If all details are correct, proceed to pay the sum of{" "}
-          <span className="green_text">10.22 GBP</span> to complete your
+          <span className="green_text">{totalToPay}</span> to complete your
           transfer
         </li>
       </ol>

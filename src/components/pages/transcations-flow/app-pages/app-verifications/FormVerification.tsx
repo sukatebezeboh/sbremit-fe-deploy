@@ -44,11 +44,12 @@ export const FormVerification = ({
   );
 
   const initialValues: any = {
-    // phoneCode: "+01",
     address2: "",
     location_country: location_country,
     dob: dayjs(convertToDateFormat(`${day}-${month}-${year}`), DateFormat),
     gender: "male",
+    username: user.username,
+    address1: "",
     ...user?.profile,
   };
 
@@ -65,11 +66,12 @@ export const FormVerification = ({
       day: day,
       month: month,
       year: year,
-      address2: "",
-      address1: values.buildingNumber + ", " + values.streetName,
+      phoneCode: userCountryData?.dialCode,
+      streetName: "",
     };
-    // Delete the 'dob' property
+    // Delete the 'dob' and username property
     delete formattedValues.dob;
+    delete formattedValues.username;
 
     submit(formattedValues);
     setOpen(false);
@@ -125,12 +127,12 @@ export const FormVerification = ({
               className="child"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please input first name!",
                 },
               ]}
             >
-              <Input size="large" placeholder="First name" />
+              <Input disabled size="large" placeholder="First name" />
             </Form.Item>
             <Form.Item
               name="lastName"
@@ -138,52 +140,28 @@ export const FormVerification = ({
               className="child"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please input your last name!",
                 },
               ]}
             >
-              <Input size="large" placeholder="Last name" />
+              <Input disabled size="large" placeholder="Last name" />
             </Form.Item>
           </FlexAndWrap>
 
           <FlexAndWrap>
             <Form.Item
-              name="mobile"
-              label="Mobile Number"
+              name="username"
+              label="Email address"
               className="child"
               rules={[
                 {
-                  required: true,
-                  message: "Please input mobile number!",
+                  required: false,
+                  message: "Please input first name!",
                 },
               ]}
             >
-              <Input
-                addonBefore={userCountryData?.dialCode}
-                size="large"
-                placeholder="Mobile number"
-                type="phone"
-              />
-            </Form.Item>
-            <Form.Item
-              name="dob"
-              label="Date of birth"
-              className="child"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your date of birth!",
-                },
-              ]}
-            >
-              <DatePicker
-                size="large"
-                format={DateFormat}
-                // defaultValue={dayjs(`${day}-${month}-${year}`, "DD-MM-YYYY")}
-                style={{ width: "100%" }}
-                onChange={onDatePickerChange}
-              />
+              <Input disabled size="large" placeholder="First name" />
             </Form.Item>
           </FlexAndWrap>
 
@@ -194,7 +172,7 @@ export const FormVerification = ({
               className="child"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please Select your gender!",
                 },
               ]}
@@ -229,59 +207,100 @@ export const FormVerification = ({
 
           <FlexAndWrap>
             <Form.Item
-              name="buildingNumber"
-              label="House/Building Number"
+              name="dob"
+              label="Date of birth"
               className="child"
               rules={[
                 {
-                  required: true,
-                  message: "Please input building no!",
+                  required: false,
+                  message: "Please input your date of birth!",
                 },
               ]}
             >
-              <Input size="large" placeholder="Building No" />
+              <DatePicker
+                size="large"
+                format={DateFormat}
+                // defaultValue={dayjs(`${day}-${month}-${year}`, "DD-MM-YYYY")}
+                style={{ width: "100%" }}
+                onChange={onDatePickerChange}
+                disabled
+              />
             </Form.Item>
             <Form.Item
-              name="buildingName"
-              label="Building Name"
+              name="mobile"
+              label="Mobile Number"
               className="child"
               rules={[
                 {
-                  required: true,
-                  message: "Please input your building name!",
+                  required: false,
+                  message: "Please input mobile number!",
                 },
               ]}
             >
-              <Input size="large" placeholder="Building name" />
+              <Input
+                addonBefore={userCountryData?.dialCode}
+                size="large"
+                placeholder="Mobile number"
+                type="phone"
+              />
             </Form.Item>
           </FlexAndWrap>
 
           <FlexAndWrap>
             <Form.Item
               name="streetName"
-              label="Street Name"
+              label="Building Name"
+              className="child"
+              rules={[
+                {
+                  required: false,
+                  message: "Please input your building name!",
+                },
+              ]}
+            >
+              <Input size="large" placeholder="Building name" />
+            </Form.Item>
+            <Form.Item
+              name="address1"
+              label="Address Line 1"
               className="child"
               rules={[
                 {
                   required: true,
-                  message: "Please input street name!",
+                  message: "Please input address Line 1!",
                 },
               ]}
             >
-              <Input size="large" placeholder="Street name" />
+              <Input size="large" placeholder="Address Line 1" />
+            </Form.Item>
+          </FlexAndWrap>
+
+          <FlexAndWrap>
+            <Form.Item
+              name="address2"
+              label="Address Line 2"
+              className="child"
+              rules={[
+                {
+                  required: false,
+                  message: "Please input address Line 2!",
+                },
+              ]}
+            >
+              <Input size="large" placeholder="Address Line 2" />
             </Form.Item>
             <Form.Item
               name="city"
-              label="City / Town"
+              label="City"
               className="child"
               rules={[
                 {
                   required: true,
-                  message: "Please input your City / Town!",
+                  message: "Please input your City!",
                 },
               ]}
             >
-              <Input size="large" placeholder="City / Town" />
+              <Input size="large" placeholder="City" />
             </Form.Item>
           </FlexAndWrap>
 
@@ -315,45 +334,46 @@ export const FormVerification = ({
                 <Input size="large" placeholder="County" />
               </Form.Item>
             )}
+
             <Form.Item
-              name="location_country"
-              label="Location Country"
+              name="zip"
+              label="Postal / zip code"
               className="child"
               rules={[
                 {
-                  required: false,
-                  message: "Please input your Location Country!",
+                  required: true,
+                  message: "Please input your Postal / zip code!",
                 },
               ]}
             >
-              {/* <Input size="large"disabled placeholder="County" /> */}
-              <Space>
-                <img
-                  src={getFlagURL(location_country)}
-                  alt="Country_location"
-                  style={{
-                    width: "24px",
-                    height: "18px",
-                    marginTop: "5px",
-                  }}
-                />
-                <span>{countries?.[location_country]}</span>
-              </Space>
+              <Input size="large" placeholder="Postal / zip code" />
             </Form.Item>
           </FlexAndWrap>
 
           <Form.Item
-            name="zip"
-            label="Postal / zip code"
+            name="location_country"
+            label="Location Country"
             className="child"
             rules={[
               {
-                required: true,
-                message: "Please input your Postal / zip code!",
+                required: false,
+                message: "Please input your Location Country!",
               },
             ]}
           >
-            <Input size="large" placeholder="Postal / zip code" />
+            {/* <Input size="large"disabled placeholder="County" /> */}
+            <Space>
+              <img
+                src={getFlagURL(location_country)}
+                alt="Country_location"
+                style={{
+                  width: "24px",
+                  height: "18px",
+                  marginTop: "5px",
+                }}
+              />
+              <span>{countries?.[location_country]}</span>
+            </Space>
           </Form.Item>
 
           <Divider style={{ marginTop: "12px" }} />

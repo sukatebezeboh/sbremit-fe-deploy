@@ -2,7 +2,7 @@ import { CheckCircleTwoTone, UnlockOutlined } from "@ant-design/icons";
 import { Alert, Avatar, Button, List, Space, Tag } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
   refreshUserDetails,
@@ -22,9 +22,14 @@ import {
   checkToShowVerificationForm,
   checkVerification,
 } from "./verificationsHelper";
+import { paths } from "util/paths";
+import { TRANSFER } from "redux/actionTypes";
 
 export default function Verifications() {
   const user = useSelector((state: any) => state.auth.user);
+  const transfer = useSelector((state: any) => state.transfer);
+  const dispatch = useDispatch();
+  const { currentTransferBeforeRedirectVericationsPage } = transfer || {};
   const history = useHistory();
   const [openFormModal, setOpenFormModal] = useState(false);
   const [isFormVerified, setFormVerified] = useState(false);
@@ -119,6 +124,22 @@ export default function Verifications() {
     return null;
   };
 
+  const onContinueToPaymentClicked = () => {
+    console.log(currentTransferBeforeRedirectVericationsPage);
+    history.push(paths.PAYMENT_METHOD, {
+      transfer: currentTransferBeforeRedirectVericationsPage,
+    });
+
+    //clear from redux store
+    dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        currentTransferBeforeRedirectVericationsPage: undefined,
+      },
+    });
+  };
+
   return (
     <VerificationsContainerStyles>
       <PageTitileAndDescription
@@ -180,6 +201,18 @@ export default function Verifications() {
         setOpen={setDisplayComplyCubeVerification}
       />
 
+      {/* !currentTransferBeforeRedirectVericationsPage !== undefined && */}
+      {idAttempted &&
+        docAttempted &&
+        currentTransferBeforeRedirectVericationsPage !== undefined && (
+          <Button
+            type="default"
+            size="large"
+            onClick={onContinueToPaymentClicked}
+          >
+            Continue with payment 💳
+          </Button>
+        )}
       {!idAttempted && !hasCompletedAllVerifications && verificationHelpNote}
     </VerificationsContainerStyles>
   );

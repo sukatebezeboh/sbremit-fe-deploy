@@ -98,7 +98,7 @@ export default function Notifications({ open, setOpen }: NotificationsProps) {
                   size={40}
                   style={{
                     background: generateAlphabetColor(
-                      getFirstLetter(item.type)
+                      getFirstLetter(item.type) ?? ""
                     ),
                   }}
                 >
