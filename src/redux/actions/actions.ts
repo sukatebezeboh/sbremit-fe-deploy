@@ -1312,7 +1312,9 @@ export const confirmDialog = (data: {
 };
 
 export const editProfileAction = (values: any, callback?: Function) => {
-  const userId = store.getState().auth.user?.id;
+  const user = store.getState().auth.user;
+  const { meta, id } = user || {};
+  const userId = id;
   confirmDialog({
     message: `Please, input your account password to make this change`,
     isPositive: undefined,
@@ -1331,6 +1333,7 @@ export const editProfileAction = (values: any, callback?: Function) => {
     http
       .put(parseEndpointParameters(endpoints.USER, userId), {
         profile: { ...values },
+        meta,
       })
       .then((res: any) => {
         store.dispatch({ type: LOADING, payload: false });
@@ -1429,7 +1432,7 @@ export const userVerificationAction = async (
   http
     .post(parseEndpointParameters(endpoints.VERIFICATION, userId), {
       ...values,
-      address1: values.buildingNumber + ", " + values.streetName,
+      //address1: values.buildingNumber + ", " + values.streetName,
       skipVerification,
     })
     .then((res) => {

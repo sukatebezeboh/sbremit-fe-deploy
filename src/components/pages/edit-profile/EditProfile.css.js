@@ -36,7 +36,33 @@ const style = () => styled.div`
                 }
             }
         }
-
+        div.phone-box {
+          border: 1px solid #7fbcad;
+          border-radius: 4px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 30px;
+          
+          img {
+            height: 24px;
+            width: 36px;
+            margin: 0 8px;
+          }
+          input {
+            width: 50%;
+            margin-bottom: 0;
+            flex: 1;
+            margin-left: 8px;
+            border-top: 0;
+            border-bottom: 0;
+          }
+          .green-txt.input{
+            border: none;
+            outline: none;
+          }
+        }
 
         .part{
                 background: #FFFFFF;
