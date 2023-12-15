@@ -88,6 +88,7 @@ export const PromoInput = () => {
         placeholder="Get discount..."
         type="text"
         size="large"
+        allowClear
         value={promoInputValue || ""}
         suffix={
           promoInputNotEmpty ? (
