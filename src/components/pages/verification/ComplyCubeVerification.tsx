@@ -47,17 +47,13 @@ export const ComplyCubeVerification = ({
     (method: { type: string }) => method.type === "IDENTITY"
   );
   const invalidIdVerification =
-    idVerification &&
-    (idVerification.status === "PENDING" ||
-      idVerification.status === "INVALID");
+    idVerification && idVerification.status === "PENDING";
 
   const documentVerification = verificationList?.find(
     (method: { type: string }) => method.type === "DOCUMENT"
   );
   const invalidDocumentVerification =
-    documentVerification &&
-    (documentVerification.status === "PENDING" ||
-      documentVerification.status === "INVALID");
+    documentVerification && documentVerification.status === "PENDING";
 
   const verificationCompleted = Boolean(user?.meta?.verified);
   //!invalidIdVerification || !invalidDocumentVerification;
@@ -192,7 +188,7 @@ export const ComplyCubeVerification = ({
   const checkSubmittedVerification = () => {
     //if id or doc is still pending
     if (invalidIdVerification) {
-      toastAction({
+      return toastAction({
         show: true,
         type: "error",
         timeout: 10000,
@@ -200,7 +196,7 @@ export const ComplyCubeVerification = ({
         message: "ID verification was not successful, Please try again",
       });
     } else if (invalidDocumentVerification) {
-      toastAction({
+      return toastAction({
         show: true,
         type: "error",
         timeout: 10000,
@@ -208,7 +204,7 @@ export const ComplyCubeVerification = ({
         message: "Document verification was not successful, Please try again",
       });
     } else {
-      toastAction({
+      return toastAction({
         show: true,
         type: "info",
         timeout: 10000,
