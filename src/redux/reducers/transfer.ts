@@ -81,6 +81,14 @@ export const transfer = (
         transferMethod: "mobile_money",
         serviceFee: 0,
         remittanceHandler: "MANUAL",
+        currentTransferBeforeRedirectVericationsPage: undefined,
+
+        total: 0,
+        days: 7,
+        limit: 10000,
+        offset: 0,
+        status: "ALL",
+        search: "",
       };
     }
     case TRANSFER_QUOTE: {
