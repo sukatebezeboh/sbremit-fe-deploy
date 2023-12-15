@@ -24,6 +24,7 @@ import {
 } from "./verificationsHelper";
 import { paths } from "util/paths";
 import { TRANSFER } from "redux/actionTypes";
+import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 
 export default function Verifications() {
   const user = useSelector((state: any) => state.auth.user);
@@ -125,7 +126,7 @@ export default function Verifications() {
   };
 
   const onContinueToPaymentClicked = () => {
-    console.log(currentTransferBeforeRedirectVericationsPage);
+    consoleLogOnLocalHost(currentTransferBeforeRedirectVericationsPage);
     history.push(paths.PAYMENT_METHOD, {
       transfer: currentTransferBeforeRedirectVericationsPage,
     });
