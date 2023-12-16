@@ -11,12 +11,15 @@ const VerificationForm = ({
   values,
   selectedCountry,
   setSelectedCountry,
+  onCancel,
 }: any) => {
   const history = useHistory();
   const countries: any = useSelector((state: any) => state.appValues.countries);
 
-  // console.log("countries", countries)
+  //console.log("countries", errors);
   // const userCountry = values?.location_country;
+  const userHasDateOfBirth = values.day && values.month && values.year;
+
   return (
     <FormStyles>
       <Form className="form">
@@ -67,109 +70,30 @@ const VerificationForm = ({
                   )}
                 </div>
               </div>
-              <div
-                className={touched.mobile && errors.mobile ? "form-error" : ""}
-              >
-                <div className="">
-                  Mobile<i>*</i>
-                </div>
-                <div className="phone-box">
-                  {/* <Field
-                        className="green-txt phone-code-adjust"
-                        as="select"
-                        name="phoneCode"
-                        id="">
-                        {Object.keys(constants.SIGNUP_COUNTRIES).map(
-                            (countryCode) => {
-                            const countryInfo = constants.COUNTRIES_PHONE_CODES.find(country => country.countryCode === countryCode)
-                            return(
-                                <option
-                                value={countryInfo?.phoneCode}>
-                                {countryInfo?.name}
-                                </option>
-                            )},
-                        )}
-                        </Field> */}
-                  <img
-                    src={`https://flagcdn.com/h24/${selectedCountry?.toLowerCase()}.png`}
-                    alt={selectedCountry + "flag"}
+
+              <div className="names">
+                <div
+                  className={
+                    touched.firstName && errors.firstName ? "form-error" : ""
+                  }
+                >
+                  <div>
+                    Email Address<i>*</i>
+                  </div>
+                  <Field
+                    className="green-txt"
+                    type="text"
+                    name="username"
+                    placeholder="email address"
+                    disabled={true}
                   />
-                  <p className="green-txt">{values.phoneCode}</p>
-                  <Field className="green-txt" type="text" name="mobile" />
-                  {touched.mobile && errors.mobile && (
-                    <div className="form-error-message form-error-message-adjust-up">
-                      {errors.mobile}
-                    </div>
-                  )}
+                  {/* {touched.firstName && errors.firstName && (
+                    <div className="form-error-message">{errors.firstName}</div>
+                  )} */}
                 </div>
               </div>
 
-              <div
-                className={
-                  (touched.day && errors.day) ||
-                  (touched.month && errors.month) ||
-                  (touched.year && errors.year)
-                    ? "form-error"
-                    : ""
-                }
-              >
-                <div>
-                  Date of birth
-                  <i>
-                    * &nbsp; &nbsp; &nbsp;{" "}
-                    {
-                      <span className="form-error-message form-error-message-adjust-up ">
-                        {errors.day || errors.month || errors.year}
-                      </span>
-                    }{" "}
-                  </i>
-                </div>
-
-                <div className="grid-col-1-2-1 grid-gap-1 dob">
-                  <div>
-                    <Field
-                      className="day-select green-txt"
-                      as="select"
-                      name="day"
-                      placeholder="day"
-                      value={days[Number(values.day)]}
-                    >
-                      <option value=""> -- </option>
-                      {days.map((day: any) => (
-                        <option key={days[day]} value={day + 1}>
-                          {day + 1}
-                        </option>
-                      ))}
-                    </Field>
-                  </div>
-                  <div>
-                    <Field
-                      className="month-select green-txt"
-                      as="select"
-                      name="month"
-                      placeholder="month"
-                      value={Object.values(months)[Number(values.month) - 1]}
-                    >
-                      <option value=""> --- </option>
-                      {Object.entries(months).map((month: any) => (
-                        <option value={Number(month[1])}>{month[0]}</option>
-                      ))}
-                    </Field>
-                  </div>
-                  <div>
-                    <Field
-                      name="year"
-                      className="green-txt"
-                      type="text"
-                      placeholder="Year"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={touched.gender && errors.gender ? "form-error" : ""}
-              >
+              <div className={errors.gender ? "form-error" : ""}>
                 <div>
                   Gender<i>*</i>
                 </div>
@@ -214,13 +138,117 @@ const VerificationForm = ({
                     />{" "}
                   </span>
                 </div>
-                {touched.gender && errors.gender && (
-                  <div className="form-error-message form-error-message-adjust-up">
-                    {errors.gender}
-                  </div>
-                )}
+                {touched.gender ||
+                  (errors.gender && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.gender}
+                    </div>
+                  ))}
               </div>
+
               <div
+                className={touched.mobile && errors.mobile ? "form-error" : ""}
+              >
+                <div
+                  className={
+                    (touched.day && errors.day) ||
+                    (touched.month && errors.month) ||
+                    (touched.year && errors.year)
+                      ? "form-error"
+                      : ""
+                  }
+                >
+                  <div>
+                    Date of birth
+                    <i>
+                      * &nbsp; &nbsp; &nbsp;{" "}
+                      {
+                        <span className="form-error-message form-error-message-adjust-up ">
+                          {errors.day || errors.month || errors.year}
+                        </span>
+                      }{" "}
+                    </i>
+                  </div>
+
+                  <div className="grid-col-1-2-1 grid-gap-1 dob">
+                    <div>
+                      <Field
+                        className="day-select green-txt"
+                        as="select"
+                        name="day"
+                        placeholder="day"
+                        value={days[Number(values.day)]}
+                        disabled={userHasDateOfBirth}
+                      >
+                        <option value=""> -- </option>
+                        {days.map((day: any) => (
+                          <option key={days[day]} value={day + 1}>
+                            {day + 1}
+                          </option>
+                        ))}
+                      </Field>
+                    </div>
+                    <div>
+                      <Field
+                        className="month-select green-txt"
+                        as="select"
+                        name="month"
+                        placeholder="month"
+                        value={Object.values(months)[Number(values.month) - 1]}
+                        disabled={userHasDateOfBirth}
+                      >
+                        <option value=""> --- </option>
+                        {Object.entries(months).map((month: any) => (
+                          <option value={Number(month[1])}>{month[0]}</option>
+                        ))}
+                      </Field>
+                    </div>
+                    <div>
+                      <Field
+                        name="year"
+                        className="green-txt"
+                        type="text"
+                        placeholder="Year"
+                        disabled={userHasDateOfBirth}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="">
+                  Mobile<i>*</i>
+                </div>
+                <div className="phone-box">
+                  {/* <Field
+                        className="green-txt phone-code-adjust"
+                        as="select"
+                        name="phoneCode"
+                        id="">
+                        {Object.keys(constants.SIGNUP_COUNTRIES).map(
+                            (countryCode) => {
+                            const countryInfo = constants.COUNTRIES_PHONE_CODES.find(country => country.countryCode === countryCode)
+                            return(
+                                <option
+                                value={countryInfo?.phoneCode}>
+                                {countryInfo?.name}
+                                </option>
+                            )},
+                        )}
+                        </Field> */}
+                  <img
+                    src={`https://flagcdn.com/h24/${selectedCountry?.toLowerCase()}.png`}
+                    alt={selectedCountry + "flag"}
+                  />
+                  <p className="green-txt">{values.phoneCode}</p>
+                  <Field className="green-txt" type="text" name="mobile" />
+                  {touched.mobile && errors.mobile && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.mobile}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* <div
                 className={
                   touched.buildingNumber && errors.buildingNumber
                     ? "form-error"
@@ -242,43 +270,66 @@ const VerificationForm = ({
                     {errors.buildingNumber}
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="building-name">
                 <div>Building Name</div>
                 <Field
                   className="green-txt street-name"
-                  name="buildingName"
+                  name="streetName"
                   type="text"
                   placeholder="Building name"
                 />
               </div>
               <div
                 className={
-                  (touched.buildingNumber && errors.buildingNumber) ||
-                  (touched.streetName && errors.streetName)
+                  // touched.address1 ||
+                  // errors.address1 ||
+                  // touched.address1 ||
+                  errors.address1
                     ? "form-error"
                     : ""
                 }
               >
                 <div>
-                  Street Name<i>*</i>
+                  Address Line 1<i>*</i>
                 </div>
                 <Field
                   className="green-txt street-name"
-                  name="streetName"
+                  name="address1"
                   type="text"
-                  placeholder="Street name"
+                  placeholder="Address Line 1"
                 />
-                {touched.streetName && errors.streetName && (
-                  <div className="form-error-message">{errors.streetName}</div>
+                {touched.address1 ||
+                  (errors.address1 && (
+                    <div className="form-error-message">{errors.address1}</div>
+                  ))}
+              </div>
+
+              <div
+                className={
+                  (touched.address2 && errors.address2) ||
+                  (touched.address2 && errors.address2)
+                    ? "form-error"
+                    : ""
+                }
+              >
+                <div>Address Line 2</div>
+                <Field
+                  className="green-txt street-name"
+                  name="address2"
+                  type="text"
+                  placeholder="Address Line 2"
+                />
+                {touched.address2 && errors.address2 && (
+                  <div className="form-error-message">{errors.address2}</div>
                 )}
               </div>
               <div
                 className={`city-town-div ${
-                  touched.city && errors.city ? "form-error" : ""
+                   errors.city ? "form-error" : ""
                 }`}
               >
-                <div>City / Town</div>
+                <div>City / Town<i>*</i></div>
                 <Field className="green-txt" name="city" type="text" />
                 {touched.city && errors.city && (
                   <div className="form-error-message form-error-message-adjust-up">
@@ -328,6 +379,16 @@ const VerificationForm = ({
                   )}
                 </div>
               )}
+              <div className={errors.zip ? "form-error" : ""}>
+                <div>Postal / zip code<i>*</i></div>
+                <Field className="green-txt" name="zip" type="text" />
+                {touched.zip ||
+                  (errors.zip && (
+                    <div className="form-error-message form-error-message-adjust-up">
+                      {errors.zip}
+                    </div>
+                  ))}
+              </div>
               <div
                 className={`state-input-div ${
                   touched.location_country && errors.location_country
@@ -352,7 +413,8 @@ const VerificationForm = ({
                   ))}
                 </Field>
                 <img
-                  src={`./assets/flags/${values.location_country}.png`}
+                  //src={`./assets/flags/${values.location_country}.png`}
+                  src={`https://flagcdn.com/h24/${values.location_country?.toLowerCase()}.png`}
                   alt="uk"
                 />
                 {touched.location_country && errors.location_country && (
@@ -361,18 +423,9 @@ const VerificationForm = ({
                   </div>
                 )}
               </div>
-              <div className={touched.zip && errors.zip ? "form-error" : ""}>
-                <div>Postal / zip code</div>
-                <Field className="green-txt" name="zip" type="text" />
-                {touched.zip && errors.zip && (
-                  <div className="form-error-message form-error-message-adjust-up">
-                    {errors.zip}
-                  </div>
-                )}
-              </div>
             </div>
             <div className="btns">
-              <span onClick={() => window.location.reload()}>Close</span>{" "}
+              <span onClick={() => onCancel()}>Close</span>{" "}
               <button type="submit">Continue</button>{" "}
             </div>
           </div>
