@@ -194,7 +194,7 @@ export const VerificationComponent = () => {
             onClick={() => {
               setDisplayComplyCubeVerification(true);
             }}
-            disabled={isIdAttempted}
+            disabled={isIdAttempted || !isFormVerified}
           >
             Start ID verification
           </Button>
