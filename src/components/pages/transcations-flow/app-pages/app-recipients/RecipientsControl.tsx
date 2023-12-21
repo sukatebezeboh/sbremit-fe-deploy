@@ -9,6 +9,7 @@ import {
   Tabs,
   TabsProps,
   Tooltip,
+  Typography,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,8 @@ import {
   transferMethodsInWords,
 } from "../../utils/reuseableUtils";
 import { userAppValues } from "../../utils/useAppValues";
+
+const { Text, Link } = Typography;
 const { Option } = Select;
 
 interface NewRecipientProps {
@@ -62,6 +65,7 @@ export const NewRecipient = ({
   const { PayoutCountries, PayinCountries } = userAppValues();
   const [mobileMoneyProvider, setMobileMoneyProvider] = useState("");
   const { destinationCurrency } = transferQuoteResponse || {};
+  const [isPhoneNumberMatched, setIsPhoneNumberMatched] = useState(false);
 
   const { recipientBankDeatails } = transfer || {};
 
@@ -302,16 +306,23 @@ export const NewRecipient = ({
             <Form.Item
               name="confirmMobile"
               label="Confirm phone Number"
-              validateDebounce={1500}
+              validateDebounce={500}
+              extra={
+                isPhoneNumberMatched && (
+                  <Text type="success">Numbers Matched!</Text>
+                )
+              }
               rules={[
                 {
                   required: true,
                   validator: (_, value) => {
                     if (value !== form.getFieldValue("mobile")) {
+                      setIsPhoneNumberMatched(false);
                       return Promise.reject(
                         "Numbers do not match, please update"
                       );
                     } else {
+                      setIsPhoneNumberMatched(true);
                       return Promise.resolve();
                     }
                   },
@@ -319,6 +330,7 @@ export const NewRecipient = ({
               ]}
             >
               <Input
+                addonBefore={countryFlag}
                 type="numnber"
                 size="large"
                 placeholder="Confirm phone number"
