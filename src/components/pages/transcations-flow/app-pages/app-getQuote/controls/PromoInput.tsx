@@ -1,7 +1,7 @@
 import {
-    CheckCircleFilled,
-    LoadingOutlined,
-    WarningFilled,
+  CheckCircleFilled,
+  LoadingOutlined,
+  WarningFilled,
 } from "@ant-design/icons";
 import { Input } from "antd";
 import React, { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
 import { getPromo } from "redux/actions/actions";
 import { GetPromoStyles } from "../GetQuoteStyles";
+import { refinePromoErrorMessage } from "../GetQuoteHelper";
 
 export const PromoInput = () => {
   const dispatch = useDispatch();
@@ -39,11 +40,11 @@ export const PromoInput = () => {
         );
       } else {
         setPromoSuccess(
-          `Spend between: ${promo.settings.minimumSpend} ${payinCurrency} and ${promo.settings.maximumSpend} ${payinCurrency}`
+          `Spend from: "${promo.settings.minimumSpend} ${payinCurrency} & ${promo.settings.maximumSpend} ${payinCurrency}" to activate code.`
         );
       }
     } else {
-      setPromoErr(promo);
+      setPromoErr(refinePromoErrorMessage(promo, promoInputValue));
     }
 
     setIsPromoValid(isValid);

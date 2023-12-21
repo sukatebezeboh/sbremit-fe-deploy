@@ -120,3 +120,21 @@ export const isWithinPaymentLimit = (transfer: any) => {
 
   return "";
 };
+
+export function refinePromoErrorMessage(message: any, code: string) {
+  const errorMessages: any = [
+    {
+      value: "Promo not found. No resource found",
+      refined: "Invalid Code.",
+    },
+    {
+      value: "Promo not found. Invalid user",
+      refined: `Voucher code "${code}" has already been redeemed`,
+    },
+  ];
+
+  const refinedMessage = errorMessages.find(
+    (msg: any) => msg.value === message
+  );
+  return refinedMessage ? refinedMessage.refined : message;
+}
