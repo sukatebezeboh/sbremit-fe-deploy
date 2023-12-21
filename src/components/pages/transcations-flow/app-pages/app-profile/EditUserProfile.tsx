@@ -130,7 +130,7 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
                 },
               ]}
             >
-              <Input size="large" placeholder="First name" />
+              <Input size="large" placeholder="First name" disabled/>
             </Form.Item>
             <Form.Item
               name="lastName"
@@ -143,7 +143,7 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
                 },
               ]}
             >
-              <Input size="large" placeholder="Last name" />
+              <Input size="large" placeholder="Last name" disabled/>
             </Form.Item>
           </FlexAndWrap>
           <FlexAndWrap>
