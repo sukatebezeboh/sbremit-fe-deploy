@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { editProfileAction } from "redux/actions/actions";
-import { DateFormat, getFlagURL } from "../../utils/reuseableUtils";
+import { DateFormat, convertToDateFormat, getFlagURL } from "../../utils/reuseableUtils";
 import { FlexAndWrap } from "../app-verifications/VerificationsStyles";
 
 interface EditUserProfileProps {
@@ -49,7 +49,7 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
     address1,
     address2,
     city,
-    dob: dayjs(`${day}-${month}-${year}`, DateFormat),
+    dob: dayjs(convertToDateFormat(`${day}-${month}-${year}`), DateFormat), //convert to DD-MM-YYYY
     firstName,
     gender,
     lastName,
