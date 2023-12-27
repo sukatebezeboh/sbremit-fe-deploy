@@ -263,7 +263,11 @@ const Usage = ({
               }
             >
               <Meta
-                title="Awaiting activation"
+                title={
+                  percentage === 0
+                    ? "Awaiting activation"
+                    : "Activation complete"
+                }
                 description={
                   <Progress percent={percentage} size="small" status="active" />
                 }
