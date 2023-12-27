@@ -1,5 +1,5 @@
 import { Select } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { paths } from "util/paths";
@@ -8,6 +8,7 @@ import LargeButton, {
   TransactionsSteps,
 } from "../../utils/ReusablePageContent";
 import {
+  checkReferralRewards,
   getTransactionQuoteRequest,
   isWithinPaymentLimit,
 } from "./GetQuoteHelper";
@@ -22,6 +23,7 @@ interface LocationState {
 export default function GetQuote() {
   const history = useHistory();
   const location = useLocation();
+  const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
   //tranferMethod from location(transfer method page) buh if location is null transfer.transferMethod(Resend transfer cases)
   const transferMethod =
@@ -49,6 +51,10 @@ export default function GetQuote() {
       onErrorEncountered
     );
   };
+
+  useEffect(() => {
+    checkReferralRewards(user)
+  }, [user])
 
   return (
     <GetQuoteContainerStyle>

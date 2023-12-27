@@ -138,3 +138,39 @@ export function refinePromoErrorMessage(message: any, code: string) {
   );
   return refinedMessage ? refinedMessage.refined : message;
 }
+
+export const checkReferralRewards = (user: any) => {
+  const { newBonusState } = user?.referral || {};
+  const { Voucher, VoucherPoints } = user.meta || {};
+
+  const isVoucherActive = Voucher === "ACTIVE";
+  const isNewBonusStateActive = newBonusState === "ACTIVE";
+
+  //newUserBonusActive 
+  //
+
+  const ToastMessage = (title: string, message: string) =>
+    toastAction({
+      name: "user-reward-notice",
+      show: true,
+      type: "success",
+      title: title,
+      message: message,
+      extraBtnText: "Continue",
+      extraBtnHandler: () => {},
+    });
+
+  if (isVoucherActive) {
+    return ToastMessage(
+      "Good News!",
+      "Your voucher reward has been activated. It will be applied automatically on your next transfer."
+    );
+  } else if (isNewBonusStateActive) {
+    return ToastMessage(
+      "Good News!",
+      "Your referral reward has been activated. It will be applied automatically on your next transfer."
+    );
+  } else {
+    return;
+  }
+};

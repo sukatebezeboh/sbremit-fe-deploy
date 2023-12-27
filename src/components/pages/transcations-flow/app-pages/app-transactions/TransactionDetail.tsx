@@ -392,6 +392,7 @@ export const TransactionDetails = ({
     transferCharge,
     promoDiscount,
     totalToPay,
+    voucherDiscount
   } = transaction?.meta || {};
   return (
     <Descriptions
@@ -422,6 +423,9 @@ export const TransactionDetails = ({
       </Descriptions.Item>
       <Descriptions.Item label="Promo Discount">
         {formatAmount(promoDiscount)} {exchangeBase}
+      </Descriptions.Item>
+      <Descriptions.Item label="Voucher Discount">
+        {formatAmount(voucherDiscount)} {exchangeBase}
       </Descriptions.Item>
       <Descriptions.Item label="They Get">
         {formatAmount(destinationAmount)} {destinationCurrency}

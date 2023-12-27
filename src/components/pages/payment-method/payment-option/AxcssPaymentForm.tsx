@@ -25,7 +25,7 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
       };
     `;
     //Moving forward this url should be dynamic to handle live and uat
-    paymentScript.src = `https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
+    paymentScript.src = `https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`;
     paymentFormContainerRef.current?.appendChild(paymentScript);
   }, []);
 
