@@ -146,9 +146,6 @@ export const checkReferralRewards = (user: any) => {
   const isVoucherActive = Voucher === "ACTIVE";
   const isNewBonusStateActive = newBonusState === "ACTIVE";
 
-  //newUserBonusActive 
-  //
-
   const ToastMessage = (title: string, message: string) =>
     toastAction({
       name: "user-reward-notice",
@@ -160,17 +157,22 @@ export const checkReferralRewards = (user: any) => {
       extraBtnHandler: () => {},
     });
 
-  if (isVoucherActive) {
-    return ToastMessage(
-      "Good News!",
-      "Your voucher reward has been activated. It will be applied automatically on your next transfer."
-    );
-  } else if (isNewBonusStateActive) {
-    return ToastMessage(
-      "Good News!",
-      "Your referral reward has been activated. It will be applied automatically on your next transfer."
-    );
+  if (isNewBonusStateActive) {
+    return {
+      state: true,
+      message:
+        "Your referral reward 🎁 has been activated! It will be applied automatically to your next transfer.",
+    };
+  } else if (isVoucherActive) {
+    return {
+      state: true,
+      message:
+        "Your voucher reward 🎁 has been activated! It will be applied automatically to your next transfer.",
+    };
   } else {
-    return;
+    return {
+      state: false,
+      message: "",
+    };
   }
 };

@@ -16,7 +16,7 @@ export const GetQuoteContainerStyle = styled(
   align-items: center;
   justify-content: center;
   @media (max-width: ${Breakpoint.sm}) {
-    gap: 24px;
+    gap: 18px;
   }
 `;
 
@@ -147,5 +147,12 @@ export const CalculatorInputStyles = styled.div<{ $error?: boolean }>`
     font-size: 12px;
     line-height: 130%;
     color: ${Colors.sbRed};
+  }
+`;
+
+export const RewardsNotificationStyles = styled.div`
+  width: 510px;
+  @media (max-width: ${Breakpoint.md}) {
+    width: 85vw;
   }
 `;

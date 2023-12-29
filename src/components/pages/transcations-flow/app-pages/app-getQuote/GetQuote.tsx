@@ -1,4 +1,4 @@
-import { Select } from "antd";
+import { Alert, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -12,9 +12,15 @@ import {
   getTransactionQuoteRequest,
   isWithinPaymentLimit,
 } from "./GetQuoteHelper";
-import { GetQuoteContainerStyle } from "./GetQuoteStyles";
+import {
+  GetQuoteContainerStyle,
+  RewardsNotificationStyles,
+} from "./GetQuoteStyles";
 import { ExchangeCalculator } from "./controls/ExchangeCalculator";
-import { consoleLogOnLocalHost, transferMethodsInWords } from "../../utils/reuseableUtils";
+import {
+  consoleLogOnLocalHost,
+  transferMethodsInWords,
+} from "../../utils/reuseableUtils";
 
 interface LocationState {
   transferMethod: string;
@@ -52,10 +58,6 @@ export default function GetQuote() {
     );
   };
 
-  useEffect(() => {
-    checkReferralRewards(user)
-  }, [user])
-
   return (
     <GetQuoteContainerStyle>
       <TransactionsSteps step="get-quote" />
@@ -63,6 +65,16 @@ export default function GetQuote() {
         title="Get quote"
         description="How much would you like to send to your recipient?😉"
       />
+      {checkReferralRewards(user)?.state && (
+        <RewardsNotificationStyles>
+          <Alert
+            description={checkReferralRewards(user)?.message}
+            type="info"
+            showIcon
+            closable
+          />
+        </RewardsNotificationStyles>
+      )}
       <ExchangeCalculator />
       <LargeButton
         text="Continue"
