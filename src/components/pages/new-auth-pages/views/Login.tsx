@@ -12,9 +12,10 @@ import AuthLayout, {
 import { paths } from "util/paths";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "redux/actions/actions";
+import { Tabs } from "antd";
 
 const schema = yup.object({
-  username: yup.string().email().required().label("Email"),
+  username: yup.string().required().label("Email/Phone"),
   password: yup.string().min(6).max(255).required().label("Password"),
 });
 
@@ -51,9 +52,9 @@ const Login = () => {
                 <Content>
                   <div className="form">
                     <AuthInput
-                      label="Email Address"
-                      placeholder="Enter your email address"
-                      type="email"
+                      label="Email Address/Phone number"
+                      placeholder="Enter your email address or phone number"
+                      // type="email"
                       name="username"
                       value={values.username}
                       errors={errors}
