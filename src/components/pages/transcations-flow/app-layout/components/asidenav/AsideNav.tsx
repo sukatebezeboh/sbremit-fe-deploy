@@ -67,8 +67,8 @@ export default function AsideNav() {
       //disabled: !isUserVerified,
     },
     {
-      label: "Referrals",
-      key: "referrals",
+      label: "Rewards",
+      key: "rewards",
       icon: <GiftOutlined rev={undefined} />,
       //disabled: true, //!isUserVerified,
     },
@@ -127,7 +127,7 @@ const PromotionBanner = () => {
       <span>They also get a £3 reward for using your referral code.</span>
       <div className="CTA">
         <Button
-          onClick={() => history.push(paths.REFERRALS)}
+          onClick={() => history.push(paths.REWARDS)}
           className="button"
           size="large"
           type="primary"
