@@ -85,7 +85,7 @@ const ColorList = [
   "#ffc107", // Yellow
   "#28a745", // Green
   "#6610f2", // Purple
-  "#ffc0cb", // Pink
+  "#FB6A83", // Pink
   "#17a2b8", // Turquoise
   "#343a40", // Black
   "#e83e8c", // Magenta
