@@ -8,6 +8,8 @@ import {
   Progress,
   Space,
   Statistic,
+  Tabs,
+  TabsProps,
 } from "antd";
 import _env from "env";
 import { useEffect, useState } from "react";
@@ -35,8 +37,10 @@ import {
   ReferralContentStyles,
   UsageStyles,
   PromoUserNameStyles,
+  VoucherExpiryDateStyles,
 } from "./ReferralsStyles";
 import { userAppValues } from "../../utils/useAppValues";
+import { convertDate } from "../app-transactions/TransactionHelper";
 const { Meta } = Card;
 
 function isNotAwaiting(user: any, referralSettings: any) {
@@ -103,7 +107,7 @@ export default function Referrals() {
   return (
     <ReferralContainerStyles>
       <PageTitileAndDescription
-        title="My Referral Page"
+        title="My Rewards Page"
         description="Invite a friend and earn £10 in credit!😛"
       />
       <ReferralContentStyles>
@@ -167,10 +171,12 @@ export default function Referrals() {
         </LinkContainerStyles>
       </ReferralContentStyles>
 
-      <Insight
+      <Insights
         count={referralDetails?.count}
         accruedBonus={getAccruedBonus(referralDetails?.referredUsers)}
         defaultCurrency={defaultCurrency}
+        user={user}
+        referredUsers={referralDetails?.referredUsers}
       />
 
       <Usage
@@ -181,37 +187,131 @@ export default function Referrals() {
   );
 }
 
-const Insight = ({
+const Insights = ({
   accruedBonus,
   defaultCurrency,
   count,
+  user,
+  referredUsers,
 }: {
   accruedBonus: any;
   defaultCurrency: string;
   count: number;
+  user: any;
+  referredUsers: any;
 }) => {
+  const voucherPoints = Number(user?.meta?.VoucherPoints);
+  const equivalentVoucherBonus = voucherPoints > 500 ? 5 : 0;
+  const voucherExpiryDate = convertDate(user?.meta?.VoucherExpire);
+
+  const getTotalReferredUsersByuseStatus = (
+    status: "Active" | "Used"
+  ): number => {
+    const matchedUsers: any[] = [];
+
+    referredUsers.forEach((user: any) => {
+      if (user.useStatus === status) {
+        matchedUsers.push(user);
+      }
+    });
+
+    return matchedUsers.length ?? 0;
+  };
+
+  const refferalInsightArray = [
+    {
+      title: "Total referee",
+      value: count,
+      color: "#d0cd23",
+    },
+    {
+      title: "Accrued bonus",
+      value: `${accruedBonus} ${defaultCurrency}`,
+      color: "#18a65f",
+    },
+    {
+      title: "Bonus used",
+      value: getTotalReferredUsersByuseStatus("Used"),
+      color: "#d0cd23",
+    },
+  ];
+
+  const loyaltInsightArray = [
+    {
+      title: "Total points",
+      value: voucherPoints,
+      color: voucherPoints < 500 ? "#d0cd23" : "#18a65f",
+    },
+    {
+      title: "Available balance",
+      value: `${equivalentVoucherBonus} ${defaultCurrency}`,
+      color: "#18a65f",
+    },
+  ];
+
+  const Insight = ({ type }: { type: "voucher" | "referral" }) => {
+    if (type === "referral") {
+      return (
+        <div className="_insights">
+          {refferalInsightArray.map((item, index) => (
+            <Card className="child" key={item.title + index}>
+              <Statistic
+                title={item.title}
+                value={item.value}
+                precision={0}
+                valueStyle={{ color: item.color }}
+              />
+            </Card>
+          ))}
+        </div>
+      );
+    } else if (type === "voucher") {
+      return (
+        <div className="_insights">
+          {loyaltInsightArray.map((item, index) => (
+            <Card className="child" key={item.title + index}>
+              <Statistic
+                title={item.title}
+                value={item.value}
+                precision={0}
+                valueStyle={{ color: item.color }}
+                suffix={
+                  item.title === "Available balance" && (
+                    <VoucherExpiryDateStyles>
+                      expires on ({voucherExpiryDate})
+                    </VoucherExpiryDateStyles>
+                  )
+                }
+              />
+            </Card>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Referral Insights",
+      children: <Insight type="referral" />,
+    },
+    {
+      key: "2",
+      label: "Loyalty Insights",
+      children: <Insight type="voucher" />,
+    },
+  ];
+
   return (
     <InsightStyles>
-      <Title>Insight</Title>
-      <div className="_insights">
-        <Card className="child">
-          <Statistic
-            title="Total users referred"
-            value={count}
-            precision={0}
-            valueStyle={{ color: "#d0cd23" }}
-          />
-        </Card>
-        <Card className="child">
-          <Statistic
-            title="Accrued bonus"
-            value={accruedBonus}
-            precision={0}
-            valueStyle={{ color: "#18a65f" }}
-            suffix={defaultCurrency}
-          />
-        </Card>
-      </div>
+      <Tabs
+        className="_tab"
+        defaultActiveKey="1"
+        items={items}
+        // onChange={onChange}
+      />
     </InsightStyles>
   );
 };
@@ -250,6 +350,17 @@ const Usage = ({
             100
           );
 
+          const getTitle = () => {
+            const isUseStatusUsed = user.useStatus === "Used";
+            if (percentage === 0) {
+              return "Awaiting Activation";
+            } else if (percentage !== 0 && isUseStatusUsed) {
+              return "Referral Bonus Used";
+            } else {
+              return "Activation Completed";
+            }
+          };
+
           return (
             <Card
               //hoverable
@@ -263,13 +374,17 @@ const Usage = ({
               }
             >
               <Meta
-                title={
-                  percentage === 0
-                    ? "Awaiting activation"
-                    : "Activation complete"
-                }
+                title={getTitle()}
                 description={
-                  <Progress percent={percentage} size="small" status="active" />
+                  getTitle() === "Referral Bonus Used" ? (
+                    <Progress percent={percentage} size="small" />
+                  ) : (
+                    <Progress
+                      percent={percentage}
+                      size="small"
+                      status="active"
+                    />
+                  )
                 }
               />
             </Card>

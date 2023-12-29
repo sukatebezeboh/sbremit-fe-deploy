@@ -128,20 +128,23 @@ export const InsightStyles = styled(ReferralContentStyles)`
   justify-content: flex-start;
   gap: 24px;
   align-items: center;
-  ._insights {
+  ._tab {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    gap: 24px;
-    @media (max-width: ${Breakpoint.md}) {
-      gap: 16px;
-    }
-    @media (max-width: ${Breakpoint.sm}) {
-      flex-direction: column;
-    }
-    .child {
-      flex: 1;
+    ._insights {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      gap: 24px;
+      @media (max-width: ${Breakpoint.md}) {
+        gap: 16px;
+      }
+      @media (max-width: ${Breakpoint.sm}) {
+        flex-direction: column;
+      }
+      .child {
+        flex: 1;
+      }
     }
   }
 `;
@@ -164,7 +167,7 @@ export const UsageStyles = styled(ReferralContentStyles)`
 `;
 
 export const PromoUserNameStyles = styled.span`
-  width: 120px;
+  width: 140px;
   height: 100px;
   line-height: 100px;
   text-align: center;
@@ -178,4 +181,9 @@ export const PromoUserNameStyles = styled.span`
   @media (max-width: ${Breakpoint.sm}) {
     width: 200px;
   }
+`;
+
+export const VoucherExpiryDateStyles = styled.span`
+  font-size: 12px;
+  color: ${Colors.sbRed};
 `;
