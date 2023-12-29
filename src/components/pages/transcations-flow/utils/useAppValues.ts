@@ -1,4 +1,3 @@
-
 //TODO: THIS hooks helps simplyfy the server app value
 const PayinCountries = [
   {
@@ -85,6 +84,12 @@ const PayinCountries = [
     dialCode: "+44",
     currency: "GBP",
   },
+  {
+    name: "Andorra",
+    countryCode: "AD",
+    dialCode: "+376",
+    currency: "EUR",
+  },
 ] as const;
 
 export const PayoutCountries = [
@@ -121,4 +126,3 @@ export const userAppValues = () => {
     PayoutCountries,
   };
 };
-
