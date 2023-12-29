@@ -31,7 +31,7 @@ export default function RouteConfig() {
 
       <Route path={paths.TRANSACTIONS} component={Transcations} />
       <Route path={paths.ACCOUNT_STATEMENTS} component={AccountStatement} />
-      <Route path={paths.REFERRALS} component={Referrals} />
+      <Route path={paths.REWARDS} component={Referrals} />
       <Route path={paths.DASHBOARD} component={Dashboard} />
       <Route path={paths.PROFILE} component={Profile} />
       <Route path={paths.USER_SETTINGS} component={Settings} />

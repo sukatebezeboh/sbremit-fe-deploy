@@ -38,7 +38,7 @@ export const paths = {
   TRANSFER_STATUS: "/transfer/:status/:transferId?",
   TRUELAYER_PROVIDERS: "/truelayer-providers",
   TRUSTPAYMENT_FOR_MOBILE: "/trustPayment-for-mobile",
-  REFERRALS: "/referrals",
+  REWARDS: "/rewards",
   REGISTER_COUNTRY: "/country/register",
   NOTIFICATIONS: "/notifications",
   INVITE_BUSINESS_USER: "/business/invite",

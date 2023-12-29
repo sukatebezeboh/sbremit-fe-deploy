@@ -135,7 +135,7 @@ const TruelayerProviders = lazy(
 const UserSettings = lazy(
   () => import("../components/pages/user-settings/UserSettings")
 );
-const Referrals = lazy(() => import("../components/pages/referrals/Referrals"));
+const Rewards = lazy(() => import("../components/pages/referrals/Referrals"));
 const AccountConfirmationSMSCode = lazy(
   () =>
     import(
@@ -445,8 +445,8 @@ export const Routing: IRoute[] = [
     protected: true,
   },
   {
-    path: paths.REFERRALS,
-    component: Referrals,
+    path: paths.REWARDS,
+    component: Rewards,
     protected: true,
   },
   {
