@@ -200,7 +200,9 @@ const Insights = ({
   user: any;
   referredUsers: any;
 }) => {
-  const voucherPoints = Number(user?.meta?.VoucherPoints);
+  const voucherPoints = isNaN(Number(user?.meta?.VoucherPoints))
+    ? 0
+    : Number(user?.meta?.VoucherPoints);
   const equivalentVoucherBonus = voucherPoints > 500 ? 5 : 0;
   const voucherExpiryDate = convertDate(user?.meta?.VoucherExpire);
 

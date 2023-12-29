@@ -34,8 +34,13 @@ export const convertDate = (unixTimestamp: number): string => {
     month: "long",
     day: "2-digit",
   };
-  const formattedDate = date.toLocaleString(undefined, options);
 
+  // Check if date is invalid
+  if (isNaN(date.getTime())) {
+    return "Date not found";
+  }
+
+  const formattedDate = date.toLocaleString(undefined, options);
   return formattedDate;
 };
 
@@ -43,8 +48,14 @@ export const convertDateToSeperateWithDash = (
   unixTimestamp: number
 ): string => {
   const date = new Date(unixTimestamp * 1000);
+
+  // Check if date is invalid
+  if (isNaN(date.getTime())) {
+    return "Date not found";
+  }
+
   const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based, so we add 1.
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const year = date.getFullYear().toString();
 
   return `${day}-${month}-${year}`;
