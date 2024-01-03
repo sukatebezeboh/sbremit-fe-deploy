@@ -113,6 +113,33 @@ export const signUpAction = async (data: any) => {
     });
 };
 
+export const updateEmailAddress = async (
+  values: any,
+  history: any,
+  callback: Function
+) => {
+  http.put(endpoints.SIGN_UP, values).then((res) => {
+    if (res.data.status === "200") {
+      toastAction({
+        show: true,
+        type: "success",
+        message: `An activation link has been sent to your email: ${values?.username} `,
+      });
+      callback();
+      history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: values.username });
+    } else {
+      toastAction({
+        show: true,
+        type: "error",
+        timeout: 25000,
+        message:
+          res.data.error.message ?? "An error occurred. Please try again.",
+      });
+      callback();
+    }
+  });
+};
+
 export const signInAction = (data: any, history: any) => {
   store.dispatch({ type: SUBMITTING, payload: SIGN_IN });
   axios
@@ -133,6 +160,27 @@ export const signInAction = (data: any, history: any) => {
 };
 
 const handleSignInResponse = (res: any, data: any, history?: any) => {
+  const handleLoginBasedOnIsPhoneNumber = () => {
+    if (isPhoneNumber(data.username)) {
+      return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
+    } else {
+      history.push(paths.DASHBOARD);
+      CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
+      CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
+      CookieService.put(
+        "X-SERVICE_PROVIDER",
+        res.headers["x-service-provider"],
+        30
+      );
+
+      CookieService.put("user", JSON.stringify(res.data.data));
+      store.dispatch({
+        type: AUTH,
+        payload: { isAuthenticated: true, user: res.data.data },
+      });
+    }
+  };
+
   if (res.data.status === "200") {
     // console.log(res.data);
     if (res?.data?.data?.status === 500) {
@@ -149,21 +197,8 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
       timeout: 5000,
       message: `Welcome, ${res.data.data.profile.firstName}`,
     });
-    history.push(paths.DASHBOARD);
-
-    CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
-    CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
-    CookieService.put(
-      "X-SERVICE_PROVIDER",
-      res.headers["x-service-provider"],
-      30
-    );
-
-    CookieService.put("user", JSON.stringify(res.data.data));
-    store.dispatch({
-      type: AUTH,
-      payload: { isAuthenticated: true, user: res.data.data },
-    });
+    //check if logins is phoneNumber
+    handleLoginBasedOnIsPhoneNumber();
   } else {
     const errorMessage = res.data.error.message;
     if (errorMessage.indexOf("not confirm") !== -1) {
