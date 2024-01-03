@@ -49,7 +49,7 @@ const Login = () => {
           >
             {({ errors, touched, values, handleChange }) => (
               <Form>
-                <Content>
+                <ContentStyles>
                   <div className="form">
                     <AuthInput
                       label="Email Address/Phone number"
@@ -116,7 +116,7 @@ const Login = () => {
                   }
                 /> */}
                   </ButtonsContainer>
-                </Content>
+                </ContentStyles>
               </Form>
             )}
           </Formik>
@@ -128,7 +128,7 @@ const Login = () => {
 
 export default Login;
 
-const Content = styled.div`
+export const ContentStyles = styled.div`
   margin-top: 40px;
   width: 100%;
   .form {

@@ -31,6 +31,11 @@ const SignIn = lazy(
   () => import("../components/pages/new-auth-pages/views/Login")
 );
 
+const EmailRegistration = lazy(
+  () => import("../components/pages/new-auth-pages/views/EmailRegistration")
+);
+
+
 const ForgetPassword = lazy(
   () => import("../components/pages/new-auth-pages/views/ForgotPassword")
 );
@@ -318,6 +323,12 @@ export const Routing: IRoute[] = [
   {
     path: paths.SIGN_IN,
     component: SignIn,
+    protected: false,
+    footerless: true,
+  },
+  {
+    path: paths.EMAIL_REGISTRATION,
+    component: EmailRegistration,
     protected: false,
     footerless: true,
   },

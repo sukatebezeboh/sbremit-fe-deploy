@@ -58,6 +58,7 @@ export const paths = {
   CONTACT: "/content/contact",
   MOBILE_MONEY_RATE: "/mobile-money-rate",
   AXCESS_MERCHANT: "/axcess-payment",
+  EMAIL_REGISTRATION: "/email-registration",
 
   NOT_FOUND: "*",
 
