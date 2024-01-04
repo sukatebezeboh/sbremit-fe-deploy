@@ -371,7 +371,10 @@ export const getUserDefaultCurrency = (
 };
 
 export const isPhoneNumber = (value: string) => {
-  return /^\+?\d{7,}$/.test(value);
+  //return /^\+?\d{7,}$/.test(value);
+  const cleanSpace = value.replace(/\s/g, '');
+
+  return /^\+?\d{7,}$/.test(cleanSpace) ? cleanSpace : null;
 };
 
 export const generateRandomString = () => {
