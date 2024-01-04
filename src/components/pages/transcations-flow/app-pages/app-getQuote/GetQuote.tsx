@@ -65,7 +65,7 @@ export default function GetQuote() {
         title="Get quote"
         description="How much would you like to send to your recipient?😉"
       />
-      {checkReferralRewards(user)?.state && (
+      {/* {checkReferralRewards(user)?.state && (
         <RewardsNotificationStyles>
           <Alert
             description={checkReferralRewards(user)?.message}
@@ -74,7 +74,7 @@ export default function GetQuote() {
             closable
           />
         </RewardsNotificationStyles>
-      )}
+      )} */}
       <ExchangeCalculator />
       <LargeButton
         text="Continue"

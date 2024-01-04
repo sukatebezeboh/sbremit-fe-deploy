@@ -161,24 +161,24 @@ export const signInAction = (data: any, history: any) => {
 
 const handleSignInResponse = (res: any, data: any, history?: any) => {
   const handleLoginBasedOnIsPhoneNumber = () => {
-    if (isPhoneNumber(data.username)) {
-      return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
-    } else {
-      history.push(paths.DASHBOARD);
-      CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
-      CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
-      CookieService.put(
-        "X-SERVICE_PROVIDER",
-        res.headers["x-service-provider"],
-        30
-      );
+    // if (isPhoneNumber(data.username)) {
+    //   return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
+    // } else {
+    history.push(paths.DASHBOARD);
+    CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
+    CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
+    CookieService.put(
+      "X-SERVICE_PROVIDER",
+      res.headers["x-service-provider"],
+      30
+    );
 
-      CookieService.put("user", JSON.stringify(res.data.data));
-      store.dispatch({
-        type: AUTH,
-        payload: { isAuthenticated: true, user: res.data.data },
-      });
-    }
+    CookieService.put("user", JSON.stringify(res.data.data));
+    store.dispatch({
+      type: AUTH,
+      payload: { isAuthenticated: true, user: res.data.data },
+    });
+    //}
   };
 
   if (res.data.status === "200") {

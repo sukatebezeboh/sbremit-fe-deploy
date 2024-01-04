@@ -299,11 +299,11 @@ const Insights = ({
       label: "Referral Insights",
       children: <Insight type="referral" />,
     },
-    {
-      key: "2",
-      label: "Loyalty Insights",
-      children: <Insight type="voucher" />,
-    },
+    // {
+    //   key: "2",
+    //   label: "Loyalty Insights",
+    //   children: <Insight type="voucher" />,
+    // },
   ];
 
   return (

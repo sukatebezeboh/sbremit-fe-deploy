@@ -422,11 +422,11 @@ export const TransactionDetails = ({
         {formatAmount(transferCharge)} {exchangeBase}
       </Descriptions.Item>
       <Descriptions.Item label="Promo Discount">
-        {formatAmount(promoDiscount)} {exchangeBase}
+        - {formatAmount(promoDiscount)} {exchangeBase}
       </Descriptions.Item>
-      <Descriptions.Item label="Voucher Discount">
-        {formatAmount(voucherDiscount)} {exchangeBase}
-      </Descriptions.Item>
+      {/* <Descriptions.Item label="Voucher Discount">
+        - {formatAmount(voucherDiscount)} {exchangeBase}
+      </Descriptions.Item> */}
       <Descriptions.Item label="They Get">
         {formatAmount(destinationAmount)} {destinationCurrency}
       </Descriptions.Item>
