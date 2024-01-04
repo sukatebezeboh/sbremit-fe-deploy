@@ -125,8 +125,15 @@ const ChnagePasswordModal = ({ open, setOpen }: ChnagePasswordProps) => {
   };
 
   const onFormFinish = (values: any) => {
-    console.log(values);
     changePasswordAction(values, () => handleCancel());
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
+
+  const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
   };
 
   const onFormFinishFailed = () => {};
@@ -178,19 +185,25 @@ const ChnagePasswordModal = ({ open, setOpen }: ChnagePasswordProps) => {
             rules={[
               {
                 required: true,
-                message: "Password input new password!",
+                message: "Please input new password!",
               },
               { min: 8, message: "Min password length is 8" },
               { max: 20, message: "Max password length is 20" },
             ]}
           >
-            <Input.Password size="large" placeholder="New password" />
+            <Input.Password
+              size="large"
+              placeholder="New password"
+              onPaste={handlePaste}
+              onCopy={handleCopy}
+            />
           </Form.Item>
           <Form.Item
             name="confirmation"
             label="Confirm New Password"
             rules={[
               {
+                required: true,
                 validator: (_, value) => {
                   if (value !== form.getFieldValue("password")) {
                     return Promise.reject(
@@ -203,7 +216,12 @@ const ChnagePasswordModal = ({ open, setOpen }: ChnagePasswordProps) => {
               },
             ]}
           >
-            <Input.Password size="large" placeholder="Confirm new password" />
+            <Input.Password
+              size="large"
+              placeholder="Confirm new password"
+              onPaste={handlePaste}
+              onCopy={handleCopy}
+            />
           </Form.Item>
         </Form>
       </div>
