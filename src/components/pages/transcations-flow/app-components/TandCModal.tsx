@@ -37,6 +37,7 @@ export default function TandCModal() {
       //   onCancel={handleCancel}
       width={410}
       footer={null}
+      closeIcon={null}
     >
       <ModalContentStyle>
         <div className="section_1">
@@ -88,7 +89,7 @@ const ModalContentStyle = styled.div`
       text-align: center;
       font-size: 24px;
       font-weight: 700;
-      line-height: 160%;
+      line-height: 150%;
       letter-spacing: -1.2px;
       margin: 0;
     }
