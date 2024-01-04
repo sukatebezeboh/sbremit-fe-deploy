@@ -8,6 +8,7 @@ export const DashboardContainerStyle = styled.div`
   gap: 12px;
   padding: 48px 0px;
   //overflow-x: hidden;
+  position: relative;
 
   @media (max-width: ${Breakpoint.xl}) {
     gap: 8px;
@@ -197,10 +198,24 @@ export const AddNewTransfer = styled.button`
   }
 `;
 
-export const FabAddNewTransfer = styled.div`
+export const FabAddNewTransferStyles = styled.div`
   display: none;
+  width: 100%;
+  justify-content: flex-end;
+
+  Button {
+    height: 48px;
+    border: 1.5px solid white;
+
+    border-radius: 14px;
+    box-shadow: 0px 4.164px 5.32px 0px rgba(0, 0, 0, 0.08),
+      0px 11.45px 17.869px 0px rgba(0, 0, 0, 0.08);
+  }
   @media (max-width: ${Breakpoint.xl}) {
+    position: absolute;
+    margin-top: 180px;
     display: flex;
+    z-index: 10;
   }
 `;
 

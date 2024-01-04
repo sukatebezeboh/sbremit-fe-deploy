@@ -17,7 +17,7 @@ import {
   DashboardAnalyticsStyle,
   DashboardContainerStyle,
   DashboardTransactionsStyle,
-  FabAddNewTransfer,
+  FabAddNewTransferStyles,
   ForUnverifiedUserMsgStyles,
   Title,
 } from "./DashboardSyles";
@@ -82,8 +82,20 @@ export default function Dashboard() {
   return (
     <DashboardContainerStyle>
       {!isUserVerified && <ForUnverifiedUserMsg />}
+
+      <FabAddNewTransferStyles>
+        <Button
+          type="primary"
+          icon={<PlusOutlined rev={undefined} />}
+          onClick={addNewTransfer}
+        >
+          Start transfer
+        </Button>
+      </FabAddNewTransferStyles>
+
       <DashboardAnalyticsStyle>
         <Title>Analytics</Title>
+
         <div className="anlytics_cards">
           {AnalyticsData.map((card, index) => (
             <AnalyticCard
@@ -112,16 +124,6 @@ export default function Dashboard() {
       <DashboardTransactionsStyle>
         <Transcations page="dashboard" />
       </DashboardTransactionsStyle>
-      <FabAddNewTransfer>
-        <FloatButton
-          style={{ padding: 6, width: 62 }}
-          icon={<PlusOutlined rev={undefined} />}
-          type="primary"
-          shape="square"
-          onClick={addNewTransfer}
-          description="Start"
-        />
-      </FabAddNewTransfer>
     </DashboardContainerStyle>
   );
 }
