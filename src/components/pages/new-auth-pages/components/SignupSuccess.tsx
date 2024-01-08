@@ -8,16 +8,25 @@ import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   setShowSuccess: Dispatch<SetStateAction<boolean>>;
+  isEmailRegistration: boolean;
 }
 
-const SignupSuccess = ({ setShowSuccess }: Props) => {
+const SignupSuccess = ({ setShowSuccess, isEmailRegistration }: Props) => {
   const { push } = useHistory();
 
   return (
     <Container>
       <BiCheckCircle color={theme.color.primary} size={120} />
-      <h2>Account successfully created!</h2>
-      <p>Your account is verified. Proceed to login with your new details</p>
+      <h2>
+        {isEmailRegistration
+          ? "Account successfully updated!"
+          : "Account successfully created!"}
+      </h2>
+      <p>
+        {isEmailRegistration
+          ? "Your email is now verified. proceed to login"
+          : "Your account is verified. Proceed to login with your new details"}
+      </p>
       <AuthButton
         title="Continue"
         onClick={() => {
