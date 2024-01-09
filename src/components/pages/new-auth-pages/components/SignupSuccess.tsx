@@ -24,7 +24,7 @@ const SignupSuccess = ({ setShowSuccess, isEmailRegistration }: Props) => {
       </h2>
       <p>
         {isEmailRegistration
-          ? "Your email is now verified. proceed to login"
+          ? "Your email is now verified. proceed to login using your email."
           : "Your account is verified. Proceed to login with your new details"}
       </p>
       <AuthButton
