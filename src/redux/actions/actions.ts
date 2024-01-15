@@ -126,7 +126,10 @@ export const updateEmailAddress = async (
         message: `An activation link has been sent to your email: ${values?.username} `,
       });
       callback();
-      history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: values.username, isEmailRegistration: true });
+      history.push(paths.CONFIRM_ACCOUNT_EMAIL, {
+        username: values.username,
+        isEmailRegistration: true,
+      });
     } else {
       toastAction({
         show: true,
@@ -164,20 +167,20 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
     if (isPhoneNumber(data.username)) {
       return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
     } else {
-    history.push(paths.DASHBOARD);
-    CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
-    CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
-    CookieService.put(
-      "X-SERVICE_PROVIDER",
-      res.headers["x-service-provider"],
-      30
-    );
+      history.push(paths.DASHBOARD);
+      CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
+      CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
+      CookieService.put(
+        "X-SERVICE_PROVIDER",
+        res.headers["x-service-provider"],
+        30
+      );
 
-    CookieService.put("user", JSON.stringify(res.data.data));
-    store.dispatch({
-      type: AUTH,
-      payload: { isAuthenticated: true, user: res.data.data },
-    });
+      CookieService.put("user", JSON.stringify(res.data.data));
+      store.dispatch({
+        type: AUTH,
+        payload: { isAuthenticated: true, user: res.data.data },
+      });
     }
   };
 
@@ -408,7 +411,12 @@ const signOutOnClient = () => {
 
   store.dispatch({
     type: AUTH,
-    payload: { isAuthenticated: false, user: undefined },
+    payload: {
+      isAuthenticated: false,
+      user: undefined,
+      verification: true,
+      isRewardModalChecked: false,
+    },
   });
   store.dispatch({
     type: RESET_TRANSFER,

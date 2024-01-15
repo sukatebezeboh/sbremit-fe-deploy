@@ -26,6 +26,7 @@ import { AUTH } from "redux/actionTypes";
 import { paths } from "util/paths";
 import TandCModal from "../app-components/TandCModal";
 import { userIsVerified } from "../utils/reuseableUtils";
+import RewardModal from "../app-components/RewardModal";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
@@ -106,7 +107,9 @@ export default function AppLayout() {
             </div>
           </div>
         </ApplayoutContainerStlye>
+        {/* General popups/modals */}
         <TandCModal />
+        <RewardModal />
       </ApplayoutStlye>
     </ConfigProvider>
   );

@@ -18,17 +18,15 @@ import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
 import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import { generateAccountStatementPDF } from "../../utils/generateAccountStatementPdf";
 import { getFirstLetter } from "../../utils/reuseableUtils";
 import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
 import {
-  convertDate,
-  convertDateToSeperateWithDash,
+  downloadStatementPdf,
   formatTransactionStatus,
   formatTransactionsReversed,
-  thisRecipient,
+  thisRecipient
 } from "./TransactionHelper";
 import {
   RecipientName,
@@ -265,62 +263,6 @@ export default function Transcations({ page }: TranscationsProps) {
     }
   };
 
-  const downloadStatementPdf = async () => {
-    setDownloadState(true);
-    const { address1, address2, firstName, lastName } = user.profile;
-    const { code } = user.referral;
-    const customerName = `${firstName} ${lastName}`;
-    const customerAddress = address1;
-    const accountNumber = code;
-
-    const startDate =
-      selecetdRows[selecetdRows.length - 1].recipient.dateCreated;
-    const endDate = selecetdRows[0].recipient.dateCreated;
-
-    const periodValue = `${convertDateToSeperateWithDash(
-      startDate
-    )} to ${convertDateToSeperateWithDash(endDate)}`;
-    const periodHeaderTitle = `Period: ${convertDate(
-      startDate
-    )} to ${convertDate(endDate)}`;
-    const selectedTransaction: any = [];
-
-    selecetdRows
-      .slice()
-      .reverse()
-      .forEach((selected: any, index: number) => {
-        const data = selected.recipient;
-        const recipientFirstName = thisRecipient(
-          recipients,
-          data.recipientId
-        )?.firstName;
-        const recipientLastName = thisRecipient(
-          recipients,
-          data.recipientId
-        )?.lastName;
-        selectedTransaction.push([
-          `${convertDateToSeperateWithDash(data.dateCreated)}`,
-          `SBR${data.meta.transactionId}`,
-          `${data.meta.exchangeRate}`,
-          `${data.originCurrency} ${data.originAmount}`,
-          `${data.destinationAmount} ${data.destinationCurrency}`,
-          `${recipientFirstName} ${recipientLastName}`,
-        ]);
-        return selectedTransaction;
-      });
-    try {
-      await generateAccountStatementPDF({
-        customerName,
-        customerAddress,
-        accountNumber,
-        periodValue,
-        periodHeaderTitle,
-        selectedTransaction,
-      });
-      setDownloadState(false);
-    } catch (error) {}
-  };
-
   return (
     <TransactionsContainerStyles>
       {page === "dashboard" ? (
@@ -393,7 +335,14 @@ export default function Transcations({ page }: TranscationsProps) {
                 <Tooltip title="Click to dwonload selected transaction(s)">
                   <Button
                     disabled={!hasSelected}
-                    onClick={downloadStatementPdf}
+                    onClick={() =>
+                      downloadStatementPdf(
+                        user,
+                        selecetdRows,
+                        recipients,
+                        setDownloadState
+                      )
+                    }
                     loading={downloadState}
                   >
                     Download
