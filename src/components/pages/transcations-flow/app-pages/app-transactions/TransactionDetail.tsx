@@ -321,6 +321,7 @@ export const RecipientDetails = ({
     pickupPoint,
     bankName,
     accountNumber,
+    recipientAccountNumber,
   } = recipient?.profile || {};
   return (
     <Descriptions
@@ -361,7 +362,7 @@ export const RecipientDetails = ({
             {bankName || "--"}
           </Descriptions.Item>
           <Descriptions.Item label="Account No">
-            {accountNumber || "--"}
+            {accountNumber || recipientAccountNumber || "--"}
           </Descriptions.Item>
         </>
       )}
@@ -392,7 +393,7 @@ export const TransactionDetails = ({
     transferCharge,
     promoDiscount,
     totalToPay,
-    voucherDiscount
+    voucherDiscount,
   } = transaction?.meta || {};
   return (
     <Descriptions
