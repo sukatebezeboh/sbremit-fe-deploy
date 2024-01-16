@@ -1,6 +1,6 @@
 import { Card, Statistic, TabsProps, Tabs } from "antd";
 import { useState } from "react";
-import { getTotalReferredUsersByuseStatus } from "../ReferralsHelper";
+import { getTotalReferredUsersByuseStatus, getTotalUsedVouchers } from "../ReferralsHelper";
 import { InsightStyles } from "../ReferralsStyles";
 import { UsageAndHistory } from "./UsageAndHistory";
 
@@ -64,7 +64,7 @@ export const Insights = ({
     },
     {
       title: "Total used",
-      value: `${equivalentVoucherBonus}`,
+      value: getTotalUsedVouchers(user),
       color: "#18a65f",
     },
   ];

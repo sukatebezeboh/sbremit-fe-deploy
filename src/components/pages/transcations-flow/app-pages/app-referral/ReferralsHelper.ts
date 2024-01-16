@@ -59,6 +59,21 @@ export const getVouchers = (user: any): VoucherProps[] => {
   return vouchersArrays ?? [];
 };
 
+export const getTotalUsedVouchers = (user: any): number => {
+  const status = "USED";
+  const matchedVoucher: any[] = [];
+  const { Vouchers } = user.meta || {};
+  const vouchersArrays = Vouchers && JSON.parse(Vouchers);
+
+  vouchersArrays.forEach((voucher: any) => {
+    if (voucher.VoucherBonus === status) {
+      matchedVoucher.push(voucher);
+    }
+  });
+
+  return matchedVoucher.length ?? 0;
+};
+
 export const getVoucherStatusColor = (voucherBonus: string) => {
   if (voucherBonus === "USED") {
     return "#888888";
