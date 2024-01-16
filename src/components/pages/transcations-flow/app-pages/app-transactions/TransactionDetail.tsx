@@ -9,7 +9,7 @@ import {
   Space,
   Steps,
   Tabs,
-  TabsProps
+  TabsProps,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -118,7 +118,8 @@ export const TransactionDetail = ({
               </Space>
               <ExchnageStyles>
                 <span>
-                  {originCurrency || "N/A"} {formatAmount(originAmount) || "N/A"}
+                  {originCurrency || "N/A"}{" "}
+                  {formatAmount(originAmount) || "N/A"}
                 </span>
                 <SwapOutlined className="icon" rev={undefined} />
                 <span>
@@ -320,6 +321,7 @@ export const RecipientDetails = ({
     pickupPoint,
     bankName,
     accountNumber,
+    recipientAccountNumber,
   } = recipient?.profile || {};
   return (
     <Descriptions
@@ -360,7 +362,7 @@ export const RecipientDetails = ({
             {bankName || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item label="Account No">
-            {accountNumber || "N/A"}
+            {accountNumber || recipientAccountNumber || "N/A"}
           </Descriptions.Item>
         </>
       )}
@@ -391,7 +393,7 @@ export const TransactionDetails = ({
     transferCharge,
     promoDiscount,
     totalToPay,
-    voucherDiscount
+    voucherDiscount,
   } = transaction?.meta || {};
   return (
     <Descriptions
