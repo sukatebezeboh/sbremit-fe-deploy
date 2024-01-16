@@ -164,34 +164,23 @@ export const UsageAndHistory = ({
           ) : (
             getVouchers(authUser).map((item, index) => (
               <div className="_voucher" key={"voucher_" + index}>
-                <div className="_ticket_label">
-                  {/* generate four circles */}
-                  {Array(4)
-                    .fill(null)
-                    .map((_, index) => (
-                      <div
-                        className="_circle"
-                        key={"_circle" + index}
-                        style={{
-                          top: index * 40,
-                        }}
-                      ></div>
-                    ))}
-                  <span>Cashback</span>
-                </div>
                 <div className="_content_label">
-                  <h1>${item.Bonus}</h1>
-                  <div className="_date">
-                    <div className="_start_date">
-                      <span>start date</span>
-                      <span>
-                        {convertDateToSeperateWithDash(item.Activated)}
-                      </span>
-                    </div>
-                    <ArrowRightOutlined rev={undefined} />
-                    <div className="_end_date">
-                      <span>end date</span>
-                      <span>{convertDateToSeperateWithDash(item.Expires)}</span>
+                  <div className="_top">
+                    <h1>${item.Bonus}</h1>
+                    <div className="_date">
+                      <div className="_start_date">
+                        <span>start date</span>
+                        <span>
+                          {convertDateToSeperateWithDash(item.Activated)}
+                        </span>
+                      </div>
+                      <ArrowRightOutlined rev={undefined} />
+                      <div className="_end_date">
+                        <span>end date</span>
+                        <span>
+                          {convertDateToSeperateWithDash(item.Expires)}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <div className="_pt_status">

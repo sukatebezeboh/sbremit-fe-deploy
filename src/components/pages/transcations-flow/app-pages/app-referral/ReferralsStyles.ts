@@ -184,88 +184,71 @@ export const UsageStyles = styled(ReferralContentStyles)`
   ._history {
     ._voucher {
       height: 220px;
-      border-radius: 16px;
+      border-radius: 8px;
       background: #fff;
       border: 1px solid rgba(0, 0, 0, 0.08);
-      border-left: none;
+      /* border-left: none; */
       overflow: hidden;
       display: flex;
       align-items: center;
-      max-height: 200px;
+      max-height: 230px;
 
-      ._ticket_label {
-        height: 100%;
-        width: 67px;
-        box-sizing: border-box;
-        flex-shrink: 0;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: ${Colors.sbGreen};
-        position: relative;
-
-        span {
-          transform: rotate(-90deg);
-          color: ${Colors.bgwhite};
-          font-size: 20px;
-          font-weight: 600;
-          text-transform: uppercase;
-        }
-
-        ._circle {
-          position: absolute;
-          width: 24px;
-          height: 24px;
-          background: ${Colors.bgwhite};
-          border-radius: 50px;
-          left: 0;
-          margin-left: -12px;
-          margin-top: 50%;
-        }
-      }
       ._content_label {
-        padding: 24px 16px;
+        /* padding: 24px 16px; */
 
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
         flex-shrink: 0;
-        width: 80%;
+        width: 100%;
+        height: 100%;
         gap: 10px;
+        background: #0d8d70;
         //background-color: red;
         /* width: max-content; */
+        ._top {
+          padding: 24px 16px;
+          width: 100%;
+          height: 65%;
 
-        h1 {
-          color: rgba(0, 0, 0, 0.88);
-          font-size: 42px;
-          font-weight: 600;
-          text-transform: uppercase;
-          margin: 0;
-        }
-        ._date {
           display: flex;
+          flex-direction: column;
           justify-content: space-between;
           align-items: center;
-          width: 100%;
-
-          ._start_date,
-          ._end_date {
+          gap: 10px;
+          h1 {
+            color: #fff;
+            font-size: 42px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+          }
+          ._date {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
-            text-align: left;
-            span {
-              color: rgba(0, 0, 0, 0.6);
-              font-size: 12px;
-              font-weight: 400;
-              text-transform: capitalize;
-            }
-            span:last-child {
-              color: rgba(0, 0, 0, 0.88);
-              font-size: 14px;
-              font-weight: 500;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            color: #fff; // icon color
+
+            ._start_date,
+            ._end_date {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              text-align: left;
+              span {
+                color: #fff;
+                font-size: 12px;
+                font-weight: 400;
+                text-transform: capitalize;
+              }
+              span:last-child {
+                color: #fff;
+                font-size: 14px;
+                font-weight: 500;
+              }
             }
           }
         }
@@ -274,8 +257,10 @@ export const UsageStyles = styled(ReferralContentStyles)`
           justify-content: space-between;
           align-items: center;
           width: 100%;
+          height: 35%;
           border-top: 1px solid rgba(0, 0, 0, 0.08);
-          padding-top: 16px;
+          padding: 20px 16px;
+          background: #fff;
           ._pt {
             display: flex;
             gap: 6px;
