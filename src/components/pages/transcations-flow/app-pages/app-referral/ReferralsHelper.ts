@@ -65,7 +65,7 @@ export const getTotalUsedVouchers = (user: any): number => {
   const { Vouchers } = user.meta || {};
   const vouchersArrays = Vouchers && JSON.parse(Vouchers);
 
-  vouchersArrays.forEach((voucher: any) => {
+  vouchersArrays?.forEach((voucher: any) => {
     if (voucher.VoucherBonus === status) {
       matchedVoucher.push(voucher);
     }
@@ -84,4 +84,42 @@ export const getVoucherStatusColor = (voucherBonus: string) => {
   else {
     return "#CF0921";
   }
+};
+
+export const getAccruedAndUsedBonus = (
+  accruedBonus: number,
+  referredUsers: any,
+  user: any
+) => {
+  const { Referrals } = user?.referral || {};
+  const ReferralsArray = Referrals && JSON.parse(Referrals);
+  const uplineBonus = 3; // This value is confirmed and agreed from the backend
+
+  const getTotalReferralsBonusUsed = getTotalReferredUsersByuseStatus(
+    "Used",
+    referredUsers
+  );
+
+  const isUserHasUplineBonusAndIsActive = ReferralsArray?.some(
+    (referral: any) =>
+      referral.Bonus === uplineBonus && referral.ReferralBonus === "ACTIVE"
+  );
+
+  const isUserHasUplineBonusAndIsUsed = ReferralsArray?.some(
+    (referral: any) =>
+      referral.Bonus === uplineBonus && referral.ReferralBonus === "USED"
+  );
+
+  const accruedBonusResult = isUserHasUplineBonusAndIsActive
+    ? accruedBonus + uplineBonus
+    : accruedBonus;
+
+  const totalReferralBonusUsedResult = isUserHasUplineBonusAndIsUsed
+    ? getTotalReferralsBonusUsed + uplineBonus
+    : getTotalReferralsBonusUsed;
+
+  return {
+    accruedBonus: accruedBonusResult ?? 0,
+    totalReferralBonusUsed: totalReferralBonusUsedResult ?? 0,
+  };
 };

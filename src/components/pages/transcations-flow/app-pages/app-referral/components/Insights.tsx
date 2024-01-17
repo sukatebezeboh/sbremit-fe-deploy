@@ -1,11 +1,14 @@
-import { Card, Statistic, TabsProps, Tabs } from "antd";
+import { Card, Statistic, Tabs, TabsProps } from "antd";
 import { useState } from "react";
-import { getTotalReferredUsersByuseStatus, getTotalUsedVouchers } from "../ReferralsHelper";
+import {
+  getAccruedAndUsedBonus,
+  getTotalUsedVouchers,
+} from "../ReferralsHelper";
 import { InsightStyles } from "../ReferralsStyles";
 import { UsageAndHistory } from "./UsageAndHistory";
 
 interface InsightsProps {
-  accruedBonus: any;
+  accruedBonus: number;
   defaultCurrency: string;
   count: number;
   user: any;
@@ -33,6 +36,18 @@ export const Insights = ({
   // If voucherPoints is greater than 500, convert the voucher to 5 base currency; otherwise, no conversion (0 bonus).
   const equivalentVoucherBonus = voucherPoints > 500 ? 5 : 0;
 
+  const accuredBonuses = getAccruedAndUsedBonus(
+    accruedBonus,
+    referredUsers,
+    user
+  ).accruedBonus;
+
+  const usedBonuses = getAccruedAndUsedBonus(
+    accruedBonus,
+    referredUsers,
+    user
+  ).totalReferralBonusUsed;
+
   const refferalInsightArray = [
     {
       title: "Total referee",
@@ -41,12 +56,12 @@ export const Insights = ({
     },
     {
       title: "Accrued bonus",
-      value: `${accruedBonus} ${defaultCurrency}`,
+      value: `${accuredBonuses} ${defaultCurrency}`,
       color: "#18a65f",
     },
     {
       title: "Bonus used",
-      value: getTotalReferredUsersByuseStatus("Used", referredUsers),
+      value: usedBonuses,
       color: "#d0cd23",
     },
   ];

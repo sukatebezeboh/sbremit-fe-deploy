@@ -1,11 +1,5 @@
 import { TwitterOutlined, WhatsAppOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  Space
-} from "antd";
+import { Avatar, Button, Card, Divider, Space } from "antd";
 import _env from "env";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -23,7 +17,7 @@ import {
   LinkContainerStyles,
   LinkStyles,
   ReferralContainerStyles,
-  ReferralContentStyles
+  ReferralContentStyles,
 } from "./ReferralsStyles";
 import { Insights } from "./components/Insights";
 const { Meta } = Card;
@@ -78,7 +72,7 @@ export default function Referrals() {
 
   const defaultCurrency = getUserDefaultCurrency() ?? "";
 
-  const getAccruedBonus = (users: any) => {
+  const getAccruedBonus = (users: any): number => {
     const filteredUsers = users?.filter(
       (user: any) =>
         user.useStatus === "Active" && isNotAwaiting(user, referralSettings)
