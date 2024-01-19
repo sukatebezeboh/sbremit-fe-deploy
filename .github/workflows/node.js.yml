@@ -4,9 +4,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "auth-page-flow-redesign" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "auth-page-flow-redesign" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
