@@ -70,7 +70,7 @@ export default function Profile() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(maxN/Awidth: 500px)");
+    const mediaQuery = window.matchMedia("(max-width: 500px)");
     setIsMobile(mediaQuery.matches);
 
     const handleMediaQueryChange = (event: any) => {
