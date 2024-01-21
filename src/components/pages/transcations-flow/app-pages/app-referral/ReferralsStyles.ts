@@ -291,7 +291,7 @@ export const UsageStyles = styled(ReferralContentStyles)`
 `;
 
 export const PromoUserNameStyles = styled.span`
-  width: 140px;
+  width: 250px;
   height: 100px;
   line-height: 100px;
   text-align: center;
@@ -304,7 +304,7 @@ export const PromoUserNameStyles = styled.span`
   color: "white";
   text-transform: capitalize;
   @media (max-width: ${Breakpoint.sm}) {
-    width: 200px;
+   // width: 200px;
   }
 `;
 
