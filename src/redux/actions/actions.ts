@@ -126,7 +126,7 @@ export const updateEmailAddress = async (
         message: `An activation link has been sent to your email: ${values?.username} `,
       });
       callback();
-      history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: values.username });
+      history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: values.username, isEmailRegistration: true });
     } else {
       toastAction({
         show: true,
@@ -161,9 +161,9 @@ export const signInAction = (data: any, history: any) => {
 
 const handleSignInResponse = (res: any, data: any, history?: any) => {
   const handleLoginBasedOnIsPhoneNumber = () => {
-    // if (isPhoneNumber(data.username)) {
-    //   return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
-    // } else {
+    if (isPhoneNumber(data.username)) {
+      return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
+    } else {
     history.push(paths.DASHBOARD);
     CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
     CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
@@ -178,7 +178,7 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
       type: AUTH,
       payload: { isAuthenticated: true, user: res.data.data },
     });
-    //}
+    }
   };
 
   if (res.data.status === "200") {
