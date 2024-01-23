@@ -77,7 +77,7 @@ const AxcssPaymentForm: React.FC<PaymentFormProps> = ({
 
       // Append the payment script with onload callback
       var paymentScript = document.createElement('script');
-      paymentScript.src = 'https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}';
+      paymentScript.src = 'https://${process.env.REACT_APP_AXCESS_PAYMENT_SITE_REFERENCE}/v1/paymentWidgets.js?checkoutId=${checkoutId}';
       paymentScript.onload = onPaymentWidgetReady;
       document.body.appendChild(paymentScript);
     `;
