@@ -76,10 +76,13 @@ const filterRecipients = (
     const searchLowerCase = searchValue.toLowerCase();
     const transferMethodInWord =
       transferMethodsInWords[transferMethod]?.toLowerCase();
+    const isRecipientSoftDeleted = recipient?.status === "SOFT_DELETED";
 
     return (
       recipient?.profile?.transferMethod.toLowerCase() ===
-        transferMethodInWord && fullName.includes(searchLowerCase)
+        transferMethodInWord &&
+      fullName.includes(searchLowerCase) &&
+      !isRecipientSoftDeleted
     );
   });
   return filtered;
