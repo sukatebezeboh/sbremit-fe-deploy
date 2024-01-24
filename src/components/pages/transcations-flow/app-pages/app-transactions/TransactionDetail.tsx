@@ -3,7 +3,6 @@ import { SwapOutlined } from "@ant-design/icons";
 import {
   Alert,
   Badge,
-  Button,
   Descriptions,
   Divider,
   Modal,
@@ -14,7 +13,11 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { TRANSFER } from "redux/actionTypes";
 import { constants } from "util/constants";
+import { paths } from "util/paths";
+import { TrnsferDetailsActionButtons } from "../../utils/ReusablePageContent";
 import {
   formatAmount,
   getPaymentEstimatedTime,
@@ -40,10 +43,6 @@ import {
   TransactionDetailStyle,
   TransactionIdStyles,
 } from "./TranscationStyles";
-import { paths } from "util/paths";
-import { useHistory } from "react-router-dom";
-import { TRANSFER } from "redux/actionTypes";
-import { TrnsferDetailsActionButtons } from "../../utils/ReusablePageContent";
 
 interface TransactionDetailProps {
   open: boolean;
@@ -119,12 +118,13 @@ export const TransactionDetail = ({
               </Space>
               <ExchnageStyles>
                 <span>
-                  {originCurrency || "-"} {formatAmount(originAmount) || "-"}
+                  {originCurrency || "N/A"}{" "}
+                  {formatAmount(originAmount) || "N/A"}
                 </span>
                 <SwapOutlined className="icon" rev={undefined} />
                 <span>
-                  {destinationCurrency || "-"}{" "}
-                  {formatAmount(destinationAmount) || "-"}
+                  {destinationCurrency || "N/A"}{" "}
+                  {formatAmount(destinationAmount) || "N/A"}
                 </span>
               </ExchnageStyles>
             </FlexContainerWithSpaceBtw>
@@ -331,16 +331,16 @@ export const RecipientDetails = ({
       layout={layout}
     >
       <Descriptions.Item label="Name">
-        {recipient?.firstName || "--"} {recipient?.lastName || "--"}
+        {recipient?.firstName || "N/A"} {recipient?.lastName || "N/A"}
       </Descriptions.Item>
       {/* Mobile Money */}
       {transferMethod === "mobile_money" && (
         <>
           <Descriptions.Item label="Network provider">
-            {mobileMoneyProvider || "--"}
+            {mobileMoneyProvider || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item label="Mobile No">
-            {phoneCode || "--"} {mobile || "--"}
+            {phoneCode || "N/A"} {mobile || "N/A"}
           </Descriptions.Item>
         </>
       )}
@@ -348,10 +348,10 @@ export const RecipientDetails = ({
       {transferMethod === "cash_pickup" && (
         <>
           <Descriptions.Item label="Pickup Point">
-            {pickupPoint || "--"}
+            {pickupPoint || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item label="Mobile No">
-            {phoneCode || "--"} {mobile || "--"}
+            {phoneCode || "N/A"} {mobile || "N/A"}
           </Descriptions.Item>
         </>
       )}
@@ -359,10 +359,10 @@ export const RecipientDetails = ({
       {transferMethod === "bank_transfer" && (
         <>
           <Descriptions.Item label="Bank Name">
-            {bankName || "--"}
+            {bankName || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item label="Account No">
-            {accountNumber || recipientAccountNumber || "--"}
+            {accountNumber || recipientAccountNumber || "N/A"}
           </Descriptions.Item>
         </>
       )}
@@ -405,7 +405,7 @@ export const TransactionDetails = ({
       <Descriptions.Item label="Transfer Method">
         {replaceUnderScore(
           transferMethodsInWords[transferMethod]
-        )?.toUpperCase() || "--"}
+        )?.toUpperCase() || "N/A"}
       </Descriptions.Item>
       <Descriptions.Item label="You send">
         {formatAmount(originAmount)} {originCurrency}
@@ -414,7 +414,7 @@ export const TransactionDetails = ({
         1 {exchangeBase} = {formatAmount(exchangeRate)} {exchangeTarget}
       </Descriptions.Item>
       <Descriptions.Item label="Referral Discount">
-        {formatAmount(referralDiscount)} {exchangeBase}
+        - {formatAmount(referralDiscount)} {exchangeBase}
       </Descriptions.Item>
       <Descriptions.Item label="Operator fee">
         + {formatAmount(serviceFee)} {exchangeBase}
@@ -425,9 +425,9 @@ export const TransactionDetails = ({
       <Descriptions.Item label="Promo Discount">
         - {formatAmount(promoDiscount)} {exchangeBase}
       </Descriptions.Item>
-      {/* <Descriptions.Item label="Voucher Discount">
+      <Descriptions.Item label="Voucher Discount">
         - {formatAmount(voucherDiscount)} {exchangeBase}
-      </Descriptions.Item> */}
+      </Descriptions.Item>
       <Descriptions.Item label="They Get">
         {formatAmount(destinationAmount)} {destinationCurrency}
       </Descriptions.Item>
