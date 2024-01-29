@@ -104,7 +104,7 @@ const SelectAfter = (
   useEffect(() => {
     //update excahnge rate onmount
     if (payInCurrency !== "") {
-      updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
+      isPayin && updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
     }
   }, [payInCurrency]);
 
