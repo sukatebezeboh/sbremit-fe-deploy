@@ -123,3 +123,16 @@ export const getAccruedAndUsedBonus = (
     totalReferralBonusUsed: totalReferralBonusUsedResult ?? 0,
   };
 };
+
+// export const getAllUserReferrals = (user: any, referrals: any) => {
+//   const { Referrals } = user.referral || {};
+//   const uplineBonus = 3;
+
+//   const referralsArray = Referrals && JSON.parse(Referrals);
+
+//   const isUserHasUplineBonus = referralsArray?.find(
+//     (referral: any) => referral.Bonus === uplineBonus
+//   );
+
+//   console.log(referrals, isUserHasUplineBonus);
+// };
