@@ -215,7 +215,7 @@ export const FabAddNewTransferStyles = styled.div`
     position: absolute;
     margin-top: 180px;
     display: flex;
-    z-index: 10;
+    z-index: 4;
   }
 `;
 
