@@ -45,7 +45,7 @@ export default function EmailRegistration() {
         <ChildContainerSyles>
           <AuthHeader
             heading="Register Email Address"
-            subHeading="Already register your email?"
+            subHeading="Already registered your email?"
             link={{ path: paths.SIGN_IN, text: "Login" }}
           />
 
