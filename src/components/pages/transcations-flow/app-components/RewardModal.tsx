@@ -9,13 +9,14 @@ import { AUTH } from "redux/actionTypes";
 import { useHistory } from "react-router-dom";
 import { paths } from "util/paths";
 import { convertDate } from "../app-pages/app-transactions/TransactionHelper";
+import { userAppValues } from "../utils/useAppValues";
 
-const PotOfGold = "/assets/images/Pot_of_gold-amico.png";
-const RefferalMedal = "/assets/images/refferal_medal.png";
+const PotOfGold = "/assets/images/pot_of_gold-amico.png";
+const ReferralMedal = "/assets/images/refferal_medal.png";
 
 interface RewradsProps {
   state: boolean;
-  type: "refferal" | "voucher";
+  type: "referral" | "voucher";
   subtitle: string;
   message: string;
   date: string;
@@ -25,38 +26,58 @@ export const checkUserReward = (user: any): RewradsProps => {
   const { Referral, Referrals } = user.referral || {};
   const { Voucher, Vouchers } = user.meta || {};
 
+  const { PayinCountries } = userAppValues();
+  const userCountryInfo = PayinCountries.find(
+    (country) => country.countryCode === user?.profile?.location_country
+  );
+
+  const defaultCurrency = userCountryInfo?.currency;
+
   const isVoucherActive = user && Voucher === "ACTIVE";
   const isNewBonusStateActive = user && Referral === "ACTIVE";
 
-  const activeRefferals = Referrals && JSON.parse(Referrals);
-  const activeVouchers = Vouchers && JSON.parse(Vouchers);
+  const referralsArray = Referrals && JSON.parse(Referrals);
+  const vouchersArray = Vouchers && JSON.parse(Vouchers);
 
-  const LastActiveRefferalExpiryDate = convertDate(
-    activeRefferals?.[0].Expires
+  // the lastActiveReferralExpiryDate simulate the FIFO method on the backend
+  const lastActiveReferralExpiryDate = convertDate(referralsArray?.[0].Expires);
+
+  const lastActiveVoucherExpiryDate = convertDate(vouchersArray?.[0].Expires);
+
+  const uplineReferralBonus = 3;
+  const downlineReferralBonus = 10;
+
+  const isReferralHasUplineBonusAndIsActive = referralsArray?.some(
+    (referral: any) =>
+      referral.Bonus === uplineReferralBonus &&
+      referral.ReferralBonus === "ACTIVE"
   );
-  const LastActiveVoucherExpiryDate = convertDate(activeVouchers?.[0].Expires);
+
+  const referralBonus = isReferralHasUplineBonusAndIsActive
+    ? uplineReferralBonus
+    : downlineReferralBonus;
 
   if (isNewBonusStateActive) {
     return {
       state: true,
-      type: "refferal",
-      subtitle: "£10 referral bonus is ready to use",
+      type: "referral",
+      subtitle: `${referralBonus} ${defaultCurrency} referral bonus is ready to use`,
       message: "This will be added to your next transfer.",
-      date: `Valid until ${LastActiveRefferalExpiryDate}`,
+      date: `Valid until ${lastActiveReferralExpiryDate}`,
     };
   } else if (isVoucherActive) {
     return {
       state: true,
       type: "voucher",
-      subtitle: "You have earned £5.",
+      subtitle: `You have earned 5 ${defaultCurrency}.`,
       message: "Your loyalty reward will be added to your next transfer.",
-      date: `Valid until ${LastActiveVoucherExpiryDate}`,
+      date: `Valid until ${lastActiveVoucherExpiryDate}`,
     };
   } else {
     return {
       state: false,
       message: "",
-      type: "refferal",
+      type: "referral",
       subtitle: "",
       date: "",
     };
@@ -84,7 +105,7 @@ export default function RewardModal() {
   };
 
   return (
-    <RewardModalStyles $customStyle={reward.type === "refferal"}>
+    <RewardModalStyles $customStyle={reward.type === "referral"}>
       <Modal
         className="custom-modal"
         open={isVisible}
@@ -97,8 +118,8 @@ export default function RewardModal() {
         {reward?.type === "voucher" && (
           <VoucherRewardContent reward={reward} onContinue={handleCloseModal} />
         )}
-        {reward?.type === "refferal" && (
-          <RefferalRewardContent
+        {reward?.type === "referral" && (
+          <ReferralRewardContent
             reward={reward}
             onContinue={handleCloseModal}
           />
@@ -113,10 +134,10 @@ interface RewardProps {
   onContinue: Function;
 }
 
-const RefferalRewardContent = ({ reward, onContinue }: RewardProps) => {
+const ReferralRewardContent = ({ reward, onContinue }: RewardProps) => {
   return (
-    <RefferalRewardContentStyles>
-      <img src={RefferalMedal} alt="Medal" />
+    <ReferralRewardContentStyles>
+      <img src={ReferralMedal} alt="Medal" />
       <h1>Congratulations!</h1>
       <h4>{reward.subtitle}</h4>
       <p>{reward.message}</p>
@@ -125,7 +146,7 @@ const RefferalRewardContent = ({ reward, onContinue }: RewardProps) => {
       </Button>
       <span className="_date">{reward.date}</span>
       <span className="_tnc">Subject to Ts & Cs</span>
-    </RefferalRewardContentStyles>
+    </ReferralRewardContentStyles>
   );
 };
 
@@ -155,7 +176,7 @@ const RewardModalStyles = styled.div<{ $customStyle: boolean }>`
   `}
 `;
 
-const RefferalRewardContentStyles = styled.div`
+const ReferralRewardContentStyles = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;

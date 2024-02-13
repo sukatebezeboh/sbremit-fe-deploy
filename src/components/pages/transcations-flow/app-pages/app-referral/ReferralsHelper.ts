@@ -93,6 +93,7 @@ export const getAccruedAndUsedBonus = (
 ) => {
   const { Referrals } = user?.referral || {};
   const ReferralsArray = Referrals && JSON.parse(Referrals);
+  // Bonus you get from ur upline
   const uplineBonus = 3; // This value is confirmed and agreed from the backend
 
   const getTotalReferralsBonusUsed = getTotalReferredUsersByuseStatus(
@@ -115,7 +116,7 @@ export const getAccruedAndUsedBonus = (
     : accruedBonus;
 
   const totalReferralBonusUsedResult = isUserHasUplineBonusAndIsUsed
-    ? getTotalReferralsBonusUsed + uplineBonus
+    ? getTotalReferralsBonusUsed + 1 //include a count for used upline bonus
     : getTotalReferralsBonusUsed;
 
   return {
@@ -123,3 +124,16 @@ export const getAccruedAndUsedBonus = (
     totalReferralBonusUsed: totalReferralBonusUsedResult ?? 0,
   };
 };
+
+// export const getAllUserReferrals = (user: any, referrals: any) => {
+//   const { Referrals } = user.referral || {};
+//   const uplineBonus = 3;
+
+//   const referralsArray = Referrals && JSON.parse(Referrals);
+
+//   const isUserHasUplineBonus = referralsArray?.find(
+//     (referral: any) => referral.Bonus === uplineBonus
+//   );
+
+//   console.log(referrals, isUserHasUplineBonus);
+// };
