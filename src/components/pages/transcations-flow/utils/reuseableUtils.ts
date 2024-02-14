@@ -301,3 +301,10 @@ export function convertToDateFormat(date: string): string {
     return "Invalid date format";
   }
 }
+
+export const getAppValueDataByName = (appValues: any[], objectName: string) => {
+  const result =
+    appValues && appValues.find((appValue) => appValue.name === objectName);
+
+  return result?.data;
+};

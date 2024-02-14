@@ -24,11 +24,13 @@ export const UsageAndHistory = ({
   referralSettings,
   type,
   authUser,
+  voucherActivationvalue,
 }: {
   referralDetails: any;
   referralSettings: any;
   type: "referral" | "voucher";
   authUser: any;
+  voucherActivationvalue: number;
 }) => {
   return (
     <UsageStyles>
@@ -139,14 +141,12 @@ export const UsageAndHistory = ({
                         />
 
                         {statusAndExpiryDate.map((item, index) => (
-                          <>
-                            <div className="_content" key={item.label + index}>
-                              <span>{item.label}:</span>
-                              <span style={{ color: item.color }}>
-                                {item.child}
-                              </span>
-                            </div>
-                          </>
+                          <div className="_content" key={item.label + index}>
+                            <span>{item.label}:</span>
+                            <span style={{ color: item.color }}>
+                              {item.child}
+                            </span>
+                          </div>
                         ))}
                       </RefferalStatusAndExpiryDateStyles>
                     }
@@ -186,7 +186,7 @@ export const UsageAndHistory = ({
                   <div className="_pt_status">
                     <div className="_pt">
                       <TagOutlined rev={undefined} />
-                      <p>+500pt</p>
+                      <p>+{voucherActivationvalue}pt</p>
                     </div>
                     {/* status */}
                     {/* <p>{item.VoucherBonus}</p> */}
