@@ -1,14 +1,13 @@
-import { Button, Modal } from "antd";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { CloseCircleFilled } from "@ant-design/icons";
-import styled from "styled-components";
-import { Breakpoint, Colors } from "../utils/stylesVariables";
-import { MouseEventHandler } from "react";
+import { Button, Modal } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import { AUTH } from "redux/actionTypes";
-import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 import { paths } from "util/paths";
 import { convertDate } from "../app-pages/app-transactions/TransactionHelper";
+import { getAppValueDataByName } from "../utils/reuseableUtils";
+import { Breakpoint, Colors } from "../utils/stylesVariables";
 import { userAppValues } from "../utils/useAppValues";
 
 const PotOfGold = "/assets/images/pot_of_gold-amico.png";
@@ -22,7 +21,10 @@ interface RewradsProps {
   date: string;
 }
 
-export const checkUserReward = (user: any): RewradsProps => {
+export const checkUserReward = (
+  user: any,
+  referralConstants: any
+): RewradsProps => {
   const { Referral, Referrals } = user.referral || {};
   const { Voucher, Vouchers } = user.meta || {};
 
@@ -44,8 +46,15 @@ export const checkUserReward = (user: any): RewradsProps => {
 
   const lastActiveVoucherExpiryDate = convertDate(vouchersArray?.[0].Expires);
 
-  const uplineReferralBonus = 3;
-  const downlineReferralBonus = 10;
+  const rawUplineReferralBonus = referralConstants?.referredUserDiscountValue;
+  const rawDownlineReferralBonus = referralConstants?.referrerDiscountValue;
+
+  const uplineReferralBonus = isNaN(rawUplineReferralBonus)
+    ? 0
+    : Number(rawUplineReferralBonus);
+  const downlineReferralBonus = isNaN(rawDownlineReferralBonus)
+    ? 0
+    : Number(rawDownlineReferralBonus);
 
   const isReferralHasUplineBonusAndIsActive = referralsArray?.some(
     (referral: any) =>
@@ -86,12 +95,22 @@ export const checkUserReward = (user: any): RewradsProps => {
 
 export default function RewardModal() {
   const auth = useSelector((state: any) => state.auth);
+  const { values } = useSelector((state: any) => state.appValues);
   const dispatch = useDispatch();
   const { isRewardModalChecked, user } = auth || {};
-  const reward = checkUserReward(user);
 
-  const isVisible = reward.state && !isRewardModalChecked;
+  const referralConstants = getAppValueDataByName(values.data, "settings");
+
+  const reward = checkUserReward(user, referralConstants);
+  const location = useLocation();
   const history = useHistory();
+
+  const isDashboardOrRewardPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.REWARDS;
+
+  const isVisible =
+    reward.state && !isRewardModalChecked && isDashboardOrRewardPage; //display the reward modal only on the dashboard or reward page
 
   const handleCloseModal = (isContinue: boolean) => {
     if (isContinue) {
