@@ -38,10 +38,15 @@ export default function AppLayout() {
   const location = useLocation();
   const { trullioVerified } = user?.meta || {};
 
+  const isDashboardOrTransactionsPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.TRANSACTIONS ||
+    location.pathname === paths.ACCOUNT_STATEMENTS;
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
-    getTransactions();
+    isDashboardOrTransactionsPage && getTransactions();
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
     getClientIp(); // get user IP address

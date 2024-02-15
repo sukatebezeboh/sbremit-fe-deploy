@@ -70,7 +70,7 @@ export const CalculatorInput = ({
         <span className="label">{isPayin ? "You send" : "They get"}</span>
         <Input
           //addonBefore={isPayin ? "You send" : "They get"}
-          addonAfter={SelectAfter("XAF", payinCurrency, isPayin, exchangeRate)}
+          addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
           placeholder="0.00"
           size="large"
           status={errorMessage != "" ? "error" : ""}
@@ -91,11 +91,10 @@ export const CalculatorInput = ({
 const SelectAfter = (
   defaultValue: string,
   payInCurrency: string,
-  isPayin: boolean,
-  exchangeRate: number
+  isPayin: boolean
 ) => {
   const transfer = useSelector((state: any) => state.transfer);
-  const { payinActualValue, payoutCurrency } = transfer;
+  const { payinActualValue, payoutCurrency, exchangeRate } = transfer;
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const PayInCountryData = PayinCountries.find(
@@ -107,7 +106,7 @@ const SelectAfter = (
     if (payInCurrency !== "") {
       isPayin && updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
     }
-  }, [payInCurrency, exchangeRate]);
+  }, [payInCurrency]);
 
   const handlePayOutCountryChange = (value: string) => {
     dispatch({
