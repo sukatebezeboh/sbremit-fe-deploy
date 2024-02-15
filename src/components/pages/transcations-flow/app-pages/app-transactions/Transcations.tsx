@@ -18,7 +18,10 @@ import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
 import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import { getFirstLetter } from "../../utils/reuseableUtils";
+import {
+  getFirstLetter,
+  transferMethodsInWords,
+} from "../../utils/reuseableUtils";
 import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
@@ -26,7 +29,7 @@ import {
   downloadStatementPdf,
   formatTransactionStatus,
   formatTransactionsReversed,
-  thisRecipient
+  thisRecipient,
 } from "./TransactionHelper";
 import {
   RecipientName,
@@ -89,9 +92,13 @@ export default function Transcations({ page }: TranscationsProps) {
     //if resend is clicked
     else if (key === "2") {
       //do sth for resend transfer
-      //update payIn, Payout, payoutCurrency
-      const { originAmount, destinationAmount, destinationCurrency } =
-        currentTransactionDetail || {};
+      //update payIn, Payout, payoutCurrency, tranfer method
+      const {
+        originAmount,
+        destinationAmount,
+        destinationCurrency,
+        transferMethod,
+      } = currentTransactionDetail || {};
       dispatch({
         type: TRANSFER,
         payload: {
@@ -99,6 +106,7 @@ export default function Transcations({ page }: TranscationsProps) {
           payinActualValue: originAmount,
           payoutActualValue: destinationAmount,
           payoutCurrency: destinationCurrency,
+          transferMethod: transferMethod,
         },
       });
       //then naviagate to get quoute
