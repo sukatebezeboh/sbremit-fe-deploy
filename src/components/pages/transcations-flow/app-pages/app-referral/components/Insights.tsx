@@ -1,5 +1,7 @@
 import { Card, Statistic, Tabs, TabsProps } from "antd";
+import { getAppValueDataByName } from "components/pages/transcations-flow/utils/reuseableUtils";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   getAccruedAndUsedBonus,
   getTotalUsedVouchers,
@@ -26,6 +28,7 @@ export const Insights = ({
   referralDetails,
   referralSettings,
 }: InsightsProps) => {
+  const { values } = useSelector((state: any) => state.appValues);
   const [activeTab, setActiveTab] = useState<"referral" | "voucher" | any>(
     "referral"
   );
@@ -33,20 +36,30 @@ export const Insights = ({
     ? 0
     : Number(user?.meta?.VoucherPoints);
 
+  const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
+  const referralConstants = getAppValueDataByName(values.data, "settings");
+
+  const rawVoucherActivationvalue = loyaltyConstants?.voucherActivationvalue;
+  const voucherActivationvalue = isNaN(rawVoucherActivationvalue)
+    ? 0
+    : Number(rawVoucherActivationvalue);
+
+  const rawVoucherBonus = loyaltyConstants?.voucherBonus;
+  const voucherBonus = isNaN(rawVoucherBonus) ? 0 : Number(rawVoucherBonus);
+
+  const rawUplineBonus = referralConstants?.referredUserDiscountValue;
+  const uplineBonus = isNaN(rawUplineBonus) ? 0 : Number(rawUplineBonus);
+
   // If voucherPoints is greater than 500, convert the voucher to 5 base currency; otherwise, no conversion (0 bonus).
-  const equivalentVoucherBonus = voucherPoints > 500 ? 5 : 0;
+  const equivalentVoucherBonus =
+    voucherPoints > voucherActivationvalue ? voucherBonus : 0;
 
-  const accuredBonuses = getAccruedAndUsedBonus(
+  const bonuses = getAccruedAndUsedBonus(
     accruedBonus,
     referredUsers,
-    user
-  ).accruedBonus;
-
-  const usedBonuses = getAccruedAndUsedBonus(
-    accruedBonus,
-    referredUsers,
-    user
-  ).totalReferralBonusUsed;
+    user,
+    uplineBonus
+  );
 
   const refferalInsightArray = [
     {
@@ -56,12 +69,12 @@ export const Insights = ({
     },
     {
       title: "Accrued bonus",
-      value: `${accuredBonuses} ${defaultCurrency}`,
+      value: `${bonuses?.accruedBonus} ${defaultCurrency}`,
       color: "#18a65f",
     },
     {
       title: "Bonus used",
-      value: usedBonuses,
+      value: bonuses?.totalReferralBonusUsed,
       color: "#d0cd23",
     },
   ];
@@ -70,7 +83,7 @@ export const Insights = ({
     {
       title: "Points tracked",
       value: voucherPoints,
-      color: voucherPoints < 500 ? "#d0cd23" : "#18a65f",
+      color: voucherPoints < voucherActivationvalue ? "#d0cd23" : "#18a65f",
     },
     {
       title: "Total earned",
@@ -152,6 +165,7 @@ export const Insights = ({
         referralDetails={referralDetails}
         referralSettings={referralSettings}
         authUser={user}
+        voucherActivationvalue={voucherActivationvalue}
       />
     </>
   );

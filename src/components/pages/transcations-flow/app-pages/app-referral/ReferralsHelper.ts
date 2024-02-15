@@ -89,12 +89,11 @@ export const getVoucherStatusColor = (voucherBonus: string) => {
 export const getAccruedAndUsedBonus = (
   accruedBonus: number,
   referredUsers: any,
-  user: any
+  user: any,
+  uplineBonus: number
 ) => {
   const { Referrals } = user?.referral || {};
   const ReferralsArray = Referrals && JSON.parse(Referrals);
-  // Bonus you get from ur upline
-  const uplineBonus = 3; // This value is confirmed and agreed from the backend
 
   const getTotalReferralsBonusUsed = getTotalReferredUsersByuseStatus(
     "Used",
