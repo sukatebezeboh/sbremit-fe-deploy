@@ -48,10 +48,10 @@ export const UsageAndHistory = ({
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: "8px 8px 0px 0px",
-                //   background: "#0D8D70",
-                background: generateAlphabetColor(
-                  getFirstLetter(user?.firstName) || ""
-                ),
+                background: "#0D8D70",
+                // background: generateAlphabetColor(
+                //   getFirstLetter(user?.firstName) || ""
+                // ),
               };
 
               let percentage = Math.min(
