@@ -164,7 +164,9 @@ const ReferralRewardContent = ({ reward, onContinue }: RewardProps) => {
         Use voucher
       </Button>
       <span className="_date">{reward.date}</span>
-      <span className="_tnc">Subject to Ts & Cs</span>
+      <a href={paths.TERMS} target="_blank">
+        Subject to Ts & Cs
+      </a>
     </ReferralRewardContentStyles>
   );
 };
@@ -180,7 +182,9 @@ const VoucherRewardContent = ({ reward, onContinue }: RewardProps) => {
         Use voucher
       </Button>
       <span className="_date">{reward.date}</span>
-      <span className="_tnc">Subject to Ts & Cs</span>
+      <a href={paths.TERMS} target="_blank">
+        Subject to Ts & Cs
+      </a>
     </VoucherRewardContentStyles>
   );
 };
@@ -258,9 +262,16 @@ const ReferralRewardContentStyles = styled.div`
     line-height: 20px; /* 125% */
     letter-spacing: -0.8px;
   }
-  ._tnc {
+  a {
     margin-top: 24px;
-    font-size: 12px;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: ${Colors.sbGreen};
+    }
   }
 `;
 
