@@ -16,6 +16,7 @@ import PaymentComplete from "../app-pages/app-payment-complete/PaymentComplete";
 import Settings from "../app-pages/app-settings/Settings";
 import Referrals from "../app-pages/app-referral/Referrals";
 import AccountStatement from "../app-pages/app-transactions/AccountStatement";
+import TruelayerProviderV3 from "../app-components/TruelayerProviderV3";
 
 export default function RouteConfig() {
   return (
@@ -26,7 +27,7 @@ export default function RouteConfig() {
       <Route path={paths.REVIEW} component={Review} />
       <Route path={paths.PAYMENT_METHOD} component={Pay} />
       <Route path={paths.AXCESS_MERCHANT} component={AxcessMerchant} />
-      <Route path={paths.TRUELAYER_PROVIDERS} component={TrulayerProvider} />
+      <Route path={paths.TRUELAYER_PROVIDERS} component={TruelayerProviderV3} />
       <Route path={paths.TRANSFER_COMPLETE_AUTH} component={PaymentComplete} />
 
       <Route path={paths.TRANSACTIONS} component={Transcations} />

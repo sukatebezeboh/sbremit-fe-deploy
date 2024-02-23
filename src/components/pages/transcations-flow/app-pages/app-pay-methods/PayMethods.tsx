@@ -25,6 +25,7 @@ import {
   PleaseNoteStyles,
 } from "./PayMethodsStyles";
 import { PaymentGateWays } from "./paymentGateway";
+import { lunchTruelayerEPP } from "./paymentHelper";
 
 interface LocationState {
   transfer: any;
@@ -84,11 +85,15 @@ export default function Pay() {
       initiateInteracTransferPayment(+transferInfo.id);
     }
     if (paymentMethod === "truelayer") {
-      history.push(paths.TRUELAYER_PROVIDERS, { transaferId: transferInfo.id });
+      //set up an action that get: payment_id, resource_token and return_uri from the server
+      //callback onSuccess should push user to
+      lunchTruelayerEPP();
+      // history.push(paths.TRUELAYER_PROVIDERS, { transaferId: transferInfo.id });
     }
     if (paymentMethod === "axcess-payment") {
       generateCheckoutIDforAxcssPayment(transferInfo);
     }
+
     // clear redux store #transactions
     resetTransferData();
     setLoader(false);
