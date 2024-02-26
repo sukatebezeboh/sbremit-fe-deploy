@@ -102,15 +102,9 @@ export default function RewardModal() {
   const referralConstants = getAppValueDataByName(values.data, "settings");
 
   const reward = checkUserReward(user, referralConstants);
-  const location = useLocation();
   const history = useHistory();
 
-  const isDashboardOrRewardPage =
-    location.pathname === paths.DASHBOARD ||
-    location.pathname === paths.REWARDS;
-
-  const isVisible =
-    reward.state && !isRewardModalChecked && isDashboardOrRewardPage; //display the reward modal only on the dashboard or reward page
+  const isVisible = reward.state && !isRewardModalChecked;
 
   const handleCloseModal = (isContinue: boolean) => {
     if (isContinue) {
