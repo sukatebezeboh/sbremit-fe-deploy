@@ -266,6 +266,8 @@ const ReferralRewardContentStyles = styled.div`
     margin-top: 24px;
     font-size: 14px;
     cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
 
     &:hover,
     &:active {
@@ -335,8 +337,17 @@ const VoucherRewardContentStyles = styled.div`
     line-height: 20px; /* 125% */
     letter-spacing: -0.8px;
   }
-  ._tnc {
+  a {
     margin-top: 24px;
-    font-size: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: ${Colors.sbGreen};
+    }
   }
 `;
