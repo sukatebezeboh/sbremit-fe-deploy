@@ -4,6 +4,7 @@ import {
   fetchUserNotifications,
   getClientIp,
   getRecipients,
+  refreshUserDetails,
   toastAction,
 } from "redux/actions/actions";
 import {
@@ -43,13 +44,18 @@ export default function AppLayout() {
     location.pathname === paths.TRANSACTIONS ||
     location.pathname === paths.ACCOUNT_STATEMENTS;
 
+  const isDashboardOrRewardPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.REWARDS;
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
     isDashboardOrTransactionsPage && getTransactions();
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
-    getClientIp(); // get user IP address
+    // getClientIp(); // get user IP address
+    isDashboardOrRewardPage && refreshUserDetails(() => {}, true); // force refresh to upadate reward props
 
     //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
@@ -114,7 +120,7 @@ export default function AppLayout() {
         </ApplayoutContainerStlye>
         {/* General popups/modals */}
         <TandCModal />
-        <RewardModal />
+        {isDashboardOrRewardPage && <RewardModal />}
       </ApplayoutStlye>
     </ConfigProvider>
   );

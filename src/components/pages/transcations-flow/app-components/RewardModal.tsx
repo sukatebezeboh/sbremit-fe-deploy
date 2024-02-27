@@ -102,15 +102,9 @@ export default function RewardModal() {
   const referralConstants = getAppValueDataByName(values.data, "settings");
 
   const reward = checkUserReward(user, referralConstants);
-  const location = useLocation();
   const history = useHistory();
 
-  const isDashboardOrRewardPage =
-    location.pathname === paths.DASHBOARD ||
-    location.pathname === paths.REWARDS;
-
-  const isVisible =
-    reward.state && !isRewardModalChecked && isDashboardOrRewardPage; //display the reward modal only on the dashboard or reward page
+  const isVisible = reward.state && !isRewardModalChecked;
 
   const handleCloseModal = (isContinue: boolean) => {
     if (isContinue) {
@@ -266,6 +260,8 @@ const ReferralRewardContentStyles = styled.div`
     margin-top: 24px;
     font-size: 14px;
     cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
 
     &:hover,
     &:active {
@@ -335,8 +331,17 @@ const VoucherRewardContentStyles = styled.div`
     line-height: 20px; /* 125% */
     letter-spacing: -0.8px;
   }
-  ._tnc {
+  a {
     margin-top: 24px;
-    font-size: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: ${Colors.sbGreen};
+    }
   }
 `;
