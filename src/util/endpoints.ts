@@ -30,7 +30,7 @@ const endpoints = {
   PROMO: "/promo/$_1",
   SAVE_TRULIOO_DOCUMENT_VERIFICATION: "/verification/documents",
   TRUELAYER_INITIATE_PAYMENT: "/truelayer/payment/$_1",
-  TRUELAYER_PAYMENT: "/truelayer/payment",
+  TRUELAYER_PAYMENT_COMPLETED: "/truelayer/completed",
   GET_AXCESS_CHECKOUT_ID: "/axcess/$_1/transfers",
   GET_AXCESS_PAYMENT_NOTIFICATION: "/axcess/payment/notification",
   TOAST_NOTIF: "/user/toast",

@@ -1777,6 +1777,14 @@ export const generateCheckoutInfo = async (
       extraBtnHandler: () => history.push(paths.PROFILE),
     });
 
+  const toastActionForOtherStatus = () =>
+    toastAction({
+      show: true,
+      type: "error",
+      timeout: 15000,
+      message: "An error occurred. Please try again.",
+    });
+
   const endpoint =
     type === "axcessms"
       ? endpoints.GET_AXCESS_CHECKOUT_ID
@@ -1791,15 +1799,12 @@ export const generateCheckoutInfo = async (
         return callback(data);
       } else if (res.data.status === "400") {
         return toastActionForStatus400();
+      } else {
+        toastActionForOtherStatus();
       }
     })
     .catch((error) => {
-      toastAction({
-        show: true,
-        type: "error",
-        timeout: 15000,
-        message: "An error occurred. Please try again.",
-      });
+      toastActionForOtherStatus();
     });
 };
 
@@ -1812,7 +1817,7 @@ export const getPaymentStatus = async (
   const endpoint =
     type === "axcessms"
       ? endpoints.GET_AXCESS_PAYMENT_NOTIFICATION
-      : parseEndpointParameters(endpoints.TRUELAYER_INITIATE_PAYMENT, checkoutID);
+      : endpoints.TRUELAYER_PAYMENT_COMPLETED;
 
   const payload =
     type === "axcessms"

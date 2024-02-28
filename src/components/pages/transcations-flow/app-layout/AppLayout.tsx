@@ -48,13 +48,15 @@ export default function AppLayout() {
     location.pathname === paths.DASHBOARD ||
     location.pathname === paths.REWARDS;
 
+  const isGetQuotePage = location.pathname === paths.GET_QUOTE;
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
     isDashboardOrTransactionsPage && getTransactions();
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
-    // getClientIp(); // get user IP address
+    !isGetQuotePage && getClientIp(); // get user IP address
     isDashboardOrRewardPage && refreshUserDetails(() => {}, true); // force refresh to upadate reward props
 
     //check user verification on Payment Method page and redirect if !verified
