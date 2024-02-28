@@ -7,7 +7,7 @@ import {
 import { Alert, Avatar, Button } from "antd";
 import _env from "env";
 import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
 import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
@@ -36,13 +36,31 @@ export default function PaymentComplete() {
   const [paymentInfo, setPaymentInfo] = useState<any>();
   const [isRequestError, setIsrequestError] = useState(false);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
+
   useEffect(() => {
     getTransactionsInfo(setTransferInfo, transferId);
   }, [transferId]);
 
   useEffect(() => {
     if (trasnferInfo !== undefined) {
-      getPaymentStatus(axcess_checkout_id, updatePaymentInfo, OnErrorRequest);
+      if (isTrulayerPayment) {
+        getPaymentStatus(
+          transferId,
+          updatePaymentInfo,
+          onErrorRequest,
+          "truelayer"
+        );
+      } else {
+        getPaymentStatus(
+          axcess_checkout_id,
+          updatePaymentInfo,
+          onErrorRequest,
+          "axcessms"
+        );
+      }
     }
   }, [trasnferInfo]);
 
@@ -50,7 +68,7 @@ export default function PaymentComplete() {
     setPaymentInfo(data);
   };
 
-  const OnErrorRequest = () => {
+  const onErrorRequest = () => {
     setIsrequestError(true);
   };
 
@@ -61,8 +79,12 @@ export default function PaymentComplete() {
   const date = new Date(currentTimestamp);
   const formattedDate: string = date.toLocaleString("en-US", options);
 
+  const statusOrCodeRes = isTrulayerPayment
+    ? paymentInfo?.status
+    : paymentInfo?.code;
+
   const PaymentCategoryIndex =
-    checkPaymentCodeWithPattern(paymentInfo?.code) ?? 1; //fallback inprogress
+    checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes) ?? 1; //fallback inprogress
 
   const AvatarIcons = [
     <CheckOutlined rev={undefined} />,
@@ -95,7 +117,7 @@ export default function PaymentComplete() {
     <PaymentCompleteConatinerStyles>
       {!paymentInfo ? (
         isRequestError ? (
-          OnErrorRequestAlert
+          onErrorRequestAlert
         ) : (
           <>
             <LoadingOutlined rev={undefined} />
@@ -138,7 +160,7 @@ export default function PaymentComplete() {
   );
 }
 
-const OnErrorRequestAlert = (
+const onErrorRequestAlert = (
   <Alert
     className="alert"
     type="error"
