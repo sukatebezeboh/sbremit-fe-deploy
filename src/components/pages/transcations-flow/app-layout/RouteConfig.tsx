@@ -1,22 +1,19 @@
-import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { paths } from "util/paths";
-import Dashboard from "../app-pages/app-dashboard/Dashboard";
-import Transcations from "../app-pages/app-transactions/Transcations";
-import TransferMethod from "../app-pages/transfer-method/TransferMethod";
-import GetQuote from "../app-pages/app-getQuote/GetQuote";
-import Recipients from "../app-pages/app-recipients/Recipients";
-import Review from "../app-pages/app-review/Review";
-import Pay from "../app-pages/app-pay-methods/PayMethods";
-import Profile from "../app-pages/app-profile/Profile";
-import Verifications from "../app-pages/app-verifications/Verifications";
 import AxcessMerchant from "../app-components/AxcessPaymentForm";
-import TrulayerProvider from "../app-components/TrulayerProvider";
+import Dashboard from "../app-pages/app-dashboard/Dashboard";
+import GetQuote from "../app-pages/app-getQuote/GetQuote";
+import Pay from "../app-pages/app-pay-methods/PayMethods";
 import PaymentComplete from "../app-pages/app-payment-complete/PaymentComplete";
-import Settings from "../app-pages/app-settings/Settings";
+import Profile from "../app-pages/app-profile/Profile";
+import Recipients from "../app-pages/app-recipients/Recipients";
 import Referrals from "../app-pages/app-referral/Referrals";
+import Review from "../app-pages/app-review/Review";
+import Settings from "../app-pages/app-settings/Settings";
 import AccountStatement from "../app-pages/app-transactions/AccountStatement";
-import TruelayerProviderV3 from "../app-components/TruelayerProviderV3";
+import Transcations from "../app-pages/app-transactions/Transcations";
+import Verifications from "../app-pages/app-verifications/Verifications";
+import TransferMethod from "../app-pages/transfer-method/TransferMethod";
 
 export default function RouteConfig() {
   return (
@@ -27,7 +24,6 @@ export default function RouteConfig() {
       <Route path={paths.REVIEW} component={Review} />
       <Route path={paths.PAYMENT_METHOD} component={Pay} />
       <Route path={paths.AXCESS_MERCHANT} component={AxcessMerchant} />
-      <Route path={paths.TRUELAYER_PROVIDERS} component={TruelayerProviderV3} />
       <Route path={paths.TRANSFER_COMPLETE_AUTH} component={PaymentComplete} />
 
       <Route path={paths.TRANSACTIONS} component={Transcations} />
