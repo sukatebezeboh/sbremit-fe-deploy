@@ -1,5 +1,5 @@
 import { ConfigProvider } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchUserNotifications,
   getClientIp,
@@ -31,8 +31,7 @@ import RewardModal from "../app-components/RewardModal";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
-  const transfer = useSelector((state: any) => state.transfer);
-  const { currentTransferBeforeRedirectVericationsPage } = transfer || {};
+  const [isRewardAvailable, setIsRewardAvailable] = useState(false);
   const { user } = auth || {};
   const dispatch = useDispatch();
   const history = useHistory();
@@ -50,6 +49,20 @@ export default function AppLayout() {
 
   const isGetQuotePage = location.pathname === paths.GET_QUOTE;
 
+  const checkIsRewardsAvailable = (data: any) => {
+    const { Referral } = data.referral || {};
+    const { Voucher } = data.meta || {};
+
+    const isVoucherActive = Voucher && Voucher === "ACTIVE";
+    const isNewBonusStateActive = Referral && Referral === "ACTIVE";
+
+    if (isVoucherActive || isNewBonusStateActive) {
+      return setIsRewardAvailable(true);
+    }
+
+    return setIsRewardAvailable(false);
+  };
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
@@ -57,7 +70,8 @@ export default function AppLayout() {
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
     !isGetQuotePage && getClientIp(); // get user IP address
-    isDashboardOrRewardPage && refreshUserDetails(() => {}, true); // force refresh to upadate reward props
+    isDashboardOrRewardPage &&
+      refreshUserDetails(checkIsRewardsAvailable, true); // force refresh to upadate reward props
 
     //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
@@ -120,9 +134,10 @@ export default function AppLayout() {
             </div>
           </div>
         </ApplayoutContainerStlye>
+
         {/* General popups/modals */}
         <TandCModal />
-        {isDashboardOrRewardPage && <RewardModal />}
+        {isRewardAvailable && <RewardModal />}
       </ApplayoutStlye>
     </ConfigProvider>
   );
