@@ -21,7 +21,20 @@ const schema = yup.object({
   username: yup.string().email().required().label("Email"),
   password: yup.string().min(6).max(255).required().label("Password"),
   mobile: yup.string().min(9).max(11).required().label("Phone number"),
-  dob: yup.date().required().label("Date of birth"),
+  // dob: yup.date().required().label("Date of birth"),
+  dob: yup
+    .date()
+    .required()
+    .label("Date of birth")
+    .test(
+      "is-over-18",
+      "You must be older than 18 years",
+      function (value: any) {
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        return value <= eighteenYearsAgo;
+      }
+    ),
   referral: yup.string().label("Referral code"),
 });
 
