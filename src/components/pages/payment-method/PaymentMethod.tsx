@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import { TRANSFER } from "../../../redux/actionTypes";
 import {
   cancelTransfer,
-  generateCheckoutId,
+  generateCheckoutInfo,
   getRecipient,
   getTransactionDetails,
   initiateInteracTransferPayment,

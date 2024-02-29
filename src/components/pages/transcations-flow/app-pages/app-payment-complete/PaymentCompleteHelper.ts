@@ -1,4 +1,7 @@
-export function checkPaymentCodeWithPattern(code: string): number {
+export function checkPaymentCodeWithPattern(
+  isTrulayerPayment: boolean,
+  code: string
+): number {
   const patterns = [
     /^(000\.000\.|000\.100\.1|000\.[36]|000\.400\.[1][12]0)/,
     /^(000.400.0[^3]|000.400.100)/,
@@ -6,13 +9,23 @@ export function checkPaymentCodeWithPattern(code: string): number {
     /^(000\.200)/,
   ];
 
-  for (let i = 0; i < patterns.length; i++) {
-    if (patterns[i].test(code)) {
-      return i === 0 ? 0 : 1; // return 0 if pattern matches at index 0, esle 1
+  if (isTrulayerPayment) {
+    if (code === "executed") {
+      return 0; // payment success
+    } else if (code === "failed") {
+      return 2; //payment failed
+    } else {
+      return 1; // other Trulayer payment status such as 'authorized' are defaulted to inprogress.
     }
-  }
+  } else {
+    for (let i = 0; i < patterns.length; i++) {
+      if (patterns[i].test(code)) {
+        return i === 0 ? 0 : 1; // return 0 if pattern matches at index 0, else 1
+      }
+    }
 
-  return 2;
+    return 2; // Default to failure if no pattern matches
+  }
 }
 
 // Result codes for successfully processed transactions /^(000.000.|000.100.1|000.[36]|000.400.[1][12]0)/ : return 0
