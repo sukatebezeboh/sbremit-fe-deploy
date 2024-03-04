@@ -31,12 +31,23 @@ const options: Intl.DateTimeFormatOptions = {
 
 export default function PaymentComplete() {
   const history = useHistory();
+  const location = useLocation();
   let { transferId } = useParams<any>();
   const [trasnferInfo, setTransferInfo] = useState<any>();
   const [paymentInfo, setPaymentInfo] = useState<any>();
   const [isRequestError, setIsrequestError] = useState(false);
 
-  const location = useLocation();
+  //clean pathname if it's truelayer and has multiple '?'' symabols
+  useEffect(() => {
+    if (location.pathname.includes("payment_type=truelayer")) {
+      //remove everything after the first '?' if any.
+      const cleanedUrl =
+        location.pathname + location.search.replace(/(\?.*?)\?.*/, "$1");
+
+      history.replace(cleanedUrl);
+    }
+  }, [location.search, location.pathname, history]);
+
   const searchParams = new URLSearchParams(location.search);
   const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
 
