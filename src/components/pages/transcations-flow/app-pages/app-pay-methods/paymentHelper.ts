@@ -7,12 +7,14 @@ import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 export const lunchTruelayerEPP = (
   transferId: string,
   payment_id: string,
-  resource_token: string
+  resource_token: string,
+  history: any
 ) => {
   const payment = Payment({
     payment_id,
     resource_token,
     return_uri: `${_env.APP_HOST}/transfer-completed/${transferId}?payment_type=truelayer`, //for dev: http://localhost:3000/
+    open_bank_in_new_tab: true,
     production: process.env.REACT_APP_ENV === "production",
 
     onLoad: () => {
@@ -29,6 +31,7 @@ export const lunchTruelayerEPP = (
     },
     onDone: () => {
       consoleLogOnLocalHost("onDone called");
+      history.push(`/transfer-completed/${transferId}?payment_type=truelayer`);
     },
   });
 
@@ -60,7 +63,7 @@ export const generateCheckoutInfoForTrulayerPayment = (
     const { payment_id, resource_token } = data || {};
 
     if (payment_id !== null && resource_token !== null) {
-      lunchTruelayerEPP(transferId, payment_id, resource_token);
+      lunchTruelayerEPP(transferId, payment_id, resource_token, history);
     }
   };
 
