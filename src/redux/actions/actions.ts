@@ -1831,7 +1831,11 @@ export const getPaymentStatus = async (
   http
     .post(endpoint, payload)
     .then((res) => {
-      callback(res.data);
+      if (res.data.status === "500") {
+        onCallbackError();
+      } else {
+        callback(res.data);
+      }
     })
     .catch((error) => {
       onCallbackError();
