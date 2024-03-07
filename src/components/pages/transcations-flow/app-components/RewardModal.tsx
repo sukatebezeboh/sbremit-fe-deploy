@@ -23,7 +23,8 @@ interface RewradsProps {
 
 export const checkUserReward = (
   user: any,
-  referralConstants: any
+  referralConstants: any,
+  loyaltyConstants: any
 ): RewradsProps => {
   const { Referral, Referrals } = user.referral || {};
   const { Voucher, Vouchers } = user.meta || {};
@@ -46,15 +47,20 @@ export const checkUserReward = (
 
   const lastActiveVoucherExpiryDate = convertDate(vouchersArray?.[0].Expires);
 
+  const rawVoucherBonus = loyaltyConstants?.voucherBonus;
+  const voucherBonus = isNaN(rawVoucherBonus)
+    ? 0
+    : Number(rawVoucherBonus).toFixed(2);
+
   const rawUplineReferralBonus = referralConstants?.referredUserDiscountValue;
   const rawDownlineReferralBonus = referralConstants?.referrerDiscountValue;
 
   const uplineReferralBonus = isNaN(rawUplineReferralBonus)
     ? 0
-    : Number(rawUplineReferralBonus);
+    : Number(rawUplineReferralBonus).toFixed(2);
   const downlineReferralBonus = isNaN(rawDownlineReferralBonus)
     ? 0
-    : Number(rawDownlineReferralBonus);
+    : Number(rawDownlineReferralBonus).toFixed(2);
 
   const isReferralHasUplineBonusAndIsActive = referralsArray?.some(
     (referral: any) =>
@@ -70,7 +76,7 @@ export const checkUserReward = (
     return {
       state: true,
       type: "referral",
-      subtitle: `${referralBonus} ${defaultCurrency} referral bonus is ready to use`,
+      subtitle: `${defaultCurrency} ${referralBonus} referral bonus is ready to use`,
       message: "This will be added to your next transfer.",
       date: `Valid until ${lastActiveReferralExpiryDate}`,
     };
@@ -78,7 +84,7 @@ export const checkUserReward = (
     return {
       state: true,
       type: "voucher",
-      subtitle: `You have earned 5 ${defaultCurrency}.`,
+      subtitle: `You have earned  ${defaultCurrency} ${voucherBonus}.`,
       message: "Your loyalty reward will be added to your next transfer.",
       date: `Valid until ${lastActiveVoucherExpiryDate}`,
     };
@@ -100,8 +106,9 @@ export default function RewardModal() {
   const { isRewardModalChecked, user } = auth || {};
 
   const referralConstants = getAppValueDataByName(values.data, "settings");
+  const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
 
-  const reward = checkUserReward(user, referralConstants);
+  const reward = checkUserReward(user, referralConstants, loyaltyConstants);
   const history = useHistory();
 
   const isVisible = reward.state && !isRewardModalChecked;
