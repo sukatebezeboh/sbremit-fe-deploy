@@ -39,7 +39,7 @@ export default function PaymentComplete() {
 
   //clean pathname if it's truelayer and has multiple '?'' symabols
   useEffect(() => {
-    if (location.pathname.includes("payment_type=truelayer")) {
+    if (location.search.includes("payment_type=truelayer")) {
       //remove everything after the first '?' if any.
       const cleanedUrl =
         location.pathname + location.search.replace(/(\?.*?)\?.*/, "$1");
