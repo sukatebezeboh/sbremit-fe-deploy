@@ -48,19 +48,17 @@ export const checkUserReward = (
   const lastActiveVoucherExpiryDate = convertDate(vouchersArray?.[0].Expires);
 
   const rawVoucherBonus = loyaltyConstants?.voucherBonus;
-  const voucherBonus = isNaN(rawVoucherBonus)
-    ? 0
-    : Number(rawVoucherBonus).toFixed(2);
+  const voucherBonus = isNaN(rawVoucherBonus) ? 0 : Number(rawVoucherBonus);
 
   const rawUplineReferralBonus = referralConstants?.referredUserDiscountValue;
   const rawDownlineReferralBonus = referralConstants?.referrerDiscountValue;
 
   const uplineReferralBonus = isNaN(rawUplineReferralBonus)
     ? 0
-    : Number(rawUplineReferralBonus).toFixed(2);
+    : Number(rawUplineReferralBonus);
   const downlineReferralBonus = isNaN(rawDownlineReferralBonus)
     ? 0
-    : Number(rawDownlineReferralBonus).toFixed(2);
+    : Number(rawDownlineReferralBonus);
 
   const isReferralHasUplineBonusAndIsActive = referralsArray?.some(
     (referral: any) =>
@@ -76,7 +74,9 @@ export const checkUserReward = (
     return {
       state: true,
       type: "referral",
-      subtitle: `${defaultCurrency} ${referralBonus} referral bonus is ready to use`,
+      subtitle: `${defaultCurrency} ${referralBonus.toFixed(
+        2
+      )} referral bonus is ready to use`,
       message: "This will be added to your next transfer.",
       date: `Valid until ${lastActiveReferralExpiryDate}`,
     };
@@ -84,7 +84,9 @@ export const checkUserReward = (
     return {
       state: true,
       type: "voucher",
-      subtitle: `You have earned  ${defaultCurrency} ${voucherBonus}.`,
+      subtitle: `You have earned  ${defaultCurrency} ${voucherBonus.toFixed(
+        2
+      )}.`,
       message: "Your loyalty reward will be added to your next transfer.",
       date: `Valid until ${lastActiveVoucherExpiryDate}`,
     };
