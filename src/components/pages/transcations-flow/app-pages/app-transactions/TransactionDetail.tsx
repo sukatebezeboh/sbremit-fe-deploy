@@ -1,8 +1,9 @@
-import { SwapOutlined } from "@ant-design/icons";
+import { SwapOutlined, FilePdfOutlined } from "@ant-design/icons";
 
 import {
   Alert,
   Badge,
+  Button,
   Descriptions,
   Divider,
   Modal,
@@ -19,6 +20,7 @@ import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { TrnsferDetailsActionButtons } from "../../utils/ReusablePageContent";
 import {
+  consoleLogOnLocalHost,
   formatAmount,
   getPaymentEstimatedTime,
   possibleIssues,
@@ -294,7 +296,17 @@ export const TransactionsInfomations = ({
       ),
     },
   ];
-  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+
+  return (
+    <Tabs
+      defaultActiveKey="1"
+      items={items}
+      onChange={onChange}
+      tabBarExtraContent={
+        <DownloadReceipt metaData={transaction?.meta} />
+      }
+    />
+  );
 };
 
 interface TransactionInfomationProps {
@@ -436,4 +448,28 @@ export const TransactionDetails = ({
       </Descriptions.Item>
     </Descriptions>
   );
+};
+
+const DownloadReceipt = ({ metaData }: { metaData: any }) => {
+  const downloadLink = metaData?.receipt_url;
+
+  if (
+    downloadLink &&
+    (downloadLink !== "" || downloadLink !== null || downloadLink !== undefined)
+  ) {
+    return (
+      <Button
+        type="link"
+        href={downloadLink}
+        rel="noreferrer"
+        target="_blank"
+        download
+        icon={<FilePdfOutlined rev={undefined} />}
+      >
+        Download
+      </Button>
+    );
+  } else {
+    return <></>;
+  }
 };
