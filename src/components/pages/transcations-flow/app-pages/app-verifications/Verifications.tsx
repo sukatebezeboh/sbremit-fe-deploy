@@ -1,14 +1,21 @@
-import { CheckCircleTwoTone, UnlockOutlined } from "@ant-design/icons";
+import {
+  CheckCircleTwoTone,
+  ClockCircleTwoTone,
+  UnlockOutlined,
+} from "@ant-design/icons";
 import { Alert, Avatar, Button, List, Space, Tag } from "antd";
 import { ComplyCubeVerification } from "components/pages/verification/ComplyCubeVerification";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { TRANSFER } from "redux/actionTypes";
 import {
   refreshUserDetails,
   userVerificationAction,
 } from "redux/actions/actions";
+import { paths } from "util/paths";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
+import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { FormVerification } from "./FormVerification";
 import {
@@ -20,11 +27,8 @@ import {
 import {
   Verifictions,
   checkToShowVerificationForm,
-  checkVerification,
+  getVerificationStatus,
 } from "./verificationsHelper";
-import { paths } from "util/paths";
-import { TRANSFER } from "redux/actionTypes";
-import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 
 export default function Verifications() {
   const user = useSelector((state: any) => state.auth.user);
@@ -46,8 +50,16 @@ export default function Verifications() {
 
   const hasCompletedAllVerifications = Boolean(verified);
 
-  const idAttempted = checkVerification(user, Verifictions.id);
-  const docAttempted = checkVerification(user, Verifictions.document);
+  const idVerificationStatus = getVerificationStatus(user, Verifictions.id);
+  const docVerificationStatus = getVerificationStatus(
+    user,
+    Verifictions.document
+  );
+
+  const idAttempted =
+    idVerificationStatus === "ATTEMPTED" || idVerificationStatus === "VALID";
+  const docAttempted =
+    docVerificationStatus === "ATTEMPTED" || docVerificationStatus === "VALID";
 
   const onSubmitFormClicked = async (values: any) => {
     const StartComplyCubeVerification = () => {
@@ -63,19 +75,19 @@ export default function Verifications() {
       title: "Proof of address",
       description: "Please tell us a little about yourself.",
       key: "address",
-      isAttempted: isFormVerified,
+      status: isFormVerified,
     },
     {
       title: "Identity Verification",
       description: "We need to verify your identity.",
       key: "identity",
-      isAttempted: idAttempted,
+      status: idVerificationStatus,
     },
     {
       title: "Document Verification",
       description: "We also need to verify your document.",
       key: "document",
-      isAttempted: docAttempted,
+      status: docVerificationStatus,
     },
   ];
 
@@ -119,10 +131,6 @@ export default function Verifications() {
     } else {
       return "0";
     }
-  };
-
-  const openVerificationHelp = () => {
-    return null;
   };
 
   const onContinueToPaymentClicked = () => {
@@ -173,11 +181,13 @@ export default function Verifications() {
                 </div>
               </VerificationStyle>
               {/* if hasCompletedAllVerifications === true ? show success icons for all cases : lets identify each case */}
-              {hasCompletedAllVerifications ? (
-                successIcon
-              ) : item.isAttempted ? (
-                successIcon
-              ) : (
+              {(hasCompletedAllVerifications ||
+                item.status === "VALID" ||
+                item.status == true) &&
+                successIcon}
+              {(item.status === "ATTEMPTED" || item.status === "INVALID") &&
+                inProgressIcon}
+              {(item.status === "PENDING" || item.status === false) && (
                 <Button
                   type="primary"
                   onClick={() => handleOnStartClicked(item.key)}
@@ -238,6 +248,18 @@ const successIcon = (
   <Avatar
     size={45}
     icon={<CheckCircleTwoTone rev={undefined} twoToneColor="#52c41a" />}
+    style={{
+      background: "none",
+      boxSizing: "border-box",
+      flexShrink: 0,
+    }}
+  />
+);
+
+const inProgressIcon = (
+  <Avatar
+    size={45}
+    icon={<ClockCircleTwoTone rev={undefined} twoToneColor="#1677FF" />}
     style={{
       background: "none",
       boxSizing: "border-box",
