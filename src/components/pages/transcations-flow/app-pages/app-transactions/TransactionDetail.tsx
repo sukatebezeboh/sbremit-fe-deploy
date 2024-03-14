@@ -1,4 +1,4 @@
-import { SwapOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { FilePdfOutlined, SwapOutlined } from "@ant-design/icons";
 
 import {
   Alert,
@@ -6,7 +6,6 @@ import {
   Button,
   Descriptions,
   Divider,
-  Flex,
   Modal,
   Space,
   Steps,
@@ -21,7 +20,6 @@ import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { TrnsferDetailsActionButtons } from "../../utils/ReusablePageContent";
 import {
-  consoleLogOnLocalHost,
   formatAmount,
   getPaymentEstimatedTime,
   possibleIssues,
@@ -168,13 +166,10 @@ export const TransactionDetail = ({
         {/* section 2 */}
         <TransactionDetailContentStyle $bgColor="#007B5D">
           <TransactionsDetailsSteps transaction={transaction} />
-          <Flex align="center" justify="space-between" gap={12} wrap="wrap">
-            <TransactionIdStyles $Color="#FFF">
-              Expected delivery time: {getPaymentEstimatedTime(transferMethod)}
-            </TransactionIdStyles>
 
-            <DownloadReceipt metaData={transaction?.meta} />
-          </Flex>
+          <TransactionIdStyles $Color="#FFF">
+            Expected delivery time: {getPaymentEstimatedTime(transferMethod)}
+          </TransactionIdStyles>
         </TransactionDetailContentStyle>
         {/* section 3 */}
         <TransactionDetailContentStyle>
