@@ -6,6 +6,7 @@ import {
   Button,
   Descriptions,
   Divider,
+  Flex,
   Modal,
   Space,
   Steps,
@@ -167,9 +168,13 @@ export const TransactionDetail = ({
         {/* section 2 */}
         <TransactionDetailContentStyle $bgColor="#007B5D">
           <TransactionsDetailsSteps transaction={transaction} />
-          <TransactionIdStyles $Color="#FFF">
-            Expected delivery time: {getPaymentEstimatedTime(transferMethod)}
-          </TransactionIdStyles>
+          <Flex align="center" justify="space-between" gap={12} wrap="wrap">
+            <TransactionIdStyles $Color="#FFF">
+              Expected delivery time: {getPaymentEstimatedTime(transferMethod)}
+            </TransactionIdStyles>
+
+            <DownloadReceipt metaData={transaction?.meta} />
+          </Flex>
         </TransactionDetailContentStyle>
         {/* section 3 */}
         <TransactionDetailContentStyle>
@@ -297,16 +302,7 @@ export const TransactionsInfomations = ({
     },
   ];
 
-  return (
-    <Tabs
-      defaultActiveKey="1"
-      items={items}
-      onChange={onChange}
-      tabBarExtraContent={
-        <DownloadReceipt metaData={transaction?.meta} />
-      }
-    />
-  );
+  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
 };
 
 interface TransactionInfomationProps {
@@ -459,14 +455,14 @@ const DownloadReceipt = ({ metaData }: { metaData: any }) => {
   ) {
     return (
       <Button
-        type="link"
+        type="default"
         href={downloadLink}
         rel="noreferrer"
         target="_blank"
         download
         icon={<FilePdfOutlined rev={undefined} />}
       >
-        Download
+        Download receipt
       </Button>
     );
   } else {
