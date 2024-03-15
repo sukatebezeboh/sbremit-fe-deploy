@@ -101,7 +101,7 @@ export default function Verifications() {
   };
 
   //this logic ensure user follow the order of FE verifications check and enable CTA
-  const isBtnDiabled = (key: string): boolean => {
+  const isBtnDisabled = (key: string): boolean => {
     if (key === "identity" && isFormVerified) {
       return false; //do not diabled when key is id and from isVerfied
     } else if (key === "document" && idAttempted) {
@@ -181,20 +181,24 @@ export default function Verifications() {
                 </div>
               </VerificationStyle>
               {/* if hasCompletedAllVerifications === true ? show success icons for all cases : lets identify each case */}
-              {(hasCompletedAllVerifications ||
-                item.status === "VALID" ||
-                item.status == true) &&
-                successIcon}
-              {(item.status === "ATTEMPTED" || item.status === "INVALID") &&
-                inProgressIcon}
-              {(item.status === "PENDING" || item.status === false) && (
-                <Button
-                  type="primary"
-                  onClick={() => handleOnStartClicked(item.key)}
-                  disabled={isBtnDiabled(item.key)} //avoid two CTA, ensure Form submission before ID and Doc
-                >
-                  Start
-                </Button>
+              {hasCompletedAllVerifications ? (
+                successIcon
+              ) : (
+                <>
+                  {(item.status === "VALID" || item.status === true) &&
+                    successIcon}
+                  {(item.status === "ATTEMPTED" || item.status === "INVALID") &&
+                    inProgressIcon}
+                  {(item.status === "PENDING" || item.status === false) && (
+                    <Button
+                      type="primary"
+                      onClick={() => handleOnStartClicked(item.key)}
+                      disabled={isBtnDisabled(item.key)}
+                    >
+                      Start
+                    </Button>
+                  )}
+                </>
               )}
             </List.Item>
           )}
