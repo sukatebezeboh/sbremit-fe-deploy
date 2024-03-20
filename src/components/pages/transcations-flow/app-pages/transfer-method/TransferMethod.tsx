@@ -1,22 +1,19 @@
-import {
-  BankOutlined,
-  DollarOutlined,
-  MobileOutlined,
-} from "@ant-design/icons";
+import { BankOutlined, MobileOutlined } from "@ant-design/icons";
 import { Radio, RadioChangeEvent } from "antd";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
 import LargeButton, {
   PageTitileAndDescription,
 } from "../../utils/ReusablePageContent";
+import { transferMethodsInWords } from "../../utils/reuseableUtils";
 import {
   SbchrgesStyles,
   TransferMethodContainerStyles,
   TransferMethodsStyles,
 } from "./TransferMethodStyles";
-import { useDispatch, useSelector } from "react-redux";
-import { TRANSFER } from "redux/actionTypes";
 
 const cashPickUpLogo = "/assets/icons/cash-pickup.svg";
 
@@ -24,7 +21,7 @@ export default function TransferMethod() {
   const history = useHistory();
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
-  const method = transfer.transferMethod;
+  const method = transferMethodsInWords[transfer.transferMethod];
   const [loading, setLoading] = useState(false);
 
   const onMethodChange = ({ target: { value } }: RadioChangeEvent) => {

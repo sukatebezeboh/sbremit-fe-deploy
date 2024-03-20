@@ -78,7 +78,7 @@ export const HeaderStyles = styled.div`
   width: 100%;
   gap: 8px;
 
-  .section_1 {
+  ._referral_code {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -135,7 +135,7 @@ export const InsightStyles = styled(ReferralContentStyles)`
       display: flex;
       justify-content: space-between;
       flex-direction: row;
-      gap: 24px;
+      gap: 16px;
       @media (max-width: ${Breakpoint.md}) {
         gap: 16px;
       }
@@ -151,23 +151,147 @@ export const InsightStyles = styled(ReferralContentStyles)`
 
 export const UsageStyles = styled(ReferralContentStyles)`
   gap: 24px;
-  ._uasge {
+  ._uasge,
+  ._history {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 16px;
+    gap: 20px;
+    max-height: 800px;
+    overflow: auto;
     @media (max-width: ${Breakpoint.sm}) {
+      justify-content: flex-start;
       flex-direction: column;
+      flex-wrap: nowrap;
+      max-height: 1200px;
       width: 100%;
-      gap: 24;
+      gap: 24px;
+    }
+    ._card,
+    ._voucher {
+      width: 320px;
+
+      @media (max-width: ${Breakpoint.xl}) {
+        width: 280px;
+      }
+      @media (max-width: ${Breakpoint.sm}) {
+        width: 100%;
+      }
+    }
+  }
+  ._history {
+    ._voucher {
+      height: 220px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      /* border-left: none; */
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      max-height: 230px;
+
+      ._content_label {
+        /* padding: 24px 16px; */
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        width: 100%;
+        height: 100%;
+        gap: 10px;
+        background: #0d8d70;
+        //background-color: red;
+        /* width: max-content; */
+        ._top {
+          padding: 24px 16px;
+          width: 100%;
+          height: 65%;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          h1 {
+            color: #fff;
+            font-size: 42px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+          }
+          ._date {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            color: #fff; // icon color
+
+            ._start_date,
+            ._end_date {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              text-align: left;
+              span {
+                color: #fff;
+                font-size: 12px;
+                font-weight: 400;
+                text-transform: capitalize;
+              }
+              span:last-child {
+                color: #fff;
+                font-size: 14px;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+        ._pt_status {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          height: 35%;
+          border-top: 1px solid rgba(0, 0, 0, 0.08);
+          padding: 20px 16px;
+          background: #fff;
+          ._pt {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+
+            color: rgba(218, 127, 20, 1);
+            font-size: 22px;
+            p {
+              color: rgba(0, 0, 0, 0.88);
+              font-size: 20px;
+              font-weight: 600;
+              text-transform: uppercase;
+              margin: 0;
+            }
+          }
+          p {
+            margin: 0;
+            color: #007b5d;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: capitalize;
+          }
+        }
+      }
     }
   }
 `;
 
 export const PromoUserNameStyles = styled.span`
-  width: 140px;
+  width: 250px;
   height: 100px;
   line-height: 100px;
   text-align: center;
@@ -178,12 +302,37 @@ export const PromoUserNameStyles = styled.span`
   font-size: 16px;
   font-weight: 600;
   color: "white";
+  text-transform: capitalize;
   @media (max-width: ${Breakpoint.sm}) {
-    width: 200px;
+   // width: 200px;
   }
 `;
 
 export const VoucherExpiryDateStyles = styled.span`
   font-size: 12px;
   color: ${Colors.sbRed};
+`;
+export const RefferalStatusAndExpiryDateStyles = styled.div`
+  display: flex;
+  //flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  flex-direction: column;
+  ._content {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+    span {
+      color: #6a6a6a;
+      font-size: 14px;
+      font-weight: 400;
+    }
+    span:last-child {
+      //color: #1e1e1e;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: right;
+    }
+  }
 `;

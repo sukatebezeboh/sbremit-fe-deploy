@@ -18,14 +18,15 @@ import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
 import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import { generateAccountStatementPDF } from "../../utils/generateAccountStatementPdf";
-import { getFirstLetter } from "../../utils/reuseableUtils";
+import {
+  getFirstLetter,
+  transferMethodsInWords,
+} from "../../utils/reuseableUtils";
 import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
 import {
-  convertDate,
-  convertDateToSeperateWithDash,
+  downloadStatementPdf,
   formatTransactionStatus,
   formatTransactionsReversed,
   thisRecipient,
@@ -69,8 +70,8 @@ export default function Transcations({ page }: TranscationsProps) {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { transactions, total, limit, days } = useSelector(
-    (state: any) => state.transfer
+  const { transactionsArray, total, days } = useSelector(
+    (state: any) => state.transactions
   );
   const recipients = useSelector((state: any) => state.recipients.recipients);
   const history = useHistory();
@@ -91,9 +92,13 @@ export default function Transcations({ page }: TranscationsProps) {
     //if resend is clicked
     else if (key === "2") {
       //do sth for resend transfer
-      //update payIn, Payout, payoutCurrency
-      const { originAmount, destinationAmount, destinationCurrency } =
-        currentTransactionDetail || {};
+      //update payIn, Payout, payoutCurrency, tranfer method
+      const {
+        originAmount,
+        destinationAmount,
+        destinationCurrency,
+        transferMethod,
+      } = currentTransactionDetail || {};
       dispatch({
         type: TRANSFER,
         payload: {
@@ -101,6 +106,7 @@ export default function Transcations({ page }: TranscationsProps) {
           payinActualValue: originAmount,
           payoutActualValue: destinationAmount,
           payoutCurrency: destinationCurrency,
+          transferMethod: transferMethod,
         },
       });
       //then naviagate to get quoute
@@ -224,7 +230,7 @@ export default function Transcations({ page }: TranscationsProps) {
   };
 
   const formatedTransactionsForTable = formatTransactionsReversed(
-    transactions,
+    transactionsArray,
     recipients,
     page
   );
@@ -263,62 +269,6 @@ export default function Transcations({ page }: TranscationsProps) {
       // });
       // getTransactions();
     }
-  };
-
-  const downloadStatementPdf = async () => {
-    setDownloadState(true);
-    const { address1, address2, firstName, lastName } = user.profile;
-    const { code } = user.referral;
-    const customerName = `${firstName} ${lastName}`;
-    const customerAddress = address1;
-    const accountNumber = code;
-
-    const startDate =
-      selecetdRows[selecetdRows.length - 1].recipient.dateCreated;
-    const endDate = selecetdRows[0].recipient.dateCreated;
-
-    const periodValue = `${convertDateToSeperateWithDash(
-      startDate
-    )} to ${convertDateToSeperateWithDash(endDate)}`;
-    const periodHeaderTitle = `Period: ${convertDate(
-      startDate
-    )} to ${convertDate(endDate)}`;
-    const selectedTransaction: any = [];
-
-    selecetdRows
-      .slice()
-      .reverse()
-      .forEach((selected: any, index: number) => {
-        const data = selected.recipient;
-        const recipientFirstName = thisRecipient(
-          recipients,
-          data.recipientId
-        )?.firstName;
-        const recipientLastName = thisRecipient(
-          recipients,
-          data.recipientId
-        )?.lastName;
-        selectedTransaction.push([
-          `${convertDateToSeperateWithDash(data.dateCreated)}`,
-          `SBR${data.meta.transactionId}`,
-          `${data.meta.exchangeRate}`,
-          `${data.originCurrency} ${data.originAmount}`,
-          `${data.destinationAmount} ${data.destinationCurrency}`,
-          `${recipientFirstName} ${recipientLastName}`,
-        ]);
-        return selectedTransaction;
-      });
-    try {
-      await generateAccountStatementPDF({
-        customerName,
-        customerAddress,
-        accountNumber,
-        periodValue,
-        periodHeaderTitle,
-        selectedTransaction,
-      });
-      setDownloadState(false);
-    } catch (error) {}
   };
 
   return (
@@ -393,7 +343,14 @@ export default function Transcations({ page }: TranscationsProps) {
                 <Tooltip title="Click to dwonload selected transaction(s)">
                   <Button
                     disabled={!hasSelected}
-                    onClick={downloadStatementPdf}
+                    onClick={() =>
+                      downloadStatementPdf(
+                        user,
+                        selecetdRows,
+                        recipients,
+                        setDownloadState
+                      )
+                    }
                     loading={downloadState}
                   >
                     Download

@@ -14,6 +14,7 @@ import { paths } from "util/paths";
 import { signUpAction, toastAction } from "redux/actions/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { CREATE_ACCOUNT_SUCCESS } from "redux/actionTypes";
 
 const schema = yup.object({
   firstName: yup.string().trim().required().label("First name"),
@@ -21,7 +22,20 @@ const schema = yup.object({
   username: yup.string().email().required().label("Email"),
   password: yup.string().min(6).max(255).required().label("Password"),
   mobile: yup.string().min(9).max(11).required().label("Phone number"),
-  dob: yup.date().required().label("Date of birth"),
+  // dob: yup.date().required().label("Date of birth"),
+  dob: yup
+    .date()
+    .required()
+    .label("Date of birth")
+    .test(
+      "is-over-18",
+      "You must be older than 18 years",
+      function (value: any) {
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        return value <= eighteenYearsAgo;
+      }
+    ),
   referral: yup.string().label("Referral code"),
 });
 
@@ -81,6 +95,11 @@ const CreateAccount = () => {
         type: "success",
         timeout: 10000,
         message: "Account created successfully. Verify your email",
+      });
+      // reset CREATE_ACCOUNT_SUCCESS to null
+      dispatch({
+        type: CREATE_ACCOUNT_SUCCESS,
+        payload: null,
       });
       history.push({
         pathname: paths.CONFIRM_ACCOUNT_EMAIL,

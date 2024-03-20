@@ -4,7 +4,10 @@ import { useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import OtpInputCustom from "../components/OtpInput";
 import AuthButton from "../components/AuthButton";
-import AuthLayout, { ChildContainerSyles, ParentContainerSyles } from "./AuthLayout";
+import AuthLayout, {
+  ChildContainerSyles,
+  ParentContainerSyles,
+} from "./AuthLayout";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { paths } from "util/paths";
@@ -19,7 +22,7 @@ const VerifyEmail = () => {
   const [otp, setOtp] = useState("");
   const isLoading = useSelector((state: any) => state.loading);
 
-  const { username }: any = history?.location?.state || {};
+  const { username, isEmailRegistration }: any = history?.location?.state || {};
   if (!username) {
     history.replace(paths.SIGN_UP);
     return <></>;
@@ -30,7 +33,10 @@ const VerifyEmail = () => {
       <ParentContainerSyles>
         <ChildContainerSyles>
           {showSuccess ? (
-            <SignupSuccess setShowSuccess={setShowSuccess} />
+            <SignupSuccess
+              setShowSuccess={setShowSuccess}
+              isEmailRegistration={isEmailRegistration}
+            />
           ) : (
             <>
               <AuthHeader

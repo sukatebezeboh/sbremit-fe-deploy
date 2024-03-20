@@ -14,6 +14,33 @@ import http from "util/http";
 // "phoneCode": null,
 //             "state": null,
 
+const getUserVerifications = (user: any) => {
+  let verificationList = [];
+
+  if (user?.verifications) {
+    for (const key in user.verifications) {
+      verificationList.push(user.verifications[key]);
+    }
+  }
+
+  const idVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "IDENTITY"
+  );
+  const invalidIdVerification =
+    idVerification && idVerification.status === "PENDING";
+
+  const documentVerification = verificationList?.find(
+    (method: { type: string }) => method.type === "DOCUMENT"
+  );
+  const invalidDocumentVerification =
+    documentVerification && documentVerification.status === "PENDING";
+
+  return {
+    documentVerification: documentVerification || undefined,
+    idVerification: idVerification || undefined,
+  };
+};
+
 interface ComplyCubeVerificationProps {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -35,25 +62,15 @@ export const ComplyCubeVerification = ({
   const location_country = user?.profile?.location_country;
   const userCountry = location_country === "GB" ? "UK" : location_country;
 
-  let verificationList = [];
+  const verifications = getUserVerifications(user);
 
-  if (user?.verifications) {
-    for (const key in user.verifications) {
-      verificationList.push(user.verifications[key]);
-    }
-  }
+  const documentVerification = verifications.documentVerification;
+  const idVerification = verifications.idVerification;
 
-  const idVerification = verificationList?.find(
-    (method: { type: string }) => method.type === "IDENTITY"
-  );
-  const invalidIdVerification =
-    idVerification && idVerification.status === "PENDING";
-
-  const documentVerification = verificationList?.find(
-    (method: { type: string }) => method.type === "DOCUMENT"
-  );
   const invalidDocumentVerification =
-    documentVerification && documentVerification.status === "PENDING";
+    documentVerification && documentVerification?.status === "PENDING";
+  const invalidIdVerification =
+    idVerification && idVerification?.status === "PENDING";
 
   const verificationCompleted = Boolean(user?.meta?.verified);
   //!invalidIdVerification || !invalidDocumentVerification;
@@ -168,7 +185,7 @@ export const ComplyCubeVerification = ({
           .finally(() => {
             complycube.updateSettings({ isModalOpen: false });
             refreshUserDetails(() => {
-              checkSubmittedVerification();
+              checkSubmittedVerification(data);
             }, true);
           });
 
@@ -185,7 +202,17 @@ export const ComplyCubeVerification = ({
   };
 
   //this check prompt user if either of the verication is still pending
-  const checkSubmittedVerification = () => {
+  const checkSubmittedVerification = (data: any) => {
+    const verifications = getUserVerifications(data);
+
+    const documentVerification = verifications.documentVerification;
+    const idVerification = verifications.idVerification;
+
+    const invalidDocumentVerification =
+      documentVerification && documentVerification?.status === "PENDING";
+    const invalidIdVerification =
+      idVerification && idVerification?.status === "PENDING";
+
     //if id or doc is still pending
     if (invalidIdVerification) {
       return toastAction({

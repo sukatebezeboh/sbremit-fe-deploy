@@ -1,16 +1,5 @@
 import { TwitterOutlined, WhatsAppOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  Empty,
-  Progress,
-  Space,
-  Statistic,
-  Tabs,
-  TabsProps,
-} from "antd";
+import { Avatar, Button, Card, Divider, Space } from "antd";
 import _env from "env";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,28 +8,18 @@ import { paths } from "util/paths";
 import {
   copyToClipBoard,
   getPercentage,
-  //getUserDefaultCurrency,
   getValueFromArray,
 } from "../../../../../util/util"; //"util/util";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import {
-  generateAlphabetColor,
-  getFirstLetter,
-} from "../../utils/reuseableUtils";
-import { Title } from "../app-dashboard/DashboardSyles";
+import { userAppValues } from "../../utils/useAppValues";
 import {
   HeaderStyles,
-  InsightStyles,
   LinkContainerStyles,
   LinkStyles,
   ReferralContainerStyles,
   ReferralContentStyles,
-  UsageStyles,
-  PromoUserNameStyles,
-  VoucherExpiryDateStyles,
 } from "./ReferralsStyles";
-import { userAppValues } from "../../utils/useAppValues";
-import { convertDate } from "../app-transactions/TransactionHelper";
+import { Insights } from "./components/Insights";
 const { Meta } = Card;
 
 function isNotAwaiting(user: any, referralSettings: any) {
@@ -93,7 +72,7 @@ export default function Referrals() {
 
   const defaultCurrency = getUserDefaultCurrency() ?? "";
 
-  const getAccruedBonus = (users: any) => {
+  const getAccruedBonus = (users: any): number => {
     const filteredUsers = users?.filter(
       (user: any) =>
         user.useStatus === "Active" && isNotAwaiting(user, referralSettings)
@@ -112,7 +91,7 @@ export default function Referrals() {
       />
       <ReferralContentStyles>
         <HeaderStyles>
-          <div className="section_1">
+          <div className="_referral_code">
             <span>Referral code</span>
             <p>{user?.referral?.code}</p>
             <p>Share this on:</p>
@@ -177,222 +156,9 @@ export default function Referrals() {
         defaultCurrency={defaultCurrency}
         user={user}
         referredUsers={referralDetails?.referredUsers}
-      />
-
-      <Usage
         referralDetails={referralDetails}
         referralSettings={referralSettings}
       />
     </ReferralContainerStyles>
   );
 }
-
-const Insights = ({
-  accruedBonus,
-  defaultCurrency,
-  count,
-  user,
-  referredUsers,
-}: {
-  accruedBonus: any;
-  defaultCurrency: string;
-  count: number;
-  user: any;
-  referredUsers: any;
-}) => {
-  const voucherPoints = isNaN(Number(user?.meta?.VoucherPoints))
-    ? 0
-    : Number(user?.meta?.VoucherPoints);
-  const equivalentVoucherBonus = voucherPoints > 500 ? 5 : 0;
-  const voucherExpiryDate = convertDate(user?.meta?.VoucherExpire);
-
-  const getTotalReferredUsersByuseStatus = (
-    status: "Active" | "Used"
-  ): number => {
-    const matchedUsers: any[] = [];
-
-    referredUsers.forEach((user: any) => {
-      if (user.useStatus === status) {
-        matchedUsers.push(user);
-      }
-    });
-
-    return matchedUsers.length ?? 0;
-  };
-
-  const refferalInsightArray = [
-    {
-      title: "Total referee",
-      value: count,
-      color: "#d0cd23",
-    },
-    {
-      title: "Accrued bonus",
-      value: `${accruedBonus} ${defaultCurrency}`,
-      color: "#18a65f",
-    },
-    {
-      title: "Bonus used",
-      value: getTotalReferredUsersByuseStatus("Used"),
-      color: "#d0cd23",
-    },
-  ];
-
-  const loyaltInsightArray = [
-    {
-      title: "Total points",
-      value: voucherPoints,
-      color: voucherPoints < 500 ? "#d0cd23" : "#18a65f",
-    },
-    {
-      title: "Available balance",
-      value: `${equivalentVoucherBonus} ${defaultCurrency}`,
-      color: "#18a65f",
-    },
-  ];
-
-  const Insight = ({ type }: { type: "voucher" | "referral" }) => {
-    if (type === "referral") {
-      return (
-        <div className="_insights">
-          {refferalInsightArray.map((item, index) => (
-            <Card className="child" key={item.title + index}>
-              <Statistic
-                title={item.title}
-                value={item.value}
-                precision={0}
-                valueStyle={{ color: item.color }}
-              />
-            </Card>
-          ))}
-        </div>
-      );
-    } else if (type === "voucher") {
-      return (
-        <div className="_insights">
-          {loyaltInsightArray.map((item, index) => (
-            <Card className="child" key={item.title + index}>
-              <Statistic
-                title={item.title}
-                value={item.value}
-                precision={0}
-                valueStyle={{ color: item.color }}
-                suffix={
-                  item.title === "Available balance" && (
-                    <VoucherExpiryDateStyles>
-                      expires on ({voucherExpiryDate})
-                    </VoucherExpiryDateStyles>
-                  )
-                }
-              />
-            </Card>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const items: TabsProps["items"] = [
-    {
-      key: "1",
-      label: "Referral Insights",
-      children: <Insight type="referral" />,
-    },
-    // {
-    //   key: "2",
-    //   label: "Loyalty Insights",
-    //   children: <Insight type="voucher" />,
-    // },
-  ];
-
-  return (
-    <InsightStyles>
-      <Tabs
-        className="_tab"
-        defaultActiveKey="1"
-        items={items}
-        // onChange={onChange}
-      />
-    </InsightStyles>
-  );
-};
-
-const Usage = ({
-  referralDetails,
-  referralSettings,
-}: {
-  referralDetails: any;
-  referralSettings: any;
-}) => {
-  return (
-    <UsageStyles>
-      <Title>Usage</Title>
-      <div className="_uasge">
-        {referralDetails?.referredUsers?.length == 0 && <Empty />}
-        {referralDetails?.referredUsers?.map((user: any, index: number) => {
-          const referalCodeSTyles = {
-            width: "100%",
-            height: 80,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: "8px 8px 0px 0px",
-            background: generateAlphabetColor(
-              getFirstLetter(user?.firstName) || ""
-            ),
-          };
-          let percentage = Math.min(
-            Number(
-              getPercentage(
-                user?.cummulativeTransfer,
-                referralSettings?.data?.referralActivationAmount
-              )
-            ),
-            100
-          );
-
-          const getTitle = () => {
-            const isUseStatusUsed = user.useStatus === "Used";
-            if (percentage === 0) {
-              return "Awaiting Activation";
-            } else if (percentage !== 0 && isUseStatusUsed) {
-              return "Referral Bonus Used";
-            } else {
-              return "Activation Completed";
-            }
-          };
-
-          return (
-            <Card
-              //hoverable
-              key={index + user.firstName}
-              cover={
-                <div style={referalCodeSTyles}>
-                  <PromoUserNameStyles>
-                    {user.firstName} {user.lastName}
-                  </PromoUserNameStyles>
-                </div>
-              }
-            >
-              <Meta
-                title={getTitle()}
-                description={
-                  getTitle() === "Referral Bonus Used" ? (
-                    <Progress percent={percentage} size="small" />
-                  ) : (
-                    <Progress
-                      percent={percentage}
-                      size="small"
-                      status="active"
-                    />
-                  )
-                }
-              />
-            </Card>
-          );
-        })}
-      </div>
-    </UsageStyles>
-  );
-};
