@@ -1,9 +1,10 @@
 import { ConfigProvider } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   fetchUserNotifications,
   getClientIp,
   getRecipients,
+  refreshUserDetails,
   toastAction,
 } from "redux/actions/actions";
 import {
@@ -26,24 +27,51 @@ import { AUTH } from "redux/actionTypes";
 import { paths } from "util/paths";
 import TandCModal from "../app-components/TandCModal";
 import { userIsVerified } from "../utils/reuseableUtils";
+import RewardModal from "../app-components/RewardModal";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
-  const transfer = useSelector((state: any) => state.transfer);
-  const { currentTransferBeforeRedirectVericationsPage } = transfer || {};
+  const [isRewardAvailable, setIsRewardAvailable] = useState(false);
   const { user } = auth || {};
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const { trullioVerified } = user?.meta || {};
 
+  const isDashboardOrTransactionsPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.TRANSACTIONS ||
+    location.pathname === paths.ACCOUNT_STATEMENTS;
+
+  const isDashboardOrRewardPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.REWARDS;
+
+  const isGetQuotePage = location.pathname === paths.GET_QUOTE;
+
+  const checkIsRewardsAvailable = (data: any) => {
+    const { Referral } = data.referral || {};
+    const { Voucher } = data.meta || {};
+
+    const isVoucherActive = Voucher && Voucher === "ACTIVE";
+    const isNewBonusStateActive = Referral && Referral === "ACTIVE";
+
+    if (isVoucherActive || isNewBonusStateActive) {
+      return setIsRewardAvailable(true);
+    }
+
+    return setIsRewardAvailable(false);
+  };
+
   useEffect(() => {
     getRecipients();
     getUserCurrencyInfo();
-    getTransactions();
+    isDashboardOrTransactionsPage && getTransactions();
     fetchUserNotifications();
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
-    getClientIp(); // get user IP address
+    !isGetQuotePage && getClientIp(); // get user IP address
+    isDashboardOrRewardPage &&
+      refreshUserDetails(checkIsRewardsAvailable, true); // force refresh to upadate reward props
 
     //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
@@ -106,7 +134,10 @@ export default function AppLayout() {
             </div>
           </div>
         </ApplayoutContainerStlye>
+
+        {/* General popups/modals */}
         <TandCModal />
+        {isRewardAvailable && <RewardModal />}
       </ApplayoutStlye>
     </ConfigProvider>
   );

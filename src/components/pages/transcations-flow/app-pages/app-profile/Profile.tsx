@@ -1,23 +1,22 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Descriptions, Space, Tag } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import {
-  consoleLogOnLocalHost,
   generateAlphabetColor,
   getFirstLetter,
-  getFlagURL,
+  getFlagURL
 } from "../../utils/reuseableUtils";
+import { checkToShowVerificationForm } from "../app-verifications/verificationsHelper";
 import { EditUserProfile } from "./EditUserProfile";
 import {
   ActionsButtonStyles,
   ProfileContainerStyles,
   TransactionIdStyles,
-  UsernameAndTransactIDContiner,
+  UsernameAndIDContainer,
   UsernameStyles,
 } from "./ProfileStyles";
-import { checkToShowVerificationForm } from "../app-verifications/verificationsHelper";
 
 const headerPadding = {
   padding: "14px 0",
@@ -68,6 +67,24 @@ export default function Profile() {
   const { code } = user.referral;
   const [editProfileModal, setEditProfileModal] = useState(false);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 500px)");
+    setIsMobile(mediaQuery.matches);
+
+    const handleMediaQueryChange = (event: any) => {
+      setIsMobile(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+
   return (
     <ProfileContainerStyles>
       <EditUserProfile open={editProfileModal} setOpen={setEditProfileModal} />
@@ -88,12 +105,14 @@ export default function Profile() {
               {getFirstLetter(firstName)}
               {getFirstLetter(lastName)}
             </Avatar>
-            <UsernameAndTransactIDContiner>
+            <UsernameAndIDContainer>
               <UsernameStyles>
                 {firstName} {lastName}
               </UsernameStyles>
-              <TransactionIdStyles>Membership ID: {code}</TransactionIdStyles>
-            </UsernameAndTransactIDContiner>
+              <TransactionIdStyles>
+                {isMobile ? "ID:" : "Membership ID:"} {code}
+              </TransactionIdStyles>
+            </UsernameAndIDContainer>
           </Space>
         }
         extra={<Tag color="green">{status}</Tag>}
@@ -113,7 +132,11 @@ export default function Profile() {
           </ActionsButtonStyles>,
         ]}
       >
-        <Descriptions column={profileColumnSize} bordered>
+        <Descriptions
+          column={profileColumnSize}
+          bordered
+          layout={isMobile ? "vertical" : "horizontal"}
+        >
           <Descriptions.Item label="First Name">{firstName}</Descriptions.Item>
           <Descriptions.Item label="Last Name">{lastName}</Descriptions.Item>
           <Descriptions.Item label="Email">{username}</Descriptions.Item>
@@ -124,7 +147,9 @@ export default function Profile() {
           >
             {mobile || "required!"}
           </Descriptions.Item>
-          <Descriptions.Item label="Phone Code">{phoneCode}</Descriptions.Item>
+          <Descriptions.Item label="Phone Code">
+            {phoneCode || "N/A"}
+          </Descriptions.Item>
           <Descriptions.Item label="DOB">
             {`${day}-${month}-${year}` || dob}
           </Descriptions.Item>
@@ -138,7 +163,7 @@ export default function Profile() {
             {address1 || "required!"}
           </Descriptions.Item>
           <Descriptions.Item label="Address 2">
-            {address2 || "-"}
+            {address2 || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item
             label="City / Town"
@@ -147,7 +172,7 @@ export default function Profile() {
             {city || "required!"}
           </Descriptions.Item>
           <Descriptions.Item label="Building Name">
-            {streetName || "-"}
+            {streetName || "N/A"}
           </Descriptions.Item>
           <Descriptions.Item
             label="Postal / Zip Code"
@@ -168,7 +193,7 @@ export default function Profile() {
               />
               {countries[location_country?.toUpperCase()] ||
                 location_country?.toUpperCase() ||
-                "-"}
+                "N/A"}
             </Space>
           </Descriptions.Item>
         </Descriptions>

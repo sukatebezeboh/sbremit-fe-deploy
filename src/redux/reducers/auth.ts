@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: undefined,
   user: undefined,
   verification: true,
+  isRewardModalChecked: false,
 };
 
 const auth = (state: any = initialState, action: IAction) => {

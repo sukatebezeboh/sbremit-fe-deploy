@@ -41,7 +41,7 @@ export const TransactionIdStyles = styled.span`
   text-overflow: ellipsis;
 `;
 
-export const UsernameAndTransactIDContiner = styled.div`
+export const UsernameAndIDContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0;

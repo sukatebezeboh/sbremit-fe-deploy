@@ -12,7 +12,7 @@ import {
   confirmDialog,
 } from './app'
 import { recipients } from './recipients'
-import { transfer } from './transfer'
+import { transfer, transactions } from './transfer'
 import {  exchange } from './exchange'
 
 export interface IAction {
@@ -34,4 +34,5 @@ export default combineReducers({
   notifications,
   confirmDialog,
   exchange,
+  transactions,
 })

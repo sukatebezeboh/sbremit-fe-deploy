@@ -1,4 +1,4 @@
-import { LOADING, TRANSFER } from "redux/actionTypes";
+import { LOADING, TRANSACTIONS, TRANSFER } from "redux/actionTypes";
 import store from "redux/store";
 import http from "../../util/http";
 import { toastAction } from "./actions";
@@ -10,9 +10,9 @@ export const getTransactions = () => {
   store.dispatch({ type: LOADING, payload: true });
 
   const user = store.getState().auth.user;
-  const transfer = store.getState().transfer;
+  const transactions = store.getState().transactions;
 
-  const { limit, days, search, offset } = transfer;
+  const { limit, days, search, offset } = transactions;
 
   const formatSearchValue = encodeURIComponent(search);
 
@@ -24,10 +24,10 @@ export const getTransactions = () => {
     .then((res) => {
       if (res.data.status === "200") {
         store.dispatch({
-          type: TRANSFER,
+          type: TRANSACTIONS,
           payload: {
-            ...transfer,
-            transactions: res.data.data.collections,
+            ...transactions,
+            transactionsArray: res.data.data.collections,
             total: res.data.data.total,
           },
         });

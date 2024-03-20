@@ -5,13 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { TRANSFER } from "redux/actionTypes";
 import {
-  generateCheckoutId,
   initiateInteracTransferPayment,
   resetTransferData,
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import { constants } from "util/constants";
-import { paths } from "util/paths";
 import LargeButton, {
   PageTitileAndDescription,
   TransactionsSteps,
@@ -25,6 +23,10 @@ import {
   PleaseNoteStyles,
 } from "./PayMethodsStyles";
 import { PaymentGateWays } from "./paymentGateway";
+import {
+  generateCheckoutIDforAxcssPayment,
+  generateCheckoutInfoForTrulayerPayment,
+} from "./paymentHelper";
 
 interface LocationState {
   transfer: any;
@@ -41,11 +43,6 @@ export default function Pay() {
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
   const transferInfo = (location.state as LocationState)?.transfer;
   const [loader, setLoader] = useState(false);
-  const [confirmModalData, setConfimModalData] = useState({
-    open: false,
-    title: "Confirmation Required!",
-    message: "",
-  });
 
   useEffect(() => {
     if (
@@ -77,53 +74,26 @@ export default function Pay() {
       paymentMethod,
       clientIp
     );
-    //close Confirmation modal
-    //closeConfirmationModal();
 
     if (paymentMethod === "interac") {
       initiateInteracTransferPayment(+transferInfo.id);
     }
     if (paymentMethod === "truelayer") {
-      history.push(paths.TRUELAYER_PROVIDERS, { transaferId: transferInfo.id });
+      //set up an action that get: payment_id, resource_token and return_uri from the server
+      generateCheckoutInfoForTrulayerPayment(transferInfo.id, history);
     }
     if (paymentMethod === "axcess-payment") {
-      generateCheckoutIDforAxcssPayment(transferInfo);
+      generateCheckoutIDforAxcssPayment(transferInfo.id, history);
     }
+
     // clear redux store #transactions
     resetTransferData();
     setLoader(false);
   };
 
-  const generateCheckoutIDforAxcssPayment = (transfer: any) => {
-    const handleCheckoutID = (checkoutID: string) => {
-      if (checkoutID !== null) {
-        history.push(paths.AXCESS_MERCHANT, {
-          transaferId: transferInfo.id,
-          checkoutId: checkoutID,
-        });
-      }
-    };
-
-    // this exp make api request to the server to generate checkout ID
-    generateCheckoutId(transferInfo.id, handleCheckoutID, history);
-  };
-
   const onPayClick = () => {
     setLoader(true);
     handleProceed(selectedMethod);
-
-    // setConfimModalData((confirmModalData) => ({
-    //   ...confirmModalData,
-    //   message: `Are you sure you want to procced?`,
-    //   open: true,
-    // }));
-  };
-
-  const closeConfirmationModal = () => {
-    setConfimModalData((confirmModalData) => ({
-      ...confirmModalData,
-      open: false,
-    }));
   };
 
   const items: CollapseProps["items"] = [
@@ -138,16 +108,6 @@ export default function Pay() {
 
   return (
     <>
-      {/* <ConfirmModal
-        type="warning"
-        open={confirmModalData.open}
-        title={confirmModalData.title}
-        message={confirmModalData.message}
-        onSave={() => {
-          handleProceed(selectedMethod);
-        }}
-        onCancel={closeConfirmationModal}
-      /> */}
       <PaymentMethodsContainerStyles>
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription

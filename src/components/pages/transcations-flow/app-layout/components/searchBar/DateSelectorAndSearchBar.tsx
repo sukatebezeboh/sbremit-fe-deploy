@@ -7,9 +7,8 @@ import { Button, Input, Modal, Select, Space } from "antd";
 import { Breakpoint } from "components/pages/transcations-flow/utils/stylesVariables";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TRANSFER } from "redux/actionTypes";
+import { TRANSACTIONS } from "redux/actionTypes";
 import { getTransactions } from "redux/actions/actionsTransfer";
-import store from "redux/store";
 import styled from "styled-components";
 
 const prefix = (
@@ -148,15 +147,16 @@ export default function DateSelectorAndSearchBar({
 }
 
 export const DateSelector = () => {
-  const transfers = store.getState().transfer;
-  const { days } = useSelector((state: any) => state.transfer);
+  const transactions = useSelector((state: any) => state.transactions);
+  const { days } = transactions || {};
+
   const dispatch = useDispatch();
   //update store and make server request
   const handleChange = (value: string) => {
     dispatch({
-      type: TRANSFER,
+      type: TRANSACTIONS,
       payload: {
-        ...transfers,
+        ...transactions,
         days: Number(value),
       },
     });

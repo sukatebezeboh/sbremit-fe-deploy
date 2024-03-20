@@ -126,7 +126,10 @@ export const updateEmailAddress = async (
         message: `An activation link has been sent to your email: ${values?.username} `,
       });
       callback();
-      history.push(paths.CONFIRM_ACCOUNT_EMAIL, { username: values.username });
+      history.push(paths.CONFIRM_ACCOUNT_EMAIL, {
+        username: values.username,
+        isEmailRegistration: true,
+      });
     } else {
       toastAction({
         show: true,
@@ -161,24 +164,24 @@ export const signInAction = (data: any, history: any) => {
 
 const handleSignInResponse = (res: any, data: any, history?: any) => {
   const handleLoginBasedOnIsPhoneNumber = () => {
-    // if (isPhoneNumber(data.username)) {
-    //   return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
-    // } else {
-    history.push(paths.DASHBOARD);
-    CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
-    CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
-    CookieService.put(
-      "X-SERVICE_PROVIDER",
-      res.headers["x-service-provider"],
-      30
-    );
+    if (isPhoneNumber(data.username)) {
+      return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
+    } else {
+      history.push(paths.DASHBOARD);
+      CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
+      CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
+      CookieService.put(
+        "X-SERVICE_PROVIDER",
+        res.headers["x-service-provider"],
+        30
+      );
 
-    CookieService.put("user", JSON.stringify(res.data.data));
-    store.dispatch({
-      type: AUTH,
-      payload: { isAuthenticated: true, user: res.data.data },
-    });
-    //}
+      CookieService.put("user", JSON.stringify(res.data.data));
+      store.dispatch({
+        type: AUTH,
+        payload: { isAuthenticated: true, user: res.data.data },
+      });
+    }
   };
 
   if (res.data.status === "200") {
@@ -408,7 +411,12 @@ const signOutOnClient = () => {
 
   store.dispatch({
     type: AUTH,
-    payload: { isAuthenticated: false, user: undefined },
+    payload: {
+      isAuthenticated: false,
+      user: undefined,
+      verification: true,
+      isRewardModalChecked: false,
+    },
   });
   store.dispatch({
     type: RESET_TRANSFER,
@@ -1751,50 +1759,83 @@ export const updateTransferRecipient = (
     });
 };
 
-export const generateCheckoutId = async (
+export const generateCheckoutInfo = async (
   transferId: any,
   callback: Function,
-  history: any
+  history: any,
+  type: "axcessms" | "truelayer"
 ) => {
+  const toastActionForStatus400 = () =>
+    toastAction({
+      show: true,
+      type: "error",
+      toastType: "toast-with-confirmation-btns",
+      title: "Missing Information!",
+      message: "Kindly update your profile to complete this payment",
+      extraBtnText: "Update now",
+      duration: 0,
+      extraBtnHandler: () => history.push(paths.PROFILE),
+    });
+
+  const toastActionForOtherStatus = () =>
+    toastAction({
+      show: true,
+      type: "error",
+      timeout: 15000,
+      message: "An error occurred. Please try again.",
+    });
+
+  const endpoint =
+    type === "axcessms"
+      ? endpoints.GET_AXCESS_CHECKOUT_ID
+      : endpoints.TRUELAYER_INITIATE_PAYMENT;
+
   http
-    .get(parseEndpointParameters(endpoints.GET_CHECKOUT_ID, transferId))
+    .get(parseEndpointParameters(endpoint, transferId))
     .then((res) => {
       if (res.data.status === "200") {
-        return callback(res.data.data.id);
+        //axcessms checkout id or truelayer data.payment_id and data.resource_token
+        const data = type === "axcessms" ? res.data.data.id : res.data;
+        return callback(data);
       } else if (res.data.status === "400") {
-        return toastAction({
-          show: true,
-          type: "error",
-          toastType: "toast-with-confirmation-btns",
-          title: "Missing Information!",
-          message: "Kindly update your profile to complete this payment",
-          extraBtnText: "Update now",
-          duration: 0,
-          extraBtnHandler: () => history.push(paths.PROFILE),
-        });
+        return toastActionForStatus400();
+      } else {
+        toastActionForOtherStatus();
       }
     })
     .catch((error) => {
-      toastAction({
-        show: true,
-        type: "error",
-        timeout: 15000,
-        message: "An error occurred. Please try again.",
-      });
+      toastActionForOtherStatus();
     });
 };
 
 export const getPaymentStatus = async (
-  checkoutID: string,
+  checkoutID: string, //checkoutID or transferID
   callback: Function,
-  onCallbackError: Function
+  onCallbackError: Function,
+  type: "axcessms" | "truelayer"
 ) => {
+  const endpoint =
+    type === "axcessms"
+      ? endpoints.GET_AXCESS_PAYMENT_NOTIFICATION
+      : endpoints.TRUELAYER_PAYMENT_COMPLETED;
+
+  const payload =
+    type === "axcessms"
+      ? {
+          checkoutid: checkoutID,
+        }
+      : {
+          transferId: checkoutID, //truelayer post request payload
+        };
+
   http
-    .post(endpoints.GET_AXCESS_PAYMENT_NOTIFICATION, {
-      checkoutid: checkoutID,
-    })
+    .post(endpoint, payload)
     .then((res) => {
-      callback(res.data);
+      if (res.data.status === "500") {
+        onCallbackError();
+      } else {
+        callback(res.data);
+      }
     })
     .catch((error) => {
       onCallbackError();
