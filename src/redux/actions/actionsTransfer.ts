@@ -75,11 +75,12 @@ export const getUserCurrencyInfo = () => {
 
 export const updateCorrespondingExchangeRate = async (
   payinCurrency: string,
-  payoutCurrency: string
+  payoutCurrency: string,
+  isLanding?: boolean
 ) => {
   store.dispatch({
     type: LOADING,
-    payload: "Fetching exchange rate...",
+    payload: isLanding ? "" : "Fetching exchange rate...",
   });
   const transfer = store.getState().transfer;
   //https://api-uat.sbremit.co.uk/exchange/GBP/XAF
@@ -87,20 +88,37 @@ export const updateCorrespondingExchangeRate = async (
     .get(`/exchange/${payinCurrency}/${payoutCurrency}`)
     .then((res) => {
       if (res.data.status === "200") {
-        store.dispatch({
+        store.dispatch({ type: LOADING, payload: false });
+        return store.dispatch({
           type: TRANSFER,
           payload: {
             ...transfer,
             exchangeRate: Number(res.data.data.rate),
           },
         });
+      } else {
         store.dispatch({ type: LOADING, payload: false });
+        //reset rate on error
+        store.dispatch({
+          type: TRANSFER,
+          payload: {
+            ...transfer,
+            exchangeRate: 0,
+          },
+        });
+        return toastAction({
+          show: true,
+          type: "error",
+          timeout: 25000,
+          message:
+            res.data.error?.message || "An error occurred, Please try again.",
+        });
       }
     })
     .catch((error) => {
       //console.log(error);
       store.dispatch({ type: LOADING, payload: false });
-      toastAction({
+      return toastAction({
         show: true,
         type: "error",
         timeout: 25000,

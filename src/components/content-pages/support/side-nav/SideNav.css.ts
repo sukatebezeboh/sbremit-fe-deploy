@@ -2,12 +2,13 @@ import styled from "styled-components";
 
 export default styled.div`
 width: 383px;
-height: 100%;
+height: auto;
 background: #FFFFFF 0% 0% no-repeat padding-box;
 position: fixed;
-top: 90px;
+top: 150px;
 padding: 40px 0px;
 z-index: 101;
+border-right: 1px solid #33333333;
 ul {
     list-style: none;
     padding-left: 20px;

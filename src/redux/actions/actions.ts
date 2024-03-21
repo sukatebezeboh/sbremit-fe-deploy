@@ -8,6 +8,7 @@ import {
   CREATE_ACCOUNT_ERROR,
   CREATE_ACCOUNT_SUCCESS,
   EXCHANGE_SPREADS,
+  ISMOBILE,
   LOADING,
   NOTIFICATIONS,
   RECIPIENT,
@@ -167,7 +168,7 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
     if (isPhoneNumber(data.username)) {
       return history.push(paths.EMAIL_REGISTRATION, { data: res.data.data });
     } else {
-      history.push(paths.DASHBOARD);
+      // history.push(paths.DASHBOARD);
       CookieService.put(env.SESSION_KEY, res.headers["x-auth-token"]);
       CookieService.put(env.SESSION_ID, res.headers["x-service-user-name"]);
       CookieService.put(
@@ -2335,4 +2336,11 @@ export const updateTandC = (profile: any, callback: Function) => {
         });
       }
     });
+};
+
+export const setIsMobileView = (state: boolean) => {
+  return store.dispatch({
+    type: ISMOBILE,
+    payload: state,
+  });
 };

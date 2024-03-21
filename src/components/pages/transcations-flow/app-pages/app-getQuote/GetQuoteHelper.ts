@@ -65,6 +65,7 @@ export const getTransactionQuoteRequest = async (
         payload: "IInitializing your transfer...",
       });
       if (res.data.status === "200") {
+        store.dispatch({ type: LOADING, payload: false });
         return callback(res.data.data);
       } else {
         onErrorCallback();
@@ -76,7 +77,6 @@ export const getTransactionQuoteRequest = async (
             res.data.error.message || "An error occurred. Please try again.",
         });
       }
-      store.dispatch({ type: LOADING, payload: false });
     });
   } catch (error: any) {
     onErrorCallback();

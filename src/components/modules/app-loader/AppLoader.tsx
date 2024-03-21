@@ -6,7 +6,7 @@ const Div = styled.div`
   width: 100%;
   height: 100vh;
   background-color: #1a191967;
-  position: absolute;
+  position: fixed;
   z-index: 30;
   top: 0px;
   left: 0px;

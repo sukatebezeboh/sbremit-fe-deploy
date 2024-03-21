@@ -33,6 +33,7 @@ import http from "util/http";
 import endpoints from "util/endpoints";
 import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
 import RouteConfig from "components/pages/transcations-flow/app-layout/RouteConfig";
+import NonAuthLayout from "components/pages/non-authenticated-pages/layouts/NonAuthLayout";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -141,8 +142,10 @@ function App() {
               path={route.path}
               render={() => (
                 <Suspense fallback={<AppLoader show={true} />}>
-                  <route.component {...route.props} />
-                  {route.footerless ? <></> : <AppFooter />}
+                  <NonAuthLayout>
+                    <route.component {...route.props} />
+                  </NonAuthLayout>
+                  {/* {route.footerless ? <></> : <AppFooter />} */}
                 </Suspense>
               )}
               key={route.path + i}

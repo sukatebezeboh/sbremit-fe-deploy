@@ -10,6 +10,7 @@ import {
   createAccountSuccess,
   createAccountError,
   confirmDialog,
+  isMobileView
 } from './app'
 import { recipients } from './recipients'
 import { transfer } from './transfer'
@@ -34,4 +35,5 @@ export default combineReducers({
   notifications,
   confirmDialog,
   exchange,
+  isMobileView
 })
