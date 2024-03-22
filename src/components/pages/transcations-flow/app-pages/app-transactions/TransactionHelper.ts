@@ -162,9 +162,9 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   if (transactionStatus === constants.TRANSFER_STATUS_EXPIRED) {
     return { text: "Expired", color: gray };
   }
-  // if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_CANCELLED) {
-  //   return { text: "Cancelled", color: gray };
-  // }
+  if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_CANCELLED) {
+    return { text: "Cancelled", color: gray };
+  }
 
   return { text: "Unknown", color: gray };
 };
