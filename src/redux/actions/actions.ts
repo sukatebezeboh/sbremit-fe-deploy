@@ -2317,7 +2317,7 @@ export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
   paymentGateway: string,
   clientIp: string,
-  callback?: Function
+  callback: Function
 ) => {
   const transfer = store.getState().transfer;
 
@@ -2333,10 +2333,16 @@ export const updateTransferWithPaymentGatewayCharge = async (
           type: TRANSFER,
           payload: { ...transfer, transactionDetails: { ...res.data.data } },
         });
-        callback?.();
+        callback();
       }
     })
-    .catch(() => {})
+    .catch((error) => {
+      toastAction({
+        show: true,
+        type: "error",
+        message: error?.message || "Could not initiate payment, please try again",
+      });
+    })
     .then(() => {});
 };
 
