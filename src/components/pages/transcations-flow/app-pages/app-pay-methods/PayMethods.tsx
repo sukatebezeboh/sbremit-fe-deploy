@@ -69,26 +69,33 @@ export default function Pay() {
 
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
+    const initiatePayment = () => {
+      if (paymentMethod === "interac") {
+        initiateInteracTransferPayment(+transferInfo.id);
+      }
+      if (paymentMethod === "truelayer") {
+        //set up an action that get: payment_id, resource_token and return_uri from the server
+        generateCheckoutInfoForTrulayerPayment(transferInfo.id, history);
+      }
+      if (paymentMethod === "axcess-payment") {
+        generateCheckoutIDforAxcssPayment(transferInfo.id, history);
+      }
+
+      // clear redux store #transactions
+      resetTransferData();
+      setLoader(false);
+
+      return;
+    };
+
     updateTransferWithPaymentGatewayCharge(
       transferInfo.id,
       paymentMethod,
-      clientIp
+      clientIp,
+      () => {
+        initiatePayment(); //callback onSucc
+      }
     );
-
-    if (paymentMethod === "interac") {
-      initiateInteracTransferPayment(+transferInfo.id);
-    }
-    if (paymentMethod === "truelayer") {
-      //set up an action that get: payment_id, resource_token and return_uri from the server
-      generateCheckoutInfoForTrulayerPayment(transferInfo.id, history);
-    }
-    if (paymentMethod === "axcess-payment") {
-      generateCheckoutIDforAxcssPayment(transferInfo.id, history);
-    }
-
-    // clear redux store #transactions
-    resetTransferData();
-    setLoader(false);
   };
 
   const onPayClick = () => {
