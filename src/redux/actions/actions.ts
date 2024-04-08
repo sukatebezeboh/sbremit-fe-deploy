@@ -1642,7 +1642,7 @@ export const confirmAccountEmail = (token: string, showSuccess?: Function) => {
 };
 
 export const subscribe = (data: { email: string }) => {
-  axios
+  http
     .post(endpoints.SUBSCRIBE, data, {
       headers: { "X-SERVICE-PROVIDER": serviceProvider },
     })
