@@ -15,9 +15,14 @@ import { useLocation } from "react-router-dom";
 const SBlogo = `/assets/main-logo.svg`;
 
 const Navbar = () => {
+  const location = useLocation();
   const isMobile = useSelector((state: any) => state.isMobileView);
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const histrory = useHistory();
+
+  useEffect(() => {
+    setOpenMobileMenu(false);
+  }, [location?.pathname]);
 
   return (
     <NavbarStyles>
@@ -70,7 +75,7 @@ const SignUpAndSignIn = () => {
 };
 
 const NavLinks = ({ isMobile }: { isMobile: boolean }) => {
-  const [currentLink, setCurrentLink] = useState("mail");
+  const [currentLink, setCurrentLink] = useState("");
   const histrory = useHistory();
   const location = useLocation();
 
@@ -325,13 +330,14 @@ const MobileMenuStyles = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  overflow: hidden;
+  max-height: 800px;
+  overflow-y: auto;
 
   background: ${Colors.bgwhite};
   width: auto;
   margin-left: 5%;
   margin-right: 5%;
-  margin-top: 84px;
+  margin-top: 88px;
   padding: 28px 20px;
   position: absolute;
   top: 0;
