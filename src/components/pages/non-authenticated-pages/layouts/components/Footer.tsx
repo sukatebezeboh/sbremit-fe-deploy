@@ -23,10 +23,10 @@ const CompanyLinks = [
     name: "FAQs",
     link: paths.HELP,
   },
-  {
-    name: "Blog",
-    link: "/",
-  },
+  // {
+  //   name: "Blog",
+  //   link: paths.OUR_BLOG,
+  // },
 ];
 
 const LegalsLinks = [
@@ -47,7 +47,7 @@ const LegalsLinks = [
 const ContactLinks = [
   {
     name: "+44(0)3301334158",
-    link: "/",
+    link: paths.HELP,
   },
   {
     name: "contact@sbremit.com",

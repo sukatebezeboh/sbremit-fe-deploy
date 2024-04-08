@@ -22,6 +22,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setOpenMobileMenu(false);
+    window.scrollTo(0, 0);
   }, [location?.pathname]);
 
   return (
@@ -96,14 +97,14 @@ const NavLinks = ({ isMobile }: { isMobile: boolean }) => {
           label: "About Us",
           key: paths.ABOUT,
         },
-        {
-          label: "Careers",
-          key: "careers",
-        },
-        {
-          label: "Our Blog",
-          key: paths.OUR_BLOG,
-        },
+        // {
+        //   label: "Careers",
+        //   key: "careers",
+        // },
+        // {
+        //   label: "Our Blog",
+        //   key: paths.OUR_BLOG,
+        // },
         {
           label: "Legal",
           key: "legal",
