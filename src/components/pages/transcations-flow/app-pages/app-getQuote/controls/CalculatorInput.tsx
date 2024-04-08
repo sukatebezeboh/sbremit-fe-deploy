@@ -38,7 +38,7 @@ export const CalculatorInput = ({
 
   const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Sanitize Input
-    const value = Number(e.target.value.replace(",", ""));
+    const value = Number(e.target.value.replace(/,/g, ""));
     upadatePayInAndPayOut(value);
   };
 
