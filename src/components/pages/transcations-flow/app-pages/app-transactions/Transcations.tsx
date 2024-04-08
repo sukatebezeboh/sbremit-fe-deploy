@@ -70,8 +70,8 @@ export default function Transcations({ page }: TranscationsProps) {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { transactions, total, limit, days } = useSelector(
-    (state: any) => state.transfer
+  const { transactionsArray, total, days } = useSelector(
+    (state: any) => state.transactions
   );
   const recipients = useSelector((state: any) => state.recipients.recipients);
   const history = useHistory();
@@ -230,7 +230,7 @@ export default function Transcations({ page }: TranscationsProps) {
   };
 
   const formatedTransactionsForTable = formatTransactionsReversed(
-    transactions,
+    transactionsArray,
     recipients,
     page
   );

@@ -23,7 +23,8 @@ interface RewradsProps {
 
 export const checkUserReward = (
   user: any,
-  referralConstants: any
+  referralConstants: any,
+  loyaltyConstants: any
 ): RewradsProps => {
   const { Referral, Referrals } = user.referral || {};
   const { Voucher, Vouchers } = user.meta || {};
@@ -45,6 +46,9 @@ export const checkUserReward = (
   const lastActiveReferralExpiryDate = convertDate(referralsArray?.[0].Expires);
 
   const lastActiveVoucherExpiryDate = convertDate(vouchersArray?.[0].Expires);
+
+  const rawVoucherBonus = loyaltyConstants?.voucherBonus;
+  const voucherBonus = isNaN(rawVoucherBonus) ? 0 : Number(rawVoucherBonus);
 
   const rawUplineReferralBonus = referralConstants?.referredUserDiscountValue;
   const rawDownlineReferralBonus = referralConstants?.referrerDiscountValue;
@@ -70,7 +74,9 @@ export const checkUserReward = (
     return {
       state: true,
       type: "referral",
-      subtitle: `${referralBonus} ${defaultCurrency} referral bonus is ready to use`,
+      subtitle: `${defaultCurrency} ${referralBonus.toFixed(
+        2
+      )} referral bonus is ready to use`,
       message: "This will be added to your next transfer.",
       date: `Valid until ${lastActiveReferralExpiryDate}`,
     };
@@ -78,7 +84,9 @@ export const checkUserReward = (
     return {
       state: true,
       type: "voucher",
-      subtitle: `You have earned 5 ${defaultCurrency}.`,
+      subtitle: `You have earned  ${defaultCurrency} ${voucherBonus.toFixed(
+        2
+      )}.`,
       message: "Your loyalty reward will be added to your next transfer.",
       date: `Valid until ${lastActiveVoucherExpiryDate}`,
     };
@@ -100,17 +108,12 @@ export default function RewardModal() {
   const { isRewardModalChecked, user } = auth || {};
 
   const referralConstants = getAppValueDataByName(values.data, "settings");
+  const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
 
-  const reward = checkUserReward(user, referralConstants);
-  const location = useLocation();
+  const reward = checkUserReward(user, referralConstants, loyaltyConstants);
   const history = useHistory();
 
-  const isDashboardOrRewardPage =
-    location.pathname === paths.DASHBOARD ||
-    location.pathname === paths.REWARDS;
-
-  const isVisible =
-    reward.state && !isRewardModalChecked && isDashboardOrRewardPage; //display the reward modal only on the dashboard or reward page
+  const isVisible = reward.state && !isRewardModalChecked;
 
   const handleCloseModal = (isContinue: boolean) => {
     if (isContinue) {
@@ -164,7 +167,9 @@ const ReferralRewardContent = ({ reward, onContinue }: RewardProps) => {
         Use voucher
       </Button>
       <span className="_date">{reward.date}</span>
-      <span className="_tnc">Subject to Ts & Cs</span>
+      <a href={paths.TERMS} target="_blank">
+        Subject to Ts & Cs
+      </a>
     </ReferralRewardContentStyles>
   );
 };
@@ -180,7 +185,9 @@ const VoucherRewardContent = ({ reward, onContinue }: RewardProps) => {
         Use voucher
       </Button>
       <span className="_date">{reward.date}</span>
-      <span className="_tnc">Subject to Ts & Cs</span>
+      <a href={paths.TERMS} target="_blank">
+        Subject to Ts & Cs
+      </a>
     </VoucherRewardContentStyles>
   );
 };
@@ -258,9 +265,18 @@ const ReferralRewardContentStyles = styled.div`
     line-height: 20px; /* 125% */
     letter-spacing: -0.8px;
   }
-  ._tnc {
+  a {
     margin-top: 24px;
-    font-size: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: ${Colors.sbGreen};
+    }
   }
 `;
 
@@ -324,8 +340,17 @@ const VoucherRewardContentStyles = styled.div`
     line-height: 20px; /* 125% */
     letter-spacing: -0.8px;
   }
-  ._tnc {
+  a {
     margin-top: 24px;
-    font-size: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: ${Colors.sbGreen};
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: ${Colors.sbGreen};
+    }
   }
 `;

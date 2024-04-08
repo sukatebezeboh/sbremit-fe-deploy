@@ -7,7 +7,7 @@ import {
 import { Alert, Avatar, Button } from "antd";
 import _env from "env";
 import { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
 import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
@@ -31,10 +31,25 @@ const options: Intl.DateTimeFormatOptions = {
 
 export default function PaymentComplete() {
   const history = useHistory();
+  const location = useLocation();
   let { transferId } = useParams<any>();
   const [trasnferInfo, setTransferInfo] = useState<any>();
   const [paymentInfo, setPaymentInfo] = useState<any>();
   const [isRequestError, setIsrequestError] = useState(false);
+
+  //clean pathname if it's truelayer and has multiple '?'' symabols
+  useEffect(() => {
+    if (location.search.includes("payment_type=truelayer")) {
+      //remove everything after the first '?' if any.
+      const cleanedUrl =
+        location.pathname + location.search.replace(/(\?.*?)\?.*/, "$1");
+
+      history.replace(cleanedUrl);
+    }
+  }, [location.search, location.pathname, history]);
+
+  const searchParams = new URLSearchParams(location.search);
+  const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
 
   useEffect(() => {
     getTransactionsInfo(setTransferInfo, transferId);
@@ -42,7 +57,21 @@ export default function PaymentComplete() {
 
   useEffect(() => {
     if (trasnferInfo !== undefined) {
-      getPaymentStatus(axcess_checkout_id, updatePaymentInfo, OnErrorRequest);
+      if (isTrulayerPayment) {
+        getPaymentStatus(
+          transferId,
+          updatePaymentInfo,
+          onErrorRequest,
+          "truelayer"
+        );
+      } else {
+        getPaymentStatus(
+          axcess_checkout_id,
+          updatePaymentInfo,
+          onErrorRequest,
+          "axcessms"
+        );
+      }
     }
   }, [trasnferInfo]);
 
@@ -50,7 +79,7 @@ export default function PaymentComplete() {
     setPaymentInfo(data);
   };
 
-  const OnErrorRequest = () => {
+  const onErrorRequest = () => {
     setIsrequestError(true);
   };
 
@@ -61,8 +90,12 @@ export default function PaymentComplete() {
   const date = new Date(currentTimestamp);
   const formattedDate: string = date.toLocaleString("en-US", options);
 
+  const statusOrCodeRes = isTrulayerPayment
+    ? paymentInfo?.status
+    : paymentInfo?.code;
+
   const PaymentCategoryIndex =
-    checkPaymentCodeWithPattern(paymentInfo?.code) ?? 1; //fallback inprogress
+    checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes) ?? 1; //fallback inprogress
 
   const AvatarIcons = [
     <CheckOutlined rev={undefined} />,
@@ -78,12 +111,12 @@ export default function PaymentComplete() {
 
   const PaymentDescriptions = [
     <p>
-      The payment has been completed successfully.
-      <br /> Thanks for being there with us.
+      Please note it can take up to 5 minutes for the status of your transfer to
+      be updated..
     </p>,
     <p>
-      Payment in progress, <br /> Please note, it may take up to 5 minutes for
-      the status of your transaction to be updated.
+      Please note it can take up to 5 minutes for the status of your transfer to
+      be updated..
     </p>,
     <p>The payment was not completed successfully!</p>,
   ];
@@ -95,7 +128,7 @@ export default function PaymentComplete() {
     <PaymentCompleteConatinerStyles>
       {!paymentInfo ? (
         isRequestError ? (
-          OnErrorRequestAlert
+          onErrorRequestAlert
         ) : (
           <>
             <LoadingOutlined rev={undefined} />
@@ -121,7 +154,7 @@ export default function PaymentComplete() {
               {/* <span> ~{paymentInfo?.message}~</span> */}
             </ExtraInfo>
             <span className="id_and_date">
-              Transaction ID: SBR{transactionId}, {formattedDate}{" "}
+              Transaction ID: {transactionId}, {formattedDate}{" "}
             </span>
             <Button
               type="default"
@@ -138,7 +171,7 @@ export default function PaymentComplete() {
   );
 }
 
-const OnErrorRequestAlert = (
+const onErrorRequestAlert = (
   <Alert
     className="alert"
     type="error"
@@ -146,9 +179,11 @@ const OnErrorRequestAlert = (
     description={
       <span>
         Oops! Something went wrong with your request. Please{" "}
-        <i>
-          <a href={`${_env.APP_HOST}${paths.CONTACT}`}>Contact Us</a>
-        </i>{" "}
+        <u>
+          <i>
+            <a href={`${_env.APP_HOST}${paths.CONTACT}`}>Contact Us</a>
+          </i>
+        </u>{" "}
         for assistance. Thank you!
       </span>
     }

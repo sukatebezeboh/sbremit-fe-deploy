@@ -1,8 +1,9 @@
-import { SwapOutlined } from "@ant-design/icons";
+import { FilePdfOutlined, SwapOutlined } from "@ant-design/icons";
 
 import {
   Alert,
   Badge,
+  Button,
   Descriptions,
   Divider,
   Modal,
@@ -165,6 +166,7 @@ export const TransactionDetail = ({
         {/* section 2 */}
         <TransactionDetailContentStyle $bgColor="#007B5D">
           <TransactionsDetailsSteps transaction={transaction} />
+
           <TransactionIdStyles $Color="#FFF">
             Expected delivery time: {getPaymentEstimatedTime(transferMethod)}
           </TransactionIdStyles>
@@ -294,6 +296,7 @@ export const TransactionsInfomations = ({
       ),
     },
   ];
+
   return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
 };
 
@@ -436,4 +439,28 @@ export const TransactionDetails = ({
       </Descriptions.Item>
     </Descriptions>
   );
+};
+
+const DownloadReceipt = ({ metaData }: { metaData: any }) => {
+  const downloadLink = metaData?.receipt_url;
+
+  if (
+    downloadLink &&
+    (downloadLink !== "" || downloadLink !== null || downloadLink !== undefined)
+  ) {
+    return (
+      <Button
+        type="default"
+        href={downloadLink}
+        rel="noreferrer"
+        target="_blank"
+        download
+        icon={<FilePdfOutlined rev={undefined} />}
+      >
+        Download receipt
+      </Button>
+    );
+  } else {
+    return <></>;
+  }
 };

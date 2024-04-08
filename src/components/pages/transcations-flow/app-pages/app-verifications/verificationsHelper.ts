@@ -3,7 +3,7 @@ export const Verifictions = {
   document: "DOCUMENT",
 };
 
-export const checkVerification = (user: any, verificationType: string) => {
+export const getVerificationStatus = (user: any, verificationType: string) => {
   let verificationList: any[] = [];
   //check if the user has a verification property and push into verificationList
   if (user?.verifications) {
@@ -12,14 +12,14 @@ export const checkVerification = (user: any, verificationType: string) => {
     }
   }
 
-  const verification = verificationList.find(
+  const verification: any = verificationList.find(
     (method) => method.type === verificationType
   );
 
-  const isVerificationAttempted =
-    verification && verification.status !== "PENDING";
+  // const isVerificationAttempted =
+  //   verification && verification.status !== "PENDING";
 
-  return isVerificationAttempted ?? false;
+  return verification?.status || "PENDING";
 };
 
 export const checkToShowVerificationForm = (user: any) => {

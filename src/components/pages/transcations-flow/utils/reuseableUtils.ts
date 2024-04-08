@@ -134,7 +134,7 @@ export const transferMethodsInWords: any = {
   2: "bank_transfer",
   3: "cash_pickup",
   mobile_money: "mobile_money",
-  bank_transfer: " bank_transfer",
+  bank_transfer: "bank_transfer",
   cash_pickup: "cash_pickup",
   cardless_withdrawal: "ATM withdrawal",
   bills_payment: "Pay Bills",

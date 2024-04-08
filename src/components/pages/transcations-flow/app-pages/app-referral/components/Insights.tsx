@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   getAccruedAndUsedBonus,
-  getTotalUsedVouchers,
+  getTotalActiveAndUsedVouchers,
 } from "../ReferralsHelper";
 import { InsightStyles } from "../ReferralsStyles";
 import { UsageAndHistory } from "./UsageAndHistory";
@@ -39,7 +39,7 @@ export const Insights = ({
   const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
   const referralConstants = getAppValueDataByName(values.data, "settings");
 
-  const rawVoucherActivationvalue = loyaltyConstants?.voucherActivationvalue;
+  const rawVoucherActivationvalue = loyaltyConstants?.minVoucherAmount;
   const voucherActivationvalue = isNaN(rawVoucherActivationvalue)
     ? 0
     : Number(rawVoucherActivationvalue);
@@ -87,12 +87,14 @@ export const Insights = ({
     },
     {
       title: "Total earned",
-      value: `${equivalentVoucherBonus} ${defaultCurrency}`,
+      value: `${
+        getTotalActiveAndUsedVouchers(user).totalActiveVouchers
+      } ${defaultCurrency}`,
       color: "#18a65f",
     },
     {
       title: "Total used",
-      value: getTotalUsedVouchers(user),
+      value: getTotalActiveAndUsedVouchers(user).totalUsedVouchers,
       color: "#18a65f",
     },
   ];

@@ -1,5 +1,5 @@
 import { IAction } from ".";
-import { RESET_TRANSFER, TRANSFER, TRANSFER_QUOTE } from "../actionTypes";
+import { RESET_TRANSFER, TRANSFER, TRANSFER_QUOTE, TRANSACTIONS } from "../actionTypes";
 
 const initialTransferState: {} = {
   conversionRate: {},
@@ -56,6 +56,16 @@ const initialTransferState: {} = {
   currentTransferBeforeRedirectVericationsPage: undefined,
 };
 
+const initialTransactionsState: {} = {
+  transactionsArray: [],
+  total: 0,
+  days: 7,
+  limit: 10000,
+  offset: 0,
+  status: "ALL",
+  search: "",
+};
+
 export const transfer = (
   state: any = initialTransferState,
   { type, payload }: IAction
@@ -100,6 +110,19 @@ export const transfer = (
           ...payload,
         },
       };
+    }
+    default:
+      return state;
+  }
+};
+
+export const transactions = (
+  state: any = initialTransactionsState,
+  { type, payload }: IAction
+) => {
+  switch (type) {
+    case TRANSACTIONS: {
+      return payload;
     }
     default:
       return state;

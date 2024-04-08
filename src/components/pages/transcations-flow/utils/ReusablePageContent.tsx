@@ -1,11 +1,11 @@
+import { FilePdfOutlined } from "@ant-design/icons";
 import { Button, Space, Steps } from "antd";
-import styled from "styled-components";
-import { Breakpoint, Colors, Heading } from "./stylesVariables";
 import { MouseEventHandler } from "react";
-import { loading } from "redux/reducers/app";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 import { constants } from "util/constants";
 import { paths } from "util/paths";
+import { Breakpoint, Colors, Heading } from "./stylesVariables";
 
 interface PageTitileAndDescriptionProps {
   title: string;
@@ -196,10 +196,14 @@ export const TrnsferDetailsActionButtons = ({
   history,
   resendTransfer,
 }: TrnsferDetailsActionButtonsProps) => {
-  let buttonContent = "Resend"; // Default button content
+  let buttonContent = ""; // Default button content
+  const isReceiptAvailable: boolean =
+    transaction &&
+    transaction.meta.receipt_url !== null &&
+    transaction.meta.receipt_url !== undefined;
 
   const renderActionButton = () => {
-    let onClickAction: () => void = resendTransfer; // Default onClick action
+    let onClickAction: () => void = () => {}; // Default onClick action
 
     if (status === constants.TRANSFER_STATUS_PENDING) {
       buttonContent = "Pay";
@@ -208,6 +212,9 @@ export const TrnsferDetailsActionButtons = ({
           transfer: transaction,
         });
       };
+    } else if (status === constants.TRANSFER_STATUS_PAYMENT_DECLINED) {
+      buttonContent = "Resend";
+      onClickAction = () => resendTransfer;
     } else if (status === constants.TRANSFER_PAYMENT_FRAUD) {
       buttonContent = "Contact us";
       onClickAction = () =>
@@ -216,18 +223,44 @@ export const TrnsferDetailsActionButtons = ({
         });
     }
 
-    return (
+    return isReceiptAvailable ? (
+      <DownloadReceipt metaData={transaction.meta} />
+    ) : buttonContent !== "" ? (
       <Button
         type={
           status === constants.TRANSFER_PAYMENT_FRAUD ? "default" : "primary"
         }
-        danger={status === constants.TRANSFER_PAYMENT_FRAUD ? true : false}
+        danger={status === constants.TRANSFER_PAYMENT_FRAUD}
         onClick={onClickAction}
       >
         {buttonContent}
       </Button>
-    );
+    ) : null;
   };
 
   return renderActionButton();
+};
+
+const DownloadReceipt = ({ metaData }: { metaData: any }) => {
+  const downloadLink = metaData?.receipt_url;
+
+  if (
+    downloadLink &&
+    (downloadLink !== "" || downloadLink !== null || downloadLink !== undefined)
+  ) {
+    return (
+      <Button
+        type="primary"
+        href={downloadLink}
+        rel="noreferrer"
+        target="_blank"
+        download
+        icon={<FilePdfOutlined rev={undefined} />}
+      >
+        Download receipt
+      </Button>
+    );
+  } else {
+    return <></>;
+  }
 };
