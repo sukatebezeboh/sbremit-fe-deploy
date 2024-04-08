@@ -8,11 +8,11 @@ export const PageResponsiveWidth = styled.div`
 export const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translateX(250px);
+    transform: translateY(-350px);
   }
   to {
     opacity: 1;
-    transform: translateX(0px);
+    transform: translateY(0px);
   }
 `;
 
