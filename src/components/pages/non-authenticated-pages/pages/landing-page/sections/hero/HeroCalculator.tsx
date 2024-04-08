@@ -115,7 +115,7 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
   }, [isPayin, payinCurrency, payoutCurrency]);
 
   const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value.replace(",", ""));
+    const value = Number(e.target.value.replace(/,/g, ""));
     if (isPayin) {
       dispatch({
         type: TRANSFER,
