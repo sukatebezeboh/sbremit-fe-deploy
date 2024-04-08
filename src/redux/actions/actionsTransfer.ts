@@ -63,14 +63,15 @@ export const getUserCurrencyInfo = () => {
       country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
   );
 
-  //console.log(userCountryInfo);
-  return store.dispatch({
-    type: TRANSFER,
-    payload: {
-      ...transfer,
-      payinCurrency: userCountryInfo?.currency || "EUR",
-    },
-  });
+  if (userCountryInfo?.currency !== transfer.payinCurrency) {
+    return store.dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        payinCurrency: userCountryInfo?.currency || "EUR",
+      },
+    });
+  }
 };
 
 export const updateCorrespondingExchangeRate = async (

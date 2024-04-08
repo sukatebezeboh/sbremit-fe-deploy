@@ -93,7 +93,9 @@ const SelectAfter = (
   payInCurrency: string,
   isPayin: boolean
 ) => {
+  const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
+  const userCountryCode = user.profile.location_country;
   const { payinActualValue, payoutCurrency, exchangeRate } = transfer;
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
@@ -103,7 +105,12 @@ const SelectAfter = (
 
   useEffect(() => {
     //update excahnge rate onmount
-    if (payInCurrency !== "") {
+    const userCountryInfo = PayinCountries.find(
+      (country) =>
+        country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
+    );
+
+    if (payInCurrency !== "" && userCountryInfo?.currency === payInCurrency) {
       isPayin && updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
     }
   }, [payInCurrency]);
