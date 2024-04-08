@@ -1,23 +1,26 @@
 import {
-    FacebookFilled,
-    InstagramFilled,
-    MailFilled,
-    PhoneOutlined,
+  FacebookFilled,
+  InstagramFilled,
+  MailFilled,
+  PhoneOutlined,
 } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { Button, Form, Input } from "antd";
 import {
-    Breakpoint,
-    Colors,
+  Breakpoint,
+  Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { toastAction } from "redux/actions/actions";
 import styled from "styled-components";
 import EndBanner from "../../components/EndBanner";
 import Faq from "../../components/Faq";
 import {
-    PageResponsiveWidth,
-    PageWrapperStyles,
+  PageResponsiveWidth,
+  PageWrapperStyles,
 } from "../../global-styles/styles";
 import { H4, HeroText, Paragraph } from "../../global-styles/typogarphy";
 
@@ -125,10 +128,31 @@ type FieldType = {
 
 const RightHeroContent = () => {
   const [form] = Form.useForm<FieldType>();
+  const user = useSelector((state: any) => state.auth.user);
+  const [error, setError] = useState("");
+  const [isLoading, setIsloading] = useState(false);
+  const location = useLocation();
+
+  const transferId = (location?.state as any)?.transferId || "";
+
+  const firstName = user?.profile.firstName || "";
+  const lastName = user?.profile.lastName || "";
+
+  const fullname = lastName && firstName && `${firstName} ${lastName}`;
+  const email = user?.username || "";
+  const mobile = user?.profile.mobile || "";
+
+  const initialValues = {
+    fullname: fullname,
+    mobile: mobile,
+    email: email,
+    transferId: transferId,
+    message: "",
+  };
 
   const onFinish = (values: any) => {
-    //console.log("Success:", values);
-
+    setError("");
+    setIsloading(true);
     emailjs
       .send("service_899wtxn", "template_2oj9lu8", values, "p1WYYOlh6LUYqiOST")
       .then(
@@ -139,22 +163,16 @@ const RightHeroContent = () => {
             timeout: 10000,
             message: "Mail recieved. We will address your request shortly",
           });
+          form.resetFields();
         },
         (error) => {
-          toastAction({
-            show: true,
-            type: "error",
-            timeout: 10000,
-            message: "There was error sending your mail. Retry after 5 minutes",
-          });
+          setError(
+            "There was error sending your mail. Retry after 5 minutes" ||
+              error.message
+          );
         }
-      );
-
-    form.resetFields();
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    // console.log("Failed:", errorInfo);
+      )
+      .finally(() => setIsloading(false));
   };
 
   return (
@@ -165,9 +183,8 @@ const RightHeroContent = () => {
         form={form}
         name="contact-us"
         className="_form"
-        initialValues={{ remember: true }}
+        initialValues={initialValues}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         layout="vertical"
       >
@@ -232,10 +249,10 @@ const RightHeroContent = () => {
             />
           </Form.Item>
         </Flex>
-
+        {error && <ErrorText>{error}</ErrorText>}
         <Flex>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button loading={isLoading} type="primary" htmlType="submit">
               <Paragraph $small>Submit</Paragraph>
             </Button>
           </Form.Item>
@@ -427,6 +444,9 @@ const RightHeroContentStyles = styled.div`
       height: 52px;
       width: 150px;
       margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       @media (max-width: ${Breakpoint.md}) {
         margin-top: 0px;
@@ -463,4 +483,9 @@ const Flex = styled.div`
       width: 100%;
     }
   }
+`;
+
+const ErrorText = styled.p`
+  color: #cf0921;
+  margin: 0;
 `;
