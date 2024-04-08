@@ -218,8 +218,8 @@ export const TrnsferDetailsActionButtons = ({
     } else if (status === constants.TRANSFER_PAYMENT_FRAUD) {
       buttonContent = "Contact us";
       onClickAction = () =>
-        history.push(paths.CONTACT, {
-          transferId: transaction.meta.transactionId,
+        history.push(paths.HELP, {
+          transferId: transaction?.meta.transactionId,
         });
     }
 

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { setIsMobileView } from "redux/actions/actions";
 import { CookieService } from "services/CookieService";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { paths } from "util/paths";
 import CookieNotice from "./components/CookieNotice";
 import Footer from "./components/Footer";
@@ -91,20 +91,28 @@ const NonAuthLayoutStyles = styled.div`
 `;
 
 const ChildrenPageStyles = styled.main<{ $hideMarginTop: boolean }>`
-  margin-top: ${(props) => (props.$hideMarginTop ? "0px" : "118px")};
-  margin-bottom: 120px;
+  ${(props) =>
+    !props.$hideMarginTop &&
+    css`
+      margin-top: 118px;
+      margin-bottom: 120px;
+    `}
 
   @media (max-width: ${Breakpoint.xl}) {
-    margin-top: ${(props) => (props.$hideMarginTop ? "0px" : "105px")};
-    margin-bottom: 90px;
+    ${(props) =>
+      !props.$hideMarginTop &&
+      css`
+        margin-top: 105px;
+        margin-bottom: 90px;
+      `}
   }
 
   @media (max-width: ${Breakpoint.md}) {
-    margin-top: ${(props) => (props.$hideMarginTop ? "0px" : "86px")};
-    margin-bottom: 60px;
+    ${(props) =>
+      !props.$hideMarginTop &&
+      css`
+        margin-top: 86px;
+        margin-bottom: 60px;
+      `}
   }
-
-  /* @media (max-width: ${Breakpoint.sm}) {
-      margin-top: ${(props) => (props.$hideMarginTop ? "0px" : "86px")};
-    } */
 `;

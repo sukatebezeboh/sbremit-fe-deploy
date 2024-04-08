@@ -440,27 +440,3 @@ export const TransactionDetails = ({
     </Descriptions>
   );
 };
-
-const DownloadReceipt = ({ metaData }: { metaData: any }) => {
-  const downloadLink = metaData?.receipt_url;
-
-  if (
-    downloadLink &&
-    (downloadLink !== "" || downloadLink !== null || downloadLink !== undefined)
-  ) {
-    return (
-      <Button
-        type="default"
-        href={downloadLink}
-        rel="noreferrer"
-        target="_blank"
-        download
-        icon={<FilePdfOutlined rev={undefined} />}
-      >
-        Download receipt
-      </Button>
-    );
-  } else {
-    return <></>;
-  }
-};

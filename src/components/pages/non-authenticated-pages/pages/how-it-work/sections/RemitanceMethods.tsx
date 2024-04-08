@@ -9,7 +9,9 @@ import {
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
 import React from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
+import { paths } from "util/paths";
 
 const RemitanceMethodArray = [
   {
@@ -29,6 +31,7 @@ const RemitanceMethodArray = [
 ];
 
 const RemitanceMethods = () => {
+  const history = useHistory();
   return (
     <RemitanceMethodsStyles>
       <div className="_left_content">
@@ -39,7 +42,11 @@ const RemitanceMethods = () => {
           there are a maximum of three different receive methods available on SB
           Remit.
         </Paragraph>
-        <Button type="primary" size="large">
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => history.push(paths.SIGN_UP)}
+        >
           Send money
         </Button>
       </div>

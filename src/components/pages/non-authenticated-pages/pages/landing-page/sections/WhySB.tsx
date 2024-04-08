@@ -12,7 +12,7 @@ import {
 import React from "react";
 import styled from "styled-components";
 
-const LadderPng = "/assets/images/ladder_png.png";
+const ClipsBg = "/assets/images/clips_bg.png";
 const NofeeIcon = "/assets/icons/fluent_money-off.svg";
 const RateIcon = "/assets/icons/vaadin_exchange.svg";
 const HandIcon = "/assets/icons/solar_hand-money-linear.svg";
@@ -56,7 +56,7 @@ const WhySB = () => {
   return (
     <WhySBStyles>
       <Options />
-      <img src={LadderPng} alt="ladder" />
+      <img src={ClipsBg} alt="image of clips" />
     </WhySBStyles>
   );
 };

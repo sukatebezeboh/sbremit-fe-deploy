@@ -168,7 +168,7 @@ const WhatTheySayStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
 
 const CardStyle = styled.div`
   display: flex;
-  width: 500px;
+  width: 520px;
   padding: 40px;
   flex-direction: column;
   align-items: flex-start;

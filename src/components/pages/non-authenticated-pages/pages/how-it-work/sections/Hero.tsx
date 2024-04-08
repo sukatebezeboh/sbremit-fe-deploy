@@ -8,11 +8,14 @@ import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
+import { useHistory } from "react-router";
 import styled from "styled-components";
+import { paths } from "util/paths";
 
 const MobileAppImages = "/assets/images/mobile_app_grouped_images.png";
 
 const Hero = () => {
+  const history = useHistory();
   return (
     <HeroStyles>
       <div className="_left_content">
@@ -27,7 +30,11 @@ const Hero = () => {
             destination securely and swiftly.
           </Paragraph>
 
-          <Button type="primary" size="large">
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => history.push(paths.SIGN_UP)}
+          >
             Get Started
           </Button>
         </div>

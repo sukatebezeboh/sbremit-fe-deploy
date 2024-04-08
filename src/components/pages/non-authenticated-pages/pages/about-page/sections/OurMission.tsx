@@ -9,7 +9,7 @@ import {
 import React from "react";
 import styled from "styled-components";
 
-const BgImage = "/assets/images/our_mission_bg.png";
+const BgImage = "/assets/images/2D_img_of_world.png";
 const TargetIcon = "/assets/icons/mingcute_target-line.svg";
 
 const missionAndVissionArray = [
@@ -33,7 +33,7 @@ const OurMission = () => {
       </div>
       <div className="_right_content">
         {missionAndVissionArray.map((item, index) => (
-          <MissionStyles>
+          <MissionStyles key={index + item.title}>
             <div className="_header">
               <img src={TargetIcon} alt="Target icon" />
               <H3>{item.title}</H3>
