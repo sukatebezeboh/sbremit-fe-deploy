@@ -18,7 +18,8 @@ const TransferingMoneyTo = () => {
         {PayoutCountries.map((country, index) => (
           <CountryStyles
             key={country.name + index}
-            href={`/${country.name?.toLocaleLowerCase()}`}
+            // href={`/${country.name?.toLocaleLowerCase()}`}
+            href="/"
           >
             <img
               src={getFlagURL(country.countryCode.toUpperCase())}
