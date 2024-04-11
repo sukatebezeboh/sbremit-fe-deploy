@@ -1,39 +1,33 @@
+import axios from "axios";
 import React, { Suspense, useEffect } from "react";
+import ReactPixel from "react-facebook-pixel";
+import ReactGA from "react-ga";
 import {
-  Redirect,
   Route,
   Switch,
   useHistory,
   useLocation,
-  withRouter,
+  withRouter
 } from "react-router-dom";
-import ReactGA from "react-ga";
-import ReactPixel from "react-facebook-pixel";
-import axios from "axios";
 
-import "./App.css";
-import { Routing, IRoute } from "./util/routes";
-import ToastFactory from "./components/modules/toast-factory/ToastFactory";
-import {
-  checkAuth,
-  appValuesAction,
-  refreshUserDetails,
-  checkForVerificationStatusToast,
-  signOutAction,
-} from "./redux/actions/actions";
-import { paths } from "./util/paths";
-import { useSelector } from "react-redux";
-import AppLoader from "./components/modules/app-loader/AppLoader";
-import { AppFooter } from "./components/modules/app-footer/AppFooter";
-import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
 import { ConfirmDialog } from "components/modules/confirm-dialog/ConfirmDialog";
 import Login from "components/pages/new-auth-pages/views/Login";
-import { isProductionEnv } from "./util/util";
-import http from "util/http";
-import endpoints from "util/endpoints";
-import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
-import RouteConfig from "components/pages/transcations-flow/app-layout/RouteConfig";
 import NonAuthLayout from "components/pages/non-authenticated-pages/layouts/NonAuthLayout";
+import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
+import { QueryClient } from "react-query";
+import { useSelector } from "react-redux";
+import endpoints from "util/endpoints";
+import http from "util/http";
+import "./App.css";
+import AppLoader from "./components/modules/app-loader/AppLoader";
+import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
+import ToastFactory from "./components/modules/toast-factory/ToastFactory";
+import {
+  appValuesAction,
+  checkAuth,
+  signOutAction
+} from "./redux/actions/actions";
+import { IRoute, Routing } from "./util/routes";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -63,11 +57,11 @@ function App() {
     appValuesAction();
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    refreshUserDetails((user: any) =>
-      checkForVerificationStatusToast(user, history)
-    );
-  }, []);
+  // useEffect(() => {
+  //   refreshUserDetails((user: any) =>
+  //     checkForVerificationStatusToast(user, history)
+  //   );
+  // }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
