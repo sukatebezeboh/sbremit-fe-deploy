@@ -1,5 +1,6 @@
 import {
   Alert,
+  Button,
   Divider,
   Form,
   Input,
@@ -22,6 +23,8 @@ import {
   transferMethodsInWords,
 } from "../../utils/reuseableUtils";
 import { userAppValues } from "../../utils/useAppValues";
+import { useCreateRecipient } from "./RecipientsHelper";
+import { ErrorMessages } from "../../utils/ReusablePageContent";
 
 const { Text, Link } = Typography;
 const { Option } = Select;
@@ -62,10 +65,18 @@ export const NewRecipient = ({
 }: NewRecipientProps) => {
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { PayoutCountries, PayinCountries } = userAppValues();
+  const { PayoutCountries } = userAppValues();
   const [mobileMoneyProvider, setMobileMoneyProvider] = useState("");
   const { destinationCurrency } = transferQuoteResponse || {};
   const [isPhoneNumberMatched, setIsPhoneNumberMatched] = useState(false);
+
+  const {
+    mutate: createRecipientMutate,
+    isLoading,
+    isError,
+    error,
+  } = useCreateRecipient(() => handleCancel());
+  const err: any = error;
 
   const { recipientBankDeatails } = transfer || {};
 
@@ -81,8 +92,6 @@ export const NewRecipient = ({
     form.resetFields();
     setOpen(false);
   };
-
-  const onFormFinishFailed = () => {};
 
   const handleOnSelcetMMPChange = (value: string) => {
     setMobileMoneyProvider(value);
@@ -103,7 +112,8 @@ export const NewRecipient = ({
     };
 
     if (transferMethod === "mobile_money" || transferMethod === "cash_pickup") {
-      createRecipient(combinedValues, setOpen(false));
+      createRecipientMutate(combinedValues);
+      //createRecipient(combinedValues, setOpen(false));
     }
 
     // TODO: refactor this logic
@@ -117,7 +127,8 @@ export const NewRecipient = ({
           combinedValues.accountBranch === "")
       ) {
         //create recipient for Tab 1
-        createRecipient(combinedValues, setOpen(false));
+        //createRecipient(combinedValues, setOpen(false));
+        createRecipientMutate(combinedValues);
       }
       // else if tab 2 is empty trigger validator for tab 2
       else if (
@@ -145,7 +156,8 @@ export const NewRecipient = ({
         }
       } else {
         // create recipient for tab 1
-        createRecipient(combinedValues, setOpen(false));
+        // createRecipient(combinedValues, setOpen(false));
+        createRecipientMutate(combinedValues);
       }
     }
 
@@ -194,8 +206,9 @@ export const NewRecipient = ({
       title={`Add a new recipient`}
       open={open}
       onCancel={handleCancel}
-      //onOk={handleOk}
       width={600}
+      okText="Submit"
+      confirmLoading={isLoading}
       onOk={() => {
         form.validateFields().then((values) => {
           onFormFinish(values);
@@ -224,7 +237,6 @@ export const NewRecipient = ({
           layout="vertical"
           name="new_recipient_form"
           onFinish={onFormFinish}
-          onFinishFailed={onFormFinishFailed}
           initialValues={initialValues}
         >
           <>
@@ -375,6 +387,7 @@ export const NewRecipient = ({
             <Tabs defaultActiveKey="1" items={items} />
           )}
 
+          {isError && <ErrorMessages errorMessage={err?.message} />}
           <Divider />
         </Form>
       </div>

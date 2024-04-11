@@ -1,4 +1,4 @@
-import { Input, Select, Space, Tooltip } from "antd";
+import { Input, Select, Space } from "antd";
 import {
   formatAmount,
   getFlagURL,
@@ -7,7 +7,6 @@ import { userAppValues } from "components/pages/transcations-flow/utils/useAppVa
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
-import { updateCorrespondingExchangeRate } from "redux/actions/actionsTransfer";
 import { isWithinPaymentLimit } from "../GetQuoteHelper";
 import { CalculatorInputStyles } from "../GetQuoteStyles";
 
@@ -15,18 +14,16 @@ const { Option } = Select;
 
 export const CalculatorInput = ({
   inputType,
+  isRateLoading,
+  rate,
 }: {
   inputType: "payin" | "payout";
+  isRateLoading: boolean;
+  rate: number;
 }) => {
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const {
-    payinActualValue,
-    payoutActualValue,
-    payinCurrency,
-    payoutCurrency,
-    exchangeRate,
-  } = transfer;
+  const { payinActualValue, payoutActualValue, payinCurrency } = transfer;
   const [errorMessage, setErrorMessage] = useState("");
 
   const isPayin = inputType === "payin";
@@ -49,7 +46,7 @@ export const CalculatorInput = ({
         payload: {
           ...transfer,
           payinActualValue: value,
-          payoutActualValue: Math.round(value * exchangeRate),
+          payoutActualValue: Math.round(value * rate),
         },
       });
     } else {
@@ -57,7 +54,7 @@ export const CalculatorInput = ({
         type: TRANSFER,
         payload: {
           ...transfer,
-          payinActualValue: (value / exchangeRate).toFixed(2),
+          payinActualValue: (value / rate).toFixed(2),
           payoutActualValue: value,
         },
       });
@@ -69,13 +66,12 @@ export const CalculatorInput = ({
       <Space direction="vertical" size={8}>
         <span className="label">{isPayin ? "You send" : "They get"}</span>
         <Input
-          //addonBefore={isPayin ? "You send" : "They get"}
           addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
           placeholder="0.00"
           size="large"
           status={errorMessage != "" ? "error" : ""}
           onChange={handleOnInputChange}
-          disabled={exchangeRate === 0}
+          disabled={isRateLoading}
           value={
             isPayin
               ? formatAmount(payinActualValue)
@@ -95,25 +91,11 @@ const SelectAfter = (
 ) => {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
-  const userCountryCode = user.profile.location_country;
-  const { payinActualValue, payoutCurrency, exchangeRate } = transfer;
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const PayInCountryData = PayinCountries.find(
     (country) => country.currency === payInCurrency
   );
-
-  useEffect(() => {
-    //update excahnge rate onmount
-    const userCountryInfo = PayinCountries.find(
-      (country) =>
-        country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
-    );
-
-    if (payInCurrency !== "" && userCountryInfo?.currency === payInCurrency) {
-      isPayin && updateCorrespondingExchangeRate(payInCurrency, payoutCurrency);
-    }
-  }, [payInCurrency]);
 
   const handlePayOutCountryChange = (value: string) => {
     dispatch({
@@ -123,11 +105,9 @@ const SelectAfter = (
         payoutCurrency: value,
       },
     });
-    updateCorrespondingExchangeRate(payInCurrency, value);
   };
 
   return isPayin && PayInCountryData !== undefined ? (
-    // <Tooltip title={`${PayInCountryData.name}`}>
     <Space align="center">
       <img
         src={getFlagURL(PayInCountryData.countryCode)}
@@ -141,11 +121,9 @@ const SelectAfter = (
       <span>{PayInCountryData.currency}</span>
     </Space>
   ) : (
-    // </Tooltip>
     <Select defaultValue={defaultValue} onChange={handlePayOutCountryChange}>
       {PayoutCountries.map((country, index) => (
         <Option value={country.currency} key={country.name + index}>
-          {/* <Tooltip title={`${country.name}`}> */}
           <Space align="center">
             <img
               src={getFlagURL(country.countryCode)}
@@ -158,7 +136,6 @@ const SelectAfter = (
             />
             <span>{country.currency}</span>
           </Space>
-          {/* </Tooltip> */}
         </Option>
       ))}
     </Select>

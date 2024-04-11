@@ -1,10 +1,14 @@
 //const {exchangeRate, payinCurrency, payoutCurrency, } = transferState
 
-import store from "redux/store";
-import http from "util/http";
-import { userAppValues } from "../../utils/useAppValues";
-import { toastAction } from "redux/actions/actions";
+import { useQuery } from "react-query";
 import { LOADING } from "redux/actionTypes";
+import { toastAction } from "redux/actions/actions";
+import store from "redux/store";
+import endpoints from "util/endpoints";
+import http, { getRequest } from "util/http";
+import env from "../../../../../env";
+import { parseEndpointParameters } from "../../../../../util/util";
+import { userAppValues } from "../../utils/useAppValues";
 
 //trnafer method to index
 const transferMethodIds: any = {
@@ -68,6 +72,7 @@ export const getTransactionQuoteRequest = async (
         store.dispatch({ type: LOADING, payload: false });
         return callback(res.data.data);
       } else {
+        store.dispatch({ type: LOADING, payload: false });
         onErrorCallback();
         toastAction({
           show: true,
@@ -79,6 +84,7 @@ export const getTransactionQuoteRequest = async (
       }
     });
   } catch (error: any) {
+    store.dispatch({ type: LOADING, payload: false });
     onErrorCallback();
     toastAction({
       show: true,
@@ -138,3 +144,64 @@ export function refinePromoErrorMessage(message: any, code: string) {
   );
   return refinedMessage ? refinedMessage.refined : message;
 }
+
+export const useExchangeRate = (
+  base: string,
+  target: string,
+  enabled: boolean
+) => {
+  const endpoint = `/exchange/${base}/${target}`;
+  return useQuery(
+    endpoint,
+    () => getRequest(endpoint, "Failed to fetch exchange rate"),
+    {
+      enabled,
+    }
+  );
+};
+
+export const getPromos = async (endpoint: string, payinCurrency: string) => {
+  try {
+    const result = await http.get(endpoint, {
+      headers: { "X-SERVICE-PROVIDER": env.X_SERVICE_PROVIDER },
+    });
+
+    if (result?.data?.status === 200 || result?.data?.status === "200") {
+      return result?.data?.data;
+    } else {
+      throw new Error(
+        result?.data?.error?.message ||
+          `Something went wrong. Please try again.`
+      );
+    }
+  } catch (error: any) {
+    // console.log(error);
+    throw error; // Throw the error to be caught by React Query
+  }
+};
+
+export const useGetPromo = (
+  code: string,
+  payinCurrency: string,
+  enabled: boolean,
+  onSuccess: Function
+) => {
+  const endpoint = parseEndpointParameters(endpoints.PROMO, code);
+  return useQuery(endpoint, () => getPromos(endpoint, payinCurrency), {
+    enabled,
+    retry: false,
+    onSuccess: (data) => {
+      const baseCurrency = data?.settings?.baseCurrency;
+      const promoRate = data?.settings?.rate || "";
+      const minimumSpend = data?.settings?.minimumSpend;
+      const maximumSpend = data?.settings?.maximumSpend;
+      if (baseCurrency !== undefined) {
+        const message = `1 ${payinCurrency} = ${promoRate} ${payinCurrency}`;
+        onSuccess(message);
+      } else {
+        const message = `Spend from: "${minimumSpend} ${payinCurrency} & ${maximumSpend} ${payinCurrency}" to activate code.`;
+        onSuccess(message);
+      }
+    },
+  });
+};

@@ -70,7 +70,6 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
     // Delete the 'dob' property
     delete formattedValues.dob;
 
-    //console.log(formattedValues);
     editProfileAction(formattedValues, () => handleCancel());
   };
 
@@ -102,6 +101,7 @@ export const EditUserProfile = ({ open, setOpen }: EditUserProfileProps) => {
       onCancel={handleCancel}
       width={800}
       okText="Update"
+      // confirmLoading={true}
       onOk={() => {
         form.validateFields().then((values) => {
           onFormFinish(values);

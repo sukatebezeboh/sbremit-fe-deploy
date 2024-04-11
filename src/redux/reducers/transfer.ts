@@ -1,5 +1,10 @@
 import { IAction } from ".";
-import { RESET_TRANSFER, TRANSFER, TRANSFER_QUOTE, TRANSACTIONS } from "../actionTypes";
+import {
+  RESET_TRANSFER,
+  TRANSFER,
+  TRANSFER_QUOTE,
+  TRANSACTIONS,
+} from "../actionTypes";
 
 const initialTransferState: {} = {
   conversionRate: {},
@@ -60,10 +65,11 @@ const initialTransactionsState: {} = {
   transactionsArray: [],
   total: 0,
   days: 7,
-  limit: 10000,
+  limit: 10,
   offset: 0,
   status: "ALL",
   search: "",
+  queryKey: "",
 };
 
 export const transfer = (
