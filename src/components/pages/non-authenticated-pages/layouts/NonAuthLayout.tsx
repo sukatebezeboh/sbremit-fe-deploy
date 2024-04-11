@@ -5,13 +5,11 @@ import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import { setIsMobileView } from "redux/actions/actions";
 import { CookieService } from "services/CookieService";
 import styled, { css } from "styled-components";
-import { paths } from "util/paths";
 import CookieNotice from "./components/CookieNotice";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -22,31 +20,14 @@ interface NonAuthLayoutProps {
 
 const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
   const { activeCountryColor } = useSelector((state: any) => state.transfer);
-  const dispatch = useDispatch();
+  const appValues = useSelector((state: any) => state.appValues);
+  const { isAuthPages } = appValues || {};
   const location = useLocation();
   const [showCookieNotice, setShowCookieNotice] = useState(
     () => !CookieService.get("cookie-notice")
   );
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    dispatch(setIsMobileView(mediaQuery.matches));
-
-    const handleMediaQueryChange = (event: any) => {
-      dispatch(setIsMobileView(event.matches));
-    };
-
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
-
-  const isLoginOrSignUpPage =
-    location.pathname.includes(paths.SIGN_IN) ||
-    location.pathname.includes(paths.SIGN_UP);
+  const isLoginOrSignUpPage = isAuthPages;
 
   return (
     <ConfigProvider theme={AntdConfigSettings}>

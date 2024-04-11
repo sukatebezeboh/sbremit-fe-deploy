@@ -38,6 +38,7 @@ function App() {
 
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
   ReactPixel.init("664533234865734");
@@ -87,6 +88,22 @@ function App() {
         window.localStorage.setItem("IP_Address", ipResponse?.data?.ip);
       })
       .catch((error) => console.error("Error getting Ip:", error));
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    dispatch(setIsMobileView(mediaQuery.matches));
+
+    const handleMediaQueryChange = (event: any) => {
+      dispatch(setIsMobileView(event.matches));
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
   }, []);
 
   return (

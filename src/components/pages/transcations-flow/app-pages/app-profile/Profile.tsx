@@ -6,7 +6,7 @@ import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import {
   generateAlphabetColor,
   getFirstLetter,
-  getFlagURL
+  getFlagURL,
 } from "../../utils/reuseableUtils";
 import { checkToShowVerificationForm } from "../app-verifications/verificationsHelper";
 import { EditUserProfile } from "./EditUserProfile";
@@ -67,23 +67,7 @@ export default function Profile() {
   const { code } = user.referral;
   const [editProfileModal, setEditProfileModal] = useState(false);
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    setIsMobile(mediaQuery.matches);
-
-    const handleMediaQueryChange = (event: any) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
+  const isMobile = useSelector((state: any) => state.isMobileView);
 
   return (
     <ProfileContainerStyles>

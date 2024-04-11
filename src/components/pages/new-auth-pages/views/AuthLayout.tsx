@@ -1,14 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styled from "styled-components";
 import Provider from "../Provider";
 import { paths } from "util/paths";
+import { useDispatch, useSelector } from "react-redux";
+import { APP_VALUES } from "redux/actionTypes";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
+  const dispatch = useDispatch();
+  const appValues = useSelector((state: any) => state.appValues);
   const location = useLocation();
 
   const routesToShowImg: string[] = [paths.SIGN_IN];
   const showBgImage = routesToShowImg.includes(location.pathname);
+
+  //mark teritory to manage nav and footer
+  useEffect(() => {
+    dispatch({
+      type: APP_VALUES,
+      payload: { ...appValues, isAuthPages: true },
+    });
+  }, []);
 
   return (
     <Provider>
