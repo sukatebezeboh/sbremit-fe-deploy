@@ -2,6 +2,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Input, Select, Space } from "antd";
 import { getCountryColor } from "components/pages/non-authenticated-pages/global-styles/styles";
 import { Paragraph } from "components/pages/non-authenticated-pages/global-styles/typogarphy";
+import { useExchangeRate } from "components/pages/transcations-flow/app-pages/app-getQuote/GetQuoteHelper";
 import {
   formatAmount,
   getFlagURL,
@@ -15,7 +16,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { TRANSFER } from "redux/actionTypes";
-import { updateCorrespondingExchangeRate } from "redux/actions/actionsTransfer";
 import styled from "styled-components";
 import { paths } from "util/paths";
 import { getAllUniqueCurrencies } from "./HeroHelper";
@@ -28,7 +28,6 @@ const HeroCalculator = () => {
   const transfer = useSelector((state: any) => state.transfer);
   const {
     payinActualValue,
-    payoutActualValue,
     exchangeRate,
     payinCurrency,
     payoutCurrency,
@@ -96,7 +95,7 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
   const {
     payinActualValue,
     payoutActualValue,
-    exchangeRate,
+
     payinCurrency,
     payoutCurrency,
     activeCountryColor,
@@ -108,11 +107,24 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
     : PayoutCountries;
   const defaultCountry = isPayin ? payinCurrency : payoutCurrency;
 
+  const { data, isLoading: isLoadingRate } = useExchangeRate(
+    payinCurrency,
+    payoutCurrency,
+    true
+  );
+
+  const exchangeRate = Number(data?.rate) || 0;
+
+  //update exchange rage to store
   useEffect(() => {
-    //update excahnge rate only when the rate is 0
-    isPayin &&
-      updateCorrespondingExchangeRate(payinCurrency, payoutCurrency, true);
-  }, [isPayin, payinCurrency, payoutCurrency]);
+    dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        exchangeRate: exchangeRate,
+      },
+    });
+  }, [exchangeRate]);
 
   const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value.replace(/,/g, ""));
@@ -141,12 +153,18 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
     <CalculatorInputStyles $activeColor={activeCountryColor}>
       <Input
         placeholder="0.00"
+        disabled={isLoadingRate}
         value={
           isPayin
             ? formatAmount(payinActualValue)
             : formatAmount(payoutActualValue)
         }
-        addonAfter={ContrySelector(countries, defaultCountry, isPayin)}
+        addonAfter={ContrySelector(
+          countries,
+          defaultCountry,
+          isPayin,
+          isLoadingRate
+        )}
         onChange={handleOnInputChange}
       />
       <span className="_label">{isPayin ? "You send" : "You receive"}</span>
@@ -157,14 +175,13 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
 const ContrySelector = (
   countries: any,
   defaultCountry: string,
-  isPayin: boolean
+  isPayin: boolean,
+  loading: boolean
 ) => {
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
   const { activeCountryColor, payoutCurrency } = transfer || {};
   const apploader = useSelector((state: any) => state.loading);
-
-  const loading = apploader === "" ? true : false;
 
   const handleCountryChange = (value: string) => {
     const activeCurrencyColor = getCountryColor(value);
