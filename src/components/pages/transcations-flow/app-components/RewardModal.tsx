@@ -101,11 +101,11 @@ export const checkUserReward = (
   }
 };
 
-export default function RewardModal() {
+export default function RewardModal({ user }: { user: any }) {
   const auth = useSelector((state: any) => state.auth);
   const { values } = useSelector((state: any) => state.appValues);
   const dispatch = useDispatch();
-  const { isRewardModalChecked, user } = auth || {};
+  const { isRewardModalChecked } = auth || {};
 
   const referralConstants = getAppValueDataByName(values.data, "settings");
   const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");

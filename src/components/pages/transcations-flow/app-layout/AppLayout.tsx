@@ -38,6 +38,9 @@ export default function AppLayout() {
   const location = useLocation();
 
   const isGetQuotePage = location.pathname === paths.GET_QUOTE;
+  const isDashboardAandRewardPage =
+    location.pathname === paths.DASHBOARD ||
+    location.pathname === paths.REWARDS;
 
   const { data: userData, isFetched: isFetchedUserData } = useUserData(
     user?.id
@@ -49,6 +52,7 @@ export default function AppLayout() {
   useEffect(() => {
     getUserCurrencyInfo();
     userData && checkIsRewardsAvailable(userData, setIsRewardAvailable);
+
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
     !isGetQuotePage && getClientIp(); // get user IP address
 
@@ -73,9 +77,9 @@ export default function AppLayout() {
     history.push(paths.VERIFICATION);
   };
 
-  const isUserVerificationRequired = userData && !userIsVerified(userData); //&&
-  // !isUserFirstTransaction(user) &&
-  // !userHasReachedFinalVerificationStage(user);
+  const isUserVerificationRequired = userData
+    ? !userIsVerified(userData)
+    : false;
 
   const checkIfUserIsVerified = (redirect: boolean) => {
     if (trullioVerified && Boolean(trullioVerified)) {
@@ -117,8 +121,10 @@ export default function AppLayout() {
         </ApplayoutContainerStlye>
 
         {/* General popups/modals */}
-        <TandCModal />
-        {isRewardAvailable && <RewardModal />}
+        <TandCModal user={userData} />
+        {isRewardAvailable && isDashboardAandRewardPage && (
+          <RewardModal user={userData} />
+        )}
       </ApplayoutStlye>
     </ConfigProvider>
   );
