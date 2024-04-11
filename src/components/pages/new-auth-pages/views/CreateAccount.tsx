@@ -1,20 +1,20 @@
-import styled from "styled-components";
-import * as yup from "yup";
-import AuthHeader from "../components/AuthHeader";
-import { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
-import { COUNTRIES } from "../utils/countries";
-import AuthInput from "../components/AuthInput";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
+import { CREATE_ACCOUNT_SUCCESS } from "redux/actionTypes";
+import { signUpAction, toastAction } from "redux/actions/actions";
+import styled from "styled-components";
+import { paths } from "util/paths";
+import * as yup from "yup";
 import AuthButton from "../components/AuthButton";
+import AuthHeader from "../components/AuthHeader";
+import AuthInput from "../components/AuthInput";
+import { COUNTRIES } from "../utils/countries";
 import AuthLayout, {
   ChildContainerSyles,
   ParentContainerSyles,
 } from "./AuthLayout";
-import { paths } from "util/paths";
-import { signUpAction, toastAction } from "redux/actions/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { CREATE_ACCOUNT_SUCCESS } from "redux/actionTypes";
 
 const schema = yup.object({
   firstName: yup.string().trim().required().label("First name"),
@@ -39,25 +39,22 @@ const schema = yup.object({
   referral: yup.string().label("Referral code"),
 });
 
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  location_country: COUNTRIES[0].countryCode,
-  username: "",
-  dob: "",
-  password: "",
-  mobile: "",
-  checked: false,
-  referral: "",
-};
-
 const getEighteenYearsAgo = () => {
-  let now = new Date();
-  let year = now.getFullYear() - 18;
-  let month =
-    now.getMonth() + 1 >= 10 ? now.getMonth() + 1 : "0" + now.getMonth() + 1;
-  let date = now.getDate() >= 10 ? now.getDate() : "0" + now.getDate();
-  return `${year}-${month}-${date}`;
+  // let now = new Date();
+  // let year = now.getFullYear() - 18;
+  // let month =
+  //   now.getMonth() + 1 >= 10 ? now.getMonth() + 1 : "0" + now.getMonth() + 1;
+  // let date = now.getDate() >= 10 ? now.getDate() : "0" + now.getDate();
+  // return `${year}-${month}-${date}`;
+
+  const today = new Date();
+  const eighteenYearsAgo = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+  );
+  const maxDateString = eighteenYearsAgo.toISOString().split("T")[0];
+  return maxDateString;
 };
 
 const CreateAccount = () => {
@@ -65,6 +62,21 @@ const CreateAccount = () => {
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const referral = searchParams.get("referral") || "";
+
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    location_country: COUNTRIES[0].countryCode,
+    username: "",
+    dob: "",
+    password: "",
+    mobile: "",
+    checked: false,
+    referral: referral || "",
+  };
 
   const submitting = useSelector((state: any) => state.submitting);
   const createAccountSuccess = useSelector(
