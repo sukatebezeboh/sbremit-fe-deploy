@@ -20,9 +20,10 @@ import {
   refreshUserDetails,
   checkForVerificationStatusToast,
   signOutAction,
+  setIsMobileView,
 } from "./redux/actions/actions";
 import { paths } from "./util/paths";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppLoader from "./components/modules/app-loader/AppLoader";
 import { AppFooter } from "./components/modules/app-footer/AppFooter";
 import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
@@ -44,6 +45,7 @@ function App() {
 
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
   ReactPixel.init("664533234865734");
@@ -93,6 +95,22 @@ function App() {
         window.localStorage.setItem("IP_Address", ipResponse?.data?.ip);
       })
       .catch((error) => console.error("Error getting Ip:", error));
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    dispatch(setIsMobileView(mediaQuery.matches));
+
+    const handleMediaQueryChange = (event: any) => {
+      dispatch(setIsMobileView(event.matches));
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
   }, []);
 
   return (
