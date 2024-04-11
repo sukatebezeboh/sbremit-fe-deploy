@@ -15,7 +15,7 @@ import Login from "components/pages/new-auth-pages/views/Login";
 import NonAuthLayout from "components/pages/non-authenticated-pages/layouts/NonAuthLayout";
 import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
 import { QueryClient } from "react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import endpoints from "util/endpoints";
 import http from "util/http";
 import "./App.css";
@@ -25,6 +25,7 @@ import ToastFactory from "./components/modules/toast-factory/ToastFactory";
 import {
   appValuesAction,
   checkAuth,
+  setIsMobileView,
   signOutAction
 } from "./redux/actions/actions";
 import { IRoute, Routing } from "./util/routes";
