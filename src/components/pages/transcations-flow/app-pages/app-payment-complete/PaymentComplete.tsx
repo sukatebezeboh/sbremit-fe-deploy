@@ -9,16 +9,25 @@ import _env from "env";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
-import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
+import { useGetTransfer } from "../../app-layout/appLayoutHelper";
+import { CustomError, CustomLoader } from "../../utils/ReusablePageContent";
 import { Title } from "../app-dashboard/DashboardSyles";
-import { checkPaymentCodeWithPattern } from "./PaymentCompleteHelper";
+import {
+  AvatarColors,
+  PaymentDescriptionsColors,
+  PaymentTitle,
+  checkPaymentCodeWithPattern,
+} from "./PaymentCompleteHelper";
 import {
   ExtraInfo,
   IconStyles,
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
+import { useSelector } from "react-redux";
+import { queryClient } from "index";
+import { constants } from "util/constants";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -33,9 +42,16 @@ export default function PaymentComplete() {
   const history = useHistory();
   const location = useLocation();
   let { transferId } = useParams<any>();
-  const [trasnferInfo, setTransferInfo] = useState<any>();
   const [paymentInfo, setPaymentInfo] = useState<any>();
   const [isRequestError, setIsrequestError] = useState(false);
+  const transactions = useSelector((state: any) => state.transactions);
+
+  const {
+    data: trasnferInfo,
+    isLoading,
+    isError,
+    error,
+  } = useGetTransfer(transferId);
 
   //clean pathname if it's truelayer and has multiple '?'' symabols
   useEffect(() => {
@@ -52,11 +68,10 @@ export default function PaymentComplete() {
   const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
 
   useEffect(() => {
-    getTransactionsInfo(setTransferInfo, transferId);
-  }, [transferId]);
-
-  useEffect(() => {
-    if (trasnferInfo !== undefined) {
+    if (
+      trasnferInfo !== undefined &&
+      trasnferInfo?.status === constants.TRANSFER_STATUS_PENDING
+    ) {
       if (isTrulayerPayment) {
         getPaymentStatus(
           transferId,
@@ -77,6 +92,7 @@ export default function PaymentComplete() {
 
   const updatePaymentInfo = (data: any) => {
     setPaymentInfo(data);
+    queryClient.invalidateQueries(transactions.queryKey);
   };
 
   const onErrorRequest = () => {
@@ -94,19 +110,14 @@ export default function PaymentComplete() {
     ? paymentInfo?.status
     : paymentInfo?.code;
 
-  const PaymentCategoryIndex =
-    checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes) ?? 1; //fallback inprogress
+  const PaymentCategoryIndex = statusOrCodeRes
+    ? checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes)
+    : 1; //fallback inprogress
 
   const AvatarIcons = [
     <CheckOutlined rev={undefined} />,
     <ClockCircleOutlined rev={undefined} />,
     <CloseOutlined rev={undefined} />,
-  ];
-
-  const PaymentTitle = [
-    "Payment Successful!",
-    "Payment Inprogress!",
-    "Payment Unsuccessful!",
   ];
 
   const PaymentDescriptions = [
@@ -121,52 +132,63 @@ export default function PaymentComplete() {
     <p>The payment was not completed successfully!</p>,
   ];
 
-  const AvatarColors = ["#87d068", "#4259cf", "#CF0921"];
-  const PaymentDescriptionsColors = ["#007B5D", "#4259cf", "#CF0921"];
+  if (isLoading) {
+    return (
+      <PaymentCompleteConatinerStyles>
+        <CustomLoader prompt="Fetching transaction details..." />
+      </PaymentCompleteConatinerStyles>
+    );
+  }
+  if (isError) {
+    const err: any = error;
+    const errMessage = err?.message;
+    return (
+      <PaymentCompleteConatinerStyles>
+        <CustomError message={errMessage} />
+      </PaymentCompleteConatinerStyles>
+    );
+  }
+
+  if (isRequestError) {
+    return (
+      <PaymentCompleteConatinerStyles>
+        {onErrorRequestAlert}
+      </PaymentCompleteConatinerStyles>
+    );
+  }
 
   return (
     <PaymentCompleteConatinerStyles>
-      {!paymentInfo ? (
-        isRequestError ? (
-          onErrorRequestAlert
-        ) : (
-          <>
-            <LoadingOutlined rev={undefined} />
-            <span>Fetching payment infomations....</span>
-          </>
-        )
-      ) : (
-        <PaymentCompleteWrapperStyles>
-          <>
-            <IconStyles $color={AvatarColors[PaymentCategoryIndex]}>
-              <Avatar
-                className="avatar"
-                size={60}
-                icon={AvatarIcons[PaymentCategoryIndex]}
-              />
-            </IconStyles>
-            <h2>
-              {totalToPay} {trasnferInfo?.originCurrency}
-            </h2>
-            <Title>{PaymentTitle[PaymentCategoryIndex]}</Title>
-            <ExtraInfo $color={PaymentDescriptionsColors[PaymentCategoryIndex]}>
-              {PaymentDescriptions[PaymentCategoryIndex]}
-              {/* <span> ~{paymentInfo?.message}~</span> */}
-            </ExtraInfo>
-            <span className="id_and_date">
-              Transaction ID: {transactionId}, {formattedDate}{" "}
-            </span>
-            <Button
-              type="default"
-              onClick={() => {
-                history.push(paths.DASHBOARD);
-              }}
-            >
-              Go back to dashboard
-            </Button>
-          </>
-        </PaymentCompleteWrapperStyles>
-      )}
+      <PaymentCompleteWrapperStyles>
+        <>
+          <IconStyles $color={AvatarColors[PaymentCategoryIndex]}>
+            <Avatar
+              className="avatar"
+              size={60}
+              icon={AvatarIcons[PaymentCategoryIndex]}
+            />
+          </IconStyles>
+          <h2>
+            {totalToPay} {trasnferInfo?.originCurrency}
+          </h2>
+          <Title>{PaymentTitle[PaymentCategoryIndex]}</Title>
+          <ExtraInfo $color={PaymentDescriptionsColors[PaymentCategoryIndex]}>
+            {PaymentDescriptions[PaymentCategoryIndex]}
+            {/* <span> ~{paymentInfo?.message}~</span> */}
+          </ExtraInfo>
+          <span className="id_and_date">
+            Transaction ID: {transactionId}, {formattedDate}{" "}
+          </span>
+          <Button
+            type="default"
+            onClick={() => {
+              history.push(paths.DASHBOARD);
+            }}
+          >
+            Go back to dashboard
+          </Button>
+        </>
+      </PaymentCompleteWrapperStyles>
     </PaymentCompleteConatinerStyles>
   );
 }

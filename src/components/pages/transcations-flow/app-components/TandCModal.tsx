@@ -7,8 +7,7 @@ import styled from "styled-components";
 
 const SBlogo = `/assets/main-logo.svg`;
 
-export default function TandCModal() {
-  const user = useSelector((state: any) => state.auth.user);
+export default function TandCModal({ user }: { user: any }) {
   const { readTermsAndCondition } = user?.profile || {};
   const [loader, setLoader] = useState(false);
   const state = readTermsAndCondition === "0" ? true : false;
@@ -20,7 +19,7 @@ export default function TandCModal() {
 
   const updateAndCloseModal = () => {
     setLoader(true);
-    
+
     const resetState = () => {
       setShowTandCmodal(false);
       setLoader(false);
