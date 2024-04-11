@@ -62,7 +62,7 @@ export const checkUserReward = (
 
   const isReferralHasUplineBonusAndIsActive = referralsArray?.some(
     (referral: any) =>
-      referral.Bonus === uplineReferralBonus &&
+      Number(referral.Bonus) === uplineReferralBonus &&
       referral.ReferralBonus === "ACTIVE"
   );
 
