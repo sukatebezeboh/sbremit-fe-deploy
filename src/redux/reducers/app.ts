@@ -28,6 +28,7 @@ const initialAppValues = {
   services: {},
   payInCountries: {},
   payOutCountries: {},
+  isAuthPages: false,
 };
 const initialLoadingState = false;
 const initialIsMobile = false;

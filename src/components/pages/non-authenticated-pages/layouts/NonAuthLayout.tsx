@@ -22,6 +22,8 @@ interface NonAuthLayoutProps {
 
 const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
   const { activeCountryColor } = useSelector((state: any) => state.transfer);
+  const appValues = useSelector((state: any) => state.appValues);
+  const { isAuthPages } = appValues || {};
   const dispatch = useDispatch();
   const location = useLocation();
   const [showCookieNotice, setShowCookieNotice] = useState(
@@ -44,9 +46,7 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
     };
   }, []);
 
-  const isLoginOrSignUpPage =
-    location.pathname.includes(paths.SIGN_IN) ||
-    location.pathname.includes(paths.SIGN_UP);
+  const isLoginOrSignUpPage = isAuthPages;
 
   return (
     <ConfigProvider theme={AntdConfigSettings}>
