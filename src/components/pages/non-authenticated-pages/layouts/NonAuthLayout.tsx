@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { CookieService } from "services/CookieService";
 import styled, { css } from "styled-components";
+import { paths } from "util/paths";
 import CookieNotice from "./components/CookieNotice";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -22,12 +23,22 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
   const { activeCountryColor } = useSelector((state: any) => state.transfer);
   const appValues = useSelector((state: any) => state.appValues);
   const { isAuthPages } = appValues || {};
+  // const [isLoginOrSignUpPage, setIsLoginOrSignUpPage] = useState(false);
   const location = useLocation();
   const [showCookieNotice, setShowCookieNotice] = useState(
     () => !CookieService.get("cookie-notice")
   );
 
-  const isLoginOrSignUpPage = isAuthPages;
+  const isLoginOrSignUpPage =
+    location.pathname.includes(paths.SIGN_IN) ||
+    location.pathname.includes(paths.SIGN_UP) ||
+    location.pathname.includes(paths.EMAIL_REGISTRATION) ||
+    location.pathname.includes(paths.FORGET_PASSWORD) ||
+    location.pathname.includes(paths.RESET_PASSWORD) ||
+    location.pathname.includes(paths.VERIFY_PASSWORD_RESET) ||
+    location.pathname.includes(paths.VERIFY_PASSWORD_RESET) ||
+    location.pathname.includes(paths.PASSWORD_RESET_EMAIL) ||
+    location.pathname.includes(paths.CONFIRM_ACCOUNT_EMAIL);
 
   return (
     <ConfigProvider theme={AntdConfigSettings}>

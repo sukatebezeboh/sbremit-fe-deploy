@@ -28,7 +28,6 @@ const initialAppValues = {
   services: {},
   payInCountries: {},
   payOutCountries: {},
-  isAuthPages: false,
 };
 const initialLoadingState = false;
 const initialIsMobile = false;
@@ -130,7 +129,6 @@ export const appValues = (
       return state;
   }
 };
-
 
 export const isMobileView = (
   state: any = initialIsMobile,

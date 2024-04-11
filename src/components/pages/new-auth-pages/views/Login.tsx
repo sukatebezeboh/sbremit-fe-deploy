@@ -25,7 +25,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const submitting = useSelector((state: any) => state.submitting);
-  const appValues = useSelector((state: any) => state.appValues);
   const isAuthenticated = useSelector(
     (state: any) => state.auth.isAuthenticated
   );
@@ -47,11 +46,6 @@ const Login = () => {
             validationSchema={schema}
             onSubmit={(values) => {
               dispatch(signInAction(values, history));
-              //unmark teritory to manage nav and footer
-              dispatch({
-                type: APP_VALUES,
-                payload: { ...appValues, isAuthPages: false },
-              });
             }}
           >
             {({ errors, touched, values, handleChange }) => (
