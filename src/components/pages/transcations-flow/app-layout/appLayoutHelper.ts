@@ -26,7 +26,7 @@ export const checkIsRewardsAvailable = (
 };
 
 export const useUserData = (userId: string) => {
-  const customEndpoint = parseEndpointParameters(endpoints.USER, userId + ";dldl");
+  const customEndpoint = parseEndpointParameters(endpoints.USER, userId);
   return useQuery(
     customEndpoint,
     () => getRequest(customEndpoint, ""),
