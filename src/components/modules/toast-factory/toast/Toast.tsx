@@ -100,7 +100,12 @@ const ToastModal = ({ props }: any) => {
   return (
     <ConfigProvider theme={AntdConfigSettings}>
       <Modal open={open} footer={null} closeIcon={null}>
-        <Alert message={title} description={message} type={type} showIcon />
+        <Alert
+          message={<b>{title}</b>}
+          description={message}
+          type={type}
+          showIcon
+        />
         <Divider style={{ margin: "12px 0px" }} />
         <Button
           style={{ width: "100%" }}

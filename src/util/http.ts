@@ -65,11 +65,13 @@ export const getRequest = async (endpoint: string, errMessage: string) => {
       throw new Error(`${errMessage}`);
     }
   } catch (error: any) {
-    toastAction({
-      show: true,
-      type: "error",
-      message: `${errMessage}`,
-    });
+    if (errMessage !== "") {
+      return toastAction({
+        show: true,
+        type: "error",
+        message: `${errMessage}`,
+      });
+    }
     throw error;
   }
 };

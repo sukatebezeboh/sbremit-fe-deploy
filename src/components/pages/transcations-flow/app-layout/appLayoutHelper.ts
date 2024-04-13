@@ -26,10 +26,10 @@ export const checkIsRewardsAvailable = (
 };
 
 export const useUserData = (userId: string) => {
-  const customEndpoint = parseEndpointParameters(endpoints.USER, userId);
+  const customEndpoint = parseEndpointParameters(endpoints.USER, userId + ";dldl");
   return useQuery(
     customEndpoint,
-    () => getRequest(customEndpoint, "Failed to fetch your infomations"),
+    () => getRequest(customEndpoint, ""),
     {
       refetchIntervalInBackground: true,
       keepPreviousData: true,
