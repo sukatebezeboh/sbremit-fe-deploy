@@ -1,3 +1,4 @@
+import _env from "env";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
 import { resources } from "../../../util/constants";
 import { settings } from "../../../util/settings";
@@ -70,8 +71,8 @@ const PaymentRedirect = ({
   const ruleIdentifier8 = "STR-8";
   const ruleIdentifier9 = "STR-9";
   const ruleIdentifier10 = "STR-10";
-  const successfulRedirectURL =
-    settings.TRUST_SUCCESSFUL_REDIRECT_URL + transferId;
+  const successfulRedirectURL = `${_env.APP_HOST}/transfer-completed/${transferId}?payment_type=trust_payment`;
+  // settings.TRUST_SUCCESSFUL_REDIRECT_URL + transferId;
   let stringToHash = currencyiso3a ?? "";
   stringToHash += mainamount ?? "";
   stringToHash += settings.TRUST_PAYMENT_SITE_REFERENCE ?? "";
