@@ -254,7 +254,7 @@ export const useTransactionsData = (userId: string, enabled: boolean) => {
       refetchIntervalInBackground: true,
       keepPreviousData: true,
       enabled: enabled,
-      refetchInterval: 15000, //15s
+      refetchInterval: 90000, //90s
       onSuccess: (data) => {
         store.dispatch({
           type: TRANSACTIONS,
