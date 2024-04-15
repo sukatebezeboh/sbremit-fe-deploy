@@ -46,7 +46,8 @@ export default function Pay() {
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
   const [isTrustPayment, setIsTrustPayment] = useState(false);
   let prevTransferInfo = (location.state as LocationState)?.transfer;
-  const { data: freshTrasnferInfo } = useGetTransfer(prevTransferInfo.id);
+  const { data: freshTrasnferInfo, isLoading: isLoadingTransferInfo } =
+    useGetTransfer(prevTransferInfo.id);
   const transferInfo = freshTrasnferInfo || prevTransferInfo;
 
   const [loader, setLoader] = useState(false);
@@ -182,6 +183,7 @@ export default function Pay() {
           onClick={onPayClick}
           hideBackBtn={true}
           loading={loader}
+          disabled={isLoadingTransferInfo}
         />
       </PaymentMethodsContainerStyles>
     </>
