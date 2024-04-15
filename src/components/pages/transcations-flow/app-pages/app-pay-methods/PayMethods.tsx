@@ -28,6 +28,8 @@ import {
   generateCheckoutIDforAxcssPayment,
   generateCheckoutInfoForTrulayerPayment,
 } from "./paymentHelper";
+import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
+import { getMoneyValue } from "../../../../../util/util";
 
 interface LocationState {
   transfer: any;
@@ -42,6 +44,7 @@ export default function Pay() {
   const { clientIp } = transfer || {};
   const { verification } = auth || {};
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
+  const [isTrustPayment, setIsTrustPayment] = useState(false);
   let prevTransferInfo = (location.state as LocationState)?.transfer;
   const { data: freshTrasnferInfo } = useGetTransfer(prevTransferInfo.id);
   const transferInfo = freshTrasnferInfo || prevTransferInfo;
@@ -84,6 +87,9 @@ export default function Pay() {
       if (paymentMethod === "axcess-payment") {
         generateCheckoutIDforAxcssPayment(transferInfo.id, history);
       }
+      if (paymentMethod === "trust-payment") {
+        setIsTrustPayment(true);
+      }
 
       // clear redux store #transactions
       resetTransferData();
@@ -98,6 +104,9 @@ export default function Pay() {
       clientIp,
       () => {
         initiatePayment(); //callback onSucc
+      },
+      () => {
+        setLoader(false);
       }
     );
   };
@@ -105,6 +114,12 @@ export default function Pay() {
   const onPayClick = () => {
     setLoader(true);
     handleProceed(selectedMethod);
+  };
+
+  const PayWithPayment = (e: any): any => {
+    e.target.mainamount.value = getTotalToPay();
+    e.target.currencyiso3a.value = transferInfo?.originCurrency;
+    return true;
   };
 
   const items: CollapseProps["items"] = [
@@ -117,9 +132,27 @@ export default function Pay() {
     },
   ];
 
+  const getTotalToPay = () => {
+    return (
+      getMoneyValue(`${transferInfo?.meta?.totalToPay}`) +
+      +transferInfo?.meta?.paymentGatewayCharge
+    );
+  };
+
   return (
     <>
       <PaymentMethodsContainerStyles>
+        {isTrustPayment && (
+          <PaymentRedirect
+            mainamount={getTotalToPay()}
+            currencyiso3a={transferInfo?.originCurrency}
+            transactionId={transferInfo?.meta?.transactionId}
+            transferId={transferInfo?.id}
+            enabled={isTrustPayment}
+            setEnabled={() => setIsTrustPayment(false)}
+          />
+        )}
+
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription
           title="Select payment method"

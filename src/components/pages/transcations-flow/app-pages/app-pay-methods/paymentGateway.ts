@@ -64,6 +64,16 @@ export const PaymentGateWays = (
             : `0.99 ${transaction?.originCurrency}`,
         isRecommended: true,
       },
+      {
+        slug: "trust-payment",
+        method: "Pay with card",
+        provider: "Trust Payment",
+        label: (transaction: any) =>
+          transaction?.meta?.destinationCountryCode === "CM"
+            ? `0.00 ${transaction?.originCurrency}`
+            : `0.99 ${transaction?.originCurrency}`,
+        isRecommended: false,
+      },
     ];
   }
 };
