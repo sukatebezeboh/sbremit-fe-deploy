@@ -235,7 +235,12 @@ export const downloadStatementPdf = async (
   } catch (error) {}
 };
 
-export const useTransactionsData = (userId: string, enabled: boolean) => {
+export const useTransactionsData = (
+  userId: string,
+  enabled: boolean,
+  refetch: boolean
+) => {
+  const refetchInterval = 60000; //60s
   const transactions = store.getState().transactions;
 
   const { limit, days, search, offset } = transactions;
@@ -254,18 +259,38 @@ export const useTransactionsData = (userId: string, enabled: boolean) => {
       refetchIntervalInBackground: true,
       keepPreviousData: true,
       enabled: enabled,
-      refetchInterval: 90000, //90s
+      refetchInterval: refetch ? refetchInterval : false,
       onSuccess: (data) => {
         store.dispatch({
           type: TRANSACTIONS,
           payload: {
             ...transactions,
             queryKey: customEndpoint,
-            transactionsArray: data.collections,
-            total: data.total,
+            transactionsArray: data?.collections,
+            total: data?.total,
           },
         });
       },
     }
   );
+};
+
+export const checkForNonTerminalTransactionStatus = (
+  transactions: any
+): boolean => {
+  const terminalStatuses = [
+    constants.TRANSFER_STATUS_EXPIRED,
+    constants.TRANSFER_STATUS_COMPLETE,
+    constants.TRANSFER_STATUS_CANCELLED,
+    constants.TRANSFER_STATUS_REFUNDED,
+    constants.TRANSFER_STATUS_REJECTED,
+    constants.TRANSFER_STATUS_PAYMENT_DECLINED,
+    constants.TRANSFER_STATUS_PAYMENT_CANCELLED,
+  ];
+
+  const isTranscationsHasNonTerminalStatus = transactions?.some(
+    (transaction: any) => !terminalStatuses.includes(transaction?.status)
+  );
+
+  return isTranscationsHasNonTerminalStatus;
 };
