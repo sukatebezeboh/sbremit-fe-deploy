@@ -2318,7 +2318,8 @@ export const updateTransferWithPaymentGatewayCharge = async (
   transferId: string,
   paymentGateway: string,
   clientIp: string,
-  callback: Function
+  callback: Function,
+  callbackOnError: Function
 ) => {
   const transfer = store.getState().transfer;
 
@@ -2335,14 +2336,26 @@ export const updateTransferWithPaymentGatewayCharge = async (
           payload: { ...transfer, transactionDetails: { ...res.data.data } },
         });
         callback();
+      } else {
+        toastAction({
+          show: true,
+          type: "error",
+          timeout: 10000,
+          message:
+            res.data?.error?.message ||
+            "Could not initiate payment, please try again",
+        });
+        callbackOnError();
       }
     })
     .catch((error) => {
       toastAction({
         show: true,
         type: "error",
-        message: error?.message || "Could not initiate payment, please try again",
+        message:
+          error?.message || "Could not initiate payment, please try again",
       });
+      callbackOnError();
     })
     .then(() => {});
 };
