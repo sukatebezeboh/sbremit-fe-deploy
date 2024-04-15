@@ -43,7 +43,6 @@ const LeftContent = () => {
 const RightContent = () => {
   const history = useHistory();
 
-
   return (
     <RightContentStyles $bgImage={TwinklingStars} $bgImageSMdevice={BannerSvg}>
       <div className="_background">
@@ -52,7 +51,7 @@ const RightContent = () => {
           <H3>on your next two transfers</H3>
           <H3 className="_bold">Use code HELLO5</H3>
           <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
-            <Paragraph>Strat tranfer</Paragraph>
+            <Paragraph>Start transfer</Paragraph>
           </Button>
           <Paragraph $small className="_TandC">
             Minimum spend $50. T & Cs Apply.{" "}
@@ -67,7 +66,7 @@ const RightContent = () => {
             Use code <b>TANKU5</b> when you login
           </H4>
           <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
-            <Paragraph>Strat tranfer</Paragraph>
+            <Paragraph>Start transfer</Paragraph>
           </Button>
         </div>
       </div>
@@ -125,7 +124,7 @@ const LeftContentStyles = styled.div<{ $bgImage: string }>`
   background-image: ${(props) => `url(${props.$bgImage})`};
   background-size: 100%;
   /* background-position: top; */
-  background-position: center bottom 120% !important; 
+  background-position: center bottom 120% !important;
   background-repeat: no-repeat;
 
   @media (max-width: ${Breakpoint.xl}) {
