@@ -29,7 +29,12 @@ import {
   generateCheckoutInfoForTrulayerPayment,
 } from "./paymentHelper";
 import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
-import { getMoneyValue } from "../../../../../util/util";
+import {
+  getMoneyValue,
+  parseEndpointParameters,
+} from "../../../../../util/util";
+import endpoints from "util/endpoints";
+import { queryClient } from "index";
 
 interface LocationState {
   transfer: any;
@@ -38,6 +43,7 @@ interface LocationState {
 export default function Pay() {
   const location = useLocation();
   const history = useHistory();
+  const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
   const auth = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
@@ -51,6 +57,12 @@ export default function Pay() {
   const transferInfo = freshTrasnferInfo || prevTransferInfo;
 
   const [loader, setLoader] = useState(false);
+
+  const transferQueryKey = parseEndpointParameters(
+    endpoints.GET_TRANSFER,
+    user?.id,
+    freshTrasnferInfo?.id
+  );
 
   useEffect(() => {
     if (
@@ -78,6 +90,8 @@ export default function Pay() {
   ///---Open paymenent method hosted pages
   const handleProceed = (paymentMethod: string) => {
     const initiatePayment = () => {
+      queryClient.invalidateQueries(transferQueryKey);
+
       if (paymentMethod === "interac") {
         initiateInteracTransferPayment(+transferInfo.id);
       }
@@ -117,12 +131,6 @@ export default function Pay() {
     handleProceed(selectedMethod);
   };
 
-  const PayWithPayment = (e: any): any => {
-    e.target.mainamount.value = getTotalToPay();
-    e.target.currencyiso3a.value = transferInfo?.originCurrency;
-    return true;
-  };
-
   const items: CollapseProps["items"] = [
     {
       key: "1",
@@ -143,16 +151,17 @@ export default function Pay() {
   return (
     <>
       <PaymentMethodsContainerStyles>
-        {isTrustPayment && (
-          <PaymentRedirect
-            mainamount={getTotalToPay()}
-            currencyiso3a={transferInfo?.originCurrency}
-            transactionId={transferInfo?.meta?.transactionId}
-            transferId={transferInfo?.id}
-            enabled={isTrustPayment}
-            setEnabled={() => setIsTrustPayment(false)}
-          />
-        )}
+        {isTrustPayment &&
+          transferInfo?.meta?.paymentGatewayCharge !== undefined && (
+            <PaymentRedirect
+              mainamount={getTotalToPay()}
+              currencyiso3a={transferInfo?.originCurrency}
+              transactionId={transferInfo?.meta?.transactionId}
+              transferId={transferInfo?.id}
+              enabled={isTrustPayment}
+              setEnabled={() => setIsTrustPayment(false)}
+            />
+          )}
 
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription
