@@ -24,6 +24,7 @@ import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
 import {
+  checkForNonTerminalTransactionStatus,
   downloadStatementPdf,
   formatTransactionStatus,
   formatTransactionsReversed,
@@ -67,20 +68,28 @@ interface TranscationsProps {
 
 export default function Transcations({ page }: TranscationsProps) {
   const user = useSelector((state: any) => state.auth.user);
-  const { isFetched, isError } = useRecipientsData(user?.id);
-  const recipients = useSelector((state: any) => state.recipients.recipients);
+  const transactions = useSelector((state: any) => state.transactions);
+  const { transactionsArray, total, days, limit } = transactions || {};
+  const isTranscationsHasNonTerminalStatus =
+    checkForNonTerminalTransactionStatus(transactionsArray);
+
+  const { isFetched: isRecipientsFetched, isError: isRecipientsError } =
+    useRecipientsData(user?.id);
   const {
     isLoading: isLoadingTransactions,
     isFetching: isFetchingTransactions,
-  } = useTransactionsData(user?.id, isFetched || isError);
+  } = useTransactionsData(
+    user?.id,
+    isRecipientsFetched || isRecipientsError,
+    isTranscationsHasNonTerminalStatus
+  );
 
   const isLoadingOrFetchingTransactions =
     isLoadingTransactions || isFetchingTransactions;
 
+  const recipients = useSelector((state: any) => state.recipients.recipients);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const transactions = useSelector((state: any) => state.transactions);
-  const { transactionsArray, total, days, limit } = transactions || {};
   const history = useHistory();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
