@@ -70,12 +70,12 @@ const RemitanceMethodsStyles = styled(PageResponsiveWidth)`
 
   @media (max-width: ${Breakpoint.xl}) {
     flex-direction: column;
-    gap: 42px;
+    gap: 24px;
     align-items: center;
   }
 
   ._left_content {
-    width: 40%;
+    width: 38%;
 
     display: flex;
     flex-direction: column;
@@ -121,7 +121,7 @@ const RemitanceMethodsStyles = styled(PageResponsiveWidth)`
 
 const RemitanceMethodStyles = styled.div`
   display: flex;
-  width: 367px;
+  width: 320px;
   padding: 89px 33px;
   flex-direction: column;
   justify-content: center;

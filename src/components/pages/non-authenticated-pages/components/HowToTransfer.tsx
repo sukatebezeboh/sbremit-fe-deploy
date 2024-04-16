@@ -149,8 +149,8 @@ const HowToTransferContentStyles = styled(PageResponsiveWidth)`
       display: none;
     }
 
-    width: 730px;
-    height: 730px;
+    width: 550px;
+    height: 550px;
 
     @media (max-width: 1440px) {
       width: 550px;

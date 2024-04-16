@@ -97,7 +97,7 @@ const WhySBStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
 
   img {
     height: inherit;
-    width: 40%;
+    width: 35%;
 
     @media (max-width: 1440px) {
       display: none;
@@ -119,7 +119,7 @@ const OptionsStyles = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  padding-left: 8%;
+  padding-left: 5%;
   gap: 40px;
 
   @media (max-width: 1440px) {
