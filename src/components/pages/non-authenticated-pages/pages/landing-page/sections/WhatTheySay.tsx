@@ -140,7 +140,7 @@ const WhatTheySayStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
     }
 
     ._buttons {
-      display: none;
+      display: flex;
       gap: 16px;
       @media (max-width: ${Breakpoint.md}) {
         display: none;

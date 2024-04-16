@@ -1,4 +1,3 @@
-import { Avatar } from "antd";
 import { PageResponsiveWidth } from "components/pages/non-authenticated-pages/global-styles/styles";
 import {
   H3,
@@ -9,7 +8,6 @@ import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
-import React from "react";
 import styled from "styled-components";
 
 const ClipsBg = "/assets/images/clips_bg.png";
@@ -102,10 +100,6 @@ const WhySBStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
     width: 40%;
 
     @media (max-width: 1440px) {
-      width: 35%;
-    }
-
-    @media (max-width: ${Breakpoint.xl}) {
       display: none;
     }
   }
@@ -130,11 +124,9 @@ const OptionsStyles = styled.div`
 
   @media (max-width: 1440px) {
     padding-left: 5%;
-  }
-
-  @media (max-width: ${Breakpoint.xl}) {
     padding: 60px 5%;
     align-items: center;
+    gap: 60px;
   }
 
   h3,
@@ -150,7 +142,7 @@ const OptionsStyles = styled.div`
     flex-wrap: wrap;
     gap: 40px;
 
-    @media (max-width: ${Breakpoint.xl}) {
+    @media (max-width: 1440px) {
       align-items: center;
       justify-content: center;
     }

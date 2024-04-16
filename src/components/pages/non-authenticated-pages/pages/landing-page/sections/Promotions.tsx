@@ -80,6 +80,7 @@ const PromotionsStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
   gap: 32px;
 
   height: 1040px;
+  overflow: hidden;
   @media (max-width: ${Breakpoint.xl}) {
     height: 650px;
     flex-direction: column;
@@ -152,7 +153,7 @@ const RightContentStyles = styled.div<{
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 
   @media (max-width: ${Breakpoint.xl}) {
     width: 100%;
@@ -162,7 +163,8 @@ const RightContentStyles = styled.div<{
 
   @media (max-width: ${Breakpoint.md}) {
     flex-direction: column;
-    /* height: 400px; */
+    width: 100%;
+    box-sizing: border-box;
   }
 
   ._background {
@@ -171,13 +173,14 @@ const RightContentStyles = styled.div<{
     flex-shrink: 0;
 
     @media (max-width: ${Breakpoint.xl}) {
-      width: 50%;
+      width: 48%;
       height: 100%;
       padding: 32px 42px;
     }
 
     @media (max-width: ${Breakpoint.md}) {
       width: 100%;
+      gap: 0px;
       height: 420px;
     }
 
@@ -232,7 +235,6 @@ const RightContentStyles = styled.div<{
       z-index: 1;
       color: ${Colors.textColor3};
       text-align: center;
-
       display: flex;
       flex-direction: column;
       align-items: center;

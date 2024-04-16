@@ -119,7 +119,7 @@ const HowToTransferStyles = styled.section`
 
   padding: 100px 0px;
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     padding: 60px 0px;
   }
 `;
@@ -130,12 +130,14 @@ const HowToTransferContentStyles = styled(PageResponsiveWidth)`
   align-items: center;
   gap: 42px;
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     justify-content: center;
   }
 
   ._images {
     border-radius: 771px;
+    box-sizing: border-box;
+
     /* opacity: 0.05; */
     background: linear-gradient(
       98deg,
@@ -143,19 +145,16 @@ const HowToTransferContentStyles = styled(PageResponsiveWidth)`
       rgba(255, 230, 46, 0.05) 78.19%
     );
 
-    @media (max-width: ${Breakpoint.xl}) {
+    @media (max-width: 1390px) {
       display: none;
     }
-    /*     
-    width: 100%;
-    height: 100%; */
 
-    min-width: 771px;
-    min-height: 771px;
+    width: 730px;
+    height: 730px;
 
     @media (max-width: 1440px) {
-      min-width: 567px;
-      min-height: 567px;
+      width: 550px;
+      height: 550px;
     }
 
     flex-shrink: 0;
@@ -169,8 +168,8 @@ const HowToTransferContentStyles = styled(PageResponsiveWidth)`
       height: 600px;
 
       @media (max-width: 1440px) {
-        min-width: 250px;
-        min-height: 550px;
+        width: 230px;
+        height: 450px;
       }
 
       flex-shrink: 0;
@@ -187,7 +186,7 @@ const StepOneStyles = styled.div<{ $activeStep: boolean }>`
   width: 520px;
   padding: 8px 42px;
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     width: 100%;
   }
 
@@ -206,7 +205,7 @@ const StepsTypeOneStyles = styled.div`
   flex-direction: column;
   gap: 52px;
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     align-items: center;
   }
   @media (max-width: ${Breakpoint.sm}) {
@@ -223,7 +222,7 @@ const StepsTypeTwoStyles = styled.div`
   flex-wrap: wrap;
   gap: 20px;
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     align-items: center;
     justify-content: center;
   }
@@ -252,7 +251,7 @@ const StepTwoStyles = styled.div<{ $activeStep: boolean }>`
     height: 320px;
   }
 
-  @media (max-width: ${Breakpoint.xl}) {
+  @media (max-width: 1390px) {
     width: 340px;
     height: 260px;
     padding: 32px;
