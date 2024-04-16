@@ -190,12 +190,12 @@ const NavbarContentStyles = styled(PageResponsiveWidth)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 0px;
+  padding: 24px 0px;
   background: ${Colors.bgwhite};
 
   img {
-    width: 205.268px;
-    height: 48px;
+    width: 188px;
+    /* height: 48px; */
     cursor: pointer;
 
     &:hover {
