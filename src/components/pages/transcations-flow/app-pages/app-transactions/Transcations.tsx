@@ -14,22 +14,22 @@ import React, { useState } from "react";
 import { IoIosMore } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { TRANSFER } from "redux/actionTypes";
+import { TRANSACTIONS, TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
+import { useRecipientsData } from "../../app-layout/appLayoutHelper";
 import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import {
-  getFirstLetter,
-  transferMethodsInWords,
-} from "../../utils/reuseableUtils";
+import { getFirstLetter } from "../../utils/reuseableUtils";
 import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
 import {
+  checkForNonTerminalTransactionStatus,
   downloadStatementPdf,
   formatTransactionStatus,
   formatTransactionsReversed,
   thisRecipient,
+  useTransactionsData,
 } from "./TransactionHelper";
 import {
   RecipientName,
@@ -68,12 +68,28 @@ interface TranscationsProps {
 
 export default function Transcations({ page }: TranscationsProps) {
   const user = useSelector((state: any) => state.auth.user);
+  const transactions = useSelector((state: any) => state.transactions);
+  const { transactionsArray, total, days, limit } = transactions || {};
+  const isTranscationsHasNonTerminalStatus =
+    checkForNonTerminalTransactionStatus(transactionsArray);
+
+  const { isFetched: isRecipientsFetched, isError: isRecipientsError } =
+    useRecipientsData(user?.id);
+  const {
+    isLoading: isLoadingTransactions,
+    isFetching: isFetchingTransactions,
+  } = useTransactionsData(
+    user?.id,
+    isRecipientsFetched || isRecipientsError,
+    isTranscationsHasNonTerminalStatus
+  );
+
+  const isLoadingOrFetchingTransactions =
+    isLoadingTransactions || isFetchingTransactions;
+
+  const recipients = useSelector((state: any) => state.recipients.recipients);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { transactionsArray, total, days } = useSelector(
-    (state: any) => state.transactions
-  );
-  const recipients = useSelector((state: any) => state.recipients.recipients);
   const history = useHistory();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(false);
@@ -258,16 +274,15 @@ export default function Transcations({ page }: TranscationsProps) {
 
   const handleTablePaginationChange = (pagination: TablePaginationConfig) => {
     if (pagination && pagination.current) {
-      const offset = pagination.current - 1;
-      //update store and make server request
-      // dispatch({
-      //   type: TRANSFER,
-      //   payload: {
-      //     ...transfers,
-      //     offset: offset,
-      //   },
-      // });
-      // getTransactions();
+      const offset = (pagination.current - 1) * limit;
+
+      dispatch({
+        type: TRANSACTIONS,
+        payload: {
+          ...transactions,
+          offset: offset,
+        },
+      });
     }
   };
 
@@ -303,7 +318,7 @@ export default function Transcations({ page }: TranscationsProps) {
               View all
             </Button>
           ) : (
-            <DateSelector />
+            <DateSelector loading={isLoadingOrFetchingTransactions} />
           )}
         </TranscationsTableHeader>
 

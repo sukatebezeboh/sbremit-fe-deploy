@@ -13,6 +13,7 @@ import { paths } from "util/paths";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "redux/actions/actions";
 import { Tabs } from "antd";
+import { APP_VALUES } from "redux/actionTypes";
 
 const schema = yup.object({
   username: yup.string().required().label("Email/Phone"),

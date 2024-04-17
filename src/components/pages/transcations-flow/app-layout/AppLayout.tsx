@@ -3,14 +3,9 @@ import { useEffect, useState } from "react";
 import {
   fetchUserNotifications,
   getClientIp,
-  getRecipients,
-  refreshUserDetails,
   toastAction,
 } from "redux/actions/actions";
-import {
-  getTransactions,
-  getUserCurrencyInfo,
-} from "redux/actions/actionsTransfer";
+import { getUserCurrencyInfo } from "redux/actions/actionsTransfer";
 import { AntdConfigSettings } from "../utils/stylesVariables";
 import {
   ApplayoutBodyStyle,
@@ -25,9 +20,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { AUTH } from "redux/actionTypes";
 import { paths } from "util/paths";
+import RewardModal from "../app-components/RewardModal";
 import TandCModal from "../app-components/TandCModal";
 import { userIsVerified } from "../utils/reuseableUtils";
-import RewardModal from "../app-components/RewardModal";
+import {
+  checkIsRewardsAvailable,
+  useRecipientsData,
+  useUserData,
+} from "./appLayoutHelper";
 
 export default function AppLayout() {
   const auth = useSelector((state: any) => state.auth);
@@ -36,49 +36,34 @@ export default function AppLayout() {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const { trullioVerified } = user?.meta || {};
 
-  const isDashboardOrTransactionsPage =
-    location.pathname === paths.DASHBOARD ||
-    location.pathname === paths.TRANSACTIONS ||
-    location.pathname === paths.ACCOUNT_STATEMENTS;
-
-  const isDashboardOrRewardPage =
+  const isGetQuotePage = location.pathname === paths.GET_QUOTE;
+  const isDashboardAandRewardPage =
     location.pathname === paths.DASHBOARD ||
     location.pathname === paths.REWARDS;
 
-  const isGetQuotePage = location.pathname === paths.GET_QUOTE;
+  const { data: userData, isFetched: isFetchedUserData } = useUserData(
+    user?.id
+  );
+  const { trullioVerified } = userData?.meta || {};
 
-  const checkIsRewardsAvailable = (data: any) => {
-    const { Referral } = data.referral || {};
-    const { Voucher } = data.meta || {};
-
-    const isVoucherActive = Voucher && Voucher === "ACTIVE";
-    const isNewBonusStateActive = Referral && Referral === "ACTIVE";
-
-    if (isVoucherActive || isNewBonusStateActive) {
-      return setIsRewardAvailable(true);
-    }
-
-    return setIsRewardAvailable(false);
-  };
+  const { isFetched, isError } = useRecipientsData(user?.id);
 
   useEffect(() => {
-    getRecipients();
     getUserCurrencyInfo();
-    isDashboardOrTransactionsPage && getTransactions();
-    fetchUserNotifications();
+    userData && checkIsRewardsAvailable(userData, setIsRewardAvailable);
+
     checkIfUserIsVerified(false); // this upadete redux store and does not trigger a redirect
     !isGetQuotePage && getClientIp(); // get user IP address
-    isDashboardOrRewardPage &&
-      refreshUserDetails(checkIsRewardsAvailable, true); // force refresh to upadate reward props
+
+    fetchUserNotifications();
 
     //check user verification on Payment Method page and redirect if !verified
     if (location.pathname === paths.PAYMENT_METHOD) {
       checkIfUserIsVerified(true);
     }
     return () => {};
-  }, []);
+  }, [userData]);
 
   const redirectUser = () => {
     toastAction({
@@ -92,9 +77,9 @@ export default function AppLayout() {
     history.push(paths.VERIFICATION);
   };
 
-  const isUserVerificationRequired = !userIsVerified(user); //&&
-  // !isUserFirstTransaction(user) &&
-  // !userHasReachedFinalVerificationStage(user);
+  const isUserVerificationRequired = userData
+    ? !userIsVerified(userData)
+    : false;
 
   const checkIfUserIsVerified = (redirect: boolean) => {
     if (trullioVerified && Boolean(trullioVerified)) {
@@ -136,8 +121,10 @@ export default function AppLayout() {
         </ApplayoutContainerStlye>
 
         {/* General popups/modals */}
-        <TandCModal />
-        {isRewardAvailable && <RewardModal />}
+        <TandCModal user={userData} />
+        {isRewardAvailable && isDashboardAandRewardPage && (
+          <RewardModal user={userData} />
+        )}
       </ApplayoutStlye>
     </ConfigProvider>
   );

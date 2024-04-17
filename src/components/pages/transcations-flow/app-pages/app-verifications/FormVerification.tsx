@@ -1,11 +1,5 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
 import {
-  DateFormat,
-  convertToDateFormat,
-  getFlagURL,
-} from "../../utils/reuseableUtils";
-import {
+  Button,
   DatePicker,
   DatePickerProps,
   Divider,
@@ -16,21 +10,26 @@ import {
   RadioChangeEvent,
   Space,
 } from "antd";
-import { FlexAndWrap } from "./VerificationsStyles";
 import dayjs from "dayjs";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  DateFormat,
+  convertToDateFormat,
+  getFlagURL,
+} from "../../utils/reuseableUtils";
 import { userAppValues } from "../../utils/useAppValues";
+
+import { FlexAndWrap } from "./VerificationsStyles";
+import { useUpdateFormVerification } from "./verificationsHelper";
+import { ErrorMessages } from "../../utils/ReusablePageContent";
 
 interface FormVerificationProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  submit: Function;
 }
 
-export const FormVerification = ({
-  open,
-  setOpen,
-  submit,
-}: FormVerificationProps) => {
+export const FormVerification = ({ open, setOpen }: FormVerificationProps) => {
   const user = useSelector((state: any) => state.auth.user);
   const countries = useSelector((state: any) => state.appValues.countries);
   const { PayinCountries } = userAppValues();
@@ -53,6 +52,15 @@ export const FormVerification = ({
     ...user?.profile,
   };
 
+  const {
+    mutate: updatePersonalDetailsMutate,
+    isLoading,
+    isError,
+    error,
+  } = useUpdateFormVerification(user.id, true, () => setOpen(false));
+
+  const err: any = error;
+
   const handleCancel = () => {
     setOpen(false);
   };
@@ -73,12 +81,7 @@ export const FormVerification = ({
     delete formattedValues.dob;
     delete formattedValues.username;
 
-    submit(formattedValues);
-    setOpen(false);
-  };
-
-  const onFormFinishFailed = (errorInfo: any) => {
-    //console.log("Failed:", errorInfo);
+    updatePersonalDetailsMutate(formattedValues);
   };
 
   const onDatePickerChange: DatePickerProps["onChange"] = (
@@ -103,12 +106,13 @@ export const FormVerification = ({
       open={open}
       onCancel={handleCancel}
       width={800}
-      okText="Submit"
       onOk={() => {
         form.validateFields().then((values) => {
           onFormFinish(values);
         });
       }}
+      confirmLoading={isLoading}
+      okText="Submit"
     >
       <Divider style={{ marginTop: "12px" }} />
       <div style={{ marginTop: "32px", width: "100%" }}>
@@ -117,7 +121,6 @@ export const FormVerification = ({
           layout="vertical"
           name="verification_form"
           onFinish={onFormFinish}
-          onFinishFailed={onFormFinishFailed}
           initialValues={initialValues}
         >
           <FlexAndWrap>
@@ -375,6 +378,8 @@ export const FormVerification = ({
               <span>{countries?.[location_country]}</span>
             </Space>
           </Form.Item>
+
+          {isError && <ErrorMessages errorMessage={err?.message} />}
 
           <Divider style={{ marginTop: "12px" }} />
         </Form>

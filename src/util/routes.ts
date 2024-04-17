@@ -35,7 +35,6 @@ const EmailRegistration = lazy(
   () => import("../components/pages/new-auth-pages/views/EmailRegistration")
 );
 
-
 const ForgetPassword = lazy(
   () => import("../components/pages/new-auth-pages/views/ForgotPassword")
 );
@@ -102,13 +101,33 @@ const EditProfile = lazy(
   () => import("../components/pages/edit-profile/EditProfile")
 );
 const Legal = lazy(
-  () => import("../components/content-pages/support/legal-wrapper/Legal")
+  () =>
+    import(
+      "../components/pages/non-authenticated-pages/pages/legals/LegalsLayout"
+    )
 );
-const About = lazy(() => import("../components/content-pages/about/About"));
+const About = lazy(
+  () =>
+    import(
+      "../components/pages/non-authenticated-pages/pages/about-page/AboutPage"
+    )
+);
 const Tutorial = lazy(
   () =>
     import("../components/content-pages/about/tutorial-pages/tutorial/Tutorial")
 );
+
+const HowItWorks = lazy(
+  () =>
+    import(
+      "../components/pages/non-authenticated-pages/pages/how-it-work/HowItWork"
+    )
+);
+
+const Help = lazy(
+  () => import("../components/pages/non-authenticated-pages/pages/help/Help")
+);
+
 const Cameroon = lazy(
   () =>
     import("../components/content-pages/about/tutorial-pages/cameroon/Cameroon")
@@ -123,7 +142,10 @@ const Tanzania = lazy(
   () =>
     import("../components/content-pages/about/tutorial-pages/tanzania/Tanzania")
 );
-// const Blog = lazy(() => import('../components/content-pages/blog/Blog'));
+const OurBlog = lazy(
+  () =>
+    import("../components/pages/non-authenticated-pages/pages/our-blog/OurBlog")
+);
 const Support = lazy(
   () => import("../components/content-pages/support/support/Support")
 );
@@ -133,7 +155,12 @@ const Contact = lazy(
 const ConfirmAccount = lazy(
   () => import("../components/pages/confirm-account/ConfirmAccount")
 );
-const NotFound = lazy(() => import("../components/pages/not-found/NotFound"));
+const NotFound = lazy(
+  () =>
+    import(
+      "../components/pages/non-authenticated-pages/pages/page-not-found/PageNotFound"
+    )
+);
 const TruelayerProviders = lazy(
   () => import("../components/pages/truelayer-providers/TruelayerProviders")
 );
@@ -148,7 +175,10 @@ const AccountConfirmationSMSCode = lazy(
     )
 );
 const LandingPage = lazy(
-  () => import("../components/pages/landing-page/LandingPage")
+  () =>
+    import(
+      "../components/pages/non-authenticated-pages/pages/landing-page/LandingPage"
+    )
 );
 const RegisterCountry = lazy(
   () => import("../components/pages/register-country/RegisterCountry")
@@ -270,6 +300,27 @@ export const Routing: IRoute[] = [
   {
     path: paths.TUTORIALS,
     component: Tutorial,
+    protected: false,
+    exact: true,
+    footerless: false,
+  },
+  {
+    path: paths.HOW_IT_WORKS,
+    component: HowItWorks,
+    protected: false,
+    exact: true,
+    footerless: false,
+  },
+  {
+    path: paths.HELP,
+    component: Help,
+    protected: false,
+    exact: true,
+    footerless: false,
+  },
+  {
+    path: paths.OUR_BLOG,
+    component: OurBlog,
     protected: false,
     exact: true,
     footerless: false,

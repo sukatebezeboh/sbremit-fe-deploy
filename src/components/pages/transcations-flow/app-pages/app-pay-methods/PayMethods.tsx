@@ -10,6 +10,7 @@ import {
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import { constants } from "util/constants";
+import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import LargeButton, {
   PageTitileAndDescription,
   TransactionsSteps,
@@ -41,7 +42,10 @@ export default function Pay() {
   const { clientIp } = transfer || {};
   const { verification } = auth || {};
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
-  const transferInfo = (location.state as LocationState)?.transfer;
+  let prevTransferInfo = (location.state as LocationState)?.transfer;
+  const { data: freshTrasnferInfo } = useGetTransfer(prevTransferInfo.id);
+  const transferInfo = freshTrasnferInfo || prevTransferInfo;
+
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {

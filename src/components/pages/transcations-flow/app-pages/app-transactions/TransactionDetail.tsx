@@ -251,23 +251,7 @@ export const TransactionsInfomations = ({
   transaction: any;
   noBorder?: boolean;
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    setIsMobile(mediaQuery.matches);
-
-    const handleMediaQueryChange = (event: any) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-
-    // Remove the listener when the component is unmounted
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
+  const isMobile = useSelector((state: any) => state.isMobileView);
 
   const onChange = (key: string) => {
     //console.log(key);
@@ -439,28 +423,4 @@ export const TransactionDetails = ({
       </Descriptions.Item>
     </Descriptions>
   );
-};
-
-const DownloadReceipt = ({ metaData }: { metaData: any }) => {
-  const downloadLink = metaData?.receipt_url;
-
-  if (
-    downloadLink &&
-    (downloadLink !== "" || downloadLink !== null || downloadLink !== undefined)
-  ) {
-    return (
-      <Button
-        type="default"
-        href={downloadLink}
-        rel="noreferrer"
-        target="_blank"
-        download
-        icon={<FilePdfOutlined rev={undefined} />}
-      >
-        Download receipt
-      </Button>
-    );
-  } else {
-    return <></>;
-  }
 };

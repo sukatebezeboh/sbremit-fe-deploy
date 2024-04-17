@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Colors = {
   textColor: "#212121",
   textColor2: "#808080",
+  textColor3: "#1E1E1E",
   borderColor: "#EDEDED",
   borderColor2: "#D9D9D9",
   bgwhite: "#FFF",

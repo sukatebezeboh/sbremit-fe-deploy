@@ -21,3 +21,4 @@ export const EXCHANGE_SPREADS = "EXCHANGES_SPREADS"
 export const EXCHANGES = "EXCHANGES"
 export const CONFIRM = "CONFIRM";
 export const TRANSACTIONS = "TRANSACTIONS";
+export const ISMOBILE = "ISMOBILE";

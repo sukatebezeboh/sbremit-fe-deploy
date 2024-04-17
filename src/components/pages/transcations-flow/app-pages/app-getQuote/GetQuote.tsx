@@ -29,7 +29,7 @@ export default function GetQuote() {
   const transferMethod =
     (location.state as LocationState)?.transferMethod ||
     transferMethodsInWords[transfer?.transferMethod];
-  const { payinActualValue } = transfer;
+  const { payinActualValue, payoutActualValue } = transfer;
   const [loader, setLoader] = useState(false);
 
   const onContinueClicked = () => {
@@ -65,7 +65,9 @@ export default function GetQuote() {
         onClick={onContinueClicked}
         loading={loader}
         disabled={
-          isWithinPaymentLimit(transfer) !== "" || payinActualValue <= 0
+          isWithinPaymentLimit(transfer) !== "" ||
+          payinActualValue <= 0 ||
+          payoutActualValue <= 0
         } // enable when there's no error message or payinActualValue > 0
       />
     </GetQuoteContainerStyle>

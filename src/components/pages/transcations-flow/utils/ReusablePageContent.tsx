@@ -1,8 +1,12 @@
-import { FilePdfOutlined } from "@ant-design/icons";
+import {
+  FilePdfOutlined,
+  FrownOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { Button, Space, Steps } from "antd";
 import { MouseEventHandler } from "react";
 import { useHistory } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { Breakpoint, Colors, Heading } from "./stylesVariables";
@@ -218,8 +222,8 @@ export const TrnsferDetailsActionButtons = ({
     } else if (status === constants.TRANSFER_PAYMENT_FRAUD) {
       buttonContent = "Contact us";
       onClickAction = () =>
-        history.push(paths.CONTACT, {
-          transferId: transaction.meta.transactionId,
+        history.push(paths.HELP, {
+          transferId: transaction?.meta.transactionId,
         });
     }
 
@@ -264,3 +268,60 @@ const DownloadReceipt = ({ metaData }: { metaData: any }) => {
     return <></>;
   }
 };
+
+export const ErrorMessages = ({ errorMessage }: { errorMessage: string }) => {
+  return (
+    <ErrorMessagesWrappper>
+      <p>{errorMessage}</p>
+    </ErrorMessagesWrappper>
+  );
+};
+
+const ErrorMessagesWrappper = styled.div`
+  width: 100%;
+  p {
+    color: ${Colors.sbRed};
+    font: 14px;
+  }
+`;
+
+export const CustomLoader = ({ prompt }: { prompt: string }) => {
+  return (
+    <CustomWrapper>
+      <LoadingOutlined rev={undefined} className="_icon" />
+      {prompt}
+    </CustomWrapper>
+  );
+};
+
+export const CustomError = ({ message }: { message: string }) => {
+  return (
+    <CustomWrapper $isError>
+      <FrownOutlined rev={undefined} className="_icon" />
+      {message}
+    </CustomWrapper>
+  );
+};
+
+const CustomWrapper = styled.div<{ $isError?: boolean }>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 8px;
+  text-align: center;
+  padding: 16px;
+
+  ${(props) =>
+    props.$isError &&
+    css`
+      color: rgba(207, 9, 33, 1);
+    `}
+
+  ._icon {
+    font-size: 32px;
+  }
+`;

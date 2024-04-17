@@ -1,8 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import Provider from "../Provider";
 import { paths } from "util/paths";
+import Provider from "../Provider";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
