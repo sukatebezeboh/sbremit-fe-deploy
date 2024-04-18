@@ -23,16 +23,19 @@ export const PageWrapperStyles = styled.div<{ $hideMarginTop?: boolean }>`
   gap: 120px;
   width: 100vw;
 
-  ${(props) => (props.$hideMarginTop ? "" : "margin-top: 38px;")};
+  ${(props) =>
+    props.$hideMarginTop ? "margin-top: -8px" : "margin-top: 38px;"};
 
   @media (max-width: ${Breakpoint.xl}) {
     gap: 80px;
-    ${(props) => (props.$hideMarginTop ? "" : "margin-top: 24px;")};
+    ${(props) =>
+      props.$hideMarginTop ? "margin-top: -12px" : "margin-top: 24px;"};
   }
 
   @media (max-width: ${Breakpoint.md}) {
     gap: 60px;
-    ${(props) => (props.$hideMarginTop ? "" : "margin-top: 38px;")}
+    ${(props) =>
+      props.$hideMarginTop ? "margin-top: -15px" : "margin-top: 38px;"}
   }
 `;
 
