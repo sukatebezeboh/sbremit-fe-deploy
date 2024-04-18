@@ -177,7 +177,7 @@ const BodyStyles = styled.div`
   }
   .wpwl-container,
   .wpwl-container-card {
-    width: 75vw;
+    width: 100%;
   }
   .wpwl-group-brand {
     display: flex;
