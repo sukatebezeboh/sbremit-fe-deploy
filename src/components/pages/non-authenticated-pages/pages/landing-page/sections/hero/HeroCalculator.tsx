@@ -12,10 +12,11 @@ import {
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
 import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { TRANSFER } from "redux/actionTypes";
+import { getServiceRate } from "redux/actions/actions";
 import styled from "styled-components";
 import { paths } from "util/paths";
 import { getAllUniqueCurrencies } from "./HeroHelper";
@@ -26,16 +27,22 @@ const HeroCalculator = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const transfer = useSelector((state: any) => state.transfer);
+  const [operatorFee, setOperatorFee] = useState(0);
   const {
     payinActualValue,
     exchangeRate,
     payinCurrency,
     payoutCurrency,
     activeCountryColor,
+    transferMethod,
   } = transfer;
   useEffect(() => {
     updatePayoutValue();
   }, [exchangeRate]);
+
+  useEffect(() => {
+    setOperatorFee(getServiceRate());
+  }, [transferMethod]);
 
   // Recalculate payout value based on the new exchange rate
   const updatePayoutValue = () => {
@@ -67,12 +74,16 @@ const HeroCalculator = () => {
           </ExchangeRateStyles>
           <OperatorFeeStyles>
             <Paragraph $small>Operator Fee</Paragraph>
-            <Paragraph $small>+2 {payinCurrency}</Paragraph>
+            <Paragraph $small>
+              {operatorFee} {payinCurrency}
+            </Paragraph>
           </OperatorFeeStyles>
           <TotalAmountStyles $activeColor={activeCountryColor}>
             <Paragraph $small>Total</Paragraph>
             <Paragraph $small>
-              {payinActualValue ? formatAmount(payinActualValue + 2) : 0}{" "}
+              {payinActualValue
+                ? formatAmount(payinActualValue + operatorFee)
+                : 0}{" "}
               {payinCurrency}
             </Paragraph>
           </TotalAmountStyles>
@@ -233,16 +244,29 @@ const ContrySelector = (
 };
 
 const HeroPaymentMethod = () => {
+  const dispatch = useDispatch();
+  const transfer = useSelector((state: any) => state.transfer);
   const methods = [
     { labal: "Mobile Money", value: "mobile_money" },
     { labal: "Bank Transfer", value: "bank_transfer" },
     { labal: "Cash Pickup", value: "cash_pickup" },
   ];
 
+  const onSelectChange = (value: string) => {
+    dispatch({
+      type: TRANSFER,
+      payload: { ...transfer, transferMethod: value },
+    });
+  };
+
   return (
     <HeroPaymentMethodStyles>
       <Paragraph $small>Delivery Options</Paragraph>
-      <Select defaultValue="mobile_money" size="large">
+      <Select
+        defaultValue="mobile_money"
+        size="large"
+        onChange={onSelectChange}
+      >
         {methods.map((method, index) => (
           <Option value={method.value} key={"hero_" + method + index}>
             {method.labal}
