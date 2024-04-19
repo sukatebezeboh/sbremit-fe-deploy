@@ -299,6 +299,7 @@ const RightContentStyles = styled.div<{
       @media (max-width: ${Breakpoint.xl}) {
         background-image: ${(props) => `url(${props.$bgImageSMdevice})`};
         background-size: 150%;
+        transform: rotate(0deg) scale(1);
       }
     }
 
