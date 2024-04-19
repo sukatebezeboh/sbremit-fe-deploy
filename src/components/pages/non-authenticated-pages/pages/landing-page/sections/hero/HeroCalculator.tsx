@@ -177,6 +177,7 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
           isLoadingRate
         )}
         onChange={handleOnInputChange}
+        maxLength={11}
       />
       <span className="_label">{isPayin ? "You send" : "You receive"}</span>
     </CalculatorInputStyles>
