@@ -1,0 +1,20 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": ["U36SFRXXLT.com.sbremit"],
+                "components": [
+                    {
+                        "/": "*",
+                        "comment": "Matches any URLs"
+                    },
+                    {
+                        "/": "/verification/*",
+                        "exclude": true
+                    }
+                ]
+            }
+        ]
+    }
+}
+	

@@ -1,3 +1,6 @@
+import { useQuery } from "react-query";
+import endpoints from "util/endpoints";
+import { getRequest } from "util/http";
 import { convertDate } from "../app-transactions/TransactionHelper";
 
 interface ReferralProps {
@@ -43,11 +46,12 @@ export const getTotalReferredUsersByuseStatus = (
 ): number => {
   const matchedUsers: any[] = [];
 
-  referredUsers.forEach((user: any) => {
-    if (user.useStatus === status) {
-      matchedUsers.push(user);
-    }
-  });
+  referredUsers &&
+    referredUsers?.forEach((user: any) => {
+      if (user.useStatus === status) {
+        matchedUsers.push(user);
+      }
+    });
 
   return matchedUsers.length ?? 0;
 };
@@ -113,12 +117,13 @@ export const getAccruedAndUsedBonus = (
 
   const isUserHasUplineBonusAndIsActive = ReferralsArray?.some(
     (referral: any) =>
-      referral.Bonus === uplineBonus && referral.ReferralBonus === "ACTIVE"
+      Number(referral.Bonus) === uplineBonus && referral.ReferralBonus === "ACTIVE"
   );
 
   const isUserHasUplineBonusAndIsUsed = ReferralsArray?.some(
     (referral: any) =>
-      referral.Bonus === uplineBonus && referral.ReferralBonus === "USED"
+      Number(referral.Bonus) === uplineBonus &&
+      referral.ReferralBonus === "USED"
   );
 
   const accruedBonusResult = isUserHasUplineBonusAndIsActive
@@ -147,3 +152,17 @@ export const getAccruedAndUsedBonus = (
 
 //   console.log(referrals, isUserHasUplineBonus);
 // };
+
+export const useRefferalsData = () => {
+  const customEndpoint = endpoints.USER_REFERRALS;
+
+  return useQuery(
+    customEndpoint,
+    () => getRequest(customEndpoint, "Failed to fetch referrals"),
+    {
+      refetchIntervalInBackground: true,
+      keepPreviousData: true,
+      onSuccess: () => {},
+    }
+  );
+};

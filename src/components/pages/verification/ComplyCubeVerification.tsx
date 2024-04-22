@@ -1,8 +1,11 @@
+import { queryClient } from "index";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { refreshUserDetails, toastAction } from "redux/actions/actions";
+import { toastAction } from "redux/actions/actions";
+import endpoints from "util/endpoints";
 import http from "util/http";
+import { parseEndpointParameters } from "../../../util/util";
 
 // INVALID VALID PENDING FAILED ATTEMPTED
 
@@ -180,13 +183,15 @@ export const ComplyCubeVerification = ({
           );
         }
         Promise.all(listOfData)
-          .then(() => {})
+          .then(() => {
+            queryClient.invalidateQueries(
+              parseEndpointParameters(endpoints.USER, user?.id)
+            );
+          })
           .catch(() => {})
           .finally(() => {
             complycube.updateSettings({ isModalOpen: false });
-            refreshUserDetails(() => {
-              checkSubmittedVerification(data);
-            }, true);
+            checkSubmittedVerification(user);
           });
 
         /**

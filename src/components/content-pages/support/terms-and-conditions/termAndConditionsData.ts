@@ -1,4 +1,4 @@
-export const termAndConditionsData = [
+export const    termAndConditionsData = [
     {
         title: "Overview",
         content: [

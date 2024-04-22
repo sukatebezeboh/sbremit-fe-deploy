@@ -1,7 +1,7 @@
 import { TwitterOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Divider, Space } from "antd";
 import _env from "env";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getUserReferrals } from "redux/actions/actions";
 import { paths } from "util/paths";
@@ -12,6 +12,7 @@ import {
 } from "../../../../../util/util"; //"util/util";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import { userAppValues } from "../../utils/useAppValues";
+import { useRefferalsData } from "./ReferralsHelper";
 import {
   HeaderStyles,
   LinkContainerStyles,
@@ -41,6 +42,8 @@ export default function Referrals() {
     (country) => country.countryCode === user?.profile?.location_country
   );
 
+  const { data: referralDetails } = useRefferalsData();
+
   const getUserDefaultCurrency = () => userCountryInfo?.currency;
 
   const referralSettings = getValueFromArray(
@@ -48,15 +51,6 @@ export default function Referrals() {
     "name",
     appValues?.values?.data || []
   );
-
-  const [referralDetails, setReferralDetails] = useState({
-    count: 0,
-    referredUsers: [],
-  });
-
-  useEffect(() => {
-    getUserReferrals(setReferralDetails);
-  }, []);
 
   const getShareReferralText = (extraText = "") => {
     return encodeURIComponent(

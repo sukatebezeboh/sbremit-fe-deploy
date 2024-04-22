@@ -11,17 +11,12 @@ export const ConfirmDialog = () => {
     dispatch({ type: CONFIRM, payload: { ...confirmState, open: false } });
   };
 
-  const confirmInput = () => {
+  const onOkClick = () => {
     confirmState.field
       ? confirmState.callback(form.getFieldValue(confirmState.field.title))
       : confirmState.callback();
     closeDialog();
     form.resetFields();
-  };
-
-  const onOkClick = () => {
-    confirmState.callback();
-    closeDialog();
   };
 
   return (
@@ -55,7 +50,7 @@ export const ConfirmDialog = () => {
                 layout="vertical"
                 name="form_in_modal"
                 initialValues={{ modifier: "public" }}
-                onChange={confirmInput}
+                // onChange={confirmInput}
               >
                 <Form.Item
                   name={confirmState.field.title}

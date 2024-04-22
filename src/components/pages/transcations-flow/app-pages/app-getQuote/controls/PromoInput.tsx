@@ -7,83 +7,51 @@ import { Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
-import { getPromo } from "redux/actions/actions";
+import { refinePromoErrorMessage, useGetPromo } from "../GetQuoteHelper";
 import { GetPromoStyles } from "../GetQuoteStyles";
-import { refinePromoErrorMessage } from "../GetQuoteHelper";
 
 export const PromoInput = () => {
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
   const { payinCurrency } = transfer;
-  const [timer, setTimer] = React.useState<NodeJS.Timeout | null>(null);
   const [promoInputValue, setPromoInputValue] = useState("");
-  const [isPromoValid, setIsPromoValid] = useState(false);
   const [promoErr, setPromoErr] = useState("");
   const [promoSuccess, setPromoSuccess] = useState("");
 
-  //clear the timer when the component unmounts
-  useEffect(() => {
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [timer]);
-
-  const validatePromo = (promo: any) => {
-    const isValid = Boolean(promo?.id);
-    //update promo exchnage rate
-    if (isValid) {
-      if (promo?.settings?.baseCurrency !== undefined) {
-        setPromoSuccess(
-          `1 ${payinCurrency} = ${promo.settings.rate} ${payinCurrency}`
-        );
-      } else {
-        setPromoSuccess(
-          `Spend from: "${promo.settings.minimumSpend} ${payinCurrency} & ${promo.settings.maximumSpend} ${payinCurrency}" to activate code.`
-        );
-      }
-    } else {
-      setPromoErr(refinePromoErrorMessage(promo, promoInputValue));
+  const {
+    isError,
+    error,
+    isLoading: isLaodingPromo,
+  } = useGetPromo(
+    promoInputValue,
+    payinCurrency,
+    promoInputValue !== "",
+    (message: string) => {
+      setPromoSuccess(message);
+      dispatch({
+        type: TRANSFER,
+        payload: {
+          ...transfer,
+          promoCode: promoInputValue,
+        },
+      });
     }
+  );
+  const promoError: any = error;
 
-    setIsPromoValid(isValid);
-  };
+  useEffect(() => {
+    setPromoErr(refinePromoErrorMessage(promoError?.message, promoInputValue));
+  }, [isError]);
 
   const handlePromoInputChange = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const promoValue = e.target.value;
     setPromoInputValue(promoValue);
-
-    // Clear the existing timer and promoErr (if any)
-    if (timer) {
-      clearTimeout(timer);
-      setPromoErr("");
-      setIsPromoValid(false);
-    }
-
-    const newTimer = setTimeout(async () => {
-      //update promo to redux store
-
-      dispatch({
-        type: TRANSFER,
-        payload: {
-          ...transfer,
-          promoCode: promoValue,
-        },
-      });
-
-      promoValue !== "" && (await getPromo(promoValue, validatePromo));
-    }, 400);
-    setTimer(newTimer);
   };
 
-  const isPromoInputAndValid = promoInputValue !== "" && isPromoValid;
-  const promoInputNotEmpty = promoInputValue !== "";
-
   return (
-    <GetPromoStyles $validPromo={isPromoInputAndValid}>
+    <GetPromoStyles $validPromo={!isError}>
       <span>Got a promo code?🎁</span>
       <Input
         placeholder="Get discount..."
@@ -92,31 +60,19 @@ export const PromoInput = () => {
         allowClear
         value={promoInputValue || ""}
         suffix={
-          promoInputNotEmpty ? (
-            isPromoInputAndValid ? (
-              <CheckCircleFilled rev={undefined} className="icon" />
-            ) : (
-              <>
-                {promoErr === "" ? (
-                  <LoadingOutlined rev={undefined} />
-                ) : (
-                  <WarningFilled rev={undefined} className="icon" />
-                )}
-              </>
-            )
+          isLaodingPromo ? (
+            <LoadingOutlined rev={undefined} />
+          ) : isError ? (
+            <WarningFilled rev={undefined} className="icon" />
+          ) : promoSuccess ? (
+            <CheckCircleFilled rev={undefined} className="icon" />
           ) : (
             <></>
           )
         }
         onChange={handlePromoInputChange}
       />
-      <p>
-        {promoInputNotEmpty
-          ? isPromoInputAndValid
-            ? promoSuccess.toString()
-            : promoErr.toString()
-          : ""}
-      </p>
+      <p>{isError ? promoErr?.toString() : promoSuccess}</p>
     </GetPromoStyles>
   );
 };

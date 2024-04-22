@@ -1,5 +1,10 @@
 import { IAction } from ".";
-import { RESET_TRANSFER, TRANSFER, TRANSFER_QUOTE, TRANSACTIONS } from "../actionTypes";
+import {
+  RESET_TRANSFER,
+  TRANSFER,
+  TRANSFER_QUOTE,
+  TRANSACTIONS,
+} from "../actionTypes";
 
 const initialTransferState: {} = {
   conversionRate: {},
@@ -49,8 +54,9 @@ const initialTransferState: {} = {
   payinActualValue: 0,
   payoutActualValue: 0,
   exchangeRate: 0,
-  payinCurrency: "",
+  payinCurrency: "GBP",
   payoutCurrency: "XAF",
+  activeCountryColor: "#007B5D",
   clientIp: "",
   currentTransferBeforeRedirectVericationsPage: undefined,
 };
@@ -59,10 +65,11 @@ const initialTransactionsState: {} = {
   transactionsArray: [],
   total: 0,
   days: 7,
-  limit: 10000,
+  limit: 10,
   offset: 0,
   status: "ALL",
   search: "",
+  queryKey: "",
 };
 
 export const transfer = (
@@ -84,11 +91,12 @@ export const transfer = (
         allowOperatorFee: true,
         payinActualValue: 0,
         payoutActualValue: 0,
-        exchangeRate: 0,
-        payinCurrency: "",
-        payoutCurrency: "XAF",
+        // exchangeRate: 0,
+        // payinCurrency: "CAD",
+        // payoutCurrency: "XAF",
+        //activeCountryColor: "#007B5D",
 
-        transferMethod: "mobile_money",
+        //transferMethod: "mobile_money",
         serviceFee: 0,
         remittanceHandler: "MANUAL",
         currentTransferBeforeRedirectVericationsPage: undefined,

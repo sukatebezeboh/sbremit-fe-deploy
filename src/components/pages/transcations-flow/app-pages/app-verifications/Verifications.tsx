@@ -9,11 +9,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { TRANSFER } from "redux/actionTypes";
-import {
-  refreshUserDetails,
-  userVerificationAction,
-} from "redux/actions/actions";
 import { paths } from "util/paths";
+import { useUserData } from "../../app-layout/appLayoutHelper";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
 import { consoleLogOnLocalHost } from "../../utils/reuseableUtils";
 import { Title } from "../app-dashboard/DashboardSyles";
@@ -31,22 +28,23 @@ import {
 } from "./verificationsHelper";
 
 export default function Verifications() {
-  const user = useSelector((state: any) => state.auth.user);
+  const userId = useSelector((state: any) => state.auth.user?.id);
+  const { data: user, isLoading: isUserDataLoading } = useUserData(userId);
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
   const { currentTransferBeforeRedirectVericationsPage } = transfer || {};
   const history = useHistory();
   const [openFormModal, setOpenFormModal] = useState(false);
-  const [isFormVerified, setFormVerified] = useState(false);
+
+  const isFormVerified = isUserDataLoading
+    ? false
+    : Boolean(checkToShowVerificationForm(user));
+
   // For cases of user.meta.verified is true #verification parent
   const { verified } = user?.meta || {};
 
   const [displayComplyCubeVerification, setDisplayComplyCubeVerification] =
     useState(false);
-
-  useEffect(() => {
-    setFormVerified(() => Boolean(checkToShowVerificationForm(user)));
-  }, [user]);
 
   const hasCompletedAllVerifications = Boolean(verified);
 
@@ -60,15 +58,6 @@ export default function Verifications() {
     idVerificationStatus === "ATTEMPTED" || idVerificationStatus === "VALID";
   const docAttempted =
     docVerificationStatus === "ATTEMPTED" || docVerificationStatus === "VALID";
-
-  const onSubmitFormClicked = async (values: any) => {
-    const StartComplyCubeVerification = () => {
-      setFormVerified(true);
-
-      refreshUserDetails();
-    };
-    await userVerificationAction(values, StartComplyCubeVerification);
-  };
 
   const verificationList = [
     {
@@ -194,6 +183,7 @@ export default function Verifications() {
                       type="primary"
                       onClick={() => handleOnStartClicked(item.key)}
                       disabled={isBtnDisabled(item.key)}
+                      loading={isUserDataLoading}
                     >
                       Start
                     </Button>
@@ -206,11 +196,7 @@ export default function Verifications() {
       </VerificationsBodyStyles>
 
       {/* Verifications modals */}
-      <FormVerification
-        open={openFormModal}
-        setOpen={setOpenFormModal}
-        submit={onSubmitFormClicked}
-      />
+      <FormVerification open={openFormModal} setOpen={setOpenFormModal} />
       <ComplyCubeVerification
         open={displayComplyCubeVerification}
         setOpen={setDisplayComplyCubeVerification}

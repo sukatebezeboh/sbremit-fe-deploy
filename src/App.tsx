@@ -1,38 +1,34 @@
+import axios from "axios";
 import React, { Suspense, useEffect } from "react";
+import ReactPixel from "react-facebook-pixel";
+import ReactGA from "react-ga";
 import {
-  Redirect,
   Route,
   Switch,
   useHistory,
   useLocation,
-  withRouter,
+  withRouter
 } from "react-router-dom";
-import ReactGA from "react-ga";
-import ReactPixel from "react-facebook-pixel";
-import axios from "axios";
 
-import "./App.css";
-import { Routing, IRoute } from "./util/routes";
-import ToastFactory from "./components/modules/toast-factory/ToastFactory";
-import {
-  checkAuth,
-  appValuesAction,
-  refreshUserDetails,
-  checkForVerificationStatusToast,
-  signOutAction,
-} from "./redux/actions/actions";
-import { paths } from "./util/paths";
-import { useSelector } from "react-redux";
-import AppLoader from "./components/modules/app-loader/AppLoader";
-import { AppFooter } from "./components/modules/app-footer/AppFooter";
-import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
 import { ConfirmDialog } from "components/modules/confirm-dialog/ConfirmDialog";
 import Login from "components/pages/new-auth-pages/views/Login";
-import { isProductionEnv } from "./util/util";
-import http from "util/http";
-import endpoints from "util/endpoints";
+import NonAuthLayout from "components/pages/non-authenticated-pages/layouts/NonAuthLayout";
 import AppLayout from "components/pages/transcations-flow/app-layout/AppLayout";
-import RouteConfig from "components/pages/transcations-flow/app-layout/RouteConfig";
+import { QueryClient } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
+import endpoints from "util/endpoints";
+import http from "util/http";
+import "./App.css";
+import AppLoader from "./components/modules/app-loader/AppLoader";
+import FloatingWhatsAppWidget from "./components/modules/floating-whatsapp-widget/FloatingWhatsAppWidget";
+import ToastFactory from "./components/modules/toast-factory/ToastFactory";
+import {
+  appValuesAction,
+  checkAuth,
+  setIsMobileView,
+  signOutAction
+} from "./redux/actions/actions";
+import { IRoute, Routing } from "./util/routes";
 
 function App() {
   const isAuthenticated = useSelector(
@@ -43,6 +39,7 @@ function App() {
 
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS as any);
   ReactPixel.init("664533234865734");
@@ -62,11 +59,11 @@ function App() {
     appValuesAction();
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    refreshUserDetails((user: any) =>
-      checkForVerificationStatusToast(user, history)
-    );
-  }, []);
+  // useEffect(() => {
+  //   refreshUserDetails((user: any) =>
+  //     checkForVerificationStatusToast(user, history)
+  //   );
+  // }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -92,6 +89,22 @@ function App() {
         window.localStorage.setItem("IP_Address", ipResponse?.data?.ip);
       })
       .catch((error) => console.error("Error getting Ip:", error));
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    dispatch(setIsMobileView(mediaQuery.matches));
+
+    const handleMediaQueryChange = (event: any) => {
+      dispatch(setIsMobileView(event.matches));
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Remove the listener when the component is unmounted
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
   }, []);
 
   return (
@@ -141,8 +154,10 @@ function App() {
               path={route.path}
               render={() => (
                 <Suspense fallback={<AppLoader show={true} />}>
-                  <route.component {...route.props} />
-                  {route.footerless ? <></> : <AppFooter />}
+                  <NonAuthLayout>
+                    <route.component {...route.props} />
+                  </NonAuthLayout>
+                  {/* {route.footerless ? <></> : <AppFooter />} */}
                 </Suspense>
               )}
               key={route.path + i}
