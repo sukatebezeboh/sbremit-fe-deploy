@@ -32,3 +32,14 @@ export function checkPaymentCodeWithPattern(
 // Result codes for successfully processed transactions that should be manually reviewed /^(000.400.0[^3]|000.400.100)/ return 1
 // Result codes for pending transactions /^(000\.200)/ and  /^(800\.400\.5|100\.400\.500)/ return 1
 // else return 2, which is payment failed.
+
+
+export const PaymentTitle = [
+  "Payment Successful!",
+  "Payment Inprogress!",
+  "Payment Unsuccessful!",
+];
+
+
+export const AvatarColors = ["#87d068", "#4259cf", "#CF0921"];
+export const PaymentDescriptionsColors = ["#007B5D", "#4259cf", "#CF0921"];

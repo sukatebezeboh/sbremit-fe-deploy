@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { getTransactionsInfo } from "redux/actions/actionsTransfer";
 import { paths } from "util/paths";
+import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import LargeButton, {
+  CustomError,
+  CustomLoader,
   PageTitileAndDescription,
   TransactionsSteps,
 } from "../../utils/ReusablePageContent";
@@ -18,21 +18,23 @@ interface LocationState {
 }
 
 export default function Review() {
-  const transfer = useSelector((state: any) => state.transfer);
-  const [trasnferInfo, setTransferInfo] = useState();
   const location = useLocation();
   const transferId = (location.state as LocationState)?.transferId;
   const history = useHistory();
+
+  const {
+    data: trasnferInfo,
+    isLoading,
+    isError,
+    error,
+  } = useGetTransfer(transferId);
+  const err: any = error;
 
   const onContinueClicked = () => {
     history.push(paths.PAYMENT_METHOD, {
       transfer: trasnferInfo,
     });
   };
-
-  useEffect(() => {
-    getTransactionsInfo(setTransferInfo, transferId);
-  }, [transferId]);
 
   return (
     <ReviewContainerStyle>
@@ -43,9 +45,12 @@ export default function Review() {
       />
       <RecipientAndTranferContainer>
         <div className="content">
-          {trasnferInfo !== undefined && (
-            <TransactionsInfomations transaction={trasnferInfo} />
-          )}
+          <RecipientContent
+            isLoading={isLoading}
+            isError={isError}
+            trasnferInfo={trasnferInfo}
+            error={err}
+          />
         </div>
       </RecipientAndTranferContainer>
       <LargeButton
@@ -56,3 +61,24 @@ export default function Review() {
     </ReviewContainerStyle>
   );
 }
+
+const RecipientContent = ({
+  isLoading,
+  isError,
+  trasnferInfo,
+  error,
+}: {
+  isLoading: boolean;
+  isError: boolean;
+  trasnferInfo: any;
+  error: any;
+}) => {
+  if (isLoading) {
+    return <CustomLoader prompt="Fetching transaction details..." />;
+  }
+  if (isError) {
+    const errMessage = error?.message;
+    return <CustomError message={errMessage} />;
+  }
+  return <TransactionsInfomations transaction={trasnferInfo} />;
+};

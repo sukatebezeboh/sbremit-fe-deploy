@@ -1,6 +1,12 @@
+import { useQuery } from "react-query";
+import { RECIPIENTS, TRANSACTIONS } from "redux/actionTypes";
+import store from "redux/store";
 import { constants } from "util/constants";
-import { formatAmount } from "../../utils/reuseableUtils";
+import { getRequest } from "util/http";
 import { generateAccountStatementPDF } from "../../utils/generateAccountStatementPdf";
+import { formatAmount } from "../../utils/reuseableUtils";
+import endpoints from "util/endpoints";
+import { parseEndpointParameters } from "../../../../../util/util";
 
 interface TableDataType {
   key: React.Key;
@@ -227,4 +233,64 @@ export const downloadStatementPdf = async (
     });
     setDownloadState(false);
   } catch (error) {}
+};
+
+export const useTransactionsData = (
+  userId: string,
+  enabled: boolean,
+  refetch: boolean
+) => {
+  const refetchInterval = 60000; //60s
+  const transactions = store.getState().transactions;
+
+  const { limit, days, search, offset } = transactions;
+
+  const formatSearchValue = encodeURIComponent(search);
+
+  const queryParams = `?days=${days}&limit=${limit}&offset=${offset}&transactionId=${formatSearchValue}`;
+  const endpoint = `/user/${userId}/transfers`;
+
+  const customEndpoint = endpoint + queryParams;
+
+  return useQuery(
+    customEndpoint,
+    () => getRequest(customEndpoint, "Failed to fetch transactions"),
+    {
+      refetchIntervalInBackground: true,
+      keepPreviousData: true,
+      enabled: enabled,
+      refetchInterval: refetch ? refetchInterval : false,
+      onSuccess: (data) => {
+        store.dispatch({
+          type: TRANSACTIONS,
+          payload: {
+            ...transactions,
+            queryKey: customEndpoint,
+            transactionsArray: data?.collections,
+            total: data?.total,
+          },
+        });
+      },
+    }
+  );
+};
+
+export const checkForNonTerminalTransactionStatus = (
+  transactions: any
+): boolean => {
+  const terminalStatuses = [
+    constants.TRANSFER_STATUS_EXPIRED,
+    constants.TRANSFER_STATUS_COMPLETE,
+    constants.TRANSFER_STATUS_CANCELLED,
+    constants.TRANSFER_STATUS_REFUNDED,
+    constants.TRANSFER_STATUS_REJECTED,
+    constants.TRANSFER_STATUS_PAYMENT_DECLINED,
+    constants.TRANSFER_STATUS_PAYMENT_CANCELLED,
+  ];
+
+  const isTranscationsHasNonTerminalStatus = transactions?.some(
+    (transaction: any) => !terminalStatuses.includes(transaction?.status)
+  );
+
+  return isTranscationsHasNonTerminalStatus;
 };

@@ -2,13 +2,13 @@ import {
   CalendarOutlined,
   CloseOutlined,
   SearchOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Modal, Select, Space } from "antd";
 import { Breakpoint } from "components/pages/transcations-flow/utils/stylesVariables";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSACTIONS } from "redux/actionTypes";
-import { getTransactions } from "redux/actions/actionsTransfer";
 import styled from "styled-components";
 
 const prefix = (
@@ -146,7 +146,7 @@ export default function DateSelectorAndSearchBar({
   );
 }
 
-export const DateSelector = () => {
+export const DateSelector = ({ loading }: { loading?: boolean }) => {
   const transactions = useSelector((state: any) => state.transactions);
   const { days } = transactions || {};
 
@@ -160,11 +160,14 @@ export const DateSelector = () => {
         days: Number(value),
       },
     });
-    getTransactions();
   };
   return (
     <Space>
-      <CalendarOutlined rev={undefined} />
+      {loading ? (
+        <LoadingOutlined rev={undefined} />
+      ) : (
+        <CalendarOutlined rev={undefined} />
+      )}
       <Select
         size="large"
         defaultValue={String(days)}

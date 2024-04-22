@@ -2,7 +2,11 @@ import axios from "axios";
 import sha1 from "sha1";
 
 import { default as config, default as env } from "../env";
-import { checkAuth, signOutAction } from "../redux/actions/actions";
+import {
+  checkAuth,
+  signOutAction,
+  toastAction,
+} from "../redux/actions/actions";
 
 const http = axios.create({
   baseURL: config.API_HOST,
@@ -50,3 +54,68 @@ http.interceptors.response.use((response: any) => {
 });
 
 export default http;
+
+//custome request
+export const getRequest = async (endpoint: string, errMessage: string) => {
+  try {
+    const result = await http.get(endpoint);
+    if (result?.data?.status === 200 || result?.data?.status === "200") {
+      return result?.data?.data;
+    } else {
+      throw new Error(`${errMessage}`);
+    }
+  } catch (error: any) {
+    if (errMessage !== "") {
+      return toastAction({
+        show: true,
+        type: "error",
+        message: `${errMessage}`,
+      });
+    }
+    throw error;
+  }
+};
+
+export const putRequest = async (
+  values: any,
+  endpoint: string,
+  errMessage: string
+) => {
+  try {
+    const result = await http.put(endpoint, values);
+    if (result?.data?.status === 200 || result?.data?.status === "200") {
+      return result;
+    } else {
+      throw new Error(`${errMessage}`);
+    }
+  } catch (error) {
+    toastAction({
+      show: true,
+      type: "error",
+      message: `${errMessage}`,
+    });
+    throw error;
+  }
+};
+
+export const postRequest = async (
+  payload: any,
+  endpoint: string,
+  errMessage: string
+) => {
+  try {
+    const result = await http.post(endpoint, payload);
+    if (result?.data?.status === 200 || result?.data?.status === "200") {
+      return result;
+    } else {
+      throw new Error(`${errMessage}`);
+    }
+  } catch (error) {
+    toastAction({
+      show: true,
+      type: "error",
+      message: `${errMessage}`,
+    });
+    throw error;
+  }
+};

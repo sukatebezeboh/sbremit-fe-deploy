@@ -11,6 +11,7 @@ import {
   ADD_TO_STACKED_TOASTS,
   REMOVE_FROM_STACKED_TOASTS,
   CONFIRM,
+  ISMOBILE,
 } from "../actionTypes";
 
 const initialSubmittingState = "";
@@ -29,6 +30,7 @@ const initialAppValues = {
   payOutCountries: {},
 };
 const initialLoadingState = false;
+const initialIsMobile = false;
 
 const initialCreatingAccountState = null;
 
@@ -121,6 +123,19 @@ export const appValues = (
 ) => {
   switch (type) {
     case APP_VALUES: {
+      return payload;
+    }
+    default:
+      return state;
+  }
+};
+
+export const isMobileView = (
+  state: any = initialIsMobile,
+  { type, payload }: IAction
+) => {
+  switch (type) {
+    case ISMOBILE: {
       return payload;
     }
     default:

@@ -1,3 +1,10 @@
+import { queryClient } from "index";
+import { useMutation } from "react-query";
+import { toastAction } from "redux/actions/actions";
+import endpoints from "util/endpoints";
+import { postRequest } from "util/http";
+import { parseEndpointParameters } from "../../../../../util/util";
+
 export const Verifictions = {
   id: "IDENTITY",
   document: "DOCUMENT",
@@ -53,4 +60,34 @@ export const checkToShowVerificationForm = (user: any) => {
   } else {
     return true; // Submitted, don't show the form
   }
+};
+
+export const useUpdateFormVerification = (
+  userId: string,
+  skipVerification: boolean,
+  onSuccess: Function
+) => {
+  return useMutation(
+    (values: any) => {
+      return postRequest(
+        { ...values, skipVerification },
+        parseEndpointParameters(endpoints.VERIFICATION, userId),
+        "Failed to to submit form, Pls try again"
+      );
+    },
+    {
+      onSuccess: () => {
+        toastAction({
+          show: true,
+          type: "success",
+          timeout: 10000,
+          message: "Personal Details submitted successfully",
+        });
+        queryClient.invalidateQueries(
+          parseEndpointParameters(endpoints.USER, userId)
+        );
+        onSuccess();
+      },
+    }
+  );
 };
