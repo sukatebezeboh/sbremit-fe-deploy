@@ -67,7 +67,14 @@ const PaymentRedirect = ({
   const ruleIdentifier4 = "STR-4";
   const ruleIdentifier5 = "STR-5";
   const strequiredfields = "nameoncard";
-  const stextraurlnotifyfields = "nameoncard";
+  const stextraurlnotifyfields1 = "nameoncard";
+  const stextraurlnotifyfields2 = "issuercountryiso2a";
+  const stextraurlnotifyfields3 = "currencyiso3a";
+  const stextraurlnotifyfields4 = "mainamount";
+  const stextraurlnotifyfields5 = "billingfirstname";
+  const stextraurlnotifyfields6 = "billingmiddlename";
+  const stextraurlnotifyfields7 = "billinglastname";
+  const stextraurlnotifyfields8 = "maskedpan";
   const stextraurlredirectfields = "nameoncard";
   // const ruleIdentifier6 = "STR-6";
   const ruleIdentifier7 = "STR-7";
@@ -95,7 +102,14 @@ const PaymentRedirect = ({
   stringToHash += stdefaultprofile;
   stringToHash += successfulRedirectURL;
   stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? "";
-  stringToHash += stextraurlnotifyfields;
+  stringToHash += stextraurlnotifyfields1;
+  stringToHash += stextraurlnotifyfields2;
+  stringToHash += stextraurlnotifyfields3;
+  stringToHash += stextraurlnotifyfields4;
+  stringToHash += stextraurlnotifyfields5;
+  stringToHash += stextraurlnotifyfields6;
+  stringToHash += stextraurlnotifyfields7;
+  stringToHash += stextraurlnotifyfields8;
   stringToHash += stextraurlredirectfields;
   stringToHash += siteSecurityTimestamp;
   stringToHash += password ?? "";
@@ -148,8 +162,44 @@ const PaymentRedirect = ({
         <input
           type="hidden"
           name="stextraurlnotifyfields"
-          value={stextraurlnotifyfields}
+          value={stextraurlnotifyfields1}
         />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields2}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields3}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields4}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields5}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields6}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields7}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields8}
+        />
+
         <input
           type="hidden"
           name="stextraurlredirectfields"
