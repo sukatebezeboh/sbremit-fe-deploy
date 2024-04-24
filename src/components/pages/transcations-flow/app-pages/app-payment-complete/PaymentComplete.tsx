@@ -2,13 +2,16 @@ import {
   CheckOutlined,
   ClockCircleOutlined,
   CloseOutlined,
-  LoadingOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
 import { Alert, Avatar, Button } from "antd";
 import _env from "env";
+import { queryClient } from "index";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
+import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import { CustomError, CustomLoader } from "../../utils/ReusablePageContent";
@@ -18,6 +21,7 @@ import {
   PaymentDescriptionsColors,
   PaymentTitle,
   checkPaymentCodeWithPattern,
+  getEquivalentVoucherPoints,
 } from "./PaymentCompleteHelper";
 import {
   ExtraInfo,
@@ -25,9 +29,6 @@ import {
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
-import { useSelector } from "react-redux";
-import { queryClient } from "index";
-import { constants } from "util/constants";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -121,15 +122,9 @@ export default function PaymentComplete() {
   ];
 
   const PaymentDescriptions = [
-    <p>
-      Please note it can take up to 5 minutes for the status of your transfer to
-      be updated..
-    </p>,
-    <p>
-      Please note it can take up to 5 minutes for the status of your transfer to
-      be updated..
-    </p>,
-    <p>The payment was not completed successfully!</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
+    <p>Your transfer with ID: {transactionId} was not completed.</p>,
   ];
 
   if (isLoading) {
@@ -174,19 +169,24 @@ export default function PaymentComplete() {
           <Title>{PaymentTitle[PaymentCategoryIndex]}</Title>
           <ExtraInfo $color={PaymentDescriptionsColors[PaymentCategoryIndex]}>
             {PaymentDescriptions[PaymentCategoryIndex]}
-            {/* <span> ~{paymentInfo?.message}~</span> */}
           </ExtraInfo>
-          <span className="id_and_date">
-            Transaction ID: {transactionId}, {formattedDate}{" "}
-          </span>
+
           <Button
-            type="default"
+            type="primary"
+            size="large"
             onClick={() => {
               history.push(paths.DASHBOARD);
             }}
           >
             Go back to dashboard
           </Button>
+
+          {PaymentCategoryIndex !== 2 && (
+            <PromotionsAlert
+              tranferAmount={trasnferInfo?.originAmount}
+              originCurrency={trasnferInfo?.originCurrency}
+            />
+          )}
         </>
       </PaymentCompleteWrapperStyles>
     </PaymentCompleteConatinerStyles>
@@ -212,4 +212,30 @@ const onErrorRequestAlert = (
   />
 );
 
-//Successful, unsuccessful, Payment processing
+const PromotionsAlert = ({
+  tranferAmount,
+  originCurrency,
+}: {
+  tranferAmount: string;
+  originCurrency: string;
+}) => {
+  const user = useSelector((state: any) => state.auth.user);
+  return (
+    <Alert
+      type="info"
+      showIcon
+      icon={<GiftOutlined rev={undefined} />}
+      description={
+        <span>
+          This transfer has earned you{" "}
+          <strong>
+            {getEquivalentVoucherPoints(Number(tranferAmount), originCurrency)}
+            pts.
+          </strong>{" "}
+          Total points earned so far{" "}
+          <strong>{user?.meta?.VoucherPoints}pts.</strong> 500pts = GBP 5
+        </span>
+      }
+    />
+  );
+};
