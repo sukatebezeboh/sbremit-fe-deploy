@@ -27,31 +27,27 @@ export const checkIsRewardsAvailable = (
 
 export const useUserData = (userId: string) => {
   const customEndpoint = parseEndpointParameters(endpoints.USER, userId);
-  return useQuery(
-    customEndpoint,
-    () => getRequest(customEndpoint, ""),
-    {
-      refetchIntervalInBackground: true,
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        store.dispatch({
-          type: AUTH,
-          payload: { ...store.getState().auth, user: data },
-        });
-      },
-      onError: () => {
-        toastAction({
-          show: true,
-          modal: true,
-          type: "error",
-          title: "Error Occurred",
-          message: `An error has ocuured please log out and try again.`,
-          extraBtnText: "Logout",
-          extraBtnHandler: () => signOutAction(),
-        });
-      },
-    }
-  );
+  return useQuery(customEndpoint, () => getRequest(customEndpoint, ""), {
+    refetchIntervalInBackground: true,
+    keepPreviousData: true,
+    onSuccess: (data) => {
+      store.dispatch({
+        type: AUTH,
+        payload: { ...store.getState().auth, user: data },
+      });
+    },
+    onError: () => {
+      toastAction({
+        show: true,
+        modal: true,
+        type: "error",
+        title: "Error Occurred",
+        message: `An error has ocuured please log out and try again.`,
+        extraBtnText: "Logout",
+        extraBtnHandler: () => signOutAction(),
+      });
+    },
+  });
 };
 
 export const useRecipientsData = (userId: string) => {
@@ -119,7 +115,6 @@ export const useGetTransfer = (transferId: string) => {
       ),
     {
       onSuccess: () => {},
-      refetchInterval: 10000, //10s
     }
   );
 };

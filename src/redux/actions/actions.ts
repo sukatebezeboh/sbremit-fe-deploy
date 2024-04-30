@@ -2319,7 +2319,8 @@ export const updateTransferWithPaymentGatewayCharge = async (
   paymentGateway: string,
   clientIp: string,
   callback: Function,
-  callbackOnError: Function
+  callbackOnError: Function,
+  tokenised?: boolean,
 ) => {
   const transfer = store.getState().transfer;
 
@@ -2328,6 +2329,7 @@ export const updateTransferWithPaymentGatewayCharge = async (
     .put(parseEndpointParameters(endpoints.UPDATE_TRANSFER, transferId), {
       paymentGateway,
       clientIp,
+      tokenised,
     })
     .then((res: any) => {
       if (res?.data?.status == 200) {

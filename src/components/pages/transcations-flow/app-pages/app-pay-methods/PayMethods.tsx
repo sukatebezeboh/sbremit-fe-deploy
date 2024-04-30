@@ -1,5 +1,8 @@
-import type { CollapseProps } from "antd";
-import { Collapse, Tag } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
+import type { CollapseProps, RadioChangeEvent } from "antd";
+import { Collapse, Divider, Modal, Radio, Space, Tag } from "antd";
+import StoredCardSubmission from "components/modules/Trust-payments/TokenisedPayment";
+import { queryClient } from "index";
 import { MouseEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -10,6 +13,11 @@ import {
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import { constants } from "util/constants";
+import endpoints from "util/endpoints";
+import {
+  getMoneyValue,
+  parseEndpointParameters,
+} from "../../../../../util/util";
 import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import LargeButton, {
   PageTitileAndDescription,
@@ -22,6 +30,7 @@ import {
   PaymentMethodsContainerStyles,
   PaymentMethodsWrapperStyles,
   PleaseNoteStyles,
+  TrustPaymentOptionWrapper,
 } from "./PayMethodsStyles";
 import { PaymentGateWays } from "./paymentGateway";
 import {
@@ -29,15 +38,16 @@ import {
   generateCheckoutInfoForTrulayerPayment,
 } from "./paymentHelper";
 import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
-import {
-  getMoneyValue,
-  parseEndpointParameters,
-} from "../../../../../util/util";
-import endpoints from "util/endpoints";
-import { queryClient } from "index";
+import TokenisedPayment from "components/modules/Trust-payments/TokenisedPayment";
 
 interface LocationState {
   transfer: any;
+}
+
+interface TrustPaymentOptionsProps {
+  type: "one-time" | "store-for-future" | "use-stored";
+  enabled: boolean;
+  transactionreference: string;
 }
 
 export default function Pay() {
@@ -51,6 +61,13 @@ export default function Pay() {
   const { verification } = auth || {};
   const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
   const [isTrustPayment, setIsTrustPayment] = useState(false);
+  const [trustPaymentOptions, setTrustPaymentOptions] =
+    useState<TrustPaymentOptionsProps>({
+      type: "one-time",
+      enabled: false,
+      transactionreference: "",
+    });
+
   let prevTransferInfo = (location.state as LocationState)?.transfer;
   const { data: freshTrasnferInfo, isLoading: isLoadingTransferInfo } =
     useGetTransfer(prevTransferInfo.id);
@@ -153,13 +170,42 @@ export default function Pay() {
       <PaymentMethodsContainerStyles>
         {isTrustPayment &&
           transferInfo?.meta?.paymentGatewayCharge !== undefined && (
-            <PaymentRedirect
-              mainamount={getTotalToPay()}
+            <TrustPaymentConfirmationModal
+              transactionInfo={transferInfo}
+              paymentMethod={selectedMethod}
+              clientIp={clientIp}
+              setTrustPaymentOptions={setTrustPaymentOptions}
+              open={isTrustPayment}
+              setOpen={() => setIsTrustPayment(false)}
+            />
+          )}
+
+        {/* Initiate Trust Paymnet one-time or store for future use paymanet */}
+        {((trustPaymentOptions.enabled &&
+          trustPaymentOptions.type === "one-time") ||
+          trustPaymentOptions.type === "store-for-future") && (
+          <PaymentRedirect
+            mainamount={getTotalToPay()}
+            currencyiso3a={transferInfo?.originCurrency}
+            transactionId={transferInfo?.meta?.transactionId}
+            transferId={transferInfo?.id}
+            enabled={trustPaymentOptions.enabled}
+            setEnabled={() => setIsTrustPayment(false)} //close modal
+            credentialsonfile={
+              trustPaymentOptions.type === "one-time" ? "0" : "1"
+            }
+          />
+        )}
+
+        {/* Initiate Trust Paymnet use-stored card (Tokenised Payment) */}
+        {trustPaymentOptions.enabled &&
+          trustPaymentOptions.type === "use-stored" && (
+            <TokenisedPayment
               currencyiso3a={transferInfo?.originCurrency}
-              transactionId={transferInfo?.meta?.transactionId}
               transferId={transferInfo?.id}
-              enabled={isTrustPayment}
-              setEnabled={() => setIsTrustPayment(false)}
+              transactionreference={trustPaymentOptions.transactionreference} //"55-9-3627172"
+              mainamount={getTotalToPay()}
+              setEnabled={setTrustPaymentOptions}
             />
           )}
 
@@ -258,5 +304,152 @@ const PleaseNote = ({ totalToPay }: any) => {
         </li>
       </ol>
     </PleaseNoteStyles>
+  );
+};
+
+interface TrustPaymentConfirmationModalProps {
+  open: boolean;
+  setOpen: Function;
+  transactionInfo: any;
+  setTrustPaymentOptions: React.Dispatch<
+    React.SetStateAction<TrustPaymentOptionsProps>
+  >;
+  paymentMethod: string;
+  clientIp: string;
+}
+
+const TrustPaymentConfirmationModal = ({
+  open,
+  setOpen,
+  transactionInfo,
+  setTrustPaymentOptions,
+  paymentMethod,
+  clientIp,
+}: TrustPaymentConfirmationModalProps) => {
+  const [radioValue, setRadioValue] = useState(1);
+
+  const onRadioChange = (e: RadioChangeEvent) => {
+    setRadioValue(e.target.value);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  const trustOptionsArray = [
+    {
+      title: "Use New Card (Save for Future Use)",
+      description:
+        "Pay with a new card and securely save its details for future payments.",
+      value: 1,
+    },
+    {
+      title: "Use New Card (One-time Use)",
+      description:
+        "Pay with a new card for this transaction only. No card details will be saved.",
+      value: 2,
+    },
+  ];
+
+  const items: CollapseProps["items"] = [
+    {
+      key: "1",
+      label: "Select a card you've previously stored",
+      children: <p>{"No cards found"}</p>,
+    },
+    {
+      key: "2",
+      label: "Select a New Card",
+      children: (
+        <Radio.Group
+          onChange={onRadioChange}
+          value={radioValue}
+          style={{ margin: "12px 0px" }}
+        >
+          <Space direction="vertical" size={16}>
+            {trustOptionsArray.map((item, index) => (
+              <TrustPaymentOptionWrapper
+                value={item.value}
+                key={item.title + index}
+              >
+                <p>{item.title}</p>
+                <span>{item.description}</span>
+              </TrustPaymentOptionWrapper>
+            ))}
+          </Space>
+        </Radio.Group>
+      ),
+    },
+  ];
+
+  const onCollapseChange = (key: string | string[]) => {
+    console.log(key);
+  };
+
+  const onContinue = () => {
+    //storeNewCard || oneTimeUse || usePreviousStoredCard
+    const isStoredNewCardSelected = radioValue === 1;
+    const isOneTimeCardSelected = radioValue === 2;
+
+    const isUsePreviousStoredCard = false; //a new check and radio value;
+
+    if (isUsePreviousStoredCard) {
+      setTrustPaymentOptions((options) => ({
+        ...options,
+        type: "use-stored",
+        enabled: true,
+        transactionreference: "55-9-3627172",
+      }));
+    } else if (isStoredNewCardSelected) {
+      updateTransferWithPaymentGatewayCharge(
+        transactionInfo?.id,
+        paymentMethod,
+        clientIp,
+        () => {
+          setTrustPaymentOptions((options) => ({
+            ...options,
+            type: "store-for-future",
+            enabled: true,
+          }));
+        },
+        () => {
+          setOpen(false);
+        }, //close confirmation modal onError
+        true //pass a flag to server to store this card
+      );
+    } else if (isOneTimeCardSelected) {
+      setTrustPaymentOptions((options) => ({
+        ...options,
+        type: "one-time",
+        enabled: true,
+      }));
+    }
+    handleCancel();
+  };
+
+  return (
+    <Modal
+      title="Trust Payment Options"
+      open={open}
+      width={600}
+      onCancel={handleCancel}
+      okText="Continue"
+      onOk={onContinue}
+    >
+      <Divider style={{ marginTop: "12px" }} />
+
+      <Collapse
+        accordion
+        expandIconPosition="right"
+        items={items}
+        defaultActiveKey={["2"]}
+        onChange={onCollapseChange}
+        expandIcon={({ isActive }) => (
+          <CaretRightOutlined rev={undefined} rotate={isActive ? 90 : 0} />
+        )}
+      />
+
+      <Divider style={{ marginTop: "20px", marginBottom: "16px" }} />
+    </Modal>
   );
 };

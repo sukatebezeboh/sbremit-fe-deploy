@@ -4,6 +4,7 @@ import {
   Colors,
   ResponsiveMarginTopForPagesWithSteps,
 } from "../../utils/stylesVariables";
+import { Radio } from "antd";
 
 export const PaymentMethodsContainerStyles = styled(
   ResponsiveMarginTopForPagesWithSteps
@@ -188,5 +189,30 @@ export const PleaseNoteStyles = styled.div`
         color: ${Colors.sbRed};
       }
     }
+  }
+`;
+
+export const TrustPaymentOptionWrapper = styled(Radio)`
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  .ant-radio,
+  .ant-wave-target,
+  .ant-radio-checked {
+    align-self: flex-start !important;
+    padding-top: 5px !important;
+    box-sizing: border-box;
+  }
+  p {
+    margin: 0;
+    font-size: 16px; //16px
+    font-weight: 500;
+    color: ${Colors.textColor};
+  }
+  span {
+    font-size: 14px; //13px
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.55);
   }
 `;

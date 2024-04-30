@@ -1,13 +1,11 @@
 import _env from "env";
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { resources } from "../../../util/constants";
 import { settings } from "../../../util/settings";
 
-import sjcl from "sjcl";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from "redux/actions/actions";
+import sjcl from "sjcl";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from "../../../util/util";
-import endpoints from "util/endpoints";
-import http from "util/http";
 require("dotenv").config();
 
 interface IPaymentRedirect {
@@ -18,6 +16,7 @@ interface IPaymentRedirect {
   transferId: string;
   enabled: boolean;
   setEnabled: Function;
+  credentialsonfile: "1" | "0"; //This must be set to “1”, to indicate the customer agreed for the payment credentials to be stored for future transactions.
 }
 
 const PaymentRedirect = ({
@@ -28,6 +27,7 @@ const PaymentRedirect = ({
   transferId,
   enabled,
   setEnabled,
+  credentialsonfile,
 }: IPaymentRedirect) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [utcDateTime, setUtcDateTime] = useState(
@@ -76,6 +76,7 @@ const PaymentRedirect = ({
   const stextraurlnotifyfields7 = "billinglastname";
   const stextraurlnotifyfields8 = "maskedpan";
   const stextraurlredirectfields = "nameoncard";
+  // const credentialsonfile = "1";
   // const ruleIdentifier6 = "STR-6";
   const ruleIdentifier7 = "STR-7";
   const ruleIdentifier8 = "STR-8";
@@ -83,6 +84,7 @@ const PaymentRedirect = ({
   const ruleIdentifier10 = "STR-10";
   const successfulRedirectURL = `${_env.APP_HOST}/transfer-completed/${transferId}?payment_type=trust_payment`;
   // settings.TRUST_SUCCESSFUL_REDIRECT_URL + transferId;
+  // const requesttypedescriptions = "ACCOUNTCHECK";
   let stringToHash = currencyiso3a ?? "";
   stringToHash += mainamount ?? "";
   stringToHash += settings.TRUST_PAYMENT_SITE_REFERENCE ?? "";
@@ -111,6 +113,8 @@ const PaymentRedirect = ({
   stringToHash += stextraurlnotifyfields7;
   stringToHash += stextraurlnotifyfields8;
   stringToHash += stextraurlredirectfields;
+  stringToHash += credentialsonfile;
+  // stringToHash += requesttypedescriptions;
   stringToHash += siteSecurityTimestamp;
   stringToHash += password ?? "";
   const siteSecurityHash =
@@ -144,6 +148,20 @@ const PaymentRedirect = ({
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier8} />
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier9} />
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier10} />
+
+        {/* Configuration for storing of payment credentials */}
+        <input
+          type="hidden"
+          name="credentialsonfile"
+          value={credentialsonfile}
+        />
+
+        {/* <input
+          type="hidden"
+          name="requesttypedescriptions"
+          value={requesttypedescriptions}
+        /> */}
+        {/* end */}
 
         <input
           type="hidden"
