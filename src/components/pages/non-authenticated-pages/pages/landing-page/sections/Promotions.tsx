@@ -47,7 +47,7 @@ const RightContent = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveIndex((prev) => (prev < 5 ? prev + 1 : 0));
-    }, 2500);
+    }, 4000);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -377,6 +377,9 @@ const RightContentStyles = styled.div<{
         margin-bottom: 4px !important;
         margin-left: -1px;
         transform: rotate(0deg);
+        @media (max-width: ${Breakpoint.xl}) {
+          margin-bottom: 2px !important;
+        }
       }
       .xl::before {
         content: "_";
@@ -385,6 +388,10 @@ const RightContentStyles = styled.div<{
         margin-bottom: 12px !important;
         margin-left: -1px;
         transform: rotate(0deg);
+
+        @media (max-width: ${Breakpoint.xl}) {
+          margin-bottom: 7px !important;
+        }
       }
 
       h2 {
