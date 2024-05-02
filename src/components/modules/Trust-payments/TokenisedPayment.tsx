@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { LOADING } from "redux/actionTypes";
 import { settings } from "util/settings";
 import { getJWTtoken } from "./trustPaymentHelper";
+import axios from "axios";
+import http from "util/http";
 
 interface TokenisedPaymentProps {
   currencyiso3a: string;
@@ -58,7 +60,10 @@ const TokenisedPayment = ({
 
   useEffect(() => {
     if (isLoading) {
-      dispatch({ type: LOADING, payload: true });
+      dispatch({
+        type: LOADING,
+        payload: "Please wait while we load payment authentication form...",
+      });
     } else {
       dispatch({ type: LOADING, payload: false });
     }
@@ -70,22 +75,31 @@ const TokenisedPayment = ({
     const liveStatus = process.env.REACT_APP_ENV === "production" ? 1 : 0;
 
     const onPaymentWidgetReady = () => {
-      setIsLoading(false); // update isLoading state to false when script is loaded
+      dispatch({ type: LOADING, payload: true }); // remove message from loader
+
       const st = (window as any).SecureTrading({
         jwt: jwtToken,
         livestatus: liveStatus,
         submitOnError: false,
         submitOnSuccess: false,
         submitOnCancel: false,
+        animatedCard: true,
+        disableNotification: true,
         submitCallback: function (data: any) {
+          setIsLoading(false); // update isLoading state to false when script is loaded
           // upddate enabled state to false at trustPaymentOptions state
           setEnabled((props: any) => ({
             ...props,
             enabled: false,
           }));
 
-          !data?.hasUserClosedAcsWindow &&
-            window.location.replace(successfulRedirectURL);
+          http.post(TRUST_NOTIFICATION_WEBHOOK_URL, {
+            data,
+            tokenisedPayment: true, //add a flag for tokenisedPayment TRUST_NOTIFICATION_WEBHOOK_URL
+          });
+
+          // !data?.hasUserClosedAcsWindow &&
+          //   window.location.replace(successfulRedirectURL);
         },
       });
 
@@ -119,6 +133,7 @@ const TokenisedPayment = ({
   return (
     <div ref={containerRef}>
       <div id="st-notification-frame"></div>
+      <div id=" st-animated-card"></div>
       <form
         id="st-form"
         action={TRUST_NOTIFICATION_WEBHOOK_URL}

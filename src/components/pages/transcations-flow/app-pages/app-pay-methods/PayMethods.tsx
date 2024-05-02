@@ -39,6 +39,7 @@ import {
 } from "./paymentHelper";
 import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
 import TokenisedPayment from "components/modules/Trust-payments/TokenisedPayment";
+import { paths } from "util/paths";
 
 interface LocationState {
   transfer: any;
@@ -70,7 +71,7 @@ export default function Pay() {
 
   let prevTransferInfo = (location.state as LocationState)?.transfer;
   const { data: freshTrasnferInfo, isLoading: isLoadingTransferInfo } =
-    useGetTransfer(prevTransferInfo.id);
+    useGetTransfer(prevTransferInfo?.id);
   const transferInfo = freshTrasnferInfo || prevTransferInfo;
 
   const [loader, setLoader] = useState(false);
@@ -82,12 +83,11 @@ export default function Pay() {
   );
 
   useEffect(() => {
-    if (
-      transferInfo.status?.toUpperCase() !== constants.TRANSFER_STATUS_PENDING
-    ) {
+    if (prevTransferInfo === undefined) {
+      history.push(paths.DASHBOARD);
     }
     updateCurrentTransferBeforeRedirectToVericationsPage();
-  }, [transferInfo]);
+  }, [transferInfo, prevTransferInfo]);
 
   //this ensure we have a transcation to be used once the user is done with verification process
   const updateCurrentTransferBeforeRedirectToVericationsPage = () => {
@@ -326,10 +326,24 @@ const TrustPaymentConfirmationModal = ({
   paymentMethod,
   clientIp,
 }: TrustPaymentConfirmationModalProps) => {
-  const [radioValue, setRadioValue] = useState(1);
+  const user = useSelector((state: any) => state.auth.user);
+  const { trustCards } = user?.meta || {};
+  const trustCardsArray: any[] = trustCards && JSON.parse(trustCards);
+  const isTrustCardsArrayEmpty = trustCardsArray.length === 0;
 
-  const onRadioChange = (e: RadioChangeEvent) => {
-    setRadioValue(e.target.value);
+  const [newCardRadioValue, setNewCardRadioValue] = useState(
+    isTrustCardsArrayEmpty ? 1 : 0
+  );
+  const [storedCardRadioValue, setStoredCardRadioValue] = useState("");
+
+  const onRadioChange = (radioType: any) => (e: RadioChangeEvent) => {
+    if (radioType === "stored-cards") {
+      setStoredCardRadioValue(e.target.value);
+      setNewCardRadioValue(0); //deselect state for new-cards
+    } else {
+      setNewCardRadioValue(e.target.value);
+      setStoredCardRadioValue(""); //deselect state for new-cards
+    }
   };
 
   const handleCancel = () => {
@@ -355,15 +369,34 @@ const TrustPaymentConfirmationModal = ({
     {
       key: "1",
       label: "Select a card you've previously stored",
-      children: <p>{"No cards found"}</p>,
+      children: (
+        <Radio.Group
+          onChange={(e) => onRadioChange("stored-cards")(e)}
+          style={{ margin: "12px 0px" }}
+          value={storedCardRadioValue}
+        >
+          <Space direction="vertical" size={16}>
+            {trustCardsArray.map((item, index) => (
+              <TrustPaymentOptionWrapper
+                value={item?.reference}
+                key={item?.title + index}
+              >
+                <p>{item?.cardType}</p>
+                <span>#### #### #### {item?.cardNumber}</span>
+                {/* item.reference */}
+              </TrustPaymentOptionWrapper>
+            ))}
+          </Space>
+        </Radio.Group>
+      ),
     },
     {
       key: "2",
       label: "Select a New Card",
       children: (
         <Radio.Group
-          onChange={onRadioChange}
-          value={radioValue}
+          onChange={(e) => onRadioChange("new-cards")(e)}
+          value={newCardRadioValue}
           style={{ margin: "12px 0px" }}
         >
           <Space direction="vertical" size={16}>
@@ -382,23 +415,19 @@ const TrustPaymentConfirmationModal = ({
     },
   ];
 
-  const onCollapseChange = (key: string | string[]) => {
-    console.log(key);
-  };
-
   const onContinue = () => {
     //storeNewCard || oneTimeUse || usePreviousStoredCard
-    const isStoredNewCardSelected = radioValue === 1;
-    const isOneTimeCardSelected = radioValue === 2;
+    const isStoredNewCardSelected = newCardRadioValue === 1;
+    const isOneTimeCardSelected = newCardRadioValue === 2;
 
-    const isUsePreviousStoredCard = false; //a new check and radio value;
+    const isUsePreviousStoredCard = storedCardRadioValue !== ""; // storedCardRadioValue not deselected
 
     if (isUsePreviousStoredCard) {
       setTrustPaymentOptions((options) => ({
         ...options,
         type: "use-stored",
         enabled: true,
-        transactionreference: "55-9-3627172",
+        transactionreference: storedCardRadioValue,
       }));
     } else if (isStoredNewCardSelected) {
       updateTransferWithPaymentGatewayCharge(
@@ -435,6 +464,9 @@ const TrustPaymentConfirmationModal = ({
       onCancel={handleCancel}
       okText="Continue"
       onOk={onContinue}
+      okButtonProps={{
+        disabled: !(storedCardRadioValue !== "" || newCardRadioValue !== 0),
+      }}
     >
       <Divider style={{ marginTop: "12px" }} />
 
@@ -442,8 +474,7 @@ const TrustPaymentConfirmationModal = ({
         accordion
         expandIconPosition="right"
         items={items}
-        defaultActiveKey={["2"]}
-        onChange={onCollapseChange}
+        defaultActiveKey={isTrustCardsArrayEmpty ? ["2"] : ["1"]}
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rev={undefined} rotate={isActive ? 90 : 0} />
         )}
