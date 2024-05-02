@@ -58,30 +58,35 @@ const RightContent = () => {
       p1Text: "$5 = 500pts off your next transfer",
       p2Text: "Points are  accumulated for every successful transfer.",
       tandc: "MIN. SPEND $250. T & C’s APPLY",
+      currency: "$",
     },
     {
       ctaText: "GET £5",
       p1Text: "£5 = 500pts off your next transfer",
       p2Text: "Points are accumulated for every successful transfer.",
       tandc: "MIN. SPEND £250. T & C’s APPLY",
+      currency: "£",
     },
     {
       ctaText: "GET €5",
       p1Text: "€5 = 500pts off your next transfer",
       p2Text: "Points are accumulated for every successful transfer.",
       tandc: "MIN. SPEND 250. T & C’s APPLY",
+      currency: "€",
     },
     {
       ctaText: "GET C$5",
       p1Text: "C$5 = 500pts off your next transfer",
       p2Text: "Points are accumulated for every successful transfer.",
       tandc: "MIN. SPEND C$250. T & C’s APPLY",
+      currency: "C$",
     },
     {
       ctaText: "GET 5kr",
       p1Text: "5kr = 500pts off your next transfer",
       p2Text: "Points are  accumulated for every successful transfer.",
       tandc: "MIN. SPEND  250kr T & C’s APPLY",
+      currency: "kr",
     },
     {
       ctaText: (
@@ -100,6 +105,7 @@ const RightContent = () => {
           MIN. SPEND <span className="swiss-franc">F</span>250. T & C’s APPLY
         </>
       ),
+      currency: <span className="swiss-franc">F</span>,
     },
   ];
   // <span className="swiss-franc">F</span>
@@ -126,8 +132,19 @@ const RightContent = () => {
       </div>
       <div className="_background">
         <div className="_content_2">
-          <H3> $5 OFF FOR EVERY FIVE TRANSFERS YOU DO </H3>
-          <H4>When you spend over $250 for the 5 Transfers</H4>
+          <H3>
+            {" "}
+            {activeIndex === 5 ? (
+              <span className="swiss-franc xl">F</span>
+            ) : (
+              arrayOfPointPromotions[activeIndex].currency
+            )}
+            5 OFF FOR EVERY FIVE TRANSFERS YOU DO{" "}
+          </H3>
+          <H4>
+            When you spend over {arrayOfPointPromotions[activeIndex].currency}
+            250 for the 5 Transfers
+          </H4>
           <H4 className="_tanku5">
             Use code <b>TANKU5</b> when you login
           </H4>
@@ -357,7 +374,15 @@ const RightContentStyles = styled.div<{
         content: "_";
         position: absolute;
         bottom: 0;
-        margin-bottom: 4px;
+        margin-bottom: 4px !important;
+        margin-left: -1px;
+        transform: rotate(0deg);
+      }
+      .xl::before {
+        content: "_";
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 12px !important;
         margin-left: -1px;
         transform: rotate(0deg);
       }
