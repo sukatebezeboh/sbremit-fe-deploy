@@ -203,6 +203,7 @@ export default function Pay() {
             <TokenisedPayment
               currencyiso3a={transferInfo?.originCurrency}
               transferId={transferInfo?.id}
+              transactionId={transferInfo?.meta?.transactionId}
               transactionreference={trustPaymentOptions.transactionreference} //"55-9-3627172"
               mainamount={getTotalToPay()}
               setEnabled={setTrustPaymentOptions}

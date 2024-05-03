@@ -13,6 +13,7 @@ interface TokenisedPaymentProps {
   transferId: string;
   transactionreference: string;
   setEnabled: Function;
+  transactionId: string;
 }
 
 const CDN_DOMAIN = "https://cdn.eu.trustpayments.com/js/latest/st.js";
@@ -25,6 +26,7 @@ const TokenisedPayment = ({
   transactionreference,
   transferId,
   setEnabled,
+  transactionId,
 }: TokenisedPaymentProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +50,7 @@ const TokenisedPayment = ({
       requesttypedescriptions: ["THREEDQUERY", "AUTH"],
       credentialsonfile: credentialsonfile, //This must be set to “2”, to indicate the new transaction is using previously-stored credentials.
       parenttransactionreference: transactionreference,
+      orderreference: transactionId,
     },
     iat: UtcTimestamp,
     iss: JWTusername,
@@ -83,8 +86,7 @@ const TokenisedPayment = ({
         submitOnError: false,
         submitOnSuccess: false,
         submitOnCancel: false,
-        animatedCard: true,
-        disableNotification: true,
+        // disableNotification: true,
         submitCallback: function (data: any) {
           setIsLoading(false); // update isLoading state to false when script is loaded
           // upddate enabled state to false at trustPaymentOptions state
@@ -98,8 +100,8 @@ const TokenisedPayment = ({
             tokenisedPayment: true, //add a flag for tokenisedPayment TRUST_NOTIFICATION_WEBHOOK_URL
           });
 
-          // !data?.hasUserClosedAcsWindow &&
-          //   window.location.replace(successfulRedirectURL);
+          !data?.hasUserClosedAcsWindow &&
+            window.location.replace(successfulRedirectURL);
         },
       });
 
