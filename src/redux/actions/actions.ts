@@ -41,6 +41,7 @@ import http from "../../util/http";
 import { themeNames } from "../../components/modules/toast-factory/themes";
 import { constants, countriesAndCurrency } from "../../util/constants";
 import { filterNotifications } from "components/pages/transcations-flow/app-components/Notifications";
+import { replaceUnderScore } from "components/pages/transcations-flow/utils/reuseableUtils";
 
 const user = store.getState().auth.user;
 const serviceProvider = env.X_SERVICE_PROVIDER;
@@ -1175,6 +1176,50 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
     });
 };
 
+export const getOperatorFeeData = () => {
+  const services = store.getState().appValues.services?.data;
+  const { transferMethod, toSend, toReceive } = store.getState().transfer;
+
+  if (!services) {
+    console.error("Services data is not available.");
+    return null;
+  }
+
+  // Find service fee objects related to the transfer method
+  const transferMethodServiceFees = services.filter(
+    (service: any) =>
+      service.name.toLowerCase() ===
+      replaceUnderScore(transferMethod.toLowerCase())
+  );
+
+  if (transferMethodServiceFees.length === 0) {
+    console.error("No service fees found for the transfer method.");
+    return null;
+  }
+
+  const ServiceFeeIsInOriginCurrency = transferMethodServiceFees.find(
+    (service: any) =>
+      Boolean(Number(service?.meta?.isInOriginCurrency)) &&
+      service.country === toSend.countryCode
+  );
+
+  const ServiceFeeNotIsInOriginCurrency = transferMethodServiceFees.find(
+    (service: any) =>
+      !Boolean(Number(service?.meta?.isInOriginCurrency)) &&
+      service.country === toReceive.countryCode
+  );
+
+  const ServiceFeeWithNoCountry = transferMethodServiceFees.find(
+    (service: any) => service.country === null || service.country === undefined
+  );
+
+  return (
+    ServiceFeeIsInOriginCurrency ||
+    ServiceFeeNotIsInOriginCurrency ||
+    ServiceFeeWithNoCountry
+  );
+};
+
 export const getServiceRate = (
   transferMethod = "",
   getRecipientsValue = false
@@ -1182,28 +1227,33 @@ export const getServiceRate = (
   const transfer = store.getState().transfer;
   if (!transfer.allowOperatorFee) {
     store.dispatch({ type: TRANSFER, payload: { ...transfer, serviceFee: 0 } });
-    return 0;
+    return null;
   }
-  const services = store.getState().appValues.services;
-  const transferMethodsIds: any = getTransferMethodIds();
-  const service =
-    services?.data?.filter(
-      (s: any) =>
-        s.id === transferMethodsIds[transferMethod || transfer.transferMethod]
-    )[0] || services?.data?.[0];
-  const fees =
-    service?.fees?.filter(
-      (f: any) =>
-        Number(f.lowerLimit) <= Number(transfer.toReceive.value) &&
-        Number(f.upperLimit) >= Number(transfer.toReceive.value)
-    )[0] || service?.fees?.[0];
+
+  const service = getOperatorFeeData();
+  const isInOriginCurrency = Boolean(Number(service?.meta?.isInOriginCurrency));
+  const fees = service?.fees?.find(
+    (f: any) =>
+      Number(f.lowerLimit) <=
+        Number(
+          isInOriginCurrency
+            ? transfer.payinActualValue
+            : transfer.payoutActualValue
+        ) &&
+      Number(f.upperLimit) >=
+        Number(
+          isInOriginCurrency
+            ? transfer.payinActualValue
+            : transfer.payoutActualValue
+        )
+  );
 
   const equiFee =
     fees?.type === "PERCENTAGE"
-      ? (Number(fees?.fee) * transfer.toReceive?.value) / 100
+      ? (Number(fees?.fee) * transfer.payinActualValue) / 100
       : Number(fees?.fee);
 
-  const mobileMoneyTax = Number((0.2 * (transfer.toReceive?.value || 0)) / 100);
+  const mobileMoneyTax = Number((0.2 * (transfer.payinActualValue || 0)) / 100);
 
   const serviceFee =
     (!transferMethod && transfer.transferMethod === "mobile_money") ||
@@ -1211,7 +1261,7 @@ export const getServiceRate = (
       ? Number(
           (
             (Number(equiFee) + Number(mobileMoneyTax)) /
-            transfer.conversionRate?.rate
+            Number(transfer.conversionRate?.rate)
           ).toFixed(2)
         )
       : Number(equiFee);
@@ -1220,7 +1270,16 @@ export const getServiceRate = (
     type: TRANSFER,
     payload: { ...transfer, serviceFee: Number(serviceFee) },
   });
-  return Number(serviceFee) || 0;
+
+  const transferLimitMax = service?.meta?.transferLimitMax;
+
+  return {
+    operatorFee: serviceFee,
+    transferLimitMax: transferLimitMax,
+    isInOriginCurrency: isInOriginCurrency,
+  };
+
+  // return Number(serviceFee) || 0;
 };
 
 export const getServiceRateValue = (

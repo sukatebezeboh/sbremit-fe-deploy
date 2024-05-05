@@ -33,7 +33,7 @@ export default function EmailRegistration() {
 
   const intitialValues = {
     username: "",
-    userid: user.id,
+    userid: user?.id,
     firstName: firstName,
     lastName: lastName,
     location_country: location_country,

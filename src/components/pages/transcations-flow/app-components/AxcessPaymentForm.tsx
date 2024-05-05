@@ -140,7 +140,7 @@ const BodyStyles = styled.div`
 
   @media (max-width: ${Breakpoint.sm}) {
     overflow-x: auto;
-    margin-top: 60px;
+    margin-top: 140px;
     justify-content: flex-start;
   }
   //width: 100%;
@@ -154,7 +154,6 @@ const BodyStyles = styled.div`
     border-radius: 12px;
     height: fit-content;
     //background: #ededed;
-    //width: 60vw;
 
     @media (max-width: ${Breakpoint.sm}) {
       gap: 24px;
@@ -175,6 +174,10 @@ const BodyStyles = styled.div`
   }
   .header > .images img {
     width: 130px;
+  }
+  .wpwl-container,
+  .wpwl-container-card {
+    width: 100%;
   }
   .wpwl-group-brand {
     display: flex;

@@ -10,9 +10,9 @@ import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
-import React from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { paths } from "util/paths";
 
 const SBMobileApp = "/assets/images/app_default_image.png";
@@ -42,26 +42,109 @@ const LeftContent = () => {
 
 const RightContent = () => {
   const history = useHistory();
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setActiveIndex((prev) => (prev < 5 ? prev + 1 : 0));
+    }, 4000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const arrayOfPointPromotions = [
+    {
+      ctaText: "GET $5",
+      p1Text: "$5 = 500pts off your next transfer",
+      p2Text: "Points are  accumulated for every successful transfer.",
+      tandc: "MIN. SPEND $250. T & C’s APPLY",
+      currency: "$",
+    },
+    {
+      ctaText: "GET £5",
+      p1Text: "£5 = 500pts off your next transfer",
+      p2Text: "Points are accumulated for every successful transfer.",
+      tandc: "MIN. SPEND £250. T & C’s APPLY",
+      currency: "£",
+    },
+    {
+      ctaText: "GET €5",
+      p1Text: "€5 = 500pts off your next transfer",
+      p2Text: "Points are accumulated for every successful transfer.",
+      tandc: "MIN. SPEND 250. T & C’s APPLY",
+      currency: "€",
+    },
+    {
+      ctaText: "GET C$5",
+      p1Text: "C$5 = 500pts off your next transfer",
+      p2Text: "Points are accumulated for every successful transfer.",
+      tandc: "MIN. SPEND C$250. T & C’s APPLY",
+      currency: "C$",
+    },
+    {
+      ctaText: "GET 5kr",
+      p1Text: "5kr = 500pts off your next transfer",
+      p2Text: "Points are  accumulated for every successful transfer.",
+      tandc: "MIN. SPEND  250kr T & C’s APPLY",
+      currency: "kr",
+    },
+    {
+      ctaText: (
+        <>
+          GET <span className="swiss-franc">F</span>5
+        </>
+      ),
+      p1Text: (
+        <>
+          <span className="swiss-franc">F</span>5= 500pts off your next transfer
+        </>
+      ),
+      p2Text: "Points are  accumulated for every successful transfer.",
+      tandc: (
+        <>
+          MIN. SPEND <span className="swiss-franc">F</span>250. T & C’s APPLY
+        </>
+      ),
+      currency: <span className="swiss-franc">F</span>,
+    },
+  ];
+  // <span className="swiss-franc">F</span>
   return (
-    <RightContentStyles $bgImage={TwinklingStars} $bgImageSMdevice={BannerSvg}>
+    <RightContentStyles
+      $bgImage={TwinklingStars}
+      $bgImageSMdevice={BannerSvg}
+      $activeIndex={activeIndex}
+    >
       <div className="_background">
         <div className="_content_1">
-          <H2>GET $10 OFF</H2>
-          <H3>on your next two transfers</H3>
-          <H3 className="_bold">Use code HELLO5</H3>
+          <H3>TRANSFER. EARN POINTS.</H3>
+
           <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
-            <Paragraph>Start transfer</Paragraph>
+            <Paragraph>{arrayOfPointPromotions[activeIndex].ctaText}</Paragraph>
           </Button>
-          <Paragraph $small className="_TandC">
-            Minimum spend $50. T & Cs Apply.{" "}
-          </Paragraph>
+          <br />
+          <Paragraph>{arrayOfPointPromotions[activeIndex].p1Text}</Paragraph>
+          <Paragraph>{arrayOfPointPromotions[activeIndex].p2Text}</Paragraph>
+          <H4 className="_italic" $small>
+            {arrayOfPointPromotions[activeIndex].tandc}
+          </H4>
         </div>
       </div>
       <div className="_background">
         <div className="_content_2">
-          <H3> $5 OFF FOR EVERY FIVE TRANSFERS YOU DO </H3>
-          <H4>When you spend over $250 for the 5 Transfers</H4>
+          <H3>
+            {" "}
+            {activeIndex === 5 ? (
+              <span className="swiss-franc xl">F</span>
+            ) : (
+              arrayOfPointPromotions[activeIndex].currency
+            )}
+            5 OFF FOR EVERY FIVE TRANSFERS YOU DO{" "}
+          </H3>
+          <H4>
+            When you spend over {arrayOfPointPromotions[activeIndex].currency}
+            250 for the 5 Transfers
+          </H4>
           <H4 className="_tanku5">
             Use code <b>TANKU5</b> when you login
           </H4>
@@ -80,6 +163,7 @@ const PromotionsStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
   gap: 32px;
 
   height: 1040px;
+  overflow: hidden;
   @media (max-width: ${Breakpoint.xl}) {
     height: 650px;
     flex-direction: column;
@@ -144,6 +228,7 @@ const LeftContentStyles = styled.div<{ $bgImage: string }>`
 const RightContentStyles = styled.div<{
   $bgImage: string;
   $bgImageSMdevice: string;
+  $activeIndex: number;
 }>`
   height: 100%;
   width: 50%;
@@ -152,7 +237,7 @@ const RightContentStyles = styled.div<{
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-  gap: 32px;
+  gap: 28px;
 
   @media (max-width: ${Breakpoint.xl}) {
     width: 100%;
@@ -162,7 +247,8 @@ const RightContentStyles = styled.div<{
 
   @media (max-width: ${Breakpoint.md}) {
     flex-direction: column;
-    /* height: 400px; */
+    width: 100%;
+    box-sizing: border-box;
   }
 
   ._background {
@@ -171,13 +257,14 @@ const RightContentStyles = styled.div<{
     flex-shrink: 0;
 
     @media (max-width: ${Breakpoint.xl}) {
-      width: 50%;
+      width: 48%;
       height: 100%;
       padding: 32px 42px;
     }
 
     @media (max-width: ${Breakpoint.md}) {
       width: 100%;
+      gap: 0px;
       height: 420px;
     }
 
@@ -211,7 +298,12 @@ const RightContentStyles = styled.div<{
     &::after {
       content: "";
       background-image: ${(props) => `url(${props.$bgImage})`};
-      /* background-color: rgba(0, 0, 0, 0.1); */
+      ${(props) =>
+        css`
+          transform: rotate(${props.$activeIndex * 30}deg)
+            scale(calc(0.8 + (${props.$activeIndex} / 9)));
+        `};
+
       background-size: cover;
       background-position: center;
       position: absolute;
@@ -224,6 +316,7 @@ const RightContentStyles = styled.div<{
       @media (max-width: ${Breakpoint.xl}) {
         background-image: ${(props) => `url(${props.$bgImageSMdevice})`};
         background-size: 150%;
+        transform: rotate(0deg) scale(1);
       }
     }
 
@@ -232,7 +325,6 @@ const RightContentStyles = styled.div<{
       z-index: 1;
       color: ${Colors.textColor3};
       text-align: center;
-
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -265,9 +357,41 @@ const RightContentStyles = styled.div<{
       ._bold {
         font-weight: 600;
       }
+      ._italic {
+        font-weight: 500;
+        font-style: italic;
+      }
       ._TandC {
         margin-top: 34px;
         width: 200px;
+      }
+
+      .swiss-franc {
+        position: relative;
+      }
+
+      .swiss-franc::before {
+        content: "_";
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 4px !important;
+        margin-left: -1px;
+        transform: rotate(0deg);
+        @media (max-width: ${Breakpoint.xl}) {
+          margin-bottom: 2px !important;
+        }
+      }
+      .xl::before {
+        content: "_";
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 12px !important;
+        margin-left: -1px;
+        transform: rotate(0deg);
+
+        @media (max-width: ${Breakpoint.xl}) {
+          margin-bottom: 7px !important;
+        }
       }
 
       h2 {

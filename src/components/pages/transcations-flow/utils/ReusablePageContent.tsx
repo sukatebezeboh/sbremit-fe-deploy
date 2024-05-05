@@ -218,7 +218,7 @@ export const TrnsferDetailsActionButtons = ({
       };
     } else if (status === constants.TRANSFER_STATUS_PAYMENT_DECLINED) {
       buttonContent = "Resend";
-      onClickAction = () => resendTransfer;
+      onClickAction = () => resendTransfer();
     } else if (status === constants.TRANSFER_PAYMENT_FRAUD) {
       buttonContent = "Contact us";
       onClickAction = () =>
@@ -282,6 +282,7 @@ const ErrorMessagesWrappper = styled.div`
   p {
     color: ${Colors.sbRed};
     font: 14px;
+    margin: 0;
   }
 `;
 

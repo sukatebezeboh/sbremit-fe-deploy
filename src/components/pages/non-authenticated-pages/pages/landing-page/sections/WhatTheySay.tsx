@@ -61,21 +61,26 @@ const WhatTheySay = () => {
   useEffect(() => {
     const contentElement = contentRef.current;
 
+    const handleScrollEnd = () => {
+      if (!contentElement) return;
+      const maxScroll = contentElement.scrollWidth - contentElement.clientWidth;
+      setIsNextDisabled(contentElement.scrollLeft >= maxScroll);
+      setIsPrevDisabled(contentElement.scrollLeft === 0);
+    };
+
+    const handleResize = () => {
+      handleScrollEnd();
+    };
+
     if (contentElement) {
-      const handleScrollEnd = () => {
-        const maxScroll =
-          contentElement.scrollWidth - contentElement.clientWidth;
-        setIsNextDisabled(contentElement.scrollLeft >= maxScroll);
-
-        setIsPrevDisabled(contentElement.scrollLeft === 0);
-      };
-
       contentElement.addEventListener("scroll", handleScrollEnd);
+      window.addEventListener("resize", handleResize);
 
       handleScrollEnd();
 
       return () => {
         contentElement.removeEventListener("scroll", handleScrollEnd);
+        window.removeEventListener("resize", handleResize);
       };
     }
   }, []);
@@ -140,7 +145,7 @@ const WhatTheySayStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
     }
 
     ._buttons {
-      display: none;
+      display: flex;
       gap: 16px;
       @media (max-width: ${Breakpoint.md}) {
         display: none;
@@ -158,9 +163,9 @@ const WhatTheySayStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
     &::-webkit-scrollbar {
       display: none;
     }
+    overflow-x: auto;
 
     @media (max-width: 1440px) {
-      overflow-x: auto;
       gap: 18px;
     }
   }

@@ -69,7 +69,7 @@ const HeroStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
   }
 
   ._left_content {
-    width: 55%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 40px;
@@ -122,7 +122,7 @@ const HeroStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
   }
 
   ._right_content {
-    width: 45%;
+    width: 44%;
     @media (max-width: ${Breakpoint.xl}) {
       display: none;
     }

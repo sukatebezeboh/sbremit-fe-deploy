@@ -3,6 +3,7 @@ import { Input, Select, Space } from "antd";
 import { getCountryColor } from "components/pages/non-authenticated-pages/global-styles/styles";
 import { Paragraph } from "components/pages/non-authenticated-pages/global-styles/typogarphy";
 import { useExchangeRate } from "components/pages/transcations-flow/app-pages/app-getQuote/GetQuoteHelper";
+import { ErrorMessages } from "components/pages/transcations-flow/utils/ReusablePageContent";
 import {
   formatAmount,
   getFlagURL,
@@ -12,11 +13,13 @@ import {
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
 import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { TRANSFER } from "redux/actionTypes";
+import { getServiceRate } from "redux/actions/actions";
 import styled from "styled-components";
+import { countriesTransferMethodAvailability } from "util/constants";
 import { paths } from "util/paths";
 import { getAllUniqueCurrencies } from "./HeroHelper";
 
@@ -26,16 +29,60 @@ const HeroCalculator = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const transfer = useSelector((state: any) => state.transfer);
+  const [operatorFee, setOperatorFee] = useState(0);
+  const [operatorError, setOperatorError] = useState({
+    errorMessage: "",
+    isPayin: false,
+    isError: false,
+  });
+
   const {
     payinActualValue,
     exchangeRate,
     payinCurrency,
     payoutCurrency,
     activeCountryColor,
+    transferMethod,
+    payoutActualValue,
   } = transfer;
   useEffect(() => {
     updatePayoutValue();
   }, [exchangeRate]);
+
+  //handle operator fee seperation logic
+  useEffect(() => {
+    const { operatorFee, transferLimitMax, isInOriginCurrency } =
+      getServiceRate(transferMethod) || {};
+
+    const formatTransferLimitMax = isNaN(Number(transferLimitMax))
+      ? 0
+      : Number(transferLimitMax);
+
+    setOperatorError({
+      errorMessage: isInOriginCurrency
+        ? `Maximum ${formatAmount(
+            transferLimitMax
+          )} ${payinCurrency} allowed at a time.`
+        : `Maximum ${formatAmount(
+            transferLimitMax
+          )} ${payoutCurrency} allowed at a time.`,
+      isPayin: isInOriginCurrency || false,
+      isError: isInOriginCurrency
+        ? payinActualValue > formatTransferLimitMax
+        : payoutActualValue > formatTransferLimitMax,
+    });
+
+    const formatOperatorFee = isNaN(Number(operatorFee))
+      ? 0
+      : Number(operatorFee);
+    setOperatorFee(formatOperatorFee);
+  }, [
+    transferMethod,
+    payinCurrency,
+    payoutCurrency,
+    payinActualValue,
+    payoutActualValue,
+  ]);
 
   // Recalculate payout value based on the new exchange rate
   const updatePayoutValue = () => {
@@ -50,13 +97,28 @@ const HeroCalculator = () => {
     });
   };
 
+  // Maximum 20,000 DKK allowed at a time
+
   return (
     <HeroCalculatorStyles $activeColor={activeCountryColor}>
       <div className="_content">
         <div className="_inputs">
-          <CalculatorInput type="payin" />
-          <CalculatorInput type="payout" />
+          <CalculatorInput
+            type="payin"
+            isError={operatorError.isError && operatorError.isPayin}
+          />
+          {operatorError.isError && operatorError.isPayin && (
+            <ErrorMessages errorMessage={operatorError.errorMessage} />
+          )}
+          <CalculatorInput
+            type="payout"
+            isError={operatorError.isError && !operatorError.isPayin}
+          />
+          {operatorError.isError && !operatorError.isPayin && (
+            <ErrorMessages errorMessage={operatorError.errorMessage} />
+          )}
         </div>
+
         <div className="_infos">
           <HeroPaymentMethod />
           <ExchangeRateStyles>
@@ -67,12 +129,16 @@ const HeroCalculator = () => {
           </ExchangeRateStyles>
           <OperatorFeeStyles>
             <Paragraph $small>Operator Fee</Paragraph>
-            <Paragraph $small>+2 {payinCurrency}</Paragraph>
+            <Paragraph $small>
+              {operatorFee} {payinCurrency}
+            </Paragraph>
           </OperatorFeeStyles>
           <TotalAmountStyles $activeColor={activeCountryColor}>
             <Paragraph $small>Total</Paragraph>
             <Paragraph $small>
-              {payinActualValue ? formatAmount(payinActualValue + 2) : 0}{" "}
+              {payinActualValue && !operatorError.isError
+                ? formatAmount(payinActualValue + operatorFee)
+                : 0}{" "}
               {payinCurrency}
             </Paragraph>
           </TotalAmountStyles>
@@ -88,7 +154,13 @@ const HeroCalculator = () => {
 
 export default HeroCalculator;
 
-const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
+const CalculatorInput = ({
+  type,
+  isError,
+}: {
+  type: "payin" | "payout";
+  isError: boolean;
+}) => {
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
@@ -150,7 +222,7 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
   };
 
   return (
-    <CalculatorInputStyles $activeColor={activeCountryColor}>
+    <CalculatorInputStyles $activeColor={activeCountryColor} $isError={isError}>
       <Input
         placeholder="0.00"
         disabled={isLoadingRate}
@@ -166,6 +238,7 @@ const CalculatorInput = ({ type }: { type: "payin" | "payout" }) => {
           isLoadingRate
         )}
         onChange={handleOnInputChange}
+        maxLength={11}
       />
       <span className="_label">{isPayin ? "You send" : "You receive"}</span>
     </CalculatorInputStyles>
@@ -184,6 +257,11 @@ const ContrySelector = (
   const apploader = useSelector((state: any) => state.loading);
 
   const handleCountryChange = (value: string) => {
+    const getEquivalentCountryCode = () => {
+      return countries.find((country: any) => country.currency === value)
+        .countryCode;
+    };
+
     const activeCurrencyColor = getCountryColor(value);
     if (isPayin) {
       return dispatch({
@@ -191,6 +269,10 @@ const ContrySelector = (
         payload: {
           ...transfer,
           payinCurrency: value,
+          toSend: {
+            ...transfer.toSend,
+            countryCode: getEquivalentCountryCode(),
+          },
         },
       });
     } else {
@@ -200,6 +282,10 @@ const ContrySelector = (
           ...transfer,
           payoutCurrency: value,
           activeCountryColor: activeCurrencyColor,
+          toReceive: {
+            ...transfer.toReceive,
+            countryCode: getEquivalentCountryCode(),
+          },
         },
       });
     }
@@ -219,7 +305,9 @@ const ContrySelector = (
             <Option value={country.currency} key={country.name + index}>
               <Space align="center">
                 <CountryFlag
-                  src={getFlagURL(country.countryCode)}
+                  src={getFlagURL(
+                    country.currency === "EUR" ? "EU" : country.countryCode
+                  )}
                   alt={country.name}
                 />
                 <span>{country.currency}</span>
@@ -233,21 +321,64 @@ const ContrySelector = (
 };
 
 const HeroPaymentMethod = () => {
+  const dispatch = useDispatch();
+  const transfer = useSelector((state: any) => state.transfer);
   const methods = [
     { labal: "Mobile Money", value: "mobile_money" },
     { labal: "Bank Transfer", value: "bank_transfer" },
     { labal: "Cash Pickup", value: "cash_pickup" },
   ];
 
+  const onSelectChange = (value: string) => {
+    dispatch({
+      type: TRANSFER,
+      payload: { ...transfer, transferMethod: value },
+    });
+  };
+
+  useEffect(() => {
+    const isSelectedMethodVailable =
+      countriesTransferMethodAvailability[transfer.toReceive.countryCode]?.[
+        transfer.transferMethod
+      ];
+
+    if (!isSelectedMethodVailable) {
+      const availableMethod = methods.find(
+        (method) =>
+          countriesTransferMethodAvailability[transfer.toReceive.countryCode]?.[
+            method.value
+          ] === true
+      );
+
+      onSelectChange(availableMethod?.value || "mobile_money");
+    }
+  }, [transfer.toReceive.countryCode]);
+
   return (
     <HeroPaymentMethodStyles>
       <Paragraph $small>Delivery Options</Paragraph>
-      <Select defaultValue="mobile_money" size="large">
-        {methods.map((method, index) => (
-          <Option value={method.value} key={"hero_" + method + index}>
-            {method.labal}
-          </Option>
-        ))}
+      <Select
+        defaultValue={"mobile_money"}
+        size="large"
+        onChange={onSelectChange}
+        value={transfer.transferMethod}
+      >
+        {methods.map((method, index) => {
+          const isAvailable =
+            countriesTransferMethodAvailability[
+              transfer.toReceive.countryCode
+            ]?.[method.value];
+
+          return (
+            <Option
+              value={method.value}
+              key={"hero_" + method.value + index}
+              disabled={!isAvailable}
+            >
+              {method.labal}
+            </Option>
+          );
+        })}
       </Select>
     </HeroPaymentMethodStyles>
   );
@@ -418,12 +549,16 @@ const ContrySelectorStyles = styled.div<{ $activeColor: string }>`
   }
 `;
 
-const CalculatorInputStyles = styled.div<{ $activeColor: string }>`
+const CalculatorInputStyles = styled.div<{
+  $activeColor: string;
+  $isError?: boolean;
+}>`
   height: auto;
   flex-shrink: 0;
 
   border-radius: 8px;
-  border: 0.7px solid ${(props) => props.$activeColor};
+  border: 0.7px solid
+    ${(props) => (props.$isError ? Colors.sbRed : props.$activeColor)};
   background: #fff;
 
   display: flex;

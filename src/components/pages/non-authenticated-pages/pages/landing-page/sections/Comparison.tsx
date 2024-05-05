@@ -8,6 +8,7 @@ import {
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
 import styled from "styled-components";
+import { css } from "styled-components";
 
 const tableHeader = [
   { img: "empty", alt: "" },
@@ -151,16 +152,16 @@ const ComparisonStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
     width: auto;
     padding: 8px 0px;
 
-    @media (max-width: ${Breakpoint.xl}) {
-      overflow: auto;
-    }
-
     ._table {
       margin-top: 32px;
       border-radius: 28px;
       border: 0.7px solid #1e1e1e;
       overflow: hidden;
-      width: max-content;
+      /* width: max-content; */
+
+      @media (max-width: ${Breakpoint.md}) {
+        overflow-x: auto;
+      }
 
       @media (max-width: ${Breakpoint.sm}) {
         margin-top: 24px;
@@ -169,14 +170,29 @@ const ComparisonStyles = styled(PageResponsiveWidth).attrs({ as: "section" })`
       ._table_header {
         display: flex;
         border-bottom: 0.7px solid #1e1e1e;
+        width: 100%;
+        box-sizing: border-box;
+
+        @media (max-width: ${Breakpoint.md}) {
+          width: max-content;
+        }
       }
     }
   }
 `;
 const ColumnStyle = styled.div<{ $noBorder?: boolean }>`
+  width: 100%;
   display: flex;
   border-bottom: 0.7px solid #1e1e1e;
-  ${(props) => props.$noBorder && "border-bottom: none"}
+  ${(props) =>
+    props.$noBorder &&
+    css`
+      border-bottom: none;
+    `}
+
+  @media (max-width: ${Breakpoint.md}) {
+    width: max-content;
+  }
 `;
 
 const CellStyles = styled.div<{
@@ -184,21 +200,25 @@ const CellStyles = styled.div<{
   $alignLeft?: boolean;
   $noBorderRight?: boolean;
 }>`
-  width: 270px;
+  min-width: 180px;
+  flex: 1;
   height: 100px;
   flex-shrink: 0;
-  padding: 8px 16px;
+  padding: 8px 0px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  box-sizing: border-box;
+  flex-shrink: 0;
+
   @media (max-width: 1440px) {
-    width: 213px;
+    min-width: 160px;
   }
 
   @media (max-width: ${Breakpoint.md}) {
-    width: 180px;
+    width: 150px;
     height: 66px;
     justify-content: ${(props) =>
       props.$alignLeft ? "flext-start" : "center"};
