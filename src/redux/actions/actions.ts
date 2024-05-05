@@ -395,6 +395,13 @@ export const refreshUserDetails = (
 
 export const signOutAction = (ignoreRequest = false) => {
   resetTransferData();
+
+  // clear any active toast message /modal toast
+  store.dispatch({
+    type: TOAST,
+    payload: {},
+  });
+
   if (!ignoreRequest) {
     store.dispatch({ type: LOADING, payload: true });
     http.delete(endpoints.SESSION).then((res) => {
@@ -428,6 +435,13 @@ const signOutOnClient = () => {
 
 const runningTimeouts: any[] = [];
 export const toastAction = (toastConfig: any) => {
+  const toast = store.getState().toast;
+
+  // if toast action is a modal toast, block other toast
+  if (toast?.modal === true) {
+    return;
+  }
+
   if (toastConfig.timeout === -1) {
     return store.dispatch({ type: TOAST, payload: { ...toastConfig } });
   }
@@ -2320,7 +2334,7 @@ export const updateTransferWithPaymentGatewayCharge = async (
   clientIp: string,
   callback: Function,
   callbackOnError: Function,
-  tokenised?: boolean,
+  tokenised?: boolean
 ) => {
   const transfer = store.getState().transfer;
 
