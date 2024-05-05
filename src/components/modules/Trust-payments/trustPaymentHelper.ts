@@ -1,5 +1,9 @@
 import crypto from "crypto";
 
+export const CDN_DOMAIN = "https://cdn.eu.trustpayments.com/js/latest/st.js";
+export const JWTusername = process.env.REACT_APP_TRUST_PAYMENT_JWT_USERNAME;
+export const JWTsecretKey = process.env.REACT_APP_TRUST_PAYMENT_JWT_SECRETKEY;
+
 const getBase64URLEncodedString = (data: any) => {
   const jsonString = JSON.stringify(data);
 

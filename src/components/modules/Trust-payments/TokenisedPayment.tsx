@@ -2,10 +2,16 @@ import _env from "env";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { LOADING } from "redux/actionTypes";
-import { settings } from "util/settings";
-import { getJWTtoken } from "./trustPaymentHelper";
-import axios from "axios";
+import { toastAction } from "redux/actions/actions";
 import http from "util/http";
+import { settings } from "util/settings";
+import {
+  CDN_DOMAIN,
+  JWTsecretKey,
+  JWTusername,
+  getJWTtoken,
+} from "./trustPaymentHelper";
+import { useHistory } from "react-router-dom";
 
 interface TokenisedPaymentProps {
   currencyiso3a: string;
@@ -16,9 +22,7 @@ interface TokenisedPaymentProps {
   transactionId: string;
 }
 
-const CDN_DOMAIN = "https://cdn.eu.trustpayments.com/js/latest/st.js";
-const JWTusername = process.env.REACT_APP_TRUST_PAYMENT_JWT_USERNAME;
-const JWTsecretKey = process.env.REACT_APP_TRUST_PAYMENT_JWT_SECRETKEY;
+const credentialsonfile = "2";
 
 const TokenisedPayment = ({
   currencyiso3a,
@@ -31,13 +35,12 @@ const TokenisedPayment = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-
-  const credentialsonfile = "2";
+  const history = useHistory();
 
   const maimountWithoutDecimal = mainamount.toString().replace(".", "");
   const UtcTimestamp = Math.floor(Date.now() / 1000); //Time in seconds since Unix epoch
 
-  const successfulRedirectURL = `${_env.APP_HOST}/transfer-completed/${transferId}?payment_type=trust_payment`;
+  const successfulRedirectURL = `/transfer-completed/${transferId}?payment_type=trust_payment`;
   const TRUST_NOTIFICATION_WEBHOOK_URL =
     settings.TRUST_NOTIFICATION_WEBHOOK_URL;
 
@@ -61,11 +64,31 @@ const TokenisedPayment = ({
     typ: "JWT",
   };
 
+  const onEnded = () => {
+    setIsLoading(false); // update isLoading state to false when script is loaded
+    // upddate enabled state to false at trustPaymentOptions state
+    setEnabled((props: any) => ({
+      ...props,
+      enabled: false,
+    }));
+
+    dispatch({ type: LOADING, payload: false });
+  };
+
   useEffect(() => {
+    if (window.location.href.includes("localhost")) {
+      toastAction({
+        show: true,
+        type: "warning",
+        message: `Trust payment st.js library will block requests from localhost/XXXX environment. Please run tests using your IPv4 address.`,
+      });
+      onEnded();
+      return;
+    }
     if (isLoading) {
       dispatch({
         type: LOADING,
-        payload: "Please wait while we load payment authentication form...",
+        payload: "Loading payment authentication form...",
       });
     } else {
       dispatch({ type: LOADING, payload: false });
@@ -78,8 +101,6 @@ const TokenisedPayment = ({
     const liveStatus = process.env.REACT_APP_ENV === "production" ? 1 : 0;
 
     const onPaymentWidgetReady = () => {
-      dispatch({ type: LOADING, payload: true }); // remove message from loader
-
       const st = (window as any).SecureTrading({
         jwt: jwtToken,
         livestatus: liveStatus,
@@ -88,20 +109,15 @@ const TokenisedPayment = ({
         submitOnCancel: false,
         // disableNotification: true,
         submitCallback: function (data: any) {
-          setIsLoading(false); // update isLoading state to false when script is loaded
-          // upddate enabled state to false at trustPaymentOptions state
-          setEnabled((props: any) => ({
-            ...props,
-            enabled: false,
-          }));
+          onEnded();
 
-          http.post(TRUST_NOTIFICATION_WEBHOOK_URL, {
-            data,
-            tokenisedPayment: true, //add a flag for tokenisedPayment TRUST_NOTIFICATION_WEBHOOK_URL
-          });
-
-          !data?.hasUserClosedAcsWindow &&
-            window.location.replace(successfulRedirectURL);
+          if (!data?.hasUserClosedAcsWindow) {
+            http.post(TRUST_NOTIFICATION_WEBHOOK_URL, {
+              data,
+              tokenisedPayment: true, //add a flag for tokenisedPayment TRUST_NOTIFICATION_WEBHOOK_URL
+            });
+            history.push(successfulRedirectURL);
+          }
         },
       });
 
