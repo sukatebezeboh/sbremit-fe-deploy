@@ -123,6 +123,7 @@ export default function PaymentComplete() {
     <p>Your transfer with ID: {transactionId} is being processed.</p>,
     <p>Your transfer with ID: {transactionId} is being processed.</p>,
     <p>Your transfer with ID: {transactionId} was not completed.</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
   ];
 
   if (isLoading) {

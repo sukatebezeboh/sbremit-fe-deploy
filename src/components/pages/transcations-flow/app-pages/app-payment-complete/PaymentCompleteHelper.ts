@@ -40,10 +40,16 @@ export const PaymentTitle = [
   "Transaction Successful",
   "Transaction Inprogress",
   "Transaction Unsuccessful",
+  "Transaction Complete",
 ];
 
-export const AvatarColors = ["#87d068", "#4259cf", "#CF0921"];
-export const PaymentDescriptionsColors = ["#007B5D", "#4259cf", "#CF0921"];
+export const AvatarColors = ["#87d068", "#4259cf", "#CF0921", "#87d068"];
+export const PaymentDescriptionsColors = [
+  "#007B5D",
+  "#4259cf",
+  "#CF0921",
+  "#007B5D",
+];
 
 export const getEquivalentVoucherPoints = (
   transferAmount: number,
