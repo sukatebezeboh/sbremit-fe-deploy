@@ -16,6 +16,7 @@ import { paths } from "util/paths";
 import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import { CustomError, CustomLoader } from "../../utils/ReusablePageContent";
 import { Title } from "../app-dashboard/DashboardSyles";
+import { convertDateAndTimeString } from "../app-transactions/TransactionHelper";
 import {
   AvatarColors,
   PaymentDescriptionsColors,
@@ -30,14 +31,6 @@ import {
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
 
-const options: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-};
 
 export default function PaymentComplete() {
   const history = useHistory();
@@ -67,11 +60,13 @@ export default function PaymentComplete() {
 
   const searchParams = new URLSearchParams(location.search);
   const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
+  const isTrustPayment = searchParams.get("payment_type") === "trust_payment";
 
   useEffect(() => {
     if (
       trasnferInfo !== undefined &&
-      trasnferInfo?.status === constants.TRANSFER_STATUS_PENDING
+      trasnferInfo?.status === constants.TRANSFER_STATUS_PENDING &&
+      !isTrustPayment
     ) {
       if (isTrulayerPayment) {
         getPaymentStatus(
@@ -103,15 +98,17 @@ export default function PaymentComplete() {
   const { totalToPay, axcess_checkout_id, transactionId } =
     trasnferInfo?.meta || {};
 
-  const currentTimestamp = Date.now();
-  const date = new Date(currentTimestamp);
-  const formattedDate: string = date.toLocaleString("en-US", options);
+  const TransferCreatedDate: string = convertDateAndTimeString(
+    trasnferInfo?.dateCreated
+  );
 
   const statusOrCodeRes = isTrulayerPayment
     ? paymentInfo?.status
     : paymentInfo?.code;
 
-  const PaymentCategoryIndex = statusOrCodeRes
+  const PaymentCategoryIndex = isTrustPayment
+    ? 3
+    : statusOrCodeRes
     ? checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes)
     : 1; //fallback inprogress
 
@@ -119,6 +116,7 @@ export default function PaymentComplete() {
     <CheckOutlined rev={undefined} />,
     <ClockCircleOutlined rev={undefined} />,
     <CloseOutlined rev={undefined} />,
+    <CheckOutlined rev={undefined} />,
   ];
 
   const PaymentDescriptions = [

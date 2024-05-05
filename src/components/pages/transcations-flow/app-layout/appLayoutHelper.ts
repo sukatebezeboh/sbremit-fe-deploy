@@ -115,7 +115,6 @@ export const useGetTransfer = (transferId: string) => {
       ),
     {
       onSuccess: () => {},
-      refetchInterval: 60000, //60s
     }
   );
 };

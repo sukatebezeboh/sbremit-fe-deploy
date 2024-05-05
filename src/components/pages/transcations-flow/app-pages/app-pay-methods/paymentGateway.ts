@@ -12,6 +12,16 @@ export const PaymentGateWays = (
   if (transaction?.originCurrency === "GBP") {
     return [
       {
+        slug: "trust-payment",
+        method: "Pay with card",
+        provider: "Trust Payment",
+        label: (transaction: any) =>
+          transaction?.meta?.destinationCountryCode === "CM"
+            ? `0.00 ${transaction?.originCurrency}`
+            : `0.99 ${transaction?.originCurrency}`,
+        isRecommended: true,
+      },
+      {
         slug: "axcess-payment",
         method: "Pay with card",
         provider: "Axcess Merchant",
@@ -19,7 +29,7 @@ export const PaymentGateWays = (
           transaction?.meta?.destinationCountryCode === "CM"
             ? `0.00 ${transaction?.originCurrency}`
             : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: true,
+        isRecommended: false,
       },
       {
         slug: "truelayer",
@@ -32,6 +42,16 @@ export const PaymentGateWays = (
   } else if (transaction?.originCurrency === "CAD") {
     return [
       {
+        slug: "trust-payment",
+        method: "Pay with card",
+        provider: "Trust Payment",
+        label: (transaction: any) =>
+          transaction?.meta?.destinationCountryCode === "CM"
+            ? `0.00 ${transaction?.originCurrency}`
+            : `0.99 ${transaction?.originCurrency}`,
+        isRecommended: true,
+      },
+      {
         slug: "axcess-payment",
         method: "Pay with card",
         provider: "Axcess Merchant",
@@ -39,7 +59,7 @@ export const PaymentGateWays = (
           transaction?.meta?.destinationCountryCode === "CM"
             ? `0.00 ${transaction?.originCurrency}`
             : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: true,
+        isRecommended: false,
       },
       {
         slug: "interac",
@@ -55,6 +75,16 @@ export const PaymentGateWays = (
   ) {
     return [
       {
+        slug: "trust-payment",
+        method: "Pay with card",
+        provider: "Trust Payment",
+        label: (transaction: any) =>
+          transaction?.meta?.destinationCountryCode === "CM"
+            ? `0.00 ${transaction?.originCurrency}`
+            : `0.99 ${transaction?.originCurrency}`,
+        isRecommended: true,
+      },
+      {
         slug: "axcess-payment",
         method: "Pay with card",
         provider: "Axcess Merchant",
@@ -62,7 +92,7 @@ export const PaymentGateWays = (
           transaction?.meta?.destinationCountryCode === "CM"
             ? `0.00 ${transaction?.originCurrency}`
             : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: true,
+        isRecommended: false,
       },
     ];
   }
