@@ -4,7 +4,7 @@ import {
   Colors,
   ResponsiveMarginTopForPagesWithSteps,
 } from "../../utils/stylesVariables";
-import { Radio } from "antd";
+import { Collapse, Radio } from "antd";
 
 export const PaymentMethodsContainerStyles = styled(
   ResponsiveMarginTopForPagesWithSteps
@@ -214,5 +214,21 @@ export const TrustPaymentOptionWrapper = styled(Radio)`
     font-size: 14px; //13px
     font-weight: 300;
     color: rgba(0, 0, 0, 0.55);
+  }
+`;
+
+export const CollapseWrapper = styled(Collapse)`
+  overflow: hidden;
+
+  .ant-collapse-header {
+    background-color: ${Colors.sbGreen};
+    color: ${Colors.bgwhite} !important;
+    border-radius: 0 !important;
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;

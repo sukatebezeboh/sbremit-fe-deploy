@@ -1,7 +1,8 @@
 import { CaretRightOutlined } from "@ant-design/icons";
 import type { CollapseProps, RadioChangeEvent } from "antd";
-import { Collapse, Divider, Modal, Radio, Space, Tag } from "antd";
-import StoredCardSubmission from "components/modules/Trust-payments/TokenisedPayment";
+import { Collapse, Divider, Empty, Modal, Radio, Space, Tag } from "antd";
+import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
+import TokenisedPayment from "components/modules/Trust-payments/TokenisedPayment";
 import { queryClient } from "index";
 import { MouseEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,8 +13,8 @@ import {
   resetTransferData,
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
-import { constants } from "util/constants";
 import endpoints from "util/endpoints";
+import { paths } from "util/paths";
 import {
   getMoneyValue,
   parseEndpointParameters,
@@ -26,6 +27,7 @@ import LargeButton, {
 import { formatAmount } from "../../utils/reuseableUtils";
 import { TransactionsInfomations } from "../app-transactions/TransactionDetail";
 import {
+  CollapseWrapper,
   PaymentMethodCardStyles,
   PaymentMethodsContainerStyles,
   PaymentMethodsWrapperStyles,
@@ -37,9 +39,6 @@ import {
   generateCheckoutIDforAxcssPayment,
   generateCheckoutInfoForTrulayerPayment,
 } from "./paymentHelper";
-import PaymentRedirect from "components/modules/Trust-payments/PaymentRedirect";
-import TokenisedPayment from "components/modules/Trust-payments/TokenisedPayment";
-import { paths } from "util/paths";
 
 interface LocationState {
   transfer: any;
@@ -60,14 +59,6 @@ export default function Pay() {
   const dispatch = useDispatch();
   const { clientIp } = transfer || {};
   const { verification } = auth || {};
-  const [selectedMethod, setSelecetdMethod] = useState("axcess-payment");
-  const [isTrustPayment, setIsTrustPayment] = useState(false);
-  const [trustPaymentOptions, setTrustPaymentOptions] =
-    useState<TrustPaymentOptionsProps>({
-      type: "one-time",
-      enabled: false,
-      transactionreference: "",
-    });
 
   let prevTransferInfo = (location.state as LocationState)?.transfer;
   const { data: freshTrasnferInfo, isLoading: isLoadingTransferInfo } =
@@ -81,6 +72,21 @@ export default function Pay() {
     user?.id,
     freshTrasnferInfo?.id
   );
+
+  const isRecommendedGateWayPayment = PaymentGateWays(transferInfo)?.find(
+    (paymentGateWay: any) => paymentGateWay?.isRecommended === true
+  )?.slug;
+
+  const [selectedMethod, setSelecetdMethod] = useState(
+    isRecommendedGateWayPayment || ""
+  );
+  const [isTrustPayment, setIsTrustPayment] = useState(false);
+  const [trustPaymentOptions, setTrustPaymentOptions] =
+    useState<TrustPaymentOptionsProps>({
+      type: "one-time",
+      enabled: false,
+      transactionreference: "",
+    });
 
   useEffect(() => {
     if (prevTransferInfo === undefined) {
@@ -353,15 +359,11 @@ const TrustPaymentConfirmationModal = ({
 
   const trustOptionsArray = [
     {
-      title: "Use New Card (Save for Future Use)",
-      description:
-        "Pay with a new card and securely save its details for future payments.",
+      title: "Yes",
       value: 1,
     },
     {
-      title: "Use New Card (One-time Use)",
-      description:
-        "Pay with a new card for this transaction only. No card details will be saved.",
+      title: "No",
       value: 2,
     },
   ];
@@ -369,8 +371,10 @@ const TrustPaymentConfirmationModal = ({
   const items: CollapseProps["items"] = [
     {
       key: "1",
-      label: "Select a card you've previously stored",
-      children: (
+      label: "Select a saved card",
+      children: isTrustCardsArrayEmpty ? (
+        <Empty />
+      ) : (
         <Radio.Group
           onChange={(e) => onRadioChange("stored-cards")(e)}
           style={{ margin: "12px 0px" }}
@@ -393,23 +397,24 @@ const TrustPaymentConfirmationModal = ({
     },
     {
       key: "2",
-      label: "Select a New Card",
+      label: "Add new card",
       children: (
         <Radio.Group
           onChange={(e) => onRadioChange("new-cards")(e)}
           value={newCardRadioValue}
           style={{ margin: "12px 0px" }}
         >
-          <Space direction="vertical" size={16}>
-            {trustOptionsArray.map((item, index) => (
-              <TrustPaymentOptionWrapper
-                value={item.value}
-                key={item.title + index}
-              >
-                <p>{item.title}</p>
-                <span>{item.description}</span>
-              </TrustPaymentOptionWrapper>
-            ))}
+          <Space direction="vertical" size={20}>
+            <span style={{ color: "#333", fontSize: 16 }}>
+              Do you want to save card for future use?
+            </span>
+            <Space direction="vertical" size={16}>
+              {trustOptionsArray.map((item, index) => (
+                <Radio value={item.value} key={item.title + index}>
+                  {item.title}
+                </Radio>
+              ))}
+            </Space>
           </Space>
         </Radio.Group>
       ),
@@ -459,7 +464,7 @@ const TrustPaymentConfirmationModal = ({
 
   return (
     <Modal
-      title="Trust Payment Options"
+      title="Debit card payment options"
       open={open}
       width={600}
       onCancel={handleCancel}
@@ -471,7 +476,7 @@ const TrustPaymentConfirmationModal = ({
     >
       <Divider style={{ marginTop: "12px" }} />
 
-      <Collapse
+      <CollapseWrapper
         accordion
         expandIconPosition="right"
         items={items}
