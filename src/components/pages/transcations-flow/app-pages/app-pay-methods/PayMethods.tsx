@@ -19,7 +19,7 @@ import {
   getMoneyValue,
   parseEndpointParameters,
 } from "../../../../../util/util";
-import { useGetTransfer } from "../../app-layout/appLayoutHelper";
+import { useGetTransfer, useUserData } from "../../app-layout/appLayoutHelper";
 import LargeButton, {
   PageTitileAndDescription,
   TransactionsSteps,
@@ -334,9 +334,11 @@ const TrustPaymentConfirmationModal = ({
   clientIp,
 }: TrustPaymentConfirmationModalProps) => {
   const user = useSelector((state: any) => state.auth.user);
-  const { trustCards } = user?.meta || {};
+  const { data: userData } = useUserData(user.id);
+  const { trustCards } = userData?.meta || {};
   const trustCardsArray: any[] = trustCards && JSON.parse(trustCards);
-  const isTrustCardsArrayEmpty = trustCardsArray.length === 0;
+  const isTrustCardsArrayEmpty =
+    trustCardsArray?.length === 0 || trustCardsArray === undefined;
 
   const [newCardRadioValue, setNewCardRadioValue] = useState(
     isTrustCardsArrayEmpty ? 1 : 0
@@ -381,7 +383,7 @@ const TrustPaymentConfirmationModal = ({
           value={storedCardRadioValue}
         >
           <Space direction="vertical" size={16}>
-            {trustCardsArray.map((item, index) => (
+            {trustCardsArray?.map((item, index) => (
               <TrustPaymentOptionWrapper
                 value={item?.reference}
                 key={item?.title + index}
