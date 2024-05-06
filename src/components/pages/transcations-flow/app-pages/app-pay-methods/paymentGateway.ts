@@ -21,16 +21,16 @@ export const PaymentGateWays = (
             : `0.99 ${transaction?.originCurrency}`,
         isRecommended: true,
       },
-      {
-        slug: "axcess-payment",
-        method: "Pay with card",
-        provider: "Axcess Merchant",
-        label: (transaction: any) =>
-          transaction?.meta?.destinationCountryCode === "CM"
-            ? `0.00 ${transaction?.originCurrency}`
-            : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: false,
-      },
+      // {
+      //   slug: "axcess-payment",
+      //   method: "Pay with card",
+      //   provider: "Axcess Merchant",
+      //   label: (transaction: any) =>
+      //     transaction?.meta?.destinationCountryCode === "CM"
+      //       ? `0.00 ${transaction?.originCurrency}`
+      //       : `0.99 ${transaction?.originCurrency}`,
+      //   isRecommended: false,
+      // },
       {
         slug: "truelayer",
         method: "Instant bank transfer",
@@ -51,16 +51,16 @@ export const PaymentGateWays = (
             : `0.99 ${transaction?.originCurrency}`,
         isRecommended: true,
       },
-      {
-        slug: "axcess-payment",
-        method: "Pay with card",
-        provider: "Axcess Merchant",
-        label: (transaction: any) =>
-          transaction?.meta?.destinationCountryCode === "CM"
-            ? `0.00 ${transaction?.originCurrency}`
-            : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: false,
-      },
+      // {
+      //   slug: "axcess-payment",
+      //   method: "Pay with card",
+      //   provider: "Axcess Merchant",
+      //   label: (transaction: any) =>
+      //     transaction?.meta?.destinationCountryCode === "CM"
+      //       ? `0.00 ${transaction?.originCurrency}`
+      //       : `0.99 ${transaction?.originCurrency}`,
+      //   isRecommended: false,
+      // },
       {
         slug: "interac",
         method: "Instant bank transfer",
@@ -84,16 +84,16 @@ export const PaymentGateWays = (
             : `0.99 ${transaction?.originCurrency}`,
         isRecommended: true,
       },
-      {
-        slug: "axcess-payment",
-        method: "Pay with card",
-        provider: "Axcess Merchant",
-        label: (transaction: any) =>
-          transaction?.meta?.destinationCountryCode === "CM"
-            ? `0.00 ${transaction?.originCurrency}`
-            : `0.99 ${transaction?.originCurrency}`,
-        isRecommended: false,
-      },
+      // {
+      //   slug: "axcess-payment",
+      //   method: "Pay with card",
+      //   provider: "Axcess Merchant",
+      //   label: (transaction: any) =>
+      //     transaction?.meta?.destinationCountryCode === "CM"
+      //       ? `0.00 ${transaction?.originCurrency}`
+      //       : `0.99 ${transaction?.originCurrency}`,
+      //   isRecommended: false,
+      // },
     ];
   }
 };
