@@ -11,6 +11,7 @@ import { TRANSFER } from "redux/actionTypes";
 import {
   initiateInteracTransferPayment,
   resetTransferData,
+  toastAction,
   updateTransferWithPaymentGatewayCharge,
 } from "redux/actions/actions";
 import endpoints from "util/endpoints";
@@ -73,13 +74,11 @@ export default function Pay() {
     freshTrasnferInfo?.id
   );
 
-  const isRecommendedGateWayPayment = PaymentGateWays(transferInfo)?.find(
-    (paymentGateWay: any) => paymentGateWay?.isRecommended === true
-  )?.slug;
+  // const isRecommendedGateWayPayment = PaymentGateWays(transferInfo)?.find(
+  //   (paymentGateWay: any) => paymentGateWay?.isRecommended === true
+  // )?.slug;
 
-  const [selectedMethod, setSelecetdMethod] = useState(
-    isRecommendedGateWayPayment || ""
-  );
+  const [selectedMethod, setSelecetdMethod] = useState("");
   const [isTrustPayment, setIsTrustPayment] = useState(false);
   const [trustPaymentOptions, setTrustPaymentOptions] =
     useState<TrustPaymentOptionsProps>({
@@ -150,6 +149,13 @@ export default function Pay() {
   };
 
   const onPayClick = () => {
+    if (selectedMethod === "") {
+      return toastAction({
+        show: true,
+        type: "warning",
+        message: "Select a payment method.",
+      });
+    }
     setLoader(true);
     handleProceed(selectedMethod);
   };
