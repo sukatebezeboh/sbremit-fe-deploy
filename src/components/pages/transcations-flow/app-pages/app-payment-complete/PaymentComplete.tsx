@@ -31,7 +31,6 @@ import {
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
 
-
 export default function PaymentComplete() {
   const history = useHistory();
   const location = useLocation();
@@ -232,7 +231,8 @@ const PromotionsAlert = ({
             pts.
           </strong>{" "}
           Total points earned so far{" "}
-          <strong>{user?.meta?.VoucherPoints}pts.</strong> 500pts = GBP 5
+          <strong>{user?.meta?.VoucherPoints || 0}pts.</strong>
+          <br /> 500pts = GBP 5
         </span>
       }
     />
