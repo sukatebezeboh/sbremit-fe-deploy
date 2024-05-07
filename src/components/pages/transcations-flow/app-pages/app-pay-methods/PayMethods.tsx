@@ -233,7 +233,7 @@ export default function Pay() {
             <PaymentMethodCard
               selected={selectedMethod == method.slug ? true : false}
               title={method.method}
-              description={`Power by ${method.provider}`}
+              description={`Powered by ${method.provider}`}
               recomended={method.isRecommended}
               imgUrl={`assets/logos/${method.slug}.png`}
               onClick={() => setSelecetdMethod(method.slug)}
