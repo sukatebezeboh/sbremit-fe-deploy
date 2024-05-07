@@ -15,6 +15,7 @@ import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import { CustomError, CustomLoader } from "../../utils/ReusablePageContent";
+import { getAppValueDataByName } from "../../utils/reuseableUtils";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { convertDateAndTimeString } from "../app-transactions/TransactionHelper";
 import {
@@ -30,6 +31,7 @@ import {
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
+import { userAppValues } from "../../utils/useAppValues";
 
 export default function PaymentComplete() {
   const history = useHistory();
@@ -218,6 +220,24 @@ const PromotionsAlert = ({
   originCurrency: string;
 }) => {
   const user = useSelector((state: any) => state.auth.user);
+  const { values } = useSelector((state: any) => state.appValues);
+  const { PayinCountries } = userAppValues();
+  const userCountryCode = user?.profile.location_country;
+
+  const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
+  const rawVoucherActivationvalue = loyaltyConstants?.minVoucherAmount;
+  const voucherActivationvalue = isNaN(rawVoucherActivationvalue)
+    ? 0
+    : Number(rawVoucherActivationvalue);
+
+  const rawVoucherBonus = loyaltyConstants?.voucherBonus;
+  const voucherBonus = isNaN(rawVoucherBonus) ? 0 : Number(rawVoucherBonus);
+
+  const userCountryInfo = PayinCountries.find(
+    (country) =>
+      country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
+  );
+
   return (
     <Alert
       type="info"
@@ -232,7 +252,8 @@ const PromotionsAlert = ({
           </strong>{" "}
           Total points earned so far{" "}
           <strong>{user?.meta?.VoucherPoints || 0}pts.</strong>
-          <br /> 500pts = GBP 5
+          <br /> {voucherActivationvalue}pts = {userCountryInfo?.currency}{" "}
+          {voucherBonus}
         </span>
       }
     />
