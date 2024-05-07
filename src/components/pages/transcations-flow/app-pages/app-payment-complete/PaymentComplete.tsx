@@ -2,22 +2,28 @@ import {
   CheckOutlined,
   ClockCircleOutlined,
   CloseOutlined,
-  LoadingOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
 import { Alert, Avatar, Button } from "antd";
 import _env from "env";
+import { queryClient } from "index";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { getPaymentStatus } from "redux/actions/actions";
+import { constants } from "util/constants";
 import { paths } from "util/paths";
 import { useGetTransfer } from "../../app-layout/appLayoutHelper";
 import { CustomError, CustomLoader } from "../../utils/ReusablePageContent";
+import { getAppValueDataByName } from "../../utils/reuseableUtils";
 import { Title } from "../app-dashboard/DashboardSyles";
+import { convertDateAndTimeString } from "../app-transactions/TransactionHelper";
 import {
   AvatarColors,
   PaymentDescriptionsColors,
   PaymentTitle,
   checkPaymentCodeWithPattern,
+  getEquivalentVoucherPoints,
 } from "./PaymentCompleteHelper";
 import {
   ExtraInfo,
@@ -25,18 +31,7 @@ import {
   PaymentCompleteConatinerStyles,
   PaymentCompleteWrapperStyles,
 } from "./PaymentCompleteStyle";
-import { useSelector } from "react-redux";
-import { queryClient } from "index";
-import { constants } from "util/constants";
-
-const options: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true,
-};
+import { userAppValues } from "../../utils/useAppValues";
 
 export default function PaymentComplete() {
   const history = useHistory();
@@ -66,11 +61,13 @@ export default function PaymentComplete() {
 
   const searchParams = new URLSearchParams(location.search);
   const isTrulayerPayment = searchParams.get("payment_type") === "truelayer";
+  const isTrustPayment = searchParams.get("payment_type") === "trust_payment";
 
   useEffect(() => {
     if (
       trasnferInfo !== undefined &&
-      trasnferInfo?.status === constants.TRANSFER_STATUS_PENDING
+      trasnferInfo?.status === constants.TRANSFER_STATUS_PENDING &&
+      !isTrustPayment
     ) {
       if (isTrulayerPayment) {
         getPaymentStatus(
@@ -102,15 +99,17 @@ export default function PaymentComplete() {
   const { totalToPay, axcess_checkout_id, transactionId } =
     trasnferInfo?.meta || {};
 
-  const currentTimestamp = Date.now();
-  const date = new Date(currentTimestamp);
-  const formattedDate: string = date.toLocaleString("en-US", options);
+  const TransferCreatedDate: string = convertDateAndTimeString(
+    trasnferInfo?.dateCreated
+  );
 
   const statusOrCodeRes = isTrulayerPayment
     ? paymentInfo?.status
     : paymentInfo?.code;
 
-  const PaymentCategoryIndex = statusOrCodeRes
+  const PaymentCategoryIndex = isTrustPayment
+    ? 3
+    : statusOrCodeRes
     ? checkPaymentCodeWithPattern(isTrulayerPayment, statusOrCodeRes)
     : 1; //fallback inprogress
 
@@ -118,18 +117,14 @@ export default function PaymentComplete() {
     <CheckOutlined rev={undefined} />,
     <ClockCircleOutlined rev={undefined} />,
     <CloseOutlined rev={undefined} />,
+    <CheckOutlined rev={undefined} />,
   ];
 
   const PaymentDescriptions = [
-    <p>
-      Please note it can take up to 5 minutes for the status of your transfer to
-      be updated..
-    </p>,
-    <p>
-      Please note it can take up to 5 minutes for the status of your transfer to
-      be updated..
-    </p>,
-    <p>The payment was not completed successfully!</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
+    <p>Your transfer with ID: {transactionId} was not completed.</p>,
+    <p>Your transfer with ID: {transactionId} is being processed.</p>,
   ];
 
   if (isLoading) {
@@ -174,19 +169,24 @@ export default function PaymentComplete() {
           <Title>{PaymentTitle[PaymentCategoryIndex]}</Title>
           <ExtraInfo $color={PaymentDescriptionsColors[PaymentCategoryIndex]}>
             {PaymentDescriptions[PaymentCategoryIndex]}
-            {/* <span> ~{paymentInfo?.message}~</span> */}
           </ExtraInfo>
-          <span className="id_and_date">
-            Transaction ID: {transactionId}, {formattedDate}{" "}
-          </span>
+
           <Button
-            type="default"
+            type="primary"
+            size="large"
             onClick={() => {
               history.push(paths.DASHBOARD);
             }}
           >
             Go back to dashboard
           </Button>
+
+          {PaymentCategoryIndex !== 2 && (
+            <PromotionsAlert
+              tranferAmount={trasnferInfo?.originAmount}
+              originCurrency={trasnferInfo?.originCurrency}
+            />
+          )}
         </>
       </PaymentCompleteWrapperStyles>
     </PaymentCompleteConatinerStyles>
@@ -212,4 +212,50 @@ const onErrorRequestAlert = (
   />
 );
 
-//Successful, unsuccessful, Payment processing
+const PromotionsAlert = ({
+  tranferAmount,
+  originCurrency,
+}: {
+  tranferAmount: string;
+  originCurrency: string;
+}) => {
+  const user = useSelector((state: any) => state.auth.user);
+  const { values } = useSelector((state: any) => state.appValues);
+  const { PayinCountries } = userAppValues();
+  const userCountryCode = user?.profile.location_country;
+
+  const loyaltyConstants = getAppValueDataByName(values.data, "loyaltyscheme");
+  const rawVoucherActivationvalue = loyaltyConstants?.minVoucherAmount;
+  const voucherActivationvalue = isNaN(rawVoucherActivationvalue)
+    ? 0
+    : Number(rawVoucherActivationvalue);
+
+  const rawVoucherBonus = loyaltyConstants?.voucherBonus;
+  const voucherBonus = isNaN(rawVoucherBonus) ? 0 : Number(rawVoucherBonus);
+
+  const userCountryInfo = PayinCountries.find(
+    (country) =>
+      country.countryCode?.toLowerCase() === userCountryCode?.toLowerCase()
+  );
+
+  return (
+    <Alert
+      type="info"
+      showIcon
+      icon={<GiftOutlined rev={undefined} />}
+      description={
+        <span>
+          This transfer has earned you{" "}
+          <strong>
+            {getEquivalentVoucherPoints(Number(tranferAmount), originCurrency)}
+            pts.
+          </strong>{" "}
+          Total points earned so far{" "}
+          <strong>{user?.meta?.VoucherPoints || 0}pts.</strong>
+          <br /> {voucherActivationvalue}pts = {userCountryInfo?.currency}{" "}
+          {voucherBonus}
+        </span>
+      }
+    />
+  );
+};
