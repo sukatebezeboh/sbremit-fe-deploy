@@ -282,6 +282,7 @@ const ErrorMessagesWrappper = styled.div`
   p {
     color: ${Colors.sbRed};
     font: 14px;
+    margin: 0;
   }
 `;
 

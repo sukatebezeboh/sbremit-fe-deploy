@@ -1,3 +1,6 @@
+import store from "redux/store";
+import { getAppValueDataByName } from "../../utils/reuseableUtils";
+
 export function checkPaymentCodeWithPattern(
   isTrulayerPayment: boolean,
   code: string
@@ -33,13 +36,44 @@ export function checkPaymentCodeWithPattern(
 // Result codes for pending transactions /^(000\.200)/ and  /^(800\.400\.5|100\.400\.500)/ return 1
 // else return 2, which is payment failed.
 
-
 export const PaymentTitle = [
-  "Payment Successful!",
-  "Payment Inprogress!",
-  "Payment Unsuccessful!",
+  "Transaction Successful",
+  "Transaction Inprogress",
+  "Transaction Unsuccessful",
+  "Transaction Complete",
 ];
 
+export const AvatarColors = ["#87d068", "#4259cf", "#CF0921", "#87d068"];
+export const PaymentDescriptionsColors = [
+  "#007B5D",
+  "#4259cf",
+  "#CF0921",
+  "#007B5D",
+];
 
-export const AvatarColors = ["#87d068", "#4259cf", "#CF0921"];
-export const PaymentDescriptionsColors = ["#007B5D", "#4259cf", "#CF0921"];
+export const getEquivalentVoucherPoints = (
+  transferAmount: number,
+  currency: string
+): number => {
+  const { values } = store.getState().appValues;
+  const voucherRange = getAppValueDataByName(
+    values.data,
+    "loyaltyscheme"
+  )?.voucherRange;
+
+  const voucherRangeArray = voucherRange && JSON.parse(voucherRange);
+
+  const rates = voucherRangeArray[currency];
+  let points = 0;
+
+  for (const amountStr in rates) {
+    const amount = parseInt(amountStr);
+    const rate = rates[amountStr];
+
+    if (transferAmount >= amount) {
+      points = rate;
+    }
+  }
+
+  return points;
+};

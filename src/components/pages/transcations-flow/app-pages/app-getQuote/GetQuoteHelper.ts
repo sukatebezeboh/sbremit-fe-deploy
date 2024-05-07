@@ -1,7 +1,7 @@
 //const {exchangeRate, payinCurrency, payoutCurrency, } = transferState
 
 import { useQuery } from "react-query";
-import { LOADING } from "redux/actionTypes";
+import { LOADING, TRANSFER } from "redux/actionTypes";
 import { toastAction } from "redux/actions/actions";
 import store from "redux/store";
 import endpoints from "util/endpoints";
@@ -150,12 +150,22 @@ export const useExchangeRate = (
   target: string,
   enabled: boolean
 ) => {
+  const transfer = store.getState().transfer;
   const endpoint = `/exchange/${base}/${target}`;
   return useQuery(
     endpoint,
     () => getRequest(endpoint, "Failed to fetch exchange rate"),
     {
       enabled,
+      onSuccess: (data) => {
+        store.dispatch({
+          type: TRANSFER,
+          payload: {
+            ...transfer,
+            conversionRate: data,
+          },
+        });
+      },
     }
   );
 };
