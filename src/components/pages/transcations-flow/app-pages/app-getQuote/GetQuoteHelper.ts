@@ -107,7 +107,7 @@ export const isWithinPaymentLimit = (transfer: any) => {
   if (payinActualValue === 0) {
     return "";
   }
-  if (payinActualValue < 0.01) { //5
+  if (payinActualValue < 0) { //5
     return `You can't send less than 0.01 ${payinCurrency}`;
   }
   if (transferMethod === "mobile_money" && payoutActualValue > 500000) {
