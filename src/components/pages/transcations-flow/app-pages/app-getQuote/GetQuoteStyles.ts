@@ -138,6 +138,9 @@ export const CalculatorInputStyles = styled.div<{ $error?: boolean }>`
   flex-direction: column;
   gap: 3px;
   width: 100%;
+  .input{
+    width: 100%;
+  }
   .label {
     font-size: 12px;
     color: ${Colors.textColor};

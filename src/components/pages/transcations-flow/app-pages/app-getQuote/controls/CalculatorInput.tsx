@@ -1,4 +1,4 @@
-import { Input, Select, Space } from "antd";
+import { Input, InputNumber, InputNumberProps, Select, Space } from "antd";
 import {
   formatAmount,
   getFlagURL,
@@ -39,6 +39,10 @@ export const CalculatorInput = ({
     upadatePayInAndPayOut(value);
   };
 
+  const onInputNumberChange: InputNumberProps["onChange"] = (value) => {
+    upadatePayInAndPayOut(Number(value));
+  };
+
   const upadatePayInAndPayOut = (value: number) => {
     if (isPayin) {
       dispatch({
@@ -65,18 +69,22 @@ export const CalculatorInput = ({
     <CalculatorInputStyles $error={errorMessage != ""}>
       <Space direction="vertical" size={8}>
         <span className="label">{isPayin ? "You send" : "They get"}</span>
-        <Input
+        <InputNumber
           addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
           placeholder="0.00"
           size="large"
+          // step={0.0001} //todo: reomove
+          className="input"
           status={errorMessage != "" ? "error" : ""}
-          onChange={handleOnInputChange}
+          onChange={onInputNumberChange}
           disabled={isRateLoading}
-          value={
-            isPayin
-              ? formatAmount(payinActualValue)
-              : formatAmount(payoutActualValue)
-          }
+          type="number" //todo: reomove
+          value={isPayin ? payinActualValue : payoutActualValue}
+          // value={
+          //   isPayin
+          //     ? formatAmount(payinActualValue)
+          //     : formatAmount(payoutActualValue)
+          // }
         />
         {isPayin && <span className="error_message">{errorMessage}</span>}
       </Space>
