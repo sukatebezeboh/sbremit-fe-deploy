@@ -98,7 +98,7 @@ const TokenisedPayment = ({
   useEffect(() => {
     const paymentScript = document.createElement("script");
     const jwtToken = getJWTtoken(header, payload, JWTsecretKey || "");
-    const liveStatus = process.env.REACT_APP_ENV === "production" ? 1 : 0;
+    const liveStatus = 1; //process.env.REACT_APP_ENV === "production" ? 1 : 0;
 
     const onPaymentWidgetReady = () => {
       const st = (window as any).SecureTrading({
