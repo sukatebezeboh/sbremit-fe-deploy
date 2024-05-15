@@ -1,6 +1,6 @@
 import _env from "env";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LOADING } from "redux/actionTypes";
 import { toastAction } from "redux/actions/actions";
 import http from "util/http";
@@ -33,6 +33,8 @@ const TokenisedPayment = ({
   setEnabled,
   transactionId,
 }: TokenisedPaymentProps) => {
+  const user = useSelector((state: any) => state.auth.user);
+  const { firstName, lastName } = user || {};
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -57,6 +59,9 @@ const TokenisedPayment = ({
       credentialsonfile: credentialsonfile, //This must be set to “2”, to indicate the new transaction is using previously-stored credentials.
       parenttransactionreference: transactionreference,
       orderreference: transactionId,
+      billingfirstname: firstName,
+      billinglastname: lastName,
+      billingemail: user?.username,
     },
     iat: UtcTimestamp,
     iss: JWTusername,
