@@ -111,6 +111,7 @@ const TokenisedPayment = ({
         // disableNotification: true,
         submitCallback: function (data: any) {
           onEnded();
+          console.log(data);
 
           const isErrorMessageEmpty = getErrorMessage(data?.errorcode) === "";
 
