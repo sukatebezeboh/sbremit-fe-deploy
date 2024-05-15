@@ -226,7 +226,7 @@ export default function Pay() {
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription
           title="Select payment method"
-          description="How would u like to pay?💳"
+          description="How would you like to pay?💳"
         />
         <PaymentMethodsWrapperStyles>
           <Collapse size="large" className="transfer_details" items={items} />
