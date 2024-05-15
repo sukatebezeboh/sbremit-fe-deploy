@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { toastAction } from "redux/actions/actions";
 
 export const CDN_DOMAIN = "https://cdn.eu.trustpayments.com/js/latest/st.js";
 export const JWTusername = process.env.REACT_APP_TRUST_PAYMENT_JWT_USERNAME;
@@ -41,4 +42,48 @@ export const getJWTtoken = (
 
   // Return the JWT token consisting of encoded header, payload, and signature
   return `${encodedHeader}.${encodedPayload}.${formatSignature}`;
+};
+
+export const getErrorMessage = (errorCode: string): string => {
+  const toastMessage = (message: string) => {
+    toastAction({
+      show: true,
+      type: "warning",
+      message: `${message}`,
+    });
+    return message;
+  };
+
+  const errorCodeNum = parseInt(errorCode);
+
+  // console.log(errorCodeNum, errorCode);
+
+  if (errorCodeNum >= 30000 && errorCodeNum <= 39999) {
+    return toastMessage(
+      "Field error. Please check the submitted fields and try again."
+    );
+  }
+
+  switch (errorCode) {
+    case "0":
+      return "";
+    case "70000":
+      return toastMessage(
+        "Payment declined by your bank. Please try a different method of payment."
+      );
+    case "71000":
+      return toastMessage(
+        "Soft decline from the card issuer. Please try again with necessary authentication."
+      );
+    case "60010":
+    case "60034":
+    case "99999":
+      return toastMessage(
+        "There has been a problem processing the request. Please contact support for assistance."
+      );
+    default:
+      return toastMessage(
+        "Unknown error code. Please contact support for assistance."
+      );
+  }
 };

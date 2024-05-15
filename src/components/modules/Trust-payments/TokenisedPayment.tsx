@@ -9,6 +9,7 @@ import {
   CDN_DOMAIN,
   JWTsecretKey,
   JWTusername,
+  getErrorMessage,
   getJWTtoken,
 } from "./trustPaymentHelper";
 import { useHistory } from "react-router-dom";
@@ -111,7 +112,9 @@ const TokenisedPayment = ({
         submitCallback: function (data: any) {
           onEnded();
 
-          if (!data?.hasUserClosedAcsWindow) {
+          const isErrorMessageEmpty = getErrorMessage(data?.errorcode) === "";
+
+          if (!data?.hasUserClosedAcsWindow && isErrorMessageEmpty) {
             http.post(TRUST_NOTIFICATION_WEBHOOK_URL, {
               data,
               tokenisedPayment: true, //add a flag for tokenisedPayment TRUST_NOTIFICATION_WEBHOOK_URL
