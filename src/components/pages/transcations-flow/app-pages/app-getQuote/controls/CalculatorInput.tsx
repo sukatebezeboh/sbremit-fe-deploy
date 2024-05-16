@@ -33,11 +33,11 @@ export const CalculatorInput = ({
     setErrorMessage(isAmountValid);
   }, [payinActualValue, payoutActualValue]);
 
-  const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Sanitize Input
-    const value = Number(e.target.value.replace(/,/g, ""));
-    upadatePayInAndPayOut(value);
-  };
+  // const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   // Sanitize Input
+  //   const value = Number(e.target.value.replace(/,/g, ""));
+  //   upadatePayInAndPayOut(value);
+  // };
 
   const onInputNumberChange: InputNumberProps["onChange"] = (value) => {
     upadatePayInAndPayOut(Number(value));
@@ -73,18 +73,17 @@ export const CalculatorInput = ({
           addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
           placeholder="0.00"
           size="large"
-          // step={0.0001} //todo: reomove
           className="input"
           status={errorMessage != "" ? "error" : ""}
           onChange={onInputNumberChange}
           disabled={isRateLoading}
-          type="number" //todo: reomove
           value={isPayin ? payinActualValue : payoutActualValue}
-          // value={
-          //   isPayin
-          //     ? formatAmount(payinActualValue)
-          //     : formatAmount(payoutActualValue)
-          // }
+          formatter={(value) =>
+            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          parser={(value) =>
+            value?.replace(/\$\s?|(,*)/g, "") as unknown as number
+          }
         />
         {isPayin && <span className="error_message">{errorMessage}</span>}
       </Space>
