@@ -44,8 +44,6 @@ const TokenisedPayment = ({
   const TRUST_NOTIFICATION_WEBHOOK_URL =
     settings.TRUST_NOTIFICATION_WEBHOOK_URL;
 
-  console.log(settings.TRUST_PAYMENT_SITE_REFERENCE);
-
   const payload = {
     payload: {
       accounttypedescription: "ECOM",
