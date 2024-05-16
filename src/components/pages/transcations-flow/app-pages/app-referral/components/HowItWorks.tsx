@@ -152,6 +152,7 @@ const LoyaltyTableWrapper = styled(Space)`
   display: flex;
   align-items: center;
   justify-content: center;
+  
 
   table {
     background: ${Colors.bgwhite};
