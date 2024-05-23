@@ -6,6 +6,7 @@ import { settings } from "../../../util/settings";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from "redux/actions/actions";
 import sjcl from "sjcl";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from "../../../util/util";
+import { useSelector } from "react-redux";
 require("dotenv").config();
 
 interface IPaymentRedirect {
@@ -29,6 +30,7 @@ const PaymentRedirect = ({
   setEnabled,
   credentialsonfile,
 }: IPaymentRedirect) => {
+  const user = useSelector((state: any) => state.auth.user);
   const formRef = useRef<HTMLFormElement>(null);
   const [utcDateTime, setUtcDateTime] = useState(
     getDateTimeNowInYYYY_MM_DD__HH_MM_SS()
@@ -58,6 +60,7 @@ const PaymentRedirect = ({
 
   const stdefaultprofile = "st_paymentcardonly";
   const orderReference = transactionId;
+  const billingemail = user?.username; //.replace(/@/g, "%40");
   const password = process.env.REACT_APP_TRUST_SITE_PASSWORD;
   const siteSecurityTimestamp = utcDateTime;
   const version = 2;
@@ -175,6 +178,7 @@ const PaymentRedirect = ({
         />
 
         <input type="hidden" name="orderreference" value={orderReference} />
+        <input type="hidden" name="billingemail" value={billingemail} />
         <input type="hidden" name="sitesecurity" value={siteSecurityHash} />
 
         <input
