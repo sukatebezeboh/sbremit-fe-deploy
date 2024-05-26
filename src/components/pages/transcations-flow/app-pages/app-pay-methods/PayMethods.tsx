@@ -203,9 +203,10 @@ export default function Pay() {
             transferId={transferInfo?.id}
             enabled={trustPaymentOptions.enabled}
             setEnabled={() => setIsTrustPayment(false)} //close modal
-            credentialsonfile={
-              trustPaymentOptions.type === "one-time" ? "0" : "1"
-            }
+            credentialsonfile="1"
+            // credentialsonfile={
+            //   trustPaymentOptions.type === "one-time" ? "0" : "1"
+            // }
           />
         )}
 
@@ -225,7 +226,7 @@ export default function Pay() {
         <TransactionsSteps step="pay" />
         <PageTitileAndDescription
           title="Select payment method"
-          description="How would u like to pay?💳"
+          description="How would you like to pay?💳"
         />
         <PaymentMethodsWrapperStyles>
           <Collapse size="large" className="transfer_details" items={items} />
