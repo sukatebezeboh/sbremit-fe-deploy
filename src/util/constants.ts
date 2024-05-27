@@ -1821,7 +1821,7 @@ export const countriesTransferMethodAvailability: any = {
   },
 };
 
-export const countriesAndCurrency = [
+export const destinationCountriesAndCurrency = [
   {
     countryCode: "UG",
     name: "Uganda",

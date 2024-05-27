@@ -84,7 +84,7 @@ const ExchangeRateCalculator = ({
   };
 
   return (
-    <Container className="exchange-rate-calculator">
+    <Container className="exchange-rate-calculator" data-testid="x-calculator">
       <div className="calculator-inner">
         <div className="title">Choose how recipient gets the money</div>
 
@@ -319,6 +319,7 @@ const ExchangeRateCalculator = ({
         {/* <Modal component={() => <UpcomingCountries toSendFlag={toSend.image} toRecieveFlag={toReceive.countryCode} toSendCountry={countryName} setClose={() => setOpenComingSoonModal(false)} />} open={openComingSoonModal} setOpen={setOpenComingSoonModal} /> */}
         <button
           className="send-btn"
+          data-testid="x-calculator-send-btn"
           onClick={() => {
             continueSending();
           }}

@@ -61,11 +61,11 @@ const HeroCalculator = () => {
     setOperatorError({
       errorMessage: isInOriginCurrency
         ? `Maximum ${formatAmount(
-            transferLimitMax
-          )} ${payinCurrency} allowed at a time.`
+          transferLimitMax
+        )} ${payinCurrency} allowed at a time.`
         : `Maximum ${formatAmount(
-            transferLimitMax
-          )} ${payoutCurrency} allowed at a time.`,
+          transferLimitMax
+        )} ${payoutCurrency} allowed at a time.`,
       isPayin: isInOriginCurrency || false,
       isError: isInOriginCurrency
         ? payinActualValue > formatTransferLimitMax
@@ -100,7 +100,7 @@ const HeroCalculator = () => {
   // Maximum 20,000 DKK allowed at a time
 
   return (
-    <HeroCalculatorStyles $activeColor={activeCountryColor}>
+    <HeroCalculatorStyles $activeColor={activeCountryColor} data-testid="x-calculator">
       <div className="_content">
         <div className="_inputs">
           <CalculatorInput
@@ -124,22 +124,25 @@ const HeroCalculator = () => {
           <ExchangeRateStyles>
             <Paragraph $small>Exchange Rate</Paragraph>
             <Paragraph $small>
-              1 {payinCurrency} = {exchangeRate.toFixed(2)} {payoutCurrency}
+              1 <span data-testid="x-payin-currency">{payinCurrency}</span>  = <span data-testid="calculator-x-rate" data-testvalue={exchangeRate}>{exchangeRate.toFixed(2)}</span> <span data-testid="x-payout-currency">{payoutCurrency}</span>
             </Paragraph>
           </ExchangeRateStyles>
           <OperatorFeeStyles>
             <Paragraph $small>Operator Fee</Paragraph>
             <Paragraph $small>
-              {operatorFee} {payinCurrency}
+              <span data-testid="calculator-operator-fee" data-testvalue={operatorFee}>{operatorFee}</span> {payinCurrency}
             </Paragraph>
           </OperatorFeeStyles>
           <TotalAmountStyles $activeColor={activeCountryColor}>
             <Paragraph $small>Total</Paragraph>
-            <Paragraph $small>
-              {payinActualValue && !operatorError.isError
-                ? formatAmount(payinActualValue + operatorFee)
-                : 0}{" "}
-              {payinCurrency}
+            <Paragraph $small >
+              <span data-testid="calculator-total-amount">
+                {payinActualValue && !operatorError.isError
+                  ? formatAmount(payinActualValue + operatorFee)
+                  : 0}
+              </span>
+              {" "}
+              <span data-testid="calculator-total-currency">{payinCurrency}</span>
             </Paragraph>
           </TotalAmountStyles>
         </div>
@@ -186,6 +189,7 @@ const CalculatorInput = ({
   );
 
   const exchangeRate = Number(data?.rate) || 0;
+  const amountDataTestId = isPayin ? 'payin-input' : 'payout-input';
 
   //update exchange rage to store
   useEffect(() => {
@@ -239,6 +243,7 @@ const CalculatorInput = ({
         )}
         onChange={handleOnInputChange}
         maxLength={11}
+        data-testid={amountDataTestId}
       />
       <span className="_label">{isPayin ? "You send" : "You receive"}</span>
     </CalculatorInputStyles>
@@ -291,6 +296,8 @@ const ContrySelector = (
     }
   };
 
+  const currencyDataTestId = isPayin ? 'calculator-payin-currency' : 'calculator-payout-currency';
+
   return (
     <ContrySelectorStyles $activeColor={activeCountryColor}>
       {loading ? (
@@ -300,6 +307,7 @@ const ContrySelector = (
           className="_select"
           defaultValue={defaultCountry}
           onChange={handleCountryChange}
+          data-testid={currencyDataTestId}
         >
           {countries?.map((country: any, index: number) => (
             <Option value={country.currency} key={country.name + index}>
@@ -339,14 +347,14 @@ const HeroPaymentMethod = () => {
   useEffect(() => {
     const isSelectedMethodVailable =
       countriesTransferMethodAvailability[transfer.toReceive.countryCode]?.[
-        transfer.transferMethod
+      transfer.transferMethod
       ];
 
     if (!isSelectedMethodVailable) {
       const availableMethod = methods.find(
         (method) =>
           countriesTransferMethodAvailability[transfer.toReceive.countryCode]?.[
-            method.value
+          method.value
           ] === true
       );
 
@@ -358,6 +366,7 @@ const HeroPaymentMethod = () => {
     <HeroPaymentMethodStyles>
       <Paragraph $small>Delivery Options</Paragraph>
       <Select
+        data-testid="payout-method-select"
         defaultValue={"mobile_money"}
         size="large"
         onChange={onSelectChange}
@@ -366,7 +375,7 @@ const HeroPaymentMethod = () => {
         {methods.map((method, index) => {
           const isAvailable =
             countriesTransferMethodAvailability[
-              transfer.toReceive.countryCode
+            transfer.toReceive.countryCode
             ]?.[method.value];
 
           return (
@@ -645,7 +654,7 @@ const OperatorFeeStyles = styled(HeroPaymentMethodStyles)`
   }
 `;
 
-const TotalAmountStyles = styled(HeroPaymentMethodStyles)<{
+const TotalAmountStyles = styled(HeroPaymentMethodStyles) <{
   $activeColor: string;
 }>`
   color: ${(props) => props.$activeColor};

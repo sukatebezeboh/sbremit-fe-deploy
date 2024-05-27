@@ -10,7 +10,7 @@ import * as yup from "yup";
 import AuthButton from "../components/AuthButton";
 import AuthHeader from "../components/AuthHeader";
 import AuthInput from "../components/AuthInput";
-import { COUNTRIES } from "../utils/countries";
+import { ORIGIN_COUNTRIES } from "../utils/countries";
 import AuthLayout, {
   ChildContainerSyles,
   ParentContainerSyles,
@@ -58,7 +58,7 @@ const getEighteenYearsAgo = () => {
 };
 
 const CreateAccount = () => {
-  const [country, setCountry] = useState(COUNTRIES[0]);
+  const [country, setCountry] = useState(ORIGIN_COUNTRIES[0]);
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
@@ -69,7 +69,7 @@ const CreateAccount = () => {
   const initialValues = {
     firstName: "",
     lastName: "",
-    location_country: COUNTRIES[0].countryCode,
+    location_country: ORIGIN_COUNTRIES[0].countryCode,
     username: "",
     dob: "",
     password: "",

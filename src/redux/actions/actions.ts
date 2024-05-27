@@ -39,7 +39,7 @@ import {
 } from "../../util/util";
 import http from "../../util/http";
 import { themeNames } from "../../components/modules/toast-factory/themes";
-import { constants, countriesAndCurrency } from "../../util/constants";
+import { constants, destinationCountriesAndCurrency } from "../../util/constants";
 import { filterNotifications } from "components/pages/transcations-flow/app-components/Notifications";
 import { replaceUnderScore } from "components/pages/transcations-flow/utils/reuseableUtils";
 
@@ -109,7 +109,7 @@ export const signUpAction = async (data: any) => {
         });
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: "" });
     });
@@ -158,7 +158,7 @@ export const signInAction = (data: any, history: any) => {
     .then((res: any) => {
       handleSignInResponse(res, data, history);
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: "" });
     });
@@ -273,7 +273,7 @@ export const signInWithToken = (data: any) => {
     .then((res: any) => {
       handleSignInResponse(res, data);
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -319,7 +319,7 @@ export const resendActivation = (username: string) => {
         });
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -349,7 +349,7 @@ export const confirmUserPassword = (password: string, callback: Function) => {
         });
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -696,7 +696,7 @@ export const getRecipients = () => {
       } else {
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -715,7 +715,7 @@ export const getRecipient = (id: string) => {
       } else {
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -758,7 +758,7 @@ export const createRecipient = (recipientData: any, callback?: any) => {
         });
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: SUBMITTING, payload: "" });
     });
@@ -892,7 +892,7 @@ export const getUserTransactions = (callback?: Function) => {
       });
       callback?.();
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -960,7 +960,7 @@ export const getUserTransactionsPaginated = (
       });
       callback();
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -1077,7 +1077,7 @@ export const setNewQuote = (
         });
       }
     })
-    .catch((error) => {})
+    .catch((error) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -1151,7 +1151,7 @@ export const getNewQuote = ($_1?: string, $_2?: string) => {
   axios
     .get(
       config.API_HOST +
-        parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2)
+      parseEndpointParameters(endpoints.QUOTE_SERVICE, $_1, $_2)
     )
     .then((res) => {
       if (res.data.status === "200") {
@@ -1235,17 +1235,17 @@ export const getServiceRate = (
   const fees = service?.fees?.find(
     (f: any) =>
       Number(f.lowerLimit) <=
-        Number(
-          isInOriginCurrency
-            ? transfer.payinActualValue
-            : transfer.payoutActualValue
-        ) &&
+      Number(
+        isInOriginCurrency
+          ? transfer.payinActualValue
+          : transfer.payoutActualValue
+      ) &&
       Number(f.upperLimit) >=
-        Number(
-          isInOriginCurrency
-            ? transfer.payinActualValue
-            : transfer.payoutActualValue
-        )
+      Number(
+        isInOriginCurrency
+          ? transfer.payinActualValue
+          : transfer.payoutActualValue
+      )
   );
 
   const equiFee =
@@ -1257,13 +1257,13 @@ export const getServiceRate = (
 
   const serviceFee =
     (!transferMethod && transfer.transferMethod === "mobile_money") ||
-    (transferMethod && transferMethod === "mobile_money")
+      (transferMethod && transferMethod === "mobile_money")
       ? Number(
-          (
-            (Number(equiFee) + Number(mobileMoneyTax)) /
-            Number(transfer.conversionRate?.rate)
-          ).toFixed(2)
-        )
+        (
+          (Number(equiFee) + Number(mobileMoneyTax)) /
+          Number(transfer.conversionRate?.rate)
+        ).toFixed(2)
+      )
       : Number(equiFee);
 
   store.dispatch({
@@ -1322,9 +1322,9 @@ export const getServiceRateValue = (
   const serviceFee =
     transferMethod && transferMethod === "mobile_money"
       ? (
-          (Number(equiFee) + Number(mobileMoneyTax)) /
-          (exchangeRate || transfer.conversionRate?.rate)
-        ).toFixed(2)
+        (Number(equiFee) + Number(mobileMoneyTax)) /
+        (exchangeRate || transfer.conversionRate?.rate)
+      ).toFixed(2)
       : equiFee;
   return Number(serviceFee) || 0;
 };
@@ -1479,9 +1479,8 @@ export const editProfileAction = (values: any, callback?: Function) => {
             type: "error",
             timeout: 10000,
             defaultThemeName: themeNames.CLEAR_MAMBA,
-            message: `${
-              res?.data?.error?.message || "Could not update profile"
-            } `,
+            message: `${res?.data?.error?.message || "Could not update profile"
+              } `,
           });
         }
       });
@@ -1896,11 +1895,11 @@ export const getPaymentStatus = async (
   const payload =
     type === "axcessms"
       ? {
-          checkoutid: checkoutID,
-        }
+        checkoutid: checkoutID,
+      }
       : {
-          transferId: checkoutID, //truelayer post request payload
-        };
+        transferId: checkoutID, //truelayer post request payload
+      };
 
   http
     .post(endpoint, payload)
@@ -1932,7 +1931,7 @@ export const fetchTruelayerProviders = (callback: Function) => {
     .then((res) => {
       callback(res.data?.results);
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -1974,7 +1973,7 @@ export const getUserReferrals = (setDetailsCallback: Function) => {
     .then((res) => {
       setDetailsCallback(res.data.data);
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2016,7 +2015,7 @@ export const registerCountry = (values: any) => {
         });
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2037,19 +2036,19 @@ export const getCompetitorRates = (
   axios
     .get(
       config.API_HOST +
-        parseEndpointParameters(
-          endpoints.COMPETITOR_RATES,
-          baseCurrency,
-          targetCurrency,
-          `${sendAmount}`
-        )
+      parseEndpointParameters(
+        endpoints.COMPETITOR_RATES,
+        baseCurrency,
+        targetCurrency,
+        `${sendAmount}`
+      )
     )
     .then((res) => {
       if (res.data.status === "200") {
         setStateCallback(res.data.data);
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2109,7 +2108,7 @@ export const setNewTransferQuote = (
         });
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2117,8 +2116,8 @@ export const setNewTransferQuote = (
 
 export const verifyPivotRecipientReference = (
   payload: any,
-  successCallback = () => {},
-  failedCallback = () => {}
+  successCallback = () => { },
+  failedCallback = () => { }
 ) => {
   store.dispatch({ type: LOADING, payload: true });
 
@@ -2180,7 +2179,7 @@ export const verifyPivotRecipientReference = (
         });
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2188,7 +2187,7 @@ export const verifyPivotRecipientReference = (
 
 export const verifyPivotRecipientAccount = (
   payload: any,
-  callback = () => {}
+  callback = () => { }
 ) => {
   store.dispatch({ type: LOADING, payload: true });
 
@@ -2214,7 +2213,7 @@ export const verifyPivotRecipientAccount = (
         });
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2262,7 +2261,7 @@ export const getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer = (
         setUtcDateTime?.(utcDateTime);
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2285,7 +2284,7 @@ export const getSpreads = () => {
         store.dispatch({ type: EXCHANGE_SPREADS, payload: [...res.data.data] });
       }
     })
-    .catch((err) => {})
+    .catch((err) => { })
     .then(() => {
       store.dispatch({ type: LOADING, payload: false });
     });
@@ -2331,12 +2330,12 @@ export const updateUserNotifReadStatus = (
         callback();
       }
     })
-    .catch(() => {})
-    .then(() => {});
+    .catch(() => { })
+    .then(() => { });
 };
 
 export const changeCountryCurrencyToCountryName = (str: any, arr: any) => {
-  const checkString = countriesAndCurrency.filter(
+  const checkString = destinationCountriesAndCurrency.filter(
     (currency: any) =>
       currency.countryCurrency === arr.filter((el: any) => str.includes(el))[0]
   );
@@ -2360,7 +2359,7 @@ export const initiateInteracTransferPayment = (transferId: number) => {
         window.location.href = res?.data?.data?.redirectUrl;
       }
     })
-    .catch(() => {})
+    .catch(() => { })
     .then(() => {
       store.dispatch({
         type: LOADING,
@@ -2432,7 +2431,7 @@ export const updateTransferWithPaymentGatewayCharge = async (
       });
       callbackOnError();
     })
-    .then(() => {});
+    .then(() => { });
 };
 
 export const resetTransferData = () => {

@@ -1,4 +1,4 @@
-import { COUNTRIES, Country } from "../utils/countries";
+import { ORIGIN_COUNTRIES, Country } from "../utils/countries";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import styled from "styled-components";
 import { BiChevronDown } from "react-icons/bi";
@@ -30,7 +30,7 @@ const SelectCountry = ({ country, setCountry }: Props) => {
               <CloseButton onClick={() => setShowSelectCountryModal(false)}>
                 Close
               </CloseButton>
-              {COUNTRIES.map((country) => (
+              {ORIGIN_COUNTRIES.map((country) => (
                 <li
                   className="country-row"
                   key={country.name}

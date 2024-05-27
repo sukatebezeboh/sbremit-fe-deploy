@@ -1,4 +1,4 @@
-export const COUNTRIES: readonly Country[] = Object.freeze([
+export const ORIGIN_COUNTRIES: readonly Country[] = Object.freeze([
   {
     name: "Belgium",
     countryCode: "BE",
