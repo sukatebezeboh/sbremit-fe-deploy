@@ -58,7 +58,7 @@ const RightContent = () => {
       p1Text: "$5 = 500pts off your next transfer",
       p2Text: "Points are  accumulated for every successful transfer.",
       tandc: "MIN. SPEND $250. T & C’s APPLY",
-      currency: "$",
+      currency: "$", 
     },
     {
       ctaText: "GET £5",

@@ -149,9 +149,9 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   if (transactionStatus === constants.TRANSFER_STATUS_REFUNDED) {
     return { text: "Refunded", color: red };
   }
-  if (transactionStatus === constants.TRANSFER_STATUS_WATCHLIST_FAILED) {
-    return { text: "Watchlist failed", color: red };
-  }
+  // if (transactionStatus === constants.TRANSFER_STATUS_WATCHLIST_FAILED) {
+  //   return { text: "Watchlist failed", color: red };
+  // }
   if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_FRAUD) {
     return { text: "Contact us", color: red };
   }
@@ -162,6 +162,8 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   }
   if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_PROCESSING) {
     return { text: "Processing", color: blue };
+  }if (transactionStatus === constants.TRANSFER_STATUS_WATCHLIST_FAILED) {
+    return { text: "In review", color: blue };
   }
 
   // GRAY ZONE
