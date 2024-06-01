@@ -10,14 +10,25 @@ import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
+import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import styled, { css } from "styled-components";
 import { paths } from "util/paths";
+import { getAllUniqueCurrencies } from "./hero/HeroHelper";
 
 const SBMobileApp = "/assets/images/app_default_image.png";
 const TwinklingStars = "/assets/images/twinkling_stars.png";
 const BannerSvg = "/assets/images/promotions_bg_svg.svg";
+const RocketPng = "/assets/icons/rocket_png.png";
+
+interface PromotionsCountryData {
+  ctaText: string;
+  p1Text: string;
+  p2Text: string;
+  tandc: string;
+  currency: string;
+}
 
 const Promotions = () => {
   return (
@@ -42,73 +53,38 @@ const LeftContent = () => {
 
 const RightContent = () => {
   const history = useHistory();
+  const { PayinCountries } = userAppValues();
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [arrayOfPointPromotions, setArrayOfPointPromotions] = useState<
+    PromotionsCountryData[]
+  >([]);
+
+  const countries = getAllUniqueCurrencies(PayinCountries);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setActiveIndex((prev) => (prev < 5 ? prev + 1 : 0));
+      setActiveIndex((prev) => (prev < countries.length - 1 ? prev + 1 : 0));
     }, 4000);
 
     return () => clearInterval(intervalId);
   }, []);
 
-  const arrayOfPointPromotions = [
-    {
-      ctaText: "GET $5",
-      p1Text: "$5 = 500pts off your next transfer",
-      p2Text: "Points are  accumulated for every successful transfer.",
-      tandc: "MIN. SPEND $250. T & C’s APPLY",
-      currency: "$", 
-    },
-    {
-      ctaText: "GET £5",
-      p1Text: "£5 = 500pts off your next transfer",
-      p2Text: "Points are accumulated for every successful transfer.",
-      tandc: "MIN. SPEND £250. T & C’s APPLY",
-      currency: "£",
-    },
-    {
-      ctaText: "GET €5",
-      p1Text: "€5 = 500pts off your next transfer",
-      p2Text: "Points are accumulated for every successful transfer.",
-      tandc: "MIN. SPEND 250. T & C’s APPLY",
-      currency: "€",
-    },
-    {
-      ctaText: "GET C$5",
-      p1Text: "C$5 = 500pts off your next transfer",
-      p2Text: "Points are accumulated for every successful transfer.",
-      tandc: "MIN. SPEND C$250. T & C’s APPLY",
-      currency: "C$",
-    },
-    {
-      ctaText: "GET 5kr",
-      p1Text: "5kr = 500pts off your next transfer",
-      p2Text: "Points are  accumulated for every successful transfer.",
-      tandc: "MIN. SPEND  250kr T & C’s APPLY",
-      currency: "kr",
-    },
-    {
-      ctaText: (
-        <>
-          GET <span className="swiss-franc">F</span>5
-        </>
-      ),
-      p1Text: (
-        <>
-          <span className="swiss-franc">F</span>5= 500pts off your next transfer
-        </>
-      ),
-      p2Text: "Points are  accumulated for every successful transfer.",
-      tandc: (
-        <>
-          MIN. SPEND <span className="swiss-franc">F</span>250. T & C’s APPLY
-        </>
-      ),
-      currency: <span className="swiss-franc">F</span>,
-    },
-  ];
-  // <span className="swiss-franc">F</span>
+  // const symbolBeforeCurrencies = new Set(["€", "$", "£"]);
+
+  useEffect(() => {
+    const arr: PromotionsCountryData[] = countries.map((country) => {
+      return {
+        ctaText: `GET ${country.currency} 5`,
+        p1Text: `${country.currency} 5 = 500pts off your next transfer`,
+        p2Text: "Points are accumulated for every successful transfer.",
+        tandc: `MIN. SPEND ${country.currency} 250. T & C’s APPLY`,
+        currency: country.currency,
+      };
+    });
+
+    setArrayOfPointPromotions(arr);
+  }, []);
+
   return (
     <RightContentStyles
       $bgImage={TwinklingStars}
@@ -120,37 +96,51 @@ const RightContent = () => {
           <H3>TRANSFER. EARN POINTS.</H3>
 
           <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
-            <Paragraph>{arrayOfPointPromotions[activeIndex].ctaText}</Paragraph>
+            <Paragraph>
+              {arrayOfPointPromotions[activeIndex]?.ctaText}
+            </Paragraph>
           </Button>
           <br />
-          <Paragraph>{arrayOfPointPromotions[activeIndex].p1Text}</Paragraph>
-          <Paragraph>{arrayOfPointPromotions[activeIndex].p2Text}</Paragraph>
+          <Paragraph>{arrayOfPointPromotions[activeIndex]?.p1Text}</Paragraph>
+          <Paragraph>{arrayOfPointPromotions[activeIndex]?.p2Text}</Paragraph>
           <H4 className="_italic" $small>
-            {arrayOfPointPromotions[activeIndex].tandc}
+            {arrayOfPointPromotions[activeIndex]?.tandc}
           </H4>
         </div>
       </div>
       <div className="_background">
         <div className="_content_2">
-          <H3>
-            {" "}
-            {activeIndex === 5 ? (
-              <span className="swiss-franc xl">F</span>
-            ) : (
-              arrayOfPointPromotions[activeIndex].currency
-            )}
-            5 OFF FOR EVERY FIVE TRANSFERS YOU DO{" "}
+          <div className="_enjoy">
+            <Paragraph $small>ENJOY</Paragraph>
+            <Paragraph className="_freebies">ZERO TRANSACTION FEES</Paragraph>
+            <Paragraph className="_freebies">
+              EXCELLENT EXCHANGE RATES
+            </Paragraph>
+            <Paragraph className="_freebies">& NO HIDDEN COSTS</Paragraph>
+          </div>
+
+          <div className="_rocket">
+            <img src={RocketPng} alt="Rocket icon " />
+            <Paragraph>
+              Choose between <span>mobile money</span>,{" "}
+              <span>bank transfer</span>, or <span>cash pickup</span> for
+              flexible delivery.
+            </Paragraph>
+          </div>
+          {/* <H3>
+            5 {arrayOfPointPromotions[activeIndex]?.currency} OFF FOR EVERY FIVE
+            TRANSFERS YOU DO{" "}
           </H3>
           <H4>
-            When you spend over {arrayOfPointPromotions[activeIndex].currency}
+            When you spend over {arrayOfPointPromotions[activeIndex]?.currency}{" "}
             250 for the 5 Transfers
           </H4>
-          <H4 className="_tanku5">
+          {/* <H4 className="_tanku5">
             Use code <b>TANKU5</b> when you login
-          </H4>
+          </H4> 
           <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
             <Paragraph>Start transfer</Paragraph>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </RightContentStyles>
@@ -399,23 +389,53 @@ const RightContentStyles = styled.div<{
     }
     ._content_2 {
       gap: 16px;
-      h3 {
-        font-weight: 600;
-        width: 440px;
+      flex-direction: row;
+      align-items: center;
+      padding: 20px;
 
-        @media (max-width: ${Breakpoint.xl}) {
-          width: 100%;
+      @media (max-width: ${Breakpoint.xl}) {
+        flex-direction: column-reverse;
+        gap: 28px;
+        padding: 0px;
+      }
+
+      ._enjoy {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        flex: 1;
+        gap: 8px;
+
+        p {
+          font-weight: 600;
+        }
+
+        ._freebies {
+          background: #fafafa;
+          padding: 8px;
+          border-radius: 12px;
+          text-align: left;
         }
       }
-      h4 {
-        width: 417px;
 
-        @media (max-width: ${Breakpoint.xl}) {
-          width: 100%;
+      ._rocket {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 8px;
+
+        img {
+          width: clamp(48px, 8vw, 120px);
         }
-      }
-      ._tanku5 {
-        width: auto;
+
+        p {
+          font-weight: 500;
+
+          span {
+            color: ${Colors.sbGreen};
+          }
+        }
       }
     }
   }
