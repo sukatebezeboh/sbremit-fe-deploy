@@ -23,15 +23,21 @@ export const CalculatorInput = ({
 }) => {
   const transfer = useSelector((state: any) => state.transfer);
   const dispatch = useDispatch();
-  const { payinActualValue, payoutActualValue, payinCurrency } = transfer;
+  const {
+    payinActualValue,
+    payoutActualValue,
+    payinCurrency,
+    payoutCurrency,
+    allowOperatorFee,
+  } = transfer;
   const [errorMessage, setErrorMessage] = useState("");
 
   const isPayin = inputType === "payin";
-  const isAmountValid = isWithinPaymentLimit(transfer);
+  // const isAmountValid = isWithinPaymentLimit(transfer);
 
   useEffect(() => {
-    setErrorMessage(isAmountValid);
-  }, [payinActualValue, payoutActualValue]);
+    setErrorMessage(isWithinPaymentLimit(transfer));
+  }, [payinActualValue, payoutActualValue, allowOperatorFee]);
 
   const handleOnInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Sanitize Input
@@ -66,7 +72,7 @@ export const CalculatorInput = ({
       <Space direction="vertical" size={8}>
         <span className="label">{isPayin ? "You send" : "They get"}</span>
         <Input
-          addonAfter={SelectAfter("XAF", payinCurrency, isPayin)}
+          addonAfter={SelectAfter(payoutCurrency, payinCurrency, isPayin)}
           placeholder="0.00"
           size="large"
           status={errorMessage != "" ? "error" : ""}

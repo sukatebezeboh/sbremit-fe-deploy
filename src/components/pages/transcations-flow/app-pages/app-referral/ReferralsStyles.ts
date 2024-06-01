@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   Breakpoint,
   Colors,
@@ -43,7 +43,7 @@ export const ReferralContainerStyles = styled(
   }
 `;
 
-export const ReferralContentStyles = styled.div`
+export const ReferralContentStyles = styled.div<{ $noBgColor?: boolean }>`
   display: flex;
   width: 800px;
   padding: 24px 24px;
@@ -52,8 +52,13 @@ export const ReferralContentStyles = styled.div`
   flex-direction: column;
   gap: 16px;
   border-radius: 14px;
-  border: 1px solid ${Colors.borderColor};
-  background: ${Colors.bgwhite};
+  ${(props) =>
+    props.$noBgColor
+      ? ``
+      : css`
+          border: 1px solid ${Colors.borderColor};
+          background: ${Colors.bgwhite};
+        `}
   box-sizing: border-box;
 
   @media (max-width: ${Breakpoint.xl}) {
@@ -304,7 +309,7 @@ export const PromoUserNameStyles = styled.span`
   color: "white";
   text-transform: capitalize;
   @media (max-width: ${Breakpoint.sm}) {
-   // width: 200px;
+    // width: 200px;
   }
 `;
 
