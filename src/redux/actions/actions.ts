@@ -242,7 +242,7 @@ const handleSignInResponse = (res: any, data: any, history?: any) => {
         defaultThemeName: themeNames.CENTER_PROMPT,
         message: res?.data?.error?.message,
         extraBtnText: "Contact us",
-        extraBtnHandler: () => window.location.replace(paths.CONTACT),
+        extraBtnHandler: () => window.location.replace(paths.HELP),
         extraBtnClass: "verif-toast-failed-extra-btn-class",
       });
     } else {
