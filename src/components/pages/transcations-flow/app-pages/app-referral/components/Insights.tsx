@@ -8,6 +8,7 @@ import {
 } from "../ReferralsHelper";
 import { InsightStyles } from "../ReferralsStyles";
 import { UsageAndHistory } from "./UsageAndHistory";
+import HowItWorks from "./HowItWorks";
 
 interface InsightsProps {
   accruedBonus: number;
@@ -63,17 +64,17 @@ export const Insights = ({
 
   const refferalInsightArray = [
     {
-      title: "Total referee",
+      title: "Total Referred",
       value: count,
       color: "#d0cd23",
     },
     {
-      title: "Accrued bonus",
+      title: "Redeemable Bonus",
       value: `${bonuses?.accruedBonus} ${defaultCurrency}`,
       color: "#18a65f",
     },
     {
-      title: "Bonus used",
+      title: "Total Redeemable",
       value: bonuses?.totalReferralBonusUsed,
       color: "#d0cd23",
     },
@@ -81,19 +82,19 @@ export const Insights = ({
 
   const loyaltInsightArray = [
     {
-      title: "Points tracked",
+      title: "Total Points Earned",
       value: voucherPoints,
       color: voucherPoints < voucherActivationvalue ? "#d0cd23" : "#18a65f",
     },
     {
-      title: "Total earned",
+      title: "Redeemable Bonus",
       value: `${
         getTotalActiveAndUsedVouchers(user).totalActiveVouchers
       } ${defaultCurrency}`,
       color: "#18a65f",
     },
     {
-      title: "Total used",
+      title: "Total Redeemable",
       value: getTotalActiveAndUsedVouchers(user).totalUsedVouchers,
       color: "#18a65f",
     },
@@ -161,6 +162,8 @@ export const Insights = ({
           onChange={onTabChange}
         />
       </InsightStyles>
+
+      {/* <HowItWorks type={activeTab} /> */}
 
       <UsageAndHistory
         type={activeTab}

@@ -144,3 +144,26 @@ export const Paragraph = styled.p<{ $small?: boolean }>`
     letter-spacing: 0px;
   }
 `;
+
+export const SpanText = styled.span<{ $small?: boolean }>`
+  font-size: ${(props) => (props.$small ? "16px" : "18px")};
+  font-weight: 300;
+  line-height: 150%; /* 150% */
+  letter-spacing: -0.8px;
+  margin: 0;
+
+  @media (max-width: ${Breakpoint.xl}) {
+    font-size: ${(props) => (props.$small ? "14px" : "16px")};
+    letter-spacing: -0.6px;
+  }
+
+  @media (max-width: ${Breakpoint.md}) {
+    font-size: ${(props) => (props.$small ? "14px" : "16px")};
+    letter-spacing: 0;
+  }
+
+  @media (max-width: ${Breakpoint.sm}) {
+    font-size: ${(props) => (props.$small ? "14px" : "16px")};
+    letter-spacing: 0px;
+  }
+`;
