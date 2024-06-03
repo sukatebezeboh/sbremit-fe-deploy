@@ -128,20 +128,6 @@ const RightContent = () => {
               flexible delivery.
             </Paragraph>
           </div>
-          {/* <H3>
-            5 {arrayOfPointPromotions[activeIndex]?.currency} OFF FOR EVERY FIVE
-            TRANSFERS YOU DO{" "}
-          </H3>
-          <H4>
-            When you spend over {arrayOfPointPromotions[activeIndex]?.currency}{" "}
-            250 for the 5 Transfers
-          </H4>
-          {/* <H4 className="_tanku5">
-            Use code <b>TANKU5</b> when you login
-          </H4> 
-          <Button type="primary" onClick={() => history.push(paths.SIGN_IN)}>
-            <Paragraph>Start transfer</Paragraph>
-          </Button> */}
         </div>
       </div>
     </RightContentStyles>
@@ -242,7 +228,7 @@ const RightContentStyles = styled.div<{
     box-sizing: border-box;
   }
 
-  ._background{
+  ._background {
     width: 100%;
     height: 49%;
     flex-shrink: 0;
