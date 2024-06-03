@@ -163,7 +163,7 @@ export const Insights = ({
         />
       </InsightStyles>
 
-      <HowItWorks type={activeTab} />
+      {/* <HowItWorks type={activeTab} /> */}
 
       <UsageAndHistory
         type={activeTab}
