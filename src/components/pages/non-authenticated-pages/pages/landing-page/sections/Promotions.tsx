@@ -12,6 +12,7 @@ import {
 } from "components/pages/transcations-flow/utils/stylesVariables";
 import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
 import { useEffect, useState } from "react";
+import { IoRocket } from "react-icons/io5";
 import { useHistory } from "react-router";
 import styled, { css } from "styled-components";
 import { paths } from "util/paths";
@@ -20,7 +21,6 @@ import { getAllUniqueCurrencies } from "./hero/HeroHelper";
 const SBMobileApp = "/assets/images/app_default_image.png";
 const TwinklingStars = "/assets/images/twinkling_stars.png";
 const BannerSvg = "/assets/images/promotions_bg_svg.svg";
-const RocketPng = "/assets/icons/rocket_png.png";
 
 interface PromotionsCountryData {
   ctaText: string;
@@ -108,7 +108,7 @@ const RightContent = () => {
           </H4>
         </div>
       </div>
-      <div className="_background">
+      <div className="_background bg_content_2">
         <div className="_content_2">
           <div className="_enjoy">
             <Paragraph $small>ENJOY</Paragraph>
@@ -120,7 +120,8 @@ const RightContent = () => {
           </div>
 
           <div className="_rocket">
-            <img src={RocketPng} alt="Rocket icon " />
+            {/* <img src={RocketPng} alt="Rocket icon " /> */}
+            <IoRocket className="_icon" />
             <Paragraph>
               Choose between <span>mobile money</span>,{" "}
               <span>bank transfer</span>, or <span>cash pickup</span> for
@@ -241,7 +242,7 @@ const RightContentStyles = styled.div<{
     box-sizing: border-box;
   }
 
-  ._background {
+  ._background{
     width: 100%;
     height: 49%;
     flex-shrink: 0;
@@ -280,9 +281,9 @@ const RightContentStyles = styled.div<{
       width: 100%;
       height: 100%;
 
-      @media (max-width: ${Breakpoint.xl}) {
+      /* @media (max-width: ${Breakpoint.xl}) {
         background: #fafafa;
-      }
+      } */
     }
 
     &::after {
@@ -425,8 +426,10 @@ const RightContentStyles = styled.div<{
         flex-direction: column;
         gap: 8px;
 
-        img {
-          width: clamp(48px, 8vw, 120px);
+        ._icon {
+          font-size: clamp(48px, 8vw, 120px);
+          color: #fff;
+          /* transform: rotate(40deg); */
         }
 
         p {
@@ -437,6 +440,13 @@ const RightContentStyles = styled.div<{
           }
         }
       }
+    }
+  }
+
+  .bg_content_2 {
+    &::after {
+      content: "";
+      background-image: none;
     }
   }
 `;
