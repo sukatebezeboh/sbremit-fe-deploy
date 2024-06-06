@@ -16,7 +16,7 @@ const tableHeader = [
   { img: "/assets/logos/world-remit.png", alt: "world-remit logo" },
   { img: "/assets/logos/taptap.png", alt: "Taptap send logo" },
   { img: "/assets/logos/sendwave.png", alt: "sendwave logo" },
-  { img: "/assets/logos/lemfi.png", alt: "lemfi logo" },
+  // { img: "/assets/logos/lemfi.png", alt: "lemfi logo" },
 ];
 
 const tableData = [
@@ -102,12 +102,12 @@ const Comparison = () => {
               <CellStyles>
                 <img className="_icon" src={item.toptapSend} />
               </CellStyles>
-              <CellStyles>
+              <CellStyles  $noBorderRight>
                 <img className="_icon" src={item.sendWave} />
               </CellStyles>
-              <CellStyles $noBorderRight>
+              {/* <CellStyles $noBorderRight>
                 <img className="_icon" src={item.lenfi} />
-              </CellStyles>
+              </CellStyles> */}
             </ColumnStyle>
           ))}
         </div>
