@@ -117,7 +117,7 @@ const ToastModal = ({ props }: any) => {
           type="primary"
           danger={type === "error"}
         >
-          {extraBtnText}
+          {extraBtnText || "Close"}
         </Button>
       </Modal>
     </ConfigProvider>
