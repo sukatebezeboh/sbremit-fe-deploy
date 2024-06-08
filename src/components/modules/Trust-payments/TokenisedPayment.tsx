@@ -37,7 +37,7 @@ const TokenisedPayment = ({
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const maimountWithoutDecimal = mainamount.toString().replace(".", "");
+  // const maimountWithoutDecimal = mainamount.toString().replace(".", "");
   const UtcTimestamp = Math.floor(Date.now() / 1000); //Time in seconds since Unix epoch
 
   const successfulRedirectURL = `/transfer-completed/${transferId}?payment_type=trust_payment`;
@@ -47,7 +47,7 @@ const TokenisedPayment = ({
   const payload = {
     payload: {
       accounttypedescription: "ECOM",
-      baseamount: maimountWithoutDecimal,
+      mainamount: Number(mainamount),
       currencyiso3a: currencyiso3a,
       sitereference: settings.TRUST_PAYMENT_SITE_REFERENCE,
       requesttypedescriptions: ["THREEDQUERY", "AUTH"],
