@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
+import { Redirect, Switch } from "react-router-dom";
 import { CookieService } from "services/CookieService";
 import styled, { css } from "styled-components";
 import { paths } from "util/paths";
@@ -62,6 +63,18 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
             icon={<ArrowUpOutlined rev={undefined} />}
           />
         )}
+
+        {/*301 Redirects: Old paths redirecting to new paths */}
+        <Switch>
+          <Redirect from={paths.CONTACT} to={paths.HELP} exact />
+          <Redirect from={paths.SUPPORT} to={paths.HELP} exact />
+          <Redirect from={paths.LEGAL} to={paths.TERMS} />
+          <Redirect from={paths.TUTORIALS} to={paths.HOW_IT_WORKS} />
+          <Redirect from={paths.CAMEROON} to={paths.HOW_IT_WORKS} />
+          <Redirect from={paths.KENYA} to={paths.HOW_IT_WORKS} />
+          <Redirect from={paths.UGANDA} to={paths.HOW_IT_WORKS} />
+          <Redirect from={paths.TANZANIA} to={paths.HOW_IT_WORKS} />
+        </Switch>
       </NonAuthLayoutStyles>
     </ConfigProvider>
   );
