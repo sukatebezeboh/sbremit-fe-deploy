@@ -1,5 +1,5 @@
 //TODO: THIS hooks helps simplyfy the server app value
-const PayinCountries = [
+export const PayinCountries = [
   {
     name: "Belgium",
     countryCode: "BE",

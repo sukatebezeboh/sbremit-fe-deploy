@@ -272,7 +272,7 @@ const DownloadReceipt = ({ metaData }: { metaData: any }) => {
 export const ErrorMessages = ({ errorMessage }: { errorMessage: string }) => {
   return (
     <ErrorMessagesWrappper>
-      <p>{errorMessage}</p>
+      <p data-testid="error-message">{errorMessage}</p>
     </ErrorMessagesWrappper>
   );
 };

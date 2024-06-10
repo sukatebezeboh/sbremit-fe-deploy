@@ -148,7 +148,8 @@ const HeroCalculator = () => {
         </div>
       </div>
 
-      <button type="button" onClick={() => history.push(paths.GET_QUOTE)}>
+      <button type="button" data-testid="x-calculator-send-btn"
+        onClick={() => history.push(paths.GET_QUOTE)}>
         <Paragraph $small>Start Sending Money</Paragraph>
       </button>
     </HeroCalculatorStyles>
