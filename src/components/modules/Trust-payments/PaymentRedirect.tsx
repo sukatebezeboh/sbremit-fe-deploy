@@ -46,6 +46,8 @@ const PaymentRedirect = ({
     return true;
   };
 
+  console.log(mainamount)
+
   useEffect(() => {
     //manually trigger form submit and action
     if (enabled && formRef.current) {

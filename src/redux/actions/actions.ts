@@ -39,7 +39,11 @@ import {
 } from "../../util/util";
 import http from "../../util/http";
 import { themeNames } from "../../components/modules/toast-factory/themes";
-import { constants, countriesAndCurrency } from "../../util/constants";
+import {
+  constants,
+  countriesAndCurrency,
+  transferMethodsInWords,
+} from "../../util/constants";
 import { filterNotifications } from "components/pages/transcations-flow/app-components/Notifications";
 import { replaceUnderScore } from "components/pages/transcations-flow/utils/reuseableUtils";
 
@@ -1189,7 +1193,7 @@ export const getOperatorFeeData = () => {
   const transferMethodServiceFees = services.filter(
     (service: any) =>
       service.name.toLowerCase() ===
-      replaceUnderScore(transferMethod.toLowerCase())
+      replaceUnderScore(transferMethodsInWords[transferMethod].toLowerCase())
   );
 
   if (transferMethodServiceFees.length === 0) {
@@ -1227,7 +1231,7 @@ export const getServiceRate = (
   const transfer = store.getState().transfer;
   if (!transfer.allowOperatorFee) {
     store.dispatch({ type: TRANSFER, payload: { ...transfer, serviceFee: 0 } });
-    return null;
+    // return null;
   }
 
   const service = getOperatorFeeData();

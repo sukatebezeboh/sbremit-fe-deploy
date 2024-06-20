@@ -6,14 +6,8 @@ import LargeButton, {
   PageTitileAndDescription,
   TransactionsSteps,
 } from "../../utils/ReusablePageContent";
-import {
-  consoleLogOnLocalHost,
-  transferMethodsInWords,
-} from "../../utils/reuseableUtils";
-import {
-  getTransactionQuoteRequest,
-  isWithinPaymentLimit,
-} from "./GetQuoteHelper";
+import { transferMethodsInWords } from "../../utils/reuseableUtils";
+import { getTransactionQuoteRequest } from "./GetQuoteHelper";
 import { GetQuoteContainerStyle } from "./GetQuoteStyles";
 import { ExchangeCalculator } from "./controls/ExchangeCalculator";
 
@@ -43,8 +37,6 @@ export default function GetQuote() {
       setLoader(false);
     };
 
-    consoleLogOnLocalHost(transferMethod);
-
     getTransactionQuoteRequest(
       transferMethod,
       navigateToRecipients,
@@ -65,9 +57,8 @@ export default function GetQuote() {
         onClick={onContinueClicked}
         loading={loader}
         disabled={
-          isWithinPaymentLimit(transfer) !== "" ||
-          payinActualValue <= 0 ||
-          payoutActualValue <= 0
+          // isWithinPaymentLimit(transfer) !== "" ||
+          payinActualValue <= 0 || payoutActualValue <= 0
         } // enable when there's no error message or payinActualValue > 0
       />
     </GetQuoteContainerStyle>

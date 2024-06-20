@@ -174,7 +174,7 @@ export default function Pay() {
     return (
       getMoneyValue(`${transferInfo?.meta?.totalToPay}`) +
       +transferInfo?.meta?.paymentGatewayCharge
-    );
+    ).toFixed(2);
   };
 
   return (

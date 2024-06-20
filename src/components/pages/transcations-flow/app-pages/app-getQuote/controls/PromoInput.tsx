@@ -7,27 +7,41 @@ import { Input } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
-import { refinePromoErrorMessage, useGetPromo } from "../GetQuoteHelper";
+import {
+  promoCalculator,
+  refinePromoErrorMessage,
+  useGetPromo,
+} from "../GetQuoteHelper";
 import { GetPromoStyles } from "../GetQuoteStyles";
 
 export const PromoInput = () => {
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
-  const { payinCurrency } = transfer;
+  const {
+    payinCurrency,
+    payinActualValue,
+    payoutActualValue,
+    allowOperatorFee,
+  } = transfer;
   const [promoInputValue, setPromoInputValue] = useState("");
   const [promoErr, setPromoErr] = useState("");
   const [promoSuccess, setPromoSuccess] = useState("");
+  const [promoData, setPromoData] = useState<any>(undefined);
 
   const {
     isError,
     error,
     isLoading: isLaodingPromo,
+    refetch,
   } = useGetPromo(
     promoInputValue,
     payinCurrency,
     promoInputValue !== "",
-    (message: string) => {
-      setPromoSuccess(message);
+
+    (result: any) => {
+      setPromoSuccess(result?.message);
+      setPromoData(result?.data);
+
       dispatch({
         type: TRANSFER,
         payload: {
@@ -40,8 +54,33 @@ export const PromoInput = () => {
   const promoError: any = error;
 
   useEffect(() => {
+    if (isLaodingPromo || promoInputValue === "" || isError) {
+      //reset all state if isLaodingPromo
+      resetPromoStates();
+    }
     setPromoErr(refinePromoErrorMessage(promoError?.message, promoInputValue));
-  }, [isError]);
+  }, [isError, isLaodingPromo, promoInputValue]);
+
+  useEffect(() => {
+    promoInputValue !== "" && refetch();
+    promoCalculator(promoData);
+  }, [payinActualValue, payoutActualValue, allowOperatorFee, promoData]);
+
+  const resetPromoStates = () => {
+    setPromoSuccess("");
+    setPromoErr("");
+    setPromoData(undefined);
+
+    dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        promoDiscountValue: 0,
+        promoType: "",
+        promoRate: 0,
+      },
+    });
+  };
 
   const handlePromoInputChange = async (
     e: React.ChangeEvent<HTMLInputElement>

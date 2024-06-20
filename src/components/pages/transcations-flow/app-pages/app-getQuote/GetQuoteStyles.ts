@@ -126,7 +126,7 @@ export const GetPromoStyles = styled.div<{ $validPromo?: boolean }>`
   }
   p {
     color: ${(props) => (props.$validPromo ? Colors.sbGreen : Colors.sbRed)};
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 22px;
     margin: 0;
@@ -148,11 +148,45 @@ export const CalculatorInputStyles = styled.div<{ $error?: boolean }>`
     line-height: 130%;
     color: ${Colors.sbRed};
   }
+
+  ._input {
+    width: 100%;
+  }
 `;
 
 export const RewardsNotificationStyles = styled.div`
   width: 510px;
   @media (max-width: ${Breakpoint.md}) {
     width: 85vw;
+  }
+`;
+
+export const OperatorFeeCallout = styled.span`
+  color: #1677ff;
+`;
+
+export const SummaryWrapper = styled.div`
+  width: 100%;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+export const SummaryFlexItem = styled.div<{ $isStrikethrough?: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  /* padding: 8px 14px; */
+  width: 100%;
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+  p:last-child {
+    text-decoration: ${(props) =>
+      props.$isStrikethrough ? "line-through" : "none"};
   }
 `;
