@@ -174,7 +174,7 @@ export default function Pay() {
     return (
       getMoneyValue(`${transferInfo?.meta?.totalToPay}`) +
       +transferInfo?.meta?.paymentGatewayCharge
-    );
+    )?.toFixed(2);
   };
 
   return (
@@ -197,7 +197,7 @@ export default function Pay() {
           trustPaymentOptions.type === "one-time") ||
           trustPaymentOptions.type === "store-for-future") && (
           <PaymentRedirect
-            mainamount={getTotalToPay()}
+            mainamount={Number(getTotalToPay())}
             currencyiso3a={transferInfo?.originCurrency}
             transactionId={transferInfo?.meta?.transactionId}
             transferId={transferInfo?.id}
@@ -218,7 +218,7 @@ export default function Pay() {
               transferId={transferInfo?.id}
               transactionId={transferInfo?.meta?.transactionId}
               transactionreference={trustPaymentOptions.transactionreference} //"55-9-3627172"
-              mainamount={getTotalToPay()}
+              mainamount={Number(getTotalToPay())}
               setEnabled={setTrustPaymentOptions}
             />
           )}
