@@ -192,27 +192,28 @@ export const getPromos = async (endpoint: string, payinCurrency: string) => {
 
     if (result?.data?.status === 200 || result?.data?.status === "200") {
       const promo = result?.data?.data;
+      return promo;
 
-      const isBelowSpendLimit =
-        Number(payinActualValue) < Number(promo?.settings?.minimumSpend);
-      const isAboveSpendLimit =
-        Number(payinActualValue) > Number(promo?.settings?.maximumSpend);
+      // const isBelowSpendLimit =
+      //   Number(payinActualValue) < Number(promo?.settings?.minimumSpend);
+      // const isAboveSpendLimit =
+      //   Number(payinActualValue) > Number(promo?.settings?.maximumSpend);
 
-      if (isBelowSpendLimit || isAboveSpendLimit) {
-        throw new Error(
-          `Transfer between ${promo?.settings?.minimumSpend} ${payinCurrency} and  ${promo?.settings?.maximumSpend} ${payinCurrency} to use this promo.`
-        );
-      } else if (
-        Boolean(promo?.settings?.currenciesValid) &&
-        promo?.settings?.currenciesValid !== "ALL" &&
-        promo?.settings?.currenciesValid !== payinCurrency
-      ) {
-        throw new Error(
-          `${promo?.settings?.discountAmount} ${payinCurrency} Discount, valid for ${promo?.settings?.currenciesValid} currencies`
-        );
-      } else {
-        return promo;
-      }
+      // if (isBelowSpendLimit || isAboveSpendLimit) {
+      //   throw new Error(
+      //     `Transfer between ${promo?.settings?.minimumSpend} ${payinCurrency} and  ${promo?.settings?.maximumSpend} ${payinCurrency} to use this promo.`
+      //   );
+      // } else if (
+      //   Boolean(promo?.settings?.currenciesValid) &&
+      //   promo?.settings?.currenciesValid !== "ALL" &&
+      //   promo?.settings?.currenciesValid !== payinCurrency
+      // ) {
+      //   throw new Error(
+      //     `${promo?.settings?.discountAmount} ${payinCurrency} Discount, valid for ${promo?.settings?.currenciesValid} currencies`
+      //   );
+      // } else {
+      //   return promo;
+      // }
     } else {
       throw new Error(
         result?.data?.error?.message ||
@@ -228,6 +229,7 @@ export const getPromos = async (endpoint: string, payinCurrency: string) => {
 export const useGetPromo = (
   code: string,
   payinCurrency: string,
+  payinActualValue: number,
   enabled: boolean,
   onSuccess: Function
 ) => {
@@ -236,36 +238,59 @@ export const useGetPromo = (
     enabled,
     retry: false,
     onSuccess: (data) => {
-      let message = "";
-
-      const {
-        percentage,
-        discountAmount,
-        currenciesValid,
-        baseCurrency,
-        targetCurrency,
-      } = data?.settings || {};
-      switch (data?.type) {
-        case "PERCENTAGE":
-          message = `${percentage}% Discount, valid for ${currenciesValid} currencies`;
-          break;
-        case "FIXED_AMOUNT":
-          message = `${discountAmount} ${payinCurrency} Discount, valid for ${currenciesValid} currencies`;
-          break;
-        case "FIXED_RATE":
-          message = `Fixed Exchange Rate, valid for ${baseCurrency} to ${targetCurrency}`;
-          break;
-        case "FREE_OPERATOR_FEE":
-          message = "Free Operator Fee";
-          break;
-        default:
-          message = "";
-          break;
-      }
-
-      onSuccess({ message, data });
+      onSuccess({ data });
     },
   });
+};
+
+export const getPromoMessages = (promo: any) => {
+  const { payinActualValue, payinCurrency } = store.getState().transfer;
+
+  let successMessage = "";
+  let errMessage = "";
+
+  const {
+    percentage,
+    discountAmount,
+    currenciesValid,
+    baseCurrency,
+    targetCurrency,
+    minimumSpend,
+    maximumSpend,
+  } = promo?.settings || {};
+
+  const isBelowSpendLimit = Number(payinActualValue) < Number(minimumSpend);
+  const isAboveSpendLimit = Number(payinActualValue) > Number(maximumSpend);
+
+  if (isBelowSpendLimit || isAboveSpendLimit) {
+    errMessage = `Transfer between ${minimumSpend} ${payinCurrency} and  ${maximumSpend} ${payinCurrency} to use this promo.`;
+  } else if (
+    Boolean(currenciesValid) &&
+    currenciesValid !== "ALL" &&
+    currenciesValid !== payinCurrency
+  ) {
+    errMessage = `${discountAmount} ${payinCurrency} Discount, valid for ${currenciesValid} currencies`;
+  } else {
+    switch (promo?.type) {
+      case "PERCENTAGE":
+        successMessage = `${percentage}% Discount, valid for ${currenciesValid} currencies`;
+        break;
+      case "FIXED_AMOUNT":
+        successMessage = `${discountAmount} ${payinCurrency} Discount, valid for ${currenciesValid} currencies`;
+        break;
+      case "FIXED_RATE":
+        successMessage = `Fixed Exchange Rate, valid for ${baseCurrency} to ${targetCurrency}`;
+        break;
+      case "FREE_OPERATOR_FEE":
+        successMessage = "Free Operator Fee";
+        break;
+      default:
+        successMessage = "";
+        break;
+    }
+  }
+
+  return { successMessage, errMessage };
 };
 
 type TPromotype =
@@ -378,26 +403,6 @@ export const promoCalculator = (promo: any) => {
       },
     });
   }
-
-  // console.log(discountAmount);
-  //dispath promo type
-
-  // store.dispatch({
-  //   type: TRANSFER,
-  //   payload: {
-  //     ...transfer,
-  //     promoDiscountValue: discountAmount,
-  //     promoType: promoType,
-  //   },
-  // });
-
-  // console.table({
-  //   exchangeRate,
-  //   discountAmount,
-  //   percentMultiplyer,
-  //   freeOperatorFee,
-  //   promoType,
-  // });
 };
 
 // Function to handle NaN, defaulting to 0 if invalid
@@ -503,26 +508,50 @@ export function calculatePayAmount(
   return result.toFixed(2);
 }
 
+//TODO: refactor this logic for simplicity
 export function calculateQuoteFees(
   serviceFee: number,
   isPayin: boolean
 ): CalculationResult {
   const transfer = store.getState().transfer;
+  const user = store.getState().auth.user;
   const {
     allowOperatorFee,
     payinActualValue,
     payoutActualValue,
     transferMethod,
-    exchangeRate: rate,
+    exchangeRate,
+    promoFreeOperatorFee,
+    promoType,
+    promoDiscountValue,
+    promoRate,
   } = transfer || {};
 
   // Ensure payIn and payOut are treated as numbers
   let payIn = Number(payinActualValue);
   let payOut = Number(payoutActualValue);
+  let totalPayOut = Number(payoutActualValue);
   let operatorFeeCallout = "";
-  const operatorFee = serviceFee.toFixed(2);
+
+  //apply promo discount rate if applicable
+  const rate = promoType === "FIXED_RATE" ? promoRate : exchangeRate;
+  //apply free operator fee if applicable
+  const operatorFee =
+    promoType === "FREE_OPERATOR_FEE" && promoFreeOperatorFee
+      ? 0
+      : Number(serviceFee.toFixed(2));
   const isMobileMoney =
     transferMethodsInWords[transferMethod] === "mobile_money";
+
+  //get promo discount value for FIXED_AMOUNT, PERCENTAGE
+  const getPromoDiscountValue = () =>
+    promoType === "FIXED_AMOUNT" || promoType === "PERCENTAGE"
+      ? promoDiscountValue
+      : 0;
+
+  //get loyalty or refferal discount
+  const getLoyaltyOrRefferalDiscount = () =>
+    getRewardsValues(user).active ? getRewardsValues(user).bonus : 0;
 
   // Scenario A: User types in PayIn input
   if (isPayin) {
@@ -530,14 +559,20 @@ export function calculateQuoteFees(
     if (allowOperatorFee) {
       operatorFeeCallout = `+${operatorFee}`;
       // Calculate payOut based on payIn without fee deduction
-      payOut = Number(calculatePayAmount(payIn, rate, false));
+      totalPayOut = Number(calculatePayAmount(payIn, rate, false));
+      payOut = Number(calculatePayAmount(payIn, exchangeRate, false)); // does not apply promo rate
       // Dispatch updated state with correct payOut and totalToPay
       store.dispatch({
         type: TRANSFER,
         payload: {
           ...transfer,
-          totalToPay: payIn + serviceFee,
+          totalToPay:
+            payIn +
+            operatorFee -
+            getPromoDiscountValue() -
+            getLoyaltyOrRefferalDiscount(),
           payoutActualValue: payOut,
+          totalToSend: totalPayOut,
         },
       });
     }
@@ -547,7 +582,15 @@ export function calculateQuoteFees(
       // Calculate payOut based on payIn after fee deduction
       payOut = Number(
         calculatePayAmount(
-          payIn - (isMobileMoney ? 0 : serviceFee), //if is mobile money, do not deduct fee
+          payIn - (isMobileMoney ? 0 : operatorFee), //if is mobile money, do not deduct fee
+          exchangeRate,
+          false
+        )
+      );
+
+      totalPayOut = Number(
+        calculatePayAmount(
+          payIn - (isMobileMoney ? 0 : operatorFee), //if is mobile money, do not deduct fee
           rate,
           false
         )
@@ -557,8 +600,10 @@ export function calculateQuoteFees(
         type: TRANSFER,
         payload: {
           ...transfer,
-          totalToPay: payIn,
+          totalToPay:
+            payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
           payoutActualValue: payOut,
+          totalToSend: totalPayOut,
         },
       });
     }
@@ -575,7 +620,11 @@ export function calculateQuoteFees(
         type: TRANSFER,
         payload: {
           ...transfer,
-          totalToPay: payIn + serviceFee,
+          totalToPay:
+            payIn +
+            operatorFee -
+            getPromoDiscountValue() -
+            getLoyaltyOrRefferalDiscount(),
           payinActualValue: payIn,
         },
       });
@@ -586,14 +635,15 @@ export function calculateQuoteFees(
       // Calculate payIn based on payOut after fee addition
       // If is mobile_money do not add a fee
       payIn = Number(
-        (payOut / rate + (isMobileMoney ? 0 : serviceFee)).toFixed(2)
+        (payOut / rate + (isMobileMoney ? 0 : operatorFee)).toFixed(2)
       );
       // Dispatch updated state with correct payIn and totalToPay
       store.dispatch({
         type: TRANSFER,
         payload: {
           ...transfer,
-          totalToPay: payIn,
+          totalToPay:
+            payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
           payinActualValue: payIn,
         },
       });
@@ -646,15 +696,15 @@ export const getRewardsValues = (user: any) => {
         referral.ReferralBonus === "ACTIVE"
     );
 
-  const bonusTobeUsed = isNewBonusStateActive
+  const bonusToUse = isNewBonusStateActive
     ? isReferralHasUplineBonusAndIsActive
       ? uplineReferralBonus
       : downlineReferralBonus
     : voucherBonus || 0;
 
   return {
-    active: isVoucherActive || isNewBonusStateActive || false,
-    bonus: bonusTobeUsed,
-    type: isVoucherActive ? "Loyalty" : "Referral",
+    active: isNewBonusStateActive || isVoucherActive || false,
+    bonus: bonusToUse,
+    type: isNewBonusStateActive ? "Referral" : "Loyalty",
   };
 };

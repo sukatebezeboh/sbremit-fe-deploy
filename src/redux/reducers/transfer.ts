@@ -59,6 +59,7 @@ const initialTransferState: {} = {
   payoutActualValue: 0,
   exchangeRate: 0,
   totalToPay: 0,
+  totalToSend: 0,
   payinCurrency: "GBP",
   payoutCurrency: "XAF",
   activeCountryColor: "#007B5D",

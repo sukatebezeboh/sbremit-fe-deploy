@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
 import {
+  getPromoMessages,
   promoCalculator,
   refinePromoErrorMessage,
   useGetPromo,
@@ -32,15 +33,16 @@ export const PromoInput = () => {
     isError,
     error,
     isLoading: isLaodingPromo,
-    refetch,
   } = useGetPromo(
     promoInputValue,
     payinCurrency,
+    payinActualValue,
     promoInputValue !== "",
 
     (result: any) => {
-      setPromoSuccess(result?.message);
+      // setPromoSuccess(result?.message);
       setPromoData(result?.data);
+      // setPromoErr(result?.errMessage);
 
       dispatch({
         type: TRANSFER,
@@ -52,17 +54,26 @@ export const PromoInput = () => {
     }
   );
   const promoError: any = error;
+  const externalError = refinePromoErrorMessage(
+    promoError?.message,
+    promoInputValue
+  );
 
   useEffect(() => {
-    if (isLaodingPromo || promoInputValue === "" || isError) {
+    if (promoInputValue === "" || isError) {
       //reset all state if isLaodingPromo
       resetPromoStates();
     }
-    setPromoErr(refinePromoErrorMessage(promoError?.message, promoInputValue));
+    // setPromoErr(refinePromoErrorMessage(promoError?.message, promoInputValue));
   }, [isError, isLaodingPromo, promoInputValue]);
 
   useEffect(() => {
-    promoInputValue !== "" && refetch();
+    //error and success messages/promts
+    const successMessage = getPromoMessages(promoData).successMessage;
+    const errMessage = getPromoMessages(promoData).errMessage;
+    setPromoSuccess(successMessage);
+    setPromoErr(errMessage);
+
     promoCalculator(promoData);
   }, [payinActualValue, payoutActualValue, allowOperatorFee, promoData]);
 
@@ -78,6 +89,8 @@ export const PromoInput = () => {
         promoDiscountValue: 0,
         promoType: "",
         promoRate: 0,
+        promoFreeOperatorFee: false,
+        promoCode: "",
       },
     });
   };
@@ -90,7 +103,7 @@ export const PromoInput = () => {
   };
 
   return (
-    <GetPromoStyles $validPromo={!isError}>
+    <GetPromoStyles $validPromo={isError || promoErr !== "" ? false : true}>
       <span>Got a promo code?🎁</span>
       <Input
         placeholder="Get discount..."
@@ -101,7 +114,7 @@ export const PromoInput = () => {
         suffix={
           isLaodingPromo ? (
             <LoadingOutlined rev={undefined} />
-          ) : isError ? (
+          ) : isError || promoErr !== "" ? (
             <WarningFilled rev={undefined} className="icon" />
           ) : promoSuccess ? (
             <CheckCircleFilled rev={undefined} className="icon" />
@@ -111,7 +124,13 @@ export const PromoInput = () => {
         }
         onChange={handlePromoInputChange}
       />
-      <p>{isError ? promoErr?.toString() : promoSuccess}</p>
+      <p>
+        {isError
+          ? externalError?.toString()
+          : promoErr !== ""
+          ? promoErr
+          : promoSuccess}
+      </p>
     </GetPromoStyles>
   );
 };

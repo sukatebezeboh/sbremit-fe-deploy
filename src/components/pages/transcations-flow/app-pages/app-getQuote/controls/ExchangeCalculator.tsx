@@ -40,8 +40,8 @@ export const ExchangeCalculator = () => {
     payinActualValue,
     transferMethod,
     payoutActualValue,
-    totalToPay,
     exchangeRate,
+    promoType,
   } = transfer;
 
   const onSwitchChange = (checked: boolean) => {
@@ -113,6 +113,7 @@ export const ExchangeCalculator = () => {
     payoutActualValue,
     allowOperatorFee,
     exchangeRate,
+    promoType,
   ]);
 
   // auto switched off operator fee on validation error
@@ -225,25 +226,11 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
     promoRate,
     promoType,
     promoFreeOperatorFee,
+    totalToSend,
   } = transfer;
 
-  // const [quoteResult, setQuoteResult] = useState({
-  //   theRecipientGet: payoutActualValue,
-  //   totalToPay: totalToPay,
-  // });
-
-  // useEffect(() => {
-  //   //handle promos:
-  //   if (promoType === "FIXED_RATE") {
-  //     setQuoteResult((prev) => ({
-  //       ...prev,
-  //       theRecipientGet: calculatePayAmount(payinActualValue, promoRate, false),
-  //       totalToPay: calculatePayAmount(payinActualValue, promoRate, true)
-  //     }));
-  //   }
-  // }, []);
-
   const rewards = getRewardsValues(user);
+  const fee = promoFreeOperatorFee ? 0 : operatorFee;
 
   return (
     <SummaryWrapper>
@@ -257,7 +244,7 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
         <p>Operator fee</p>
         <p>
           {" "}
-          {formatAmount(String(operatorFee))} {payinCurrency}
+          +{formatAmount(String(operatorFee))} {payinCurrency}
         </p>
       </SummaryFlexItem>
 
@@ -271,7 +258,7 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
           <SummaryFlexItem>
             <p>Promo discount</p>
             <p>
-              {promoDiscountValue} {payinCurrency}
+              -{promoDiscountValue} {payinCurrency}
             </p>
           </SummaryFlexItem>
         ))}
@@ -279,7 +266,7 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
         <SummaryFlexItem>
           <p>{rewards.type} discount</p>
           <p>
-            {rewards.bonus} {payinCurrency}
+            -{rewards.bonus} {payinCurrency}
           </p>
         </SummaryFlexItem>
       )}
@@ -289,10 +276,10 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
         <p>
           {transferMethodsInWords[transferMethod] === "mobile_money" &&
           !allowOperatorFee
-            ? `${formatAmount(payoutActualValue)} ${payoutCurrency}`
+            ? `${formatAmount(totalToSend)} ${payoutCurrency}`
             : `${formatAmount(
-                payoutActualValue +
-                  Number(calculatePayAmount(operatorFee, exchangeRate, false))
+                totalToSend +
+                  Number(calculatePayAmount(fee, exchangeRate, false))
               )} ${payoutCurrency} `}
         </p>
       </SummaryFlexItem>
@@ -300,7 +287,7 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
       <SummaryFlexItem>
         <p>Total to pay</p>
         <p>
-          {formatAmount(totalToPay)} {payinCurrency}
+          {totalToPay < 0 ? 0 : formatAmount(totalToPay)} {payinCurrency}
         </p>
       </SummaryFlexItem>
     </SummaryWrapper>
