@@ -219,6 +219,7 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
 
   const rewards = getRewardsValues(user);
   const fee = promoFreeOperatorFee ? 0 : operatorFee;
+  const NonNegativeTotalToSend = totalToSend < 0 ? 0 : totalToSend;
 
   const isMobileMoneyTransfer =
     transferMethodsInWords[transferMethod] === "mobile_money";
@@ -264,9 +265,9 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
         {/* if isMobileMoneyTransfer update and add the fee payout conversion else not applicable for other methods */}
         <p>
           {isMobileMoneyTransfer && !allowOperatorFee
-            ? `${formatAmount(totalToSend)} ${payoutCurrency}`
+            ? `${formatAmount(NonNegativeTotalToSend)} ${payoutCurrency}`
             : `${formatAmount(
-                totalToSend +
+                NonNegativeTotalToSend +
                   (isMobileMoneyTransfer
                     ? Number(calculatePayAmount(fee, exchangeRate, false))
                     : 0)

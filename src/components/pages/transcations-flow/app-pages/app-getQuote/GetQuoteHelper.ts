@@ -597,7 +597,7 @@ export function calculateQuoteFees(
             operatorFee -
             getPromoDiscountValue() -
             getLoyaltyOrRefferalDiscount(),
-          // payoutActualValue: payOut,
+          payoutActualValue: payOut,
           totalToSend: totalPayOut,
         },
       });
@@ -628,7 +628,7 @@ export function calculateQuoteFees(
           ...transfer,
           totalToPay:
             payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
-          // payoutActualValue: payOut,
+          payoutActualValue: payOut,
           totalToSend: totalPayOut,
         },
       });
@@ -651,7 +651,7 @@ export function calculateQuoteFees(
             operatorFee -
             getPromoDiscountValue() -
             getLoyaltyOrRefferalDiscount(),
-          // payinActualValue: payIn,
+          payinActualValue: payIn,
           totalToSend: payoutActualValue,
         },
       });
@@ -660,9 +660,9 @@ export function calculateQuoteFees(
     else {
       operatorFeeCallout = `-${operatorFeeForCallout}`;
       // Calculate payIn based on payOut after fee addition
-      // If is mobile_money do not add a fee
+      // If is mobile_money do not deduct a fee
       payIn = Number(
-        (payOut / rate + (isMobileMoney ? 0 : operatorFee)).toFixed(2)
+        (payOut / rate - (isMobileMoney ? 0 : operatorFee)).toFixed(2)
       );
 
       ////if is mobile money, do not deduct fee
@@ -677,8 +677,11 @@ export function calculateQuoteFees(
         payload: {
           ...transfer,
           totalToPay:
-            payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
+            payinActualValue -
+            getPromoDiscountValue() -
+            getLoyaltyOrRefferalDiscount(),
           // payinActualValue: payIn,
+          payoutActualValue: totalPayOut,
           totalToSend: totalPayOut,
         },
       });
