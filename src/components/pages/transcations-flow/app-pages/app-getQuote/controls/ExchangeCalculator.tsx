@@ -182,7 +182,7 @@ export const ExchangeCalculator = () => {
             <Switch
               checked={allowOperatorFee}
               onChange={onSwitchChange}
-              // disabled={calculatorInputValidator.transferLimitMaxOut}
+              disabled={calculatorInputValidator.transferLimitMaxOut}
             />
           </div>
         </PayoutInclusiveStyles>

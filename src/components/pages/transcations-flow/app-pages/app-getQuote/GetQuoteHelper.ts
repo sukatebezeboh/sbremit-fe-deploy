@@ -480,8 +480,8 @@ export const checkAmountValidation = (
     ? payinValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax
     : payoutValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax;
   const transferLimitMaxOut = isInOriginCurrency
-    ? payinValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax
-    : payoutValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax;
+    ? payinValue + fee > formattedTransferLimitMax
+    : payoutValue + fee > formattedTransferLimitMax;
 
   const operatorFeeCallout = calculateQuoteFees(
     fee,
@@ -489,15 +489,15 @@ export const checkAmountValidation = (
   ).operatorFeeCallout;
 
   //auto switch Off operator toggle if transferLimitMaxOut is true
-  // if (transferLimitMaxOut) {
-  //   store.dispatch({
-  //     type: TRANSFER,
-  //     payload: {
-  //       ...transfer,
-  //       allowOperatorFee: false,
-  //     },
-  //   });
-  // }
+  if (transferLimitMaxOut) {
+    store.dispatch({
+      type: TRANSFER,
+      payload: {
+        ...transfer,
+        allowOperatorFee: false,
+      },
+    });
+  }
 
   return {
     fee,
@@ -564,8 +564,10 @@ export function calculateQuoteFees(
       : Number(serviceFee.toFixed(2));
 
   const operatorFeeForCallout = isMobileMoney
-    ? Number(calculatePayAmount(operatorFee, exchangeRate, false)) // isMobileMoney convert the fee to equivalent payIn currency
-    : operatorFee;
+    ? formatAmount(
+        `${Number(calculatePayAmount(operatorFee, exchangeRate, false))}`
+      ) // isMobileMoney convert the fee to equivalent payIn currency
+    : formatAmount(`${operatorFee}`);
 
   //get promo discount value for FIXED_AMOUNT, PERCENTAGE
   const getPromoDiscountValue = () =>
@@ -595,7 +597,7 @@ export function calculateQuoteFees(
             operatorFee -
             getPromoDiscountValue() -
             getLoyaltyOrRefferalDiscount(),
-          payoutActualValue: payOut,
+          // payoutActualValue: payOut,
           totalToSend: totalPayOut,
         },
       });
@@ -626,7 +628,7 @@ export function calculateQuoteFees(
           ...transfer,
           totalToPay:
             payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
-          payoutActualValue: payOut,
+          // payoutActualValue: payOut,
           totalToSend: totalPayOut,
         },
       });
@@ -649,7 +651,8 @@ export function calculateQuoteFees(
             operatorFee -
             getPromoDiscountValue() -
             getLoyaltyOrRefferalDiscount(),
-          payinActualValue: payIn,
+          // payinActualValue: payIn,
+          totalToSend: payoutActualValue,
         },
       });
     }
@@ -661,6 +664,13 @@ export function calculateQuoteFees(
       payIn = Number(
         (payOut / rate + (isMobileMoney ? 0 : operatorFee)).toFixed(2)
       );
+
+      ////if is mobile money, do not deduct fee
+      totalPayOut = isMobileMoney
+        ? payoutActualValue
+        : payoutActualValue -
+          Number(calculatePayAmount(operatorFee, exchangeRate, false));
+
       // Dispatch updated state with correct payIn and totalToPay
       store.dispatch({
         type: TRANSFER,
@@ -668,7 +678,8 @@ export function calculateQuoteFees(
           ...transfer,
           totalToPay:
             payIn - getPromoDiscountValue() - getLoyaltyOrRefferalDiscount(),
-          payinActualValue: payIn,
+          // payinActualValue: payIn,
+          totalToSend: totalPayOut,
         },
       });
     }
