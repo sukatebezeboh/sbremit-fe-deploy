@@ -89,6 +89,7 @@ export const ExchangeCalculator = () => {
     isError: false,
     fee: 0,
     operatorFeeCallout: "",
+    transferLimitMaxOut: false,
   });
 
   useEffect(() => {
@@ -104,6 +105,7 @@ export const ExchangeCalculator = () => {
       isError: validation.isError,
       fee: validation.fee,
       operatorFeeCallout: validation.operatorFeeCallout,
+      transferLimitMaxOut: validation.transferLimitMaxOut,
     }));
   }, [
     transferMethod,
@@ -115,24 +117,6 @@ export const ExchangeCalculator = () => {
     exchangeRate,
     promoType,
   ]);
-
-  // auto switched off operator fee on validation error
-  useEffect(() => {
-    // console.table(calculatorInputValidator);
-    // calculatorInputValidator.isError && onSwitchChange(false);
-    // const { isError } = calculatorInputValidator;
-    // if (isError) {
-    //   if (debounceTimeout.current) {
-    //     clearTimeout(debounceTimeout.current);
-    //   }
-    //   debounceTimeout.current = setTimeout(() => {
-    //     onSwitchChange(false);
-    //   }, 2500);
-    //   return () => {
-    //     clearTimeout(debounceTimeout.current); // Clear the timeout if isError changes
-    //   };
-    // }
-  }, [calculatorInputValidator]);
 
   return (
     <ExchangeCalculatorStyles>
@@ -195,7 +179,11 @@ export const ExchangeCalculator = () => {
           </p>
           <div className="payout_inclusive">
             <span>Include operator fee</span>
-            <Switch checked={allowOperatorFee} onChange={onSwitchChange} />
+            <Switch
+              checked={allowOperatorFee}
+              onChange={onSwitchChange}
+              // disabled={calculatorInputValidator.transferLimitMaxOut}
+            />
           </div>
         </PayoutInclusiveStyles>
 
@@ -232,13 +220,14 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
   const rewards = getRewardsValues(user);
   const fee = promoFreeOperatorFee ? 0 : operatorFee;
 
+  const isMobileMoneyTransfer =
+    transferMethodsInWords[transferMethod] === "mobile_money";
+
   return (
     <SummaryWrapper>
       <SummaryFlexItem
         $isStrikethrough={
-          (transferMethodsInWords[transferMethod] === "mobile_money" &&
-            !allowOperatorFee) ||
-          promoFreeOperatorFee
+          (isMobileMoneyTransfer && !allowOperatorFee) || promoFreeOperatorFee
         }
       >
         <p>Operator fee</p>
@@ -272,14 +261,15 @@ const QuoteSummary = ({ operatorFee }: { operatorFee: number }) => {
       )}
       <SummaryFlexItem>
         <p>They get</p>
-
+        {/* if isMobileMoneyTransfer update and add the fee payout conversion else not applicable for other methods */}
         <p>
-          {transferMethodsInWords[transferMethod] === "mobile_money" &&
-          !allowOperatorFee
+          {isMobileMoneyTransfer && !allowOperatorFee
             ? `${formatAmount(totalToSend)} ${payoutCurrency}`
             : `${formatAmount(
                 totalToSend +
-                  Number(calculatePayAmount(fee, exchangeRate, false))
+                  (isMobileMoneyTransfer
+                    ? Number(calculatePayAmount(fee, exchangeRate, false))
+                    : 0)
               )} ${payoutCurrency} `}
         </p>
       </SummaryFlexItem>

@@ -433,13 +433,16 @@ export const checkAmountValidation = (
   const IsBelowMinPayinValue =
     Number(payinActualValue) > 0 && Number(payinActualValue) < 5;
 
+  const isMobileMoney =
+    transferMethodsInWords[transferMethod] === "mobile_money";
+
   // Function to generate an error message based on transferMethod and others
   const getErrorMessage = (
     limit: number,
     currency: string,
     includeFee: boolean
   ) => {
-    if (transferMethodsInWords[transferMethod] === "mobile_money") {
+    if (isMobileMoney) {
       return (
         `The maximum transferrable amount ${
           includeFee ? "inclusive of Operator Fees" : ""
@@ -476,11 +479,25 @@ export const checkAmountValidation = (
     : isInOriginCurrency
     ? payinValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax
     : payoutValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax;
+  const transferLimitMaxOut = isInOriginCurrency
+    ? payinValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax
+    : payoutValue + (inclusiveOfFee ? fee : 0) > formattedTransferLimitMax;
 
   const operatorFeeCallout = calculateQuoteFees(
     fee,
     isPayinInputActive
   ).operatorFeeCallout;
+
+  //auto switch Off operator toggle if transferLimitMaxOut is true
+  // if (transferLimitMaxOut) {
+  //   store.dispatch({
+  //     type: TRANSFER,
+  //     payload: {
+  //       ...transfer,
+  //       allowOperatorFee: false,
+  //     },
+  //   });
+  // }
 
   return {
     fee,
@@ -488,6 +505,7 @@ export const checkAmountValidation = (
     isPayin,
     isError,
     operatorFeeCallout,
+    transferLimitMaxOut,
   };
 };
 
@@ -533,15 +551,21 @@ export function calculateQuoteFees(
   let totalPayOut = Number(payoutActualValue);
   let operatorFeeCallout = "";
 
+  const isMobileMoney =
+    transferMethodsInWords[transferMethod] === "mobile_money";
+
   //apply promo discount rate if applicable
   const rate = promoType === "FIXED_RATE" ? promoRate : exchangeRate;
+
   //apply free operator fee if applicable
   const operatorFee =
     promoType === "FREE_OPERATOR_FEE" && promoFreeOperatorFee
       ? 0
       : Number(serviceFee.toFixed(2));
-  const isMobileMoney =
-    transferMethodsInWords[transferMethod] === "mobile_money";
+
+  const operatorFeeForCallout = isMobileMoney
+    ? Number(calculatePayAmount(operatorFee, exchangeRate, false)) // isMobileMoney convert the fee to equivalent payIn currency
+    : operatorFee;
 
   //get promo discount value for FIXED_AMOUNT, PERCENTAGE
   const getPromoDiscountValue = () =>
@@ -557,7 +581,7 @@ export function calculateQuoteFees(
   if (isPayin) {
     // Scenario A(i): operator fee is on
     if (allowOperatorFee) {
-      operatorFeeCallout = `+${operatorFee}`;
+      operatorFeeCallout = `+${operatorFeeForCallout}`;
       // Calculate payOut based on payIn without fee deduction
       totalPayOut = Number(calculatePayAmount(payIn, rate, false));
       payOut = Number(calculatePayAmount(payIn, exchangeRate, false)); // does not apply promo rate
@@ -578,7 +602,7 @@ export function calculateQuoteFees(
     }
     // Scenario A(ii): operator fee is off
     else {
-      operatorFeeCallout = `-${operatorFee}`;
+      operatorFeeCallout = `-${operatorFeeForCallout}`;
       // Calculate payOut based on payIn after fee deduction
       payOut = Number(
         calculatePayAmount(
@@ -612,7 +636,7 @@ export function calculateQuoteFees(
   else {
     // Scenario B(i): operator fee is on (Same as A(i))
     if (allowOperatorFee) {
-      operatorFeeCallout = `+${operatorFee}`;
+      operatorFeeCallout = `+${operatorFeeForCallout}`;
       // Calculate payIn based on payOut without fee addition
       payIn = Number(calculatePayAmount(payOut, rate, true));
       // Dispatch updated state with correct payIn and totalToPay
@@ -631,7 +655,7 @@ export function calculateQuoteFees(
     }
     // Scenario B(ii): operator fee is off
     else {
-      operatorFeeCallout = `-${operatorFee}`;
+      operatorFeeCallout = `-${operatorFeeForCallout}`;
       // Calculate payIn based on payOut after fee addition
       // If is mobile_money do not add a fee
       payIn = Number(
