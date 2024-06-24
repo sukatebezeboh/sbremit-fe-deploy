@@ -681,7 +681,7 @@ export function calculateQuoteFees(
             getPromoDiscountValue() -
             getLoyaltyOrRefferalDiscount(),
           // payinActualValue: payIn,
-          payoutActualValue: totalPayOut,
+          // payoutActualValue: totalPayOut,
           totalToSend: totalPayOut,
         },
       });
