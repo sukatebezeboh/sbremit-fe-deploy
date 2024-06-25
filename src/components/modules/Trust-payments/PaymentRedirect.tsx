@@ -104,6 +104,7 @@ const PaymentRedirect = ({
   stringToHash += stdefaultprofile;
   stringToHash += successfulRedirectURL;
   stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? "";
+  stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? "";
   stringToHash += stextraurlnotifyfields1;
   stringToHash += stextraurlnotifyfields2;
   stringToHash += stextraurlnotifyfields3;
@@ -172,6 +173,12 @@ const PaymentRedirect = ({
           type="hidden"
           name="successfulurlredirect"
           value={successfulRedirectURL}
+        />
+
+        <input
+          type="hidden"
+          name="allurlnotification"
+          value={settings.TRUST_NOTIFICATION_WEBHOOK_URL}
         />
 
         <input type="hidden" name="orderreference" value={orderReference} />
