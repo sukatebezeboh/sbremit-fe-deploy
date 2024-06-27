@@ -273,8 +273,3 @@ const PaymentRedirect = ({
 };
 
 export default PaymentRedirect;
-
-// <input type="hidden" name="stextraurlnotifyfields" value="">
-
-// <input type="hidden" name="stextraurlnotifyfields" value="requesttypedescription">
-// <input type="hidden" name="stextraurlnotifyfields" value="authcode">
