@@ -44,4 +44,4 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: sbstdev/fe-prod:latest
+        tags: sbstdev/fe-prod:trust
