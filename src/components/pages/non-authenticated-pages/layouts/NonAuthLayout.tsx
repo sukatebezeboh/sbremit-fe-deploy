@@ -14,6 +14,7 @@ import { paths } from "util/paths";
 import CookieNotice from "./components/CookieNotice";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import SiteMaintenance from "../pages/site-maintenance/SiteMaintenance";
 
 interface NonAuthLayoutProps {
   children: React.ReactNode;
@@ -43,7 +44,9 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
   return (
     <ConfigProvider theme={AntdConfigSettings}>
       <NonAuthLayoutStyles>
-        {!isLoginOrSignUpPage && <Navbar />}
+        <SiteMaintenance />
+
+        {/* {!isLoginOrSignUpPage && <Navbar />}
 
         <ChildrenPageStyles $hideMarginTop={isLoginOrSignUpPage}>
           {children}
@@ -51,7 +54,7 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
 
         {!isLoginOrSignUpPage && <Footer />}
 
-        {/* cookie notice */}
+        
         {showCookieNotice && (
           <CookieNotice close={() => setShowCookieNotice(false)} />
         )}
@@ -61,7 +64,7 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
             type="primary"
             icon={<ArrowUpOutlined rev={undefined} />}
           />
-        )}
+        )} */}
       </NonAuthLayoutStyles>
     </ConfigProvider>
   );

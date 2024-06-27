@@ -16,7 +16,13 @@ import styled from "styled-components";
 
 const { Panel } = Collapse;
 
-const Faq = ({ showAllFaqs }: { showAllFaqs?: boolean }) => {
+const Faq = ({
+  showAllFaqs,
+  hideHeader,
+}: {
+  showAllFaqs?: boolean;
+  hideHeader?: boolean;
+}) => {
   const [activeFaq, setActiveFaq] = useState<string | string[]>([]);
   const totalFaqs = showAllFaqs ? Faqs.length : 5;
 
@@ -25,8 +31,8 @@ const Faq = ({ showAllFaqs }: { showAllFaqs?: boolean }) => {
   };
 
   return (
-    <FaqStyles>
-      <H3 $large>Frequently Asked Questions</H3>
+    <FaqStyles $fitParentWidth={true}>
+      {!hideHeader && <H3 $large>Frequently Asked Questions</H3>}
       <Collapse
         accordion
         activeKey={activeFaq}
@@ -62,7 +68,11 @@ const Faq = ({ showAllFaqs }: { showAllFaqs?: boolean }) => {
 
 export default Faq;
 
-const FaqStyles = styled(PageResponsiveWidth).attrs({as: 'section'})`
+const FaqStyles = styled(PageResponsiveWidth).attrs({ as: "section" })<{
+  $fitParentWidth?: boolean;
+}>`
+  width: ${(props) => (props.$fitParentWidth ? "100%" : "")};
+
   display: flex;
   flex-direction: column;
 
