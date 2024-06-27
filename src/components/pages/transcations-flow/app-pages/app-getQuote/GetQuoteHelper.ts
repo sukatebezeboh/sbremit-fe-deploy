@@ -108,7 +108,7 @@ export const isWithinPaymentLimit = (transfer: any) => {
   if (payinActualValue === 0) {
     return "";
   }
-  if (payinActualValue < 5) {
+  if (payinActualValue < 0) {
     return `You can't send less than 5 ${payinCurrency}`;
   }
   if (
