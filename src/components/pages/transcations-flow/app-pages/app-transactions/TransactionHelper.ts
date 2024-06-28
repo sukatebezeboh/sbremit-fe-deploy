@@ -162,8 +162,12 @@ export const formatTransactionStatus = (transactionStatus: string) => {
   }
   if (transactionStatus === constants.TRANSFER_STATUS_PAYMENT_PROCESSING) {
     return { text: "Processing", color: blue };
-  }if (transactionStatus === constants.TRANSFER_STATUS_WATCHLIST_FAILED) {
+  }
+  if (transactionStatus === constants.TRANSFER_STATUS_WATCHLIST_FAILED) {
     return { text: "In review", color: blue };
+  }
+  if (transactionStatus === constants.TRANSFER_STATUS_PENDING_APPROVAL) {
+    return { text: "Pending approval", color: blue };
   }
 
   // GRAY ZONE
