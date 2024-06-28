@@ -6,6 +6,7 @@ import { settings } from "../../../util/settings";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS_FromServer } from "redux/actions/actions";
 import sjcl from "sjcl";
 import { getDateTimeNowInYYYY_MM_DD__HH_MM_SS } from "../../../util/util";
+import { useSelector } from "react-redux";
 require("dotenv").config();
 
 interface IPaymentRedirect {
@@ -29,6 +30,8 @@ const PaymentRedirect = ({
   setEnabled,
   credentialsonfile,
 }: IPaymentRedirect) => {
+  const user = useSelector((state: any) => state.auth.user);
+  const { firstName, lastName } = user.profile;
   const formRef = useRef<HTMLFormElement>(null);
   const [utcDateTime, setUtcDateTime] = useState(
     getDateTimeNowInYYYY_MM_DD__HH_MM_SS()
@@ -58,6 +61,9 @@ const PaymentRedirect = ({
 
   const stdefaultprofile = "st_paymentcardonly";
   const orderReference = transactionId;
+  const billingemail = user?.username;
+  const billingfirstname = firstName || "";
+  const billinglastname = lastName || "";
   const password = process.env.REACT_APP_TRUST_SITE_PASSWORD;
   const siteSecurityTimestamp = utcDateTime;
   const version = 2;
@@ -75,13 +81,15 @@ const PaymentRedirect = ({
   const stextraurlnotifyfields6 = "billingmiddlename";
   const stextraurlnotifyfields7 = "billinglastname";
   const stextraurlnotifyfields8 = "maskedpan";
+  const stextraurlnotifyfields9 = "requesttypedescription";
+  const stextraurlnotifyfields10 = "authcode";
   const stextraurlredirectfields = "nameoncard";
   // const credentialsonfile = "1";
   // const ruleIdentifier6 = "STR-6";
-  const ruleIdentifier7 = "STR-7";
-  const ruleIdentifier8 = "STR-8";
-  const ruleIdentifier9 = "STR-9";
-  const ruleIdentifier10 = "STR-10";
+  // const ruleIdentifier7 = "STR-7";
+  // const ruleIdentifier8 = "STR-8";
+  // const ruleIdentifier9 = "STR-9";
+  // const ruleIdentifier10 = "STR-10";
   const successfulRedirectURL = `${_env.APP_HOST}/transfer-completed/${transferId}?payment_type=trust_payment`;
   // settings.TRUST_SUCCESSFUL_REDIRECT_URL + transferId;
   // const requesttypedescriptions = "ACCOUNTCHECK";
@@ -97,10 +105,10 @@ const PaymentRedirect = ({
   stringToHash += ruleIdentifier4 ?? "";
   stringToHash += ruleIdentifier5 ?? "";
   // stringToHash += ruleIdentifier6 ?? ''
-  stringToHash += ruleIdentifier7 ?? "";
-  stringToHash += ruleIdentifier8 ?? "";
-  stringToHash += ruleIdentifier9 ?? "";
-  stringToHash += ruleIdentifier10 ?? "";
+  // stringToHash += ruleIdentifier7 ?? "";
+  // stringToHash += ruleIdentifier8 ?? "";
+  // stringToHash += ruleIdentifier9 ?? "";
+  // stringToHash += ruleIdentifier10 ?? "";
   stringToHash += stdefaultprofile;
   stringToHash += successfulRedirectURL;
   stringToHash += settings.TRUST_NOTIFICATION_WEBHOOK_URL ?? "";
@@ -113,6 +121,8 @@ const PaymentRedirect = ({
   stringToHash += stextraurlnotifyfields6;
   stringToHash += stextraurlnotifyfields7;
   stringToHash += stextraurlnotifyfields8;
+  stringToHash += stextraurlnotifyfields9;
+  stringToHash += stextraurlnotifyfields10;
   stringToHash += stextraurlredirectfields;
   stringToHash += credentialsonfile;
   // stringToHash += requesttypedescriptions;
@@ -145,10 +155,10 @@ const PaymentRedirect = ({
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier4} />
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier5} />
         {/* <input type="hidden" name="ruleidentifier" value={ruleIdentifier6} /> */}
-        <input type="hidden" name="ruleidentifier" value={ruleIdentifier7} />
+        {/* <input type="hidden" name="ruleidentifier" value={ruleIdentifier7} />
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier8} />
         <input type="hidden" name="ruleidentifier" value={ruleIdentifier9} />
-        <input type="hidden" name="ruleidentifier" value={ruleIdentifier10} />
+        <input type="hidden" name="ruleidentifier" value={ruleIdentifier10} /> */}
 
         {/* Configuration for storing of payment credentials */}
         <input
@@ -182,6 +192,9 @@ const PaymentRedirect = ({
         />
 
         <input type="hidden" name="orderreference" value={orderReference} />
+        <input type="hidden" name="billingfirstname" value={billingfirstname} />
+        <input type="hidden" name="billinglastname" value={billinglastname} />
+        <input type="hidden" name="billingemail" value={billingemail} />
         <input type="hidden" name="sitesecurity" value={siteSecurityHash} />
 
         <input
@@ -223,6 +236,17 @@ const PaymentRedirect = ({
           type="hidden"
           name="stextraurlnotifyfields"
           value={stextraurlnotifyfields8}
+        />
+
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields9}
+        />
+        <input
+          type="hidden"
+          name="stextraurlnotifyfields"
+          value={stextraurlnotifyfields10}
         />
 
         <input
