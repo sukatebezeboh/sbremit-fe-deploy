@@ -94,7 +94,8 @@ export default function Recipients() {
   const location = useLocation();
   const transferQuoteResponse = (location.state as LocationState)
     ?.transferQuoteResponse;
-  const { recipientId } = useSelector((state: any) => state.transfer);
+  // const { recipientId } = useSelector((state: any) => state.transfer);
+  const [recipientId, setRecipientId] = useState("");
   const recipients = useSelector((state: any) => state.recipients.recipients);
   const [openCategoriesModal, setOpenCategoriesModal] = useState(false);
   const [openNewRecipientModal, setOpenNewRecipientModal] = useState(false);
@@ -158,6 +159,7 @@ export default function Recipients() {
         <Divider style={{ margin: 0 }} />
         <RecipientTable
           recipients={filterRecipients(searchValue, recipients, transferMethod)}
+          setRecipientId={setRecipientId}
         />
       </RecipientTableStyles>
       <LargeButton
@@ -202,7 +204,13 @@ const getRecipientTableData = ({ recipients }: { recipients: any }) => {
   return dataSource;
 };
 
-const RecipientTable = (recipients: any) => {
+const RecipientTable = ({
+  recipients,
+  setRecipientId,
+}: {
+  recipients: any;
+  setRecipientId: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const data = getRecipientTableData(recipients);
   const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
@@ -212,13 +220,14 @@ const RecipientTable = (recipients: any) => {
   const onRadioChange = (e: RadioChangeEvent) => {
     const id = e.target.value;
     setSelectedId(e.target.value);
-    dispatch({
-      type: TRANSFER,
-      payload: {
-        ...transfer,
-        recipientId: id,
-      },
-    });
+    setRecipientId(id);
+    // dispatch({
+    //   type: TRANSFER,
+    //   payload: {
+    //     ...transfer,
+    //     recipientId: id,
+    //   },
+    // });
   };
 
   const handleRecipientDelete = (recipientId: string | number) => {
