@@ -105,7 +105,7 @@ export const isWithinPaymentLimit = (transfer: any) => {
     allowOperatorFee,
   } = transfer;
 
-  if (payinActualValue === 0) {
+  if (payinActualValue === 5) {
     return "";
   }
   if (payinActualValue < 0) {
