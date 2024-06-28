@@ -183,7 +183,7 @@ interface TableDataType {
   id: string;
 }
 
-const getRecipientTableData = ({ recipients }: { recipients: any }) => {
+const getRecipientTableData = (recipients: any) => {
   const dataSource: TableDataType[] = [];
   recipients
     ?.slice()
