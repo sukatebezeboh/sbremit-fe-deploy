@@ -44,9 +44,9 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
   return (
     <ConfigProvider theme={AntdConfigSettings}>
       <NonAuthLayoutStyles>
-        <SiteMaintenance />
+        {/* <SiteMaintenance /> */}
 
-        {/* {!isLoginOrSignUpPage && <Navbar />}
+        {!isLoginOrSignUpPage && <Navbar />}
 
         <ChildrenPageStyles $hideMarginTop={isLoginOrSignUpPage}>
           {children}
@@ -54,7 +54,6 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
 
         {!isLoginOrSignUpPage && <Footer />}
 
-        
         {showCookieNotice && (
           <CookieNotice close={() => setShowCookieNotice(false)} />
         )}
@@ -64,7 +63,7 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
             type="primary"
             icon={<ArrowUpOutlined rev={undefined} />}
           />
-        )} */}
+        )}
       </NonAuthLayoutStyles>
     </ConfigProvider>
   );
