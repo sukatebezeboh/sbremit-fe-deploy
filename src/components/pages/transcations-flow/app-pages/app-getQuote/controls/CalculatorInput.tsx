@@ -1,12 +1,14 @@
-import { Input, Select, Space } from "antd";
+import { Input, Select, Space, Tooltip } from "antd";
 import {
   formatAmount,
   getFlagURL,
+  replaceUnderScore,
 } from "components/pages/transcations-flow/utils/reuseableUtils";
 import { userAppValues } from "components/pages/transcations-flow/utils/useAppValues";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TRANSFER } from "redux/actionTypes";
+import { countriesTransferMethodAvailability } from "util/constants";
 import { isWithinPaymentLimit } from "../GetQuoteHelper";
 import { CalculatorInputStyles } from "../GetQuoteStyles";
 
@@ -97,6 +99,7 @@ const SelectAfter = (
 ) => {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
+  const { transferMethod } = transfer || {};
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const PayInCountryData = PayinCountries.find(
@@ -128,22 +131,42 @@ const SelectAfter = (
     </Space>
   ) : (
     <Select defaultValue={defaultValue} onChange={handlePayOutCountryChange}>
-      {PayoutCountries.map((country, index) => (
-        <Option value={country.currency} key={country.name + index}>
-          <Space align="center">
-            <img
-              src={getFlagURL(country.countryCode)}
-              alt={country.name}
-              style={{
-                width: "24px",
-                height: "18px",
-                marginTop: "5px",
-              }}
-            />
-            <span>{country.currency}</span>
-          </Space>
-        </Option>
-      ))}
+      {PayoutCountries.map((country, index) => {
+        const isPayoutCountryNotSupported =
+          !countriesTransferMethodAvailability[country.countryCode]?.[
+            transferMethod
+          ];
+
+        const promptText = isPayoutCountryNotSupported
+          ? `Sorry, ${replaceUnderScore(
+              transferMethod
+            )}s are not supported in ${country.currency}.`
+          : "";
+
+        return (
+          <Option
+            value={country.currency}
+            key={country.name + index}
+            disabled={isPayoutCountryNotSupported}
+          >
+            <Tooltip title={promptText}>
+              <Space align="center">
+                <img
+                  src={getFlagURL(country.countryCode)}
+                  alt={country.name}
+                  style={{
+                    width: "24px",
+                    height: "18px",
+                    marginTop: "5px",
+                    opacity: isPayoutCountryNotSupported ? 0.3 : 1,
+                  }}
+                />
+                <span>{country.currency}</span>
+              </Space>
+            </Tooltip>
+          </Option>
+        );
+      })}
     </Select>
   );
 };
