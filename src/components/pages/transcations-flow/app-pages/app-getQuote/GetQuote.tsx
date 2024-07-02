@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { TRANSFER } from "redux/actionTypes";
 import { paths } from "util/paths";
 import LargeButton, {
   PageTitileAndDescription,
@@ -24,13 +25,27 @@ interface LocationState {
 export default function GetQuote() {
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
   const transfer = useSelector((state: any) => state.transfer);
   //tranferMethod from location(transfer method page) buh if location is null transfer.transferMethod(Resend transfer cases)
+
+  const searchParams = new URLSearchParams(location.search);
+  const transferMethodQuaryParams = searchParams.get("method") || 1;
+
   const transferMethod =
-    (location.state as LocationState)?.transferMethod ||
+    transferMethodsInWords[transferMethodQuaryParams] ||
     transferMethodsInWords[transfer?.transferMethod];
+
   const { payinActualValue, payoutActualValue } = transfer;
   const [loader, setLoader] = useState(false);
+
+  //Reupdate the transferMethod value in the global state: for page refresh case
+  useEffect(() => {
+    dispatch({
+      type: TRANSFER,
+      payload: { ...transfer, transferMethod: transferMethod },
+    });
+  }, [transferMethod]);
 
   const onContinueClicked = () => {
     setLoader(true);

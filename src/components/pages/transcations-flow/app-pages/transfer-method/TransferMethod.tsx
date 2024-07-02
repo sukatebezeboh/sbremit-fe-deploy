@@ -34,8 +34,16 @@ export default function TransferMethod() {
   };
 
   const startTransfer = () => {
+    const transferMethodsInNumbers: any = {
+      mobile_money: 1,
+      bank_transfer: 2,
+      cash_pickup: 3,
+    };
+
     setLoading(true);
-    history.push(paths.GET_QUOTE, { transferMethod: method });
+    history.push(
+      `${paths.GET_QUOTE}?method=${transferMethodsInNumbers[method]}`
+    );
   };
 
   return (
