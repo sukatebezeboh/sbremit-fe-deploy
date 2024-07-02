@@ -30,10 +30,10 @@ export default function GetQuote() {
   //tranferMethod from location(transfer method page) buh if location is null transfer.transferMethod(Resend transfer cases)
 
   const searchParams = new URLSearchParams(location.search);
-  const transferMethodQuaryParams = searchParams.get("method") || 1;
+  const transferMethodQueryParams = searchParams.get("method") || 1;
 
   const transferMethod =
-    transferMethodsInWords[transferMethodQuaryParams] ||
+    transferMethodsInWords[transferMethodQueryParams] ||
     transferMethodsInWords[transfer?.transferMethod];
 
   const { payinActualValue, payoutActualValue } = transfer;
