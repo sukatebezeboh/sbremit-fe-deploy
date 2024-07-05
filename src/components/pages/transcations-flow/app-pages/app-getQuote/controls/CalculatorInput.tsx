@@ -99,7 +99,7 @@ const SelectAfter = (
 ) => {
   const user = useSelector((state: any) => state.auth.user);
   const transfer = useSelector((state: any) => state.transfer);
-  const { transferMethod } = transfer || {};
+  const { transferMethod, payoutCurrency } = transfer || {};
   const dispatch = useDispatch();
   const { PayoutCountries, PayinCountries } = userAppValues();
   const PayInCountryData = PayinCountries.find(
@@ -116,6 +116,37 @@ const SelectAfter = (
     });
   };
 
+  // Additional logic to handle selection of the next available option ---
+  // -- if current sellection is disabled
+  useEffect(() => {
+    const isCurrentPayoutDisabled = PayoutCountries.some(
+      (country) =>
+        country.currency === payoutCurrency &&
+        !countriesTransferMethodAvailability[country.countryCode]?.[
+          transferMethod
+        ]
+    );
+
+    if (isCurrentPayoutDisabled) {
+      const nextAvailableOption = PayoutCountries.find(
+        (country) =>
+          countriesTransferMethodAvailability[country.countryCode]?.[
+            transferMethod
+          ]
+      );
+
+      if (nextAvailableOption) {
+        handlePayOutCountryChange(nextAvailableOption.currency);
+      }
+    }
+  }, [
+    transferMethod,
+    payoutCurrency,
+    PayoutCountries,
+    countriesTransferMethodAvailability,
+    handlePayOutCountryChange,
+  ]);
+
   return isPayin && PayInCountryData !== undefined ? (
     <Space align="center">
       <img
@@ -130,7 +161,11 @@ const SelectAfter = (
       <span>{PayInCountryData.currency}</span>
     </Space>
   ) : (
-    <Select defaultValue={defaultValue} onChange={handlePayOutCountryChange}>
+    <Select
+      defaultValue={defaultValue}
+      onChange={handlePayOutCountryChange}
+      value={payoutCurrency}
+    >
       {PayoutCountries.map((country, index) => {
         const isPayoutCountryNotSupported =
           !countriesTransferMethodAvailability[country.countryCode]?.[
