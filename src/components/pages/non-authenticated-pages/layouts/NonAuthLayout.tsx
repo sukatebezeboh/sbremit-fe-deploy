@@ -15,6 +15,7 @@ import CookieNotice from "./components/CookieNotice";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import SiteMaintenance from "../pages/site-maintenance/SiteMaintenance";
+import { useMaintenanceData } from "./nonAuthLayoutHelper";
 
 interface NonAuthLayoutProps {
   children: React.ReactNode;
@@ -41,28 +42,33 @@ const NonAuthLayout: React.FC<NonAuthLayoutProps> = ({ children }) => {
     location.pathname.includes(paths.PASSWORD_RESET_EMAIL) ||
     location.pathname.includes(paths.CONFIRM_ACCOUNT_EMAIL);
 
+  const { data: maintenanaceData } = useMaintenanceData();
+
+  const isWebMaintenance =
+    Boolean(Number(maintenanaceData?.meta?.webMaintenance)) || false;
+
   return (
     <ConfigProvider theme={AntdConfigSettings}>
       <NonAuthLayoutStyles>
-        {/* <SiteMaintenance /> */}
-
-        {!isLoginOrSignUpPage && <Navbar />}
-
-        <ChildrenPageStyles $hideMarginTop={isLoginOrSignUpPage}>
-          {children}
-        </ChildrenPageStyles>
-
-        {!isLoginOrSignUpPage && <Footer />}
-
-        {showCookieNotice && (
-          <CookieNotice close={() => setShowCookieNotice(false)} />
-        )}
-
-        {!isLoginOrSignUpPage && (
-          <FloatButton.BackTop
-            type="primary"
-            icon={<ArrowUpOutlined rev={undefined} />}
-          />
+        {isWebMaintenance ? (
+          <SiteMaintenance data={maintenanaceData?.meta} />
+        ) : (
+          <>
+            {!isLoginOrSignUpPage && <Navbar />}
+            <ChildrenPageStyles $hideMarginTop={isLoginOrSignUpPage}>
+              {children}
+            </ChildrenPageStyles>
+            {!isLoginOrSignUpPage && <Footer />}
+            {showCookieNotice && (
+              <CookieNotice close={() => setShowCookieNotice(false)} />
+            )}
+            {!isLoginOrSignUpPage && (
+              <FloatButton.BackTop
+                type="primary"
+                icon={<ArrowUpOutlined rev={undefined} />}
+              />
+            )}{" "}
+          </>
         )}
       </NonAuthLayoutStyles>
     </ConfigProvider>

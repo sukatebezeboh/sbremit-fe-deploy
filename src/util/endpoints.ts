@@ -45,6 +45,7 @@ const endpoints = {
   EXCHANGE_RATE_SPREADS: "/rate/spreads",
   INTERAC_PAYMENT: "/payments/interac",
   CREATE_PUSH_NOTIFICATION_TOKEN: "/user/notifications/push",
+  HEALTH_CHECK: "/health-check",
 };
 
 export default endpoints;

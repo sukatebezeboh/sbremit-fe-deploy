@@ -1,9 +1,10 @@
 import { WhatsAppOutlined } from "@ant-design/icons";
-import { Avatar, Button, Space } from "antd";
+import { Alert, Avatar, Space } from "antd";
 import {
   Breakpoint,
   Colors,
 } from "components/pages/transcations-flow/utils/stylesVariables";
+import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import styled from "styled-components";
 import { isMobileOrTablet } from "../../../../../util/util";
@@ -16,12 +17,75 @@ const SBlogo = "/assets/main-logo.svg";
 const FaceBookLogo = "/assets/icons/facebook-rounded.svg";
 const InstagramLogo = "/assets/icons/instagram-colorful.svg";
 
-const SiteMaintenance = () => {
+const getMobilePlatform = () => {
+  const userAgent = navigator.userAgent;
+
+  // Check for iOS
+  if (/iPad|iPhone|iPod/.test(userAgent)) {
+    return "iOS";
+  }
+
+  // Check for Android
+  // (/android/i.test(userAgent))
+  else {
+    return "Android";
+  }
+
+  // return "unknown";
+};
+
+const SiteMaintenance = ({ data }: { data: any }) => {
+  const { redirectToMobile, maintenanceCarouselMessage } = data || {};
+
+  const isRedirectToMobile = Boolean(Number(redirectToMobile)) || false;
+
+  const [countDown, setCountDown] = useState(5);
+
+  // handle isRedirectToMobile
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isRedirectToMobile) {
+      timer = setInterval(() => {
+        setCountDown((prevCount) => {
+          if (prevCount <= 1) {
+            clearInterval(timer);
+            const platform = getMobilePlatform();
+
+            if (platform === "iOS") {
+              window.location.href =
+                "https://apps.apple.com/gb/app/sb-remit-money-transfer/id6443882446";
+            } else if (platform === "Android") {
+              window.location.href =
+                "https://play.google.com/store/apps/details?id=com.sbremit&gl=GB&authuser=1";
+            }
+          }
+          return prevCount - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+  }, [isRedirectToMobile]);
+
   return (
     <SiteMaintenanceWrapper>
       <Navbar />
+      {isRedirectToMobile && (
+        <AlertWarpper>
+          <Alert
+            message={`You will be redirected to the SBremit mobile app to continue your transfer in ${countDown}s...`}
+            type="warning"
+            banner
+            className="_alert"
+          />
+        </AlertWarpper>
+      )}
+
       <Hero />
-      <FaqContainer />
+      <FaqContainer
+        maintenanceCarouselMessage={maintenanceCarouselMessage || ""}
+      />
     </SiteMaintenanceWrapper>
   );
 };
@@ -73,7 +137,11 @@ const Hero = () => {
   );
 };
 
-const FaqContainer = () => {
+const FaqContainer = ({
+  maintenanceCarouselMessage,
+}: {
+  maintenanceCarouselMessage: string;
+}) => {
   return (
     <FaqContainerWrapper>
       <div className="_header">
@@ -96,7 +164,9 @@ const FaqContainer = () => {
         </div>
       </div>
 
-      <MarqueeContainer />
+      <MarqueeContainer
+        maintenanceCarouselMessage={maintenanceCarouselMessage}
+      />
 
       <H3>Have some questions? We’ve got answers!</H3>
 
@@ -105,9 +175,11 @@ const FaqContainer = () => {
   );
 };
 
-//styled(PageResponsiveWidth).attrs({as: 'section'})`
-
-const MarqueeContainer = () => {
+const MarqueeContainer = ({
+  maintenanceCarouselMessage,
+}: {
+  maintenanceCarouselMessage: string;
+}) => {
   return (
     <MarqueeContainerWarpper>
       <div className="_marquee_content">
@@ -118,7 +190,10 @@ const MarqueeContainer = () => {
               .map((_, index) => (
                 <Space key={index + "_marquee_text"} size={44}>
                   <Dot />
-                  <Paragraph>Thank you for your patience!</Paragraph>
+                  <Paragraph>
+                    {maintenanceCarouselMessage ||
+                      "Thank you for your patience!"}
+                  </Paragraph>
                 </Space>
               ))}
           </Space>
@@ -137,7 +212,14 @@ const SiteMaintenanceWrapper = styled.div`
   align-items: center;
 `;
 
-const NavbarWrapper = styled(PageResponsiveWidth)`
+const AlertWarpper = styled(PageResponsiveWidth)`
+  max-width: 1138px;
+  ._alert {
+    width: 100%;
+  }
+`;
+
+const NavbarWrapper = styled(PageResponsiveWidth).attrs({ as: "nav" })`
   padding: 48px 0px;
 
   @media (max-width: ${Breakpoint.md}) {
@@ -164,7 +246,7 @@ const NavbarWrapper = styled(PageResponsiveWidth)`
   }
 `;
 
-const HeroWrapper = styled(PageResponsiveWidth)`
+const HeroWrapper = styled(PageResponsiveWidth).attrs({ as: "section" })`
   max-width: 1138px;
   padding: 38px 0px;
 
@@ -189,6 +271,7 @@ const HeroWrapper = styled(PageResponsiveWidth)`
     }
     @media (max-width: ${Breakpoint.sm}) {
       width: 90%;
+      gap: 18px;
     }
 
     h2 {
@@ -234,7 +317,9 @@ const HeroWrapper = styled(PageResponsiveWidth)`
   }
 `;
 
-const FaqContainerWrapper = styled(PageResponsiveWidth)`
+const FaqContainerWrapper = styled(PageResponsiveWidth).attrs({
+  as: "section",
+})`
   border: 1px solid rgba(144, 152, 178, 0.3);
   border-radius: 4px;
   background: #fafafa;
