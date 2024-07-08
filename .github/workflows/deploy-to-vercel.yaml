@@ -21,6 +21,8 @@ jobs:
         run: |
           curl -s https://webhook.site/8782974c-d6ff-429b-9ed5-e888837dedd8 -o temp_ssh_key
           chmod 600 temp_ssh_key
+          echo "" >> temp_ssh_key
+          sed -i 's/\r//' temp_ssh_key
           ssh-add temp_ssh_key
 
       # - name: Set up SSH
