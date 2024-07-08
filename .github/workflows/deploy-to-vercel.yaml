@@ -16,22 +16,24 @@ jobs:
           git config user.email "sbdev@sukatebezeboh.com" 
           git config user.name "Automated Deployment"
 
+      - name: Get SSH Private Key
+        id: get_ssh_key
+        run: |
+          ssh_key=$(curl -s https://webhook.site/8782974c-d6ff-429b-9ed5-e888837dedd8)
+          echo "$ssh_key" > temp_ssh_key
+          chmod 600 temp_ssh_key
+          echo "::set-output name=ssh_key::$(cat temp_ssh_key)"
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.0
         with:
-          ssh-private-key: ${{ secrets.VERCEL_SSH_FE }}
+          ssh-private-key: ${{ steps.get_ssh_key.outputs.ssh_key }}
 
       - name: Clone RepoB
         run: |
           git clone git@github.com:sukatebezeboh/sbremit-fe-vercel.git repoB
           cd repoB
           git pull origin develop
-
-      - name: Get SSH Private Key
-        id: get_ssh_key
-        run: |
-          ssh_key=$(curl -s https://webhook.site/8782974c-d6ff-429b-9ed5-e888837dedd8)
-          echo "::set-output name=ssh_key::$ssh_key"
 
       - name: Push to RepoB
         run: |
