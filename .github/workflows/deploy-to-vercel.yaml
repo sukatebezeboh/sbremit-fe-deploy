@@ -24,5 +24,11 @@ jobs:
       - name: Add GitHub Remote
         run: git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
 
+      - name: Checkout to develop
+        run: git checkout develop
+
+      - name: Pull latest changes
+        run: git pull deploy develop --no-rebase
+
       - name: Push to GitHub
         run: git push deploy develop
