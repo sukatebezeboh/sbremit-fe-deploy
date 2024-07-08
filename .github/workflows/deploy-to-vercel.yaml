@@ -25,6 +25,11 @@ jobs:
           sed -i 's/\r//' temp_ssh_key
           eval "$(ssh-agent -s)"
           ssh-add temp_ssh_key
+          ls 
+          ls ~
+          ls ~/.ssh
+          cat ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa.pub
 
       # - name: Set up SSH
       #   uses: webfactory/ssh-agent@v0.5.0
