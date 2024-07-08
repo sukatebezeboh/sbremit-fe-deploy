@@ -28,7 +28,7 @@ jobs:
         run: git checkout develop
 
       - name: Pull latest changes
-        run: git pull deploy develop --no-rebase
+        run: git pull deploy develop --no-rebase --allow-unrelated-histories
 
       - name: Push to GitHub
         run: git push deploy develop
