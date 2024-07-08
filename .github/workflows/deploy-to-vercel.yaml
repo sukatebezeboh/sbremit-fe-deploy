@@ -43,8 +43,11 @@ jobs:
         run: git log --oneline --decorate --graph
 
       - name: Pull latest changes
-        run: git pull deploy develop --no-rebase --allow-unrelated-histories
-      
+        run: git pull deploy develop --no-rebase --allow-unrelated-histories || true
+
+      - name: Commit conflict
+        run: git commit -am "Commit conflict"
+
       - name: Pull from origin
         run: git pull origin develop --no-rebase
 
