@@ -21,9 +21,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VERCEL_SSH_FE }}
 
-      - name: Add GitHub Remote
-        run: git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
-
       - name: Go mad
         run: |
           git clone git@github.com:sukatebezeboh/sbremit-fe-vercel.git
