@@ -49,7 +49,7 @@ jobs:
         run: git commit -am "Commit conflict"
 
       - name: Pull from origin
-        run: git pull origin develop --no-rebase
+        run: git push origin develop
 
       - name: Push to GitHub
         run: git push deploy develop --force
