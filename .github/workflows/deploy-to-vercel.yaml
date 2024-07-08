@@ -44,6 +44,9 @@ jobs:
 
       - name: Pull latest changes
         run: git pull deploy develop --no-rebase --allow-unrelated-histories
+      
+      - name: Pull from origin
+        run: git pull origin develop --no-rebase
 
       - name: Push to GitHub
         run: git push deploy develop --force
