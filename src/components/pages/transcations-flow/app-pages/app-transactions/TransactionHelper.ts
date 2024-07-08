@@ -90,9 +90,10 @@ export const formatTransactionsReversed = (
           key: index,
           recipient: transaction,
           date: `${convertDateAndTimeString(transaction?.dateCreated)}`,
-          amount_paid: `${transaction?.originCurrency || "-"} ${
-            formatAmount(transaction?.originAmount) || "-"
-          }`,
+          amount_paid: transaction,
+          // amount_paid: `${transaction?.originCurrency || "-"} ${
+          //   formatAmount(transaction?.originAmount) || "-"
+          // }`,
           amount_received: `${transaction?.destinationCurrency || "-"} ${
             formatAmount(transaction?.destinationAmount) || "-"
           }`,

@@ -19,7 +19,7 @@ import { paths } from "util/paths";
 import { useRecipientsData } from "../../app-layout/appLayoutHelper";
 import { DateSelector } from "../../app-layout/components/searchBar/DateSelectorAndSearchBar";
 import { PageTitileAndDescription } from "../../utils/ReusablePageContent";
-import { getFirstLetter } from "../../utils/reuseableUtils";
+import { formatAmount, getFirstLetter } from "../../utils/reuseableUtils";
 import { Colors } from "../../utils/stylesVariables";
 import { Title } from "../app-dashboard/DashboardSyles";
 import { TransactionDetail } from "./TransactionDetail";
@@ -170,6 +170,32 @@ export default function Transcations({ page }: TranscationsProps) {
       {
         title: "Base currency",
         dataIndex: "amount_paid",
+        render: (data) => {
+          const isReferralDiscount = Boolean(data?.meta?.referralDiscount);
+          const isPromoDiscount = Boolean(data?.meta?.promoDiscount);
+          return (
+            <Space direction="vertical" size={0}>
+              <RecipientName>
+                {data?.originCurrency} {formatAmount(data?.originAmount)}
+              </RecipientName>
+              {isReferralDiscount ? (
+                <TransactionIdStyles>
+                  Referral Bonus Applied 🎁
+                </TransactionIdStyles>
+              ) : (
+                ""
+              )}
+
+              {isPromoDiscount ? (
+                <TransactionIdStyles>
+                  Loyalty Bonus Applied 🎁
+                </TransactionIdStyles>
+              ) : (
+                ""
+              )}
+            </Space>
+          );
+        },
       },
       {
         title: "Target currency",

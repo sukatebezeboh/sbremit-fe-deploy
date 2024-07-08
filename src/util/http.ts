@@ -62,17 +62,15 @@ export const getRequest = async (endpoint: string, errMessage: string) => {
     if (result?.data?.status === 200 || result?.data?.status === "200") {
       return result?.data?.data;
     } else {
-      throw new Error(`${errMessage}`);
+      throw new Error(`${errMessage}: Status is not 200`);
     }
   } catch (error: any) {
-    if (errMessage !== "") {
-      return toastAction({
-        show: true,
-        type: "error",
-        message: `${errMessage}`,
-      });
-    }
-    throw error;
+    toastAction({
+      show: true,
+      type: "error",
+      message: `${error?.message}`,
+    });
+    // throw error;
   }
 };
 
@@ -86,15 +84,15 @@ export const putRequest = async (
     if (result?.data?.status === 200 || result?.data?.status === "200") {
       return result;
     } else {
-      throw new Error(`${errMessage}`);
+      throw new Error(`${errMessage}: Status is not 200`);
     }
-  } catch (error) {
+  } catch (error: any) {
     toastAction({
       show: true,
       type: "error",
-      message: `${errMessage}`,
+      message: `${error?.message}`,
     });
-    throw error;
+    // throw error;
   }
 };
 
@@ -103,19 +101,20 @@ export const postRequest = async (
   endpoint: string,
   errMessage: string
 ) => {
+  console.log(payload);
   try {
     const result = await http.post(endpoint, payload);
     if (result?.data?.status === 200 || result?.data?.status === "200") {
       return result;
     } else {
-      throw new Error(`${errMessage}`);
+      throw new Error(`${errMessage}: Status is not 200`);
     }
-  } catch (error) {
+  } catch (error: any) {
     toastAction({
       show: true,
       type: "error",
-      message: `${errMessage}`,
+      message: `${error?.message}`,
     });
-    throw error;
+    // throw error;
   }
 };

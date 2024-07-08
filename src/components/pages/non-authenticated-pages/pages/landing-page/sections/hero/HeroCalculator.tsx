@@ -137,7 +137,7 @@ const HeroCalculator = () => {
             <Paragraph $small>Total</Paragraph>
             <Paragraph $small>
               {payinActualValue && !operatorError.isError
-                ? formatAmount(payinActualValue + operatorFee)
+                ? formatAmount(String(Number(payinActualValue) + operatorFee))
                 : 0}{" "}
               {payinCurrency}
             </Paragraph>
