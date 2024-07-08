@@ -27,6 +27,9 @@ jobs:
       - name: Checkout to develop
         run: git checkout develop
 
+      - name: Log
+        run: git log --oneline --decorate --graph
+
       - name: Pull latest changes
         run: git pull deploy develop --no-rebase --allow-unrelated-histories
 
