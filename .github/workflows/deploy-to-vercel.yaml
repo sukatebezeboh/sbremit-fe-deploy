@@ -24,29 +24,36 @@ jobs:
       - name: Add GitHub Remote
         run: git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
 
-      - name: Checkout to develop
-        run: git checkout origin/develop
-
-      - name: Check project name and repo link
+      - name: Go mad
         run: |
-          echo "User name: $(git config --get user.name)"
-          echo "Current repo link: $(git config --get remote.deploy.url)"
-          echo "Current branch: $(git branch --show-current)"
-          echo "Current commit: $(git rev-parse HEAD)"
-          echo "Current commit message: $(git log -1 --pretty=%B)"
-          echo "Current commit author: $(git log -1 --pretty=%aN)"
-          echo "Current commit date: $(git log -1 --pretty=%aD)"
-          echo "Versions: $(git remote -v)"
-          echo "Status: $(git status)"
+          git clone deploy
+          git checkout deploy/develop
+          git pull git@github.com:Sukate-Bezeboh/sbremit-fe.git develop --no-rebase
+          git push deploy develop --force
 
-      - name: Log
-        run: git log --oneline --decorate --graph
+      # - name: Checkout to develop
+      #   run: git checkout origin/develop
 
-      - name: Pull latest changes
-        run: git pull deploy develop --rebase --allow-unrelated-histories || true
+      # - name: Check project name and repo link
+      #   run: |
+      #     echo "User name: $(git config --get user.name)"
+      #     echo "Current repo link: $(git config --get remote.deploy.url)"
+      #     echo "Current branch: $(git branch --show-current)"
+      #     echo "Current commit: $(git rev-parse HEAD)"
+      #     echo "Current commit message: $(git log -1 --pretty=%B)"
+      #     echo "Current commit author: $(git log -1 --pretty=%aN)"
+      #     echo "Current commit date: $(git log -1 --pretty=%aD)"
+      #     echo "Versions: $(git remote -v)"
+      #     echo "Status: $(git status)"
 
-      - name: Commit conflict
-        run: git commit -am "Commit conflict"
+      # - name: Log
+      #   run: git log --oneline --decorate --graph
 
-      - name: Push to GitHub
-        run: git push deploy develop --force
+      # - name: Pull latest changes
+      #   run: git pull deploy develop --rebase --allow-unrelated-histories || true
+
+      # - name: Commit conflict
+      #   run: git commit -am "Commit conflict"
+
+      # - name: Push to GitHub
+      #   run: git push deploy develop --force
