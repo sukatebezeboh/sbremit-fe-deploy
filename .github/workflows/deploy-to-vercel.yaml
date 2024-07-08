@@ -24,6 +24,7 @@ jobs:
       - name: Go mad
         run: |
           git clone git@github.com:sukatebezeboh/sbremit-fe-vercel.git
+          cd sbremit-fe-vercel
           git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
           git checkout deploy/develop
           git pull git@github.com:Sukate-Bezeboh/sbremit-fe.git develop --no-rebase
