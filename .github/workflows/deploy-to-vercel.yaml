@@ -26,7 +26,10 @@ jobs:
           git clone git@github.com:sukatebezeboh/sbremit-fe-vercel.git
           cd sbremit-fe-vercel
           git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
-          git checkout deploy/develop
+          git checkout develop
+          git status
+          git branch
+          git remote -v
           git pull git@github.com:Sukate-Bezeboh/sbremit-fe.git develop --no-rebase
           git push deploy develop --force
 
