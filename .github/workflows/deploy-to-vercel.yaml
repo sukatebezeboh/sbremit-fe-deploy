@@ -25,12 +25,12 @@ jobs:
         run: git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
 
       - name: Checkout to develop
-        run: git checkout develop
+        run: git checkout origin/develop
 
       - name: Check project name and repo link
         run: |
-          echo "Project name: $(git config --get user.name)"
-          echo "Repo link: $(git config --get remote.deploy.url)"
+          echo "User name: $(git config --get user.name)"
+          echo "Current repo link: $(git config --get remote.deploy.url)"
           echo "Current branch: $(git branch --show-current)"
           echo "Current commit: $(git rev-parse HEAD)"
           echo "Current commit message: $(git log -1 --pretty=%B)"
@@ -46,4 +46,4 @@ jobs:
         run: git pull deploy develop --no-rebase --allow-unrelated-histories
 
       - name: Push to GitHub
-        run: git push deploy develop
+        run: git push deploy develop --force --allow-unrelated-histories --no-rebase
