@@ -27,6 +27,18 @@ jobs:
       - name: Checkout to develop
         run: git checkout develop
 
+      - name: Check project name and repo link
+        run: |
+          echo "Project name: $(git config --get user.name)"
+          echo "Repo link: $(git config --get remote.deploy.url)"
+          echo "Current branch: $(git branch --show-current)"
+          echo "Current commit: $(git rev-parse HEAD)"
+          echo "Current commit message: $(git log -1 --pretty=%B)"
+          echo "Current commit author: $(git log -1 --pretty=%aN)"
+          echo "Current commit date: $(git log -1 --pretty=%aD)"
+          echo "Versions: $(git remote -v)"
+          echo "Status: $(git status)"
+
       - name: Log
         run: git log --oneline --decorate --graph
 
