@@ -25,4 +25,4 @@ jobs:
         run: git remote add deploy git@github.com:sukatebezeboh/sbremit-fe-vercel.git
 
       - name: Push to GitHub
-        run: git push deploy ${{ github.ref }}
+        run: git push deploy develop
